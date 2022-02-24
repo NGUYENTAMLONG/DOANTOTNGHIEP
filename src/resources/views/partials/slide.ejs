@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="css/slide.css">
+</head>
+
+<body>
+  <div class="box-slide d-flex">
+    <% slides.forEach(function(slide,index){ %>
+    <div class="slide <% if ( index=== 2) { %> active <%}%>" style="
+          background-image: url('<%= slide.image %>');
+        ">
+      <div class="slide__info">
+        <h3><%= slide.name %>
+          <p class="slide__author">Tác giả: <%= slide.author %></p>
+        </h3>
+        <span>Chapter: <b><%= slide.chapter %></b></span>
+        <p><b>Thể loại: </b>
+          <% slide.type.forEach(function(type){ %>
+          <a href="#" class="slide__types"><%= type %></a>
+          <% }) %>
+        </p>
+        <p class="slide__desc">
+          <%= slide.desc %>
+        </p>
+        <div class="text-center">
+          <a href="#" class="btn btn-success">Đọc ngay</a>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</body>
+<script>
+  const slides = document.querySelectorAll(".slide");
+
+  for (const slide of slides) {
+    slide.addEventListener("click", () => {
+      removeActiveClass();
+      slide.classList.add("active");
+    });
+  }
+
+  function removeActiveClass() {
+    slides.forEach((slide) => {
+      slide.classList.remove("active");
+    });
+  }
+</script>
+
+</html>

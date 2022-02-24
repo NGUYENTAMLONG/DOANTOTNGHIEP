@@ -1,0 +1,29 @@
+GET http://localhost:3416/manage/admin_manga/slide
+### GET - find slide by ID
+GET  http://localhost:3416/manage/admin_manga/slide/620535aed811d4c51bbd6222
+
+### POST - create slide
+POST http://localhost:3416/manage/admin_manga/slide
+content-type: application/json
+
+{
+    "name": "Daredevil",
+    "image": "/image/s6.jpg",
+    "author":"Stand Lee",
+    "chapter":"10",
+    "desc":"Daredevil: Season One (dài hơn 100 trang) nhằm mục đích hiện đại hóa và kể lại về cuộc đời của Daredevil cho một số đối tượng mới. Daredevil: Reborn là một Limited Series 4 tập của Marvel Comics. Sau sự kiện Shadowland, Matt Murdock đã rời bỏ Hell's Kitchen. Câu chuyện bắt đầu khi Matt bước vào một vụ án tại một thị trấn ở Mexico.",
+    "type":["Action","Hero","18+","Comic"]
+}
+### PUT - update slide
+PUT http://localhost:3416/manage/admin_manga/slide/62053212a4c9fb1746212865
+content-type: application/json
+
+{
+    "name": "Attack On Titan",
+    "image": "/image/aottheme.jpg",
+    "chapter":"200",
+    "desc":"Hơn 100 năm trước, giống người khổng lồ Titan đã tấn công và đẩy loài người tới bờ vực tuyệt chủng. Những con người sống sót tụ tập lại, xây bao quanh mình 1 tòa thành 3 lớp kiên cố và tự nhốt mình bên trong để trốn tránh những cuộc tấn công của người khổng lồ. Họ tìm mọi cách để tiêu diệt người khổng lồ nhưng không thành công. Và sau 1 thế kỉ hòa bình, giống khổng lồ đã xuất hiện trở lại, một lần nữa đe dọa sự tồn vong của con người....  Elen và Mikasa phải chứng kiến một cảnh tượng cực kinh khủng - mẹ của mình bị ăn thịt ngay trước mắt. Elen thề rằng cậu sẽ giết tất cả những tên khổng lồ mà cậu gặp...",
+    "type":["Action","Phưu lưu","Đấu trí","Chiến dịch","18+","Kinh dị"]
+}
+### DELETE - delete slide
+DELETE  http://localhost:3416/manage/admin_manga/slide/620535aed811d4c51bbd6222

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin HRM</title>
+  <link rel="stylesheet" href="/css/manage_hrm.css">
+  <link rel="stylesheet" href="/css/sidebar_hrm.css">
+
+  <%- include("../partials/link") %>
+  <!-- {{!-- Link fontawesome 5 --}} -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+    </nav>
+  </header>
+  <%- include("../partials/sidebar",{admin}) %>
+  <div class="container">
+    <h1 class="text-center" style="margin-top: 70px;">EDIT PAGE</h1>
+    <b style="margin-left: 100px;">Tìm tài khoản cần cập nhật</b>
+    <input class="form-control mt-2 mb-2" style="width: 400px;margin-left: 100px;" id="myInput" type="text" placeholder="Search..">
+    <table class="table table-dark table-hover table-strippe" style="margin-left: 100px;">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">STT</th>
+          <th scope="col">Admin</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+          <th scope="col" colspan="2">Avatar</th>
+          <th scope="col" class="text-center">Choose</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        <% adminList.forEach(function(admin,index){ %>
+        <tr id="<%= admin._id %>">
+          <th scope="row" class="text-center"><%= index + 1%></th>
+          <td id="account_td"><%= admin.account %></td>
+          <td id="email_td"><%= admin.email%></td>
+          <td id="role_td"> <% if (admin.role =="hrm_admin"){%><span class="badge badge-pill badge-primary">Quản trị nhân lực / hrm_admin</span> <%}else { %><span class="badge badge-pill badge-warning">Quản trị nội dung / manga_admin</span><% } %> </td>
+          <td id="avatar_td"><%= admin.avatar%></td>
+          <td>
+            <% if (admin.avatar !== "avatar.png"){%><img class="avatar" src="/manage/admin_hrm/avatar/<%= admin.avatar%>" /> <% }else{%>
+            <img class="avatar" src="/image/avatar.png" />
+            <%} %>
+          </td>
+          <td class="text-center">
+            <button type=" button" class="btn btn-warning" data-toggle="modal" data-target="#form" data-id="<%= admin._id %>" onclick="showModalUpdate(this)">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+            </button>
+          </td>
+        </tr>
+        <% }); %>
+
+      </tbody>
+    </table>
+  </div>
+  <!-- Modal -->
+
+  <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-user-gear"></i> Update Account</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none; font-size: 40px;">
+            <span aria-hidden="true" class="outline-none">&times;</span>
+          </button>
+        </div>
+        <form>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="account">Account</label>
+              <input type="text" class="form-control" id="account" placeholder="Enter account">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter Email">
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <div class="form-group d-flex">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="role" id="manga_admin" value="manga_admin">
+                  <label class="form-check-label" for="manga_admin">
+                    Quản trị nội dung
+                  </label>
+                </div>
+                <div class="form-check ml-3">
+                  <input class="form-check-input" type="radio" name="role" id="hrm_admin" value="hrm_admin">
+                  <label class="form-check-label" for="hrm_admin">
+                    Quản trị nhân lực
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3 uploadAvatar">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Avatar</span>
+              </div>
+              <div class="custom-file ">
+                <input type="file" class="custom-file-input" name="avatar" id="avatar">
+                <label class="custom-file-label">Choose file</label>
+              </div>
+            </div>
+            <div class="preview-zone">
+              <p class="bg-warning boderred">Preview Avatar</p>
+              <img id="preview" src="#" alt="your avatar">
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+              <button type="submit" class="btn btn-success" click="handleSubmit()">Submit</button>
+              <button type="submit" class="btn btn-danger">Cancel</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="container" style="width: 400px;">
+    <form action="/manage" method="POST">
+      <div class="form-group">
+        <label for="account">Tài khoản</label>
+        <input type="text" class="form-control" required name="account" id="account" placeholder="Enter account/ Nhập tài khoản admin" />
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" class="form-control" required name="password" id="password" placeholder=" Enter password/ Nhập mật khẩu admin" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" required name="email" id="email" placeholder="Enter email/ Nhập email admin" />
+      </div>
+      <div class="form-group">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="exampleRadios" id="hrm_admin" value="hrm_admin" checked>
+          <label class="form-check-label" for="hrm_admin">
+            Quản trị nhân lực
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="exampleRadios" id="manga_admin" value="manga_admin">
+          <label class="form-check-label" for="manga_admin">
+            Quản trị nội dung
+          </label>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Upload</span>
+        </div>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="inputGroupFile01">
+          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Thêm mới <i class="fa-solid fa-plane-departure"></i></button>
+      </div>
+    </form>
+  </div> -->
+
+</body>
+<%- include("../partials/script") %>
+<script>
+  //   fetch("/manage/admin_hrm/admin").then((res) => res.json()).then(data => console.log(data)).catch(error => console.log(error))
+  $(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+
+  function showModalUpdate(own) {
+    const id = own.getAttribute("data-id")
+    const tr = document.getElementById(`${id}`);
+    const account = tr.querySelector("#account_td").textContent;
+    const email = tr.querySelector("#email_td").textContent;
+    const role = tr.querySelector("#role_td").textContent;
+    const avatar = tr.querySelector("#avatar_td").textContent;
+    const modal = document.querySelector(".modal");
+    modal.querySelector("#account").setAttribute("value", account);
+    modal.querySelector("#email").setAttribute("value", email);
+    if (avatar === "avatar.png") {
+      preview.src = "/image/" + avatar;
+    } else {
+      preview.src = "/manage/admin_hrm/avatar/" + avatar;
+    }
+    if (role.includes("hrm_admin")) {
+      modal.querySelector("#hrm_admin").checked = true
+    } else {
+      modal.querySelector("#manga_admin").checked = true
+    }
+
+  }
+  window.onsubmit = function(event) {
+    event.preventDefault();
+
+  }
+</script>
+<script>
+  avatar.onchange = () => {
+    const [file] = avatar.files
+    if (file) {
+      preview.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+</html>

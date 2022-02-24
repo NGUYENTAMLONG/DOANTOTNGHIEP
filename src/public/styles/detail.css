@@ -1,0 +1,97 @@
+.container {
+  max-width: 1170px; }
+
+.breadcrumb a {
+  text-decoration: none; }
+
+.section {
+  padding: 20px 20px; }
+
+.manga-img {
+  text-align: center; }
+  .manga-img img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    box-shadow: 5px 5px 10px 5px #888888;
+    border-radius: 5px; }
+
+.manga-info {
+  margin-top: 20px; }
+  .manga-info .manga-info__author a {
+    text-decoration: none; }
+  .manga-info .manga-info__statistical span {
+    margin: 0px 5px; }
+  .manga-info .read,
+  .manga-info .follow,
+  .manga-info .like {
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    padding: 5px 8px;
+    margin-bottom: 10px; }
+  .manga-info .read {
+    background-color: #8bc34a; }
+  .manga-info .follow {
+    background-color: #ff2853; }
+  .manga-info .like {
+    background-color: #bd10e0; }
+  .manga-info .manga-info__desc {
+    transition: display 5s ease-in-out; }
+    .manga-info .manga-info__desc p {
+      text-indent: 20px; }
+      .manga-info .manga-info__desc p::first-letter {
+        text-transform: uppercase;
+        font-size: 3em;
+        font-weight: bold; }
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden; }
+
+.my-custom-scrollbar {
+  position: relative;
+  height: 500px;
+  overflow: auto; }
+
+.table-wrapper-scroll-y {
+  display: block; }
+
+#section-3 .form-group input {
+  width: 45%; }
+
+#section-3 .myComment {
+  position: relative; }
+  #section-3 .myComment .fa-grin {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer; }
+
+#section-4 .comment-zone .comment {
+  margin: 20px 0px; }
+  #section-4 .comment-zone .comment .comment__avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px; }
+  #section-4 .comment-zone .comment .comment__detail {
+    width: 100%;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #ebebeb; }
+    #section-4 .comment-zone .comment .comment__detail .comment__whose span {
+      padding: 3px;
+      border: #007bff solid 1px;
+      color: #007bff;
+      border-radius: 4px;
+      font-size: 13px; }
+    #section-4 .comment-zone .comment .comment__detail .like-comment,
+    #section-4 .comment-zone .comment .comment__detail .response-comment {
+      cursor: pointer;
+      color: #be151b; }
+
+.emojionearea-button {
+  transform: scale(1.5); }

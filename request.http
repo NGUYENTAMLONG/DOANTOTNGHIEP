@@ -1,0 +1,62 @@
+# ************** For admin controller ******************
+GET http://localhost:3416/manage/admin_hrm/
+###
+POST http://localhost:3416/manage/admin_hrm
+content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjAzOWExYjM0NDU5OWI1YzQxMmM0MDEiLCJhY2NvdW50IjoiYWRtaW5ocm0iLCJyb2xlIjoiaHJtX2FkbWluIiwiaWF0IjoxNjQ0NjM4NzAwfQ.sj-Xb9X3BxQnmT0fiP5zzIzmCRQ80vQnFuG7GvAg6OQ
+
+{
+    "account": "admin_hrm",
+    "password": "1234567",
+    "role":"hrm_admin",
+    "email":"email1@gmail.com",
+    "avatar":"1644751964162.png"
+}
+### 
+DELETE http://localhost:3416/manage/admin_hrm/:id
+###
+PUT http://localhost:3416/manage/admin_hrm/6203da707f931b586882b13c
+content-type: application/json
+
+{
+    "account": "adminmanga2",
+    "password": "1234567",
+    "role":"manga_admin",
+    "email":"email43210@gmail.com",
+    "avatar":"/image/admin.jpg"
+}
+### 
+GET http://localhost:3416/manage/admin_hrm/
+
+### 
+GET http://localhost:3416/manage/admin_hrm/admin
+
+# ************** For admin controller ******************
+
+### Method:GET - all users   /manage/admin_hrm/user
+GET http://localhost:3416/manage/admin_hrm/user/
+### Method:GET - find user by id   /manage/admin_hrm/user/:id
+GET http://localhost:3416/manage/admin_hrm/user/62048a11d26e55b985feda0e
+### Method:POST - create user account   /manage/admin_hrm/user
+POST http://localhost:3416/manage/admin_hrm/user
+content-type: application/json
+
+{
+    "username": "tamlongnguyen2",
+    "password": "123456",
+    "email":"tamlong@gmail.com",
+    "avatar":"/image/avatar.jpg"
+}
+
+### Method:PUT - update user account by Id, data   /manage/admin_hrm/user/:id
+PUT http://localhost:3416/manage/admin_hrm/user/62048a11d26e55b985feda0e
+content-type: application/json
+
+{
+    "username": "tamlongnguyen3",
+    "password": "123456",
+    "email":"tamlong@gmail.com",
+    "avatar":"/image/avatar.jpg"
+}
+### 
+DELETE  http://localhost:3416/manage/admin_hrm/user/620e1cf6ea5ab307aef15f52

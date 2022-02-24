@@ -1,0 +1,116 @@
+const Slide = require("../models/Slide");
+const jwt = require("jsonwebtoken");
+
+class mangaController {
+  async showDashboardManga(req, res) {
+    // const token = req.cookies.token;
+    try {
+      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const admin = await Admin.findOne({ account: tokenVerify.account });
+      // const adminList = await Admin.find();
+      if (tokenVerify.role === "manga_admin") {
+        res.render("admin/manage_manga");
+      } else {
+        res.status(403).json({ message: "You are not manga admin !!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error, message: "No Authentication" });
+    }
+  }
+  async findAllSlides(req, res, next) {
+    try {
+      const listSlide = await Slide.find();
+      if (!listSlide) {
+        res
+          .status(403)
+          .json({ status: "error", message: "Slide list is empty !!!" });
+      }
+      res.status(200).json({ status: "ok", listSlide: listSlide });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: error });
+    }
+  }
+  async createSlide(req, res, next) {
+    const { name, author, image, chapter, desc, type } = req.body;
+    // res.json({ name,author, image, chapter, desc, type });
+    try {
+      const response = await Slide.create({
+        name,
+        author,
+        image,
+        chapter,
+        desc,
+        type,
+      });
+      res.status(200).json({ status: "ok", createdSlide: response });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: error });
+    }
+  }
+  async updateSlide(req, res, next) {
+    const { name, author, image, chapter, desc, type } = req.body;
+    const idSlide = req.params.id;
+
+    try {
+      const response = await Slide.findByIdAndUpdate(idSlide, {
+        name,
+        author,
+        image,
+        chapter,
+        desc,
+        type,
+      });
+      if (!response) {
+        res.status(403).json({
+          status: "error",
+          message: "Something went wrong while updating !!!",
+        });
+      }
+      res
+        .status(200)
+        .json({ status: "ok", message: "Successfully updated !!!" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: error });
+    }
+  }
+  async deleteSlide(req, res, next) {
+    const idSlide = req.params.id;
+    try {
+      const deletedSlide = await Slide.findByIdAndDelete(idSlide);
+      if (!deletedSlide) {
+        res.status(403).json({
+          status: "error",
+          message: "Something went wrong while deleting !!!",
+        });
+      }
+      res
+        .status(200)
+        .json({ status: "ok", message: "Successfully deleted !!!" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: error });
+    }
+  }
+  async findSlideById(req, res, next) {
+    const idSlide = req.params.id;
+    try {
+      const slide = await Slide.findById(idSlide);
+      if (!slide) {
+        res.status(403).json({
+          status: "error",
+          message: "Not Found !!!",
+        });
+      }
+      res.status(200).json({ status: "ok", slide: slide });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: error });
+    }
+  }
+}
+
+module.exports = new mangaController();

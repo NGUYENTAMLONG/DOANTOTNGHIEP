@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/manage_manga.css">
+  <link rel="stylesheet" href="/css/addChapter.css">
+  <link rel="stylesheet" href="/css/fullscreenImg.css">
+
+  <%- include("../../partials/link") %>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <section style="background-image: url('<%= manga.image%>');">
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <div class="manga-img">
+          <img src="<%= manga.image%>" alt="">
+        </div>
+      </div>
+      <div class="col-md-8 col-lg-4">
+        <div class="manga-info">
+          <h3 class="manga-info__name"><%= manga.name%></h3>
+          <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
+          <p class="manga-info__author">Tác giả: <a href="#">
+              <%= manga.author %>
+            </a></p>
+          <p class="manga-info__status">Tình trạng: <%= manga.status %> </p>
+          <p class="manga-info__statistical">Thống kê:
+            <span>
+              <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
+            </span>
+            <span>
+              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
+            </span>
+            <span>
+              <i class="far fa-eye"></i> <%= manga.statistical.views %>
+            </span>
+          </p>
+          <% manga.type.forEach(function(type,index){ %>
+          <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
+          <% }) %>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-5 pt-3">
+        <div class="manga-info__desc">
+          <b>Nội dung:</b>
+          <p class="truncate">
+            <%= manga.description %>
+          </p>
+          <div class="text-center">
+            <button class="show-more btn btn-primary">Show More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="container">
+    <form action="add_chapter/" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="number">Chương số</label>
+        <input type="text" class="form-control" required name="number" id="number" placeholder="Enter number of chapter/ Nhập chương số" />
+      </div>
+      <div class="form-group">
+        <label for="username">Tên chương</label>
+        <input type="text" class="form-control" required name="name" id="name" placeholder="Enter name of chapter/ Nhập tên chương" />
+      </div>
+      <input type="file" multiple id="gallery-photo-chapter" name="chapterImg" id="chapterImg">
+      <div class="gallery"></div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary submitBtn">Đăng</button>
+      </div>
+    </form>
+  </section>
+</body>
+<%- include("../../partials/script") %>
+
+<script>
+  // Add the following code if you want the name of the file appear on select
+  function changeImage() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  }
+
+  const btnShowMore = document.querySelector(".show-more");
+  const textDesc = document.querySelector(".manga-info__desc p");
+
+  let flag = false;
+  btnShowMore.onclick = function() {
+    if (flag === false) {
+      btnShowMore.textContent = "Show Less";
+      textDesc.classList.remove("truncate");
+      flag = true
+    } else {
+      btnShowMore.textContent = "Show More";
+      textDesc.classList.add("truncate");
+      flag = false
+    }
+  }
+</script>
+<script>
+  var imagesPreview = function(input, placeToInsertImagePreview) {
+
+    if (input.files) {
+      var filesAmount = input.files.length;
+      for (i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          $($.parseHTML('<img>')).attr('style', "width:70%").attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+        }
+        reader.readAsDataURL(input.files[i]);
+      }
+    }
+
+  };
+
+  $('#gallery-photo-chapter').on('change', function() {
+    imagesPreview(this, 'div.gallery');
+  });
+
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+    // const chapterNumber = document.querySelector("#number").value;
+    // const chapterName = document.querySelector("#name").value;
+    // const formData = new FormData();
+    // formData.append("image", imgChapterFiles.files[0])
+    // console.log({
+    //   chapterNumber,
+    //   chapterName,
+    // })
+  }
+  document.querySelector(".submitBtn").onclick = function() {
+    const chapterNumber = document.querySelector("#number").value;
+    const chapterName = document.querySelector("#name").value;
+    const data = {
+      chapterNumber,
+      chapterName
+    };
+
+    fetch('add_chapter/' + data.chapterNumber, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data === false) {
+          alert("Chương số này đã tồn tại !!!")
+        }
+        console.log(data)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+
+</html>

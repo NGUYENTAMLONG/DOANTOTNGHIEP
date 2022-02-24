@@ -1,0 +1,5 @@
+GET http://localhost:3416/manage/admin_manga
+###
+GET http://localhost:3416/manage/admin_manga/61ffb19f0d300ec4ceb9b5c2
+###
+GET http://localhost:3416/manage/admin_manga/slide

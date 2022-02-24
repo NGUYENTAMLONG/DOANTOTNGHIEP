@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin HRM</title>
+  <link rel="stylesheet" href="/css/manage_hrm.css">
+  <link rel="stylesheet" href="/css/sidebar_hrm.css">
+  <link rel="stylesheet" href="/css/fullscreenImg.css">
+
+
+  <%- include("../partials/link") %>
+  <!-- {{!-- Link fontawesome 5 --}} -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+    </nav>
+  </header>
+  <%- include("../partials/sidebar",{admin}) %>
+  <div class="container">
+    <h1 class="text-center" style="margin-top: 70px;">CREATE PAGE</h1>
+    <div class="container" style="width: 400px;">
+      <!-- enctype="multipart/form-data" -->
+      <form action="/manage/admin_hrm" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="account">Tài khoản</label>
+          <input type="text" class="form-control" required name="account" id="account" placeholder="Enter account/ Nhập tài khoản admin" />
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" class="form-control" required name="password" id="password" placeholder=" Enter password/ Nhập mật khẩu admin" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" required name="email" id="email" placeholder="Enter email/ Nhập email admin" />
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="role" id="manga_admin" value="manga_admin" checked>
+            <label class="form-check-label" for="manga_admin">
+              Quản trị nội dung
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="role" id="hrm_admin" value="hrm_admin">
+            <label class="form-check-label" for="hrm_admin">
+              Quản trị nhân lực
+            </label>
+          </div>
+        </div>
+        <div class="input-group mb-3 uploadAvatar">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Avatar</span>
+          </div>
+          <div class="custom-file ">
+            <input type="file" class="custom-file-input" name="avatar" id="avatar">
+            <label class="custom-file-label">Choose file</label>
+          </div>
+        </div>
+        <div class="preview-zone">
+          <p class="bg-warning boderred">Preview Avatar</p>
+          <img id="preview" src="#" alt="your avatar">
+          <!-- The Modal -->
+          <div id="myModal" class="modal">
+            <span class="close-btn">&times;</span>
+            <img class="modal-content" id="preview-modal">
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Thêm mới <i class="fa-solid fa-plane-departure"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+<%- include("../partials/script") %>
+<script>
+  // Add the following code if you want the name of the file appear on select
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+  window.onsubmit = function(event) {
+    event.preventDefault();
+    //find content
+    const account = document.getElementById("account").value;
+    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const role = document.querySelector("[name='role']:checked").value;
+    const imgFiles = document.getElementById("avatar")
+    //set up avatar file
+    const formData = new FormData();
+    formData.append("avatar", imgFiles.files[0])
+    const obj = {
+      account: account,
+      password: password,
+      email: email,
+      role: role,
+    }
+    if (password.length < 6) {
+      alert("Mật khẩu phải nhiều hơn 6 ký tự !!!")
+    }
+    fetch("/manage/admin_hrm/admin")
+      .then(res => res.json())
+      .then(data => {
+        const checkAccount = data.admins.some((admin) => admin.account === account);
+        const checkEmail = data.admins.some((admin) => admin.email === email);
+        if (checkAccount === true) {
+          alert("Tài khoản đã tồn tại ! Vui lòng đăng ký tài khoản khác !!!")
+        } else if (checkEmail === true) {
+          alert("Email đã dùng với tài khoản khác !")
+        } else {
+          if (typeof imgFiles.files[0] === "undefined") {
+            submitDataWithoutAvatar(obj)
+          } else {
+            submitData(formData, obj)
+          }
+        }
+      })
+      .catch(error => console.log(error))
+
+  }
+
+  function submitData(formData, obj) {
+    fetch('/manage/admin_hrm/images', {
+        method: 'POST', // or 'PUT'
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        obj.avatar = data.filename;
+        fetch('/manage/admin_hrm/', {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(obj),
+          })
+          .then(response => response.json())
+          .then(data => {
+            // console.log(data)
+            swal({
+              title: "Thành công",
+              text: "Đã thêm tài khoản",
+              icon: "success",
+              button: "Ok!",
+            });
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  function submitDataWithoutAvatar(obj) {
+    fetch('/manage/admin_hrm/', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        swal({
+          title: "Thành công",
+          text: "Đã thêm tài khoản",
+          icon: "success",
+          button: "Ok!",
+        });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+  }
+</script>
+<script>
+  avatar.onchange = () => {
+    const [file] = avatar.files
+    if (file) {
+      preview.src = URL.createObjectURL(file)
+    }
+  }
+
+  var modal = document.getElementById("myModal");
+
+  // Get the image and insert it inside the modal - use its "alt" text as a caption
+  var img = document.getElementById("preview");
+  var modalImg = document.getElementById("preview-modal");
+  img.onclick = function() {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+  }
+
+  // Get the <span> element that close-btns the modal
+  var span = document.getElementsByClassName("close-btn")[0];
+
+  // When the user clicks on <span> (x), close-btn the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+</script>
+
+</html>

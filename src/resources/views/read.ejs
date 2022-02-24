@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>READ</title>
+  <%- include("partials/link") %>
+  <link rel="stylesheet" href="/css/read.css">
+</head>
+
+<body>
+
+  <%- include('partials/header') %>
+  <section class="section container mt-3" id="section-1">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item">
+          <a href="/detail/<%= manga.slug%>"> <%= manga.slug%></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">chapter-<%= chapter.chapterNumber%></li>
+      </ol>
+    </nav>
+    <button class="btn btn-success">Chương trước</button>
+    <button class="btn btn-primary">Chương sau</button>
+    <div class="text-light text-center">
+      <b>Chương <%= chapter.chapterNumber%> - Tựa đề:</b>
+      <h2>
+        <%= chapter.chapterName%>
+      </h2>
+    </div>
+  </section>
+  <section class="section container" id="section-2">
+    <% chapter.chapterImages.forEach((img,index) => { %>
+    <img src="<%= img %>" class="m-2" alt="">
+    <%}); %>
+  </section>
+  <section class="section container text-light" id="section-3">
+    <h2><i class="fas fa-comments"></i> Bình luận (<%= manga.statistical.comments %>)</h2>
+    <p>Like Fanpage để ủng hộ Manga chúng mình và cập nhật các thông tin mới nhất về các bộ truyện nhé. </p>
+    <div class="fb-like" data-href="/" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+    <div id="fb-root"></div>
+    <form action="#" method="POST" enctype="multipart/form-data">
+      <div class="form-group d-flex justify-content-around mt-2">
+        <input type="text" class="form-control" required name="name" id="name" placeholder="Điền tên bạn trước khi bình luận" />
+        <input type="email" class="form-control" required name="email" id="email" placeholder=" Nhập email" />
+      </div>
+      <div class="myComment">
+        <textarea class="form-control" name="content" id="content" cols="30" rows="5" placeholder="Nội dung bình luận ...">
+        </textarea>
+      </div>
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary">Gửi bình luận <i class="fas fa-paper-plane"></i> </button>
+      </div>
+    </form>
+  </section>
+  <section class="section container" id="section-4">
+    <div class="comment-zone">
+      <div class="comment d-flex">
+        <img class="comment__avatar" src="/image/avatar.png" alt="avatar">
+        <div class="comment__detail">
+          <p class="comment__whose">
+            <b>Uchiha Shin</b> <span>Thành viên</span>
+            <i>1 Phút trước</i>
+          </p>
+          <p>Truyện này hay ghê ó :v Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum repudiandae sint at vel repellat labore assumenda sed unde iure consectetur odit eos ratione, voluptate ex nulla fugit, laudantium dolores cum.</p>
+          <div>
+            <span class="like-comment">
+              <i class="fa fa-thumbs-up"></i> 0
+            </span>
+            <span class="response-comment">
+              <i class="fas fa-comment"></i> Trả lời
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="comment d-flex">
+        <img class="comment__avatar" src="/image/avatar.png" alt="avatar">
+        <div class="comment__detail">
+          <p class="comment__whose">
+            <b>Uchiha Shin</b> <span>Thành viên</span>
+            <i>1 Phút trước</i>
+          </p>
+          <p>Truyện này hay ghê ó :v Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum repudiandae sint at vel repellat labore assumenda sed unde iure consectetur odit eos ratione, voluptate ex nulla fugit, laudantium dolores cum.</p>
+          <div>
+            <span class="like-comment">
+              <i class="fa fa-thumbs-up"></i> 0
+            </span>
+            <span class="response-comment">
+              <i class="fas fa-comment"></i> Trả lời
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="comment d-flex">
+        <img class="comment__avatar" src="/image/avatar.png" alt="avatar">
+        <div class="comment__detail">
+          <p class="comment__whose">
+            <b>Uchiha Shin</b> <span>Thành viên</span>
+            <i>1 Phút trước</i>
+          </p>
+          <p>Truyện này hay ghê ó :v Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum repudiandae sint at vel repellat labore assumenda sed unde iure consectetur odit eos ratione, voluptate ex nulla fugit, laudantium dolores cum.</p>
+          <div>
+            <span class="like-comment">
+              <i class="fa fa-thumbs-up"></i> 0
+            </span>
+            <span class="response-comment">
+              <i class="fas fa-comment"></i> Trả lời
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section " id="section-5">
+    <div class="chapter-nav text-light">
+      <ul>
+        <li>
+          <a href="/">
+            <i class="fas fa-home mr-2"></i> Trang chủ
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-exclamation-circle mr-2"></i> Báo lỗi
+          </a>
+        </li>
+        <li class="nav">
+          <i class="fas fa-2x  fa-caret-left mr-4"></i>
+          <select class="form-control">
+            <% manga.chapters.forEach((chapter,index) => { %>
+            <option value="chapter-<%= chapter.chapterNumber%>">
+              <%= chapter.chapterNumber%>
+            </option>
+            <%}); %>
+          </select>
+          <i class="fas fa-2x fa-caret-right ml-4"></i>
+        </li>
+        <li>
+          <span>
+            <i class="fas fa-lightbulb"></i> Bật đèn
+          </span>
+        </li>
+        <li>
+          <span>
+            <i class="fas fa-heart"></i> Theo dõi
+          </span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+<!-- CDN script Facebook for DEV -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=929579514428909&autoLogAppEvents=1" nonce="OSNlapej"></script>
+
+<!-- CDN script Emoji -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+<%- include("partials/script") %>
+<script>
+  // const btnShowMore = document.querySelector(".show-more");
+  // const textDesc = document.querySelector(".manga-info__desc p");
+
+  // let flag = false;
+  // btnShowMore.onclick = function() {
+  //   if (flag === false) {
+  //     btnShowMore.textContent = "Show Less";
+  //     textDesc.classList.remove("truncate");
+  //     flag = true
+  //   } else {
+  //     btnShowMore.textContent = "Show More";
+  //     textDesc.classList.add("truncate");
+  //     flag = false
+  //   }
+  // }
+</script>
+<script>
+  // $("#content").emojioneArea({
+  //   pickerPosition: "bottom",
+  // })
+
+  $('select').on('change', function(e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    alert(valueSelected)
+    window.location = valueSelected
+  });
+</script>
+
+</html>

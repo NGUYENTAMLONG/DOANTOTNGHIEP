@@ -1,0 +1,103 @@
+@import "variables.scss";
+
+body {
+  background-color: #343a40;
+}
+
+#section-2 {
+  text-align: center;
+}
+#section-3 {
+  margin-bottom: 20px;
+  .form-group {
+    input {
+      width: 45%;
+    }
+  }
+  .myComment {
+    position: relative;
+    .fa-grin {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+    }
+  }
+}
+#section-4 {
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  .comment-zone {
+    .comment {
+      margin: 20px 0px;
+      .comment__avatar {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+      }
+      .comment__detail {
+        width: 100%;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: $color-6;
+        .comment__whose {
+          span {
+            padding: 3px;
+            border: $color-3 solid 1px;
+            color: $color-3;
+            border-radius: 4px;
+            font-size: 13px;
+          }
+        }
+        .like-comment,
+        .response-comment {
+          cursor: pointer;
+          color: $color-2;
+        }
+      }
+    }
+  }
+}
+#section-5 {
+  width: 100%;
+  .chapter-nav {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: $color-2;
+    ul {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      li {
+        line-height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        a {
+          text-decoration: none;
+          color: white;
+        }
+        span {
+          cursor: pointer;
+        }
+      }
+      .nav {
+        width: 450px;
+        // margin: 0px 30px;
+        i {
+          cursor: pointer;
+        }
+        select {
+          line-height: 100%;
+          width: 300px;
+        }
+      }
+    }
+  }
+}

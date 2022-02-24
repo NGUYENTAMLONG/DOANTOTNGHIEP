@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>HOME</title>
+  <%- include("partials/link") %>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <section class="section container" id="section-1">
+    <%- include('partials/slide',{slides:slides}) %>
+  </section>
+  <section class="section container" id="section-2">
+    <h3><i class="fas fa-hourglass-half"></i> Lịch ra truyện ngày <%= new Date().getDate()   %>/<%= new Date().getMonth() + 1 %>/<%= new Date().getFullYear() %>
+    </h3>
+    <div class="timeline">
+      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
+      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
+      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
+      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
+    </div>
+  </section>
+  <section class="section container" id="section-3">
+    <h3><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
+    <div class="row">
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+    </div>
+  </section>
+  <section class="section container" id="section-4">
+    <h3 style="color:rgb(54, 211, 54)"><i class="fas fa-venus-mars"></i> Truyện tổng hợp</h3>
+    <div class="row">
+      <% mangas.forEach(function(manga){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+    </div>
+  </section>
+  <section class="section container" id="section-5">
+    <h3 style="color:#3088F3"><i class="fas fa-mars"></i> Truyện con trai</h3>
+    <div class="row">
+      <% mangaForMale.forEach(function(manga){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+    </div>
+  </section>
+  <section class="section container mb-4" id="section-6">
+    <h3 style="color: #fa1c49"><i class="fas fa-venus"></i> Truyện con gái</h3>
+    <div class="row">
+      <% mangaForFemale.forEach(function(manga){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+    </div>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+<script>
+</script>
+
+</html>

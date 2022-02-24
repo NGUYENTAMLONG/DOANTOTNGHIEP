@@ -1,0 +1,76 @@
+body {
+  background-color: #343a40; }
+
+#section-2 {
+  text-align: center; }
+
+#section-3 {
+  margin-bottom: 20px; }
+  #section-3 .form-group input {
+    width: 45%; }
+  #section-3 .myComment {
+    position: relative; }
+    #section-3 .myComment .fa-grin {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer; }
+
+#section-4 {
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px; }
+  #section-4 .comment-zone .comment {
+    margin: 20px 0px; }
+    #section-4 .comment-zone .comment .comment__avatar {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin-right: 10px; }
+    #section-4 .comment-zone .comment .comment__detail {
+      width: 100%;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #ebebeb; }
+      #section-4 .comment-zone .comment .comment__detail .comment__whose span {
+        padding: 3px;
+        border: #007bff solid 1px;
+        color: #007bff;
+        border-radius: 4px;
+        font-size: 13px; }
+      #section-4 .comment-zone .comment .comment__detail .like-comment,
+      #section-4 .comment-zone .comment .comment__detail .response-comment {
+        cursor: pointer;
+        color: #be151b; }
+
+#section-5 {
+  width: 100%; }
+  #section-5 .chapter-nav {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #be151b; }
+    #section-5 .chapter-nav ul {
+      display: flex;
+      justify-content: space-around;
+      list-style: none; }
+      #section-5 .chapter-nav ul li {
+        line-height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px; }
+        #section-5 .chapter-nav ul li a {
+          text-decoration: none;
+          color: white; }
+        #section-5 .chapter-nav ul li span {
+          cursor: pointer; }
+      #section-5 .chapter-nav ul .nav {
+        width: 450px; }
+        #section-5 .chapter-nav ul .nav i {
+          cursor: pointer; }
+        #section-5 .chapter-nav ul .nav select {
+          line-height: 100%;
+          width: 300px; }

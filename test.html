@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="file" multiple id="gallery-photo-add">
+  <div class="gallery"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  // Multiple images preview in browser
+  var imagesPreview = function(input, placeToInsertImagePreview) {
+
+    if (input.files) {
+      var filesAmount = input.files.length;
+      for (i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+        }
+        reader.readAsDataURL(input.files[i]);
+      }
+    }
+
+  };
+
+  $('#gallery-photo-add').on('change', function() {
+    imagesPreview(this, 'div.gallery');
+  });
+</script>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <form id='post-form' class='post-form' method='post' enctype="multipart/form-data">
+    <input id='files' type='file' multiple />
+    <output id='result' />
+    <input type="submit">
+  </form>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+  //Check File API support
+
+  if (window.File && window.FileList && window.FileReader) {
+    var filesInput = document.getElementById("files");
+    filesInput.addEventListener("change", function(event) {
+      var files = event.target.files; //FileList object
+      var output = document.getElementById("result");
+      console.log("files:", files)
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i]; //Only pics 
+
+        if (!file.type.match('image')) continue;
+        var picReader = new FileReader();
+        picReader.addEventListener("load", function(event) {
+          var picFile = event.target;
+          var div = document.createElement("div");
+          div.innerHTML = "<img src='" + picFile.result + "'" + "title='" + picFile.name + "'/>";
+          output.insertBefore(div, null);
+        }); //Read the image 
+        picReader.readAsDataURL(file);
+      }
+    });
+  } else {
+    console.log("Your browser does not support File API");
+  }
+</script>
+
+</html> -->

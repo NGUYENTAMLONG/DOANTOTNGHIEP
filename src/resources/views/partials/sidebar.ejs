@@ -1,0 +1,112 @@
+    <aside class="side-bar-wrap">
+      <nav class="side-bar">
+        <div class="logo-area">
+          <!-- <img class="min" src="/manage/admin_hrm/avatar/<%= admin.avatar%>" alt="logo"> -->
+          <% if (admin.avatar !== "avatar.png"){%><img class="min avatar" src="/manage/admin_hrm/avatar/<%= admin.avatar%>" alt="logo" /> <% }else{%>
+          <img class="min avatar" src="/image/avatar.png" alt="logo" />
+          <%} %>
+          <div class="show">
+            <!-- <img src="/manage/admin_hrm/avatar/<%= admin.avatar%>" alt="logo"> -->
+            <% if (admin.avatar !== "avatar.png"){%><img class="max avatar" src="/manage/admin_hrm/avatar/<%= admin.avatar%>" alt="logo" /> <% }else{%>
+            <img class="max avatar" src="/image/avatar.png" alt="logo" />
+            <%} %>
+            <p><%= admin.account %><br> <button class="btn btn-warning p-1 d-block float-right" style="font-size: 10px;">Đăng xuất</button></p>
+
+          </div>
+        </div>
+        </div>
+        <ul>
+          <h4 class="for">Admin</h4>
+          <li id="adminList" class="active">
+            <a href="/manage/admin_hrm">
+              <i class="fas fa-clipboard-list"></i>
+              <span class="title">List</span>
+            </a>
+          </li>
+          <li id="create_admin">
+            <a href="/manage/admin_hrm/create_admin">
+              <i class="fas fa-user-plus"></i>
+              <span class="title">Create</span>
+            </a>
+          </li>
+          <li id="edit_admin">
+            <a href="/manage/admin_hrm/edit_admin">
+              <i class="fas fa-user-edit"></i>
+              <span class="title">Edit</span>
+            </a>
+          </li>
+          <li id="delete_admin">
+            <a href="/manage/admin_hrm/delete_admin">
+              <i class="fas fa-user-times"></i>
+              <span class="title">Delete</span>
+            </a>
+          </li>
+          <h4 class="for">User</h4>
+          <li id="userList">
+            <a href="/manage/admin_hrm/user">
+              <i class="fa-solid fa-address-book"></i>
+              <span class="title">List</span>
+            </a>
+          </li>
+          <li id="create_user">
+            <a href="/manage/admin_hrm/user/create">
+              <i class="fa-solid fa-plus"></i>
+              <span class="title">Create</span>
+            </a>
+          </li>
+          <li id="edit_user">
+            <a href="#">
+              <i class="fa-solid fa-pen-fancy"></i>
+              <span class="title">Edit</span>
+            </a>
+          </li>
+          <li id="delete_user">
+            <a href="/manage/admin_hrm/user/delete">
+              <i class="fa-solid fa-minus"></i>
+              <span class="title">Delete</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <script>
+      // *********
+      //   const initNavBar = () => {
+      //     const menusEl = document.querySelectorAll('.side-bar ul li')
+      //     menusEl.forEach(menu => menu.addEventListener('click', () => {
+      //       const menuActiveEl = document.querySelector('.side-bar ul li.active')
+      //       menuActiveEl.classList.remove('active')
+      //       menu.classList.add('active')
+      //     }))
+      //   }
+      //   initNavBar()
+      //*******
+      function changeActive(id) {
+        const menuActiveEl = document.querySelector('.side-bar ul li.active');
+        menuActiveEl.classList.remove('active')
+        document.getElementById(id).classList.add('active')
+      }
+      switch (window.location.pathname) {
+        case "/manage/admin_hrm/create_admin":
+          changeActive("create_admin")
+          break;
+        case "/manage/admin_hrm/edit_admin":
+          changeActive("edit_admin")
+          break;
+        case "/manage/admin_hrm/delete_admin":
+          changeActive("delete_admin")
+          break;
+        case "/manage/admin_hrm/user":
+          changeActive("userList")
+          break;
+        case "/manage/admin_hrm/user/create":
+          changeActive("create_user")
+          break;
+        case "/manage/admin_hrm/user/delete":
+          changeActive("delete_user")
+          break;
+        default:
+          break;
+      }
+    </script>

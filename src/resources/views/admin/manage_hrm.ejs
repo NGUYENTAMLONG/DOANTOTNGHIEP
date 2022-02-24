@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin HRM</title>
+  <link rel="stylesheet" href="/css/manage_hrm.css">
+  <link rel="stylesheet" href="/css/sidebar_hrm.css">
+
+  <%- include("../partials/link") %>
+  <!-- {{!-- Link fontawesome 5 --}} -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <%- include("../partials/sidebar",{admin}) %>
+  <div class="container">
+    <h2 style="margin-left: 100px;"><i class="fa-solid fa-list"></i> Danh sách tài khoản quản trị viên</h2>
+    <table class="table table-dark table-hover table-strippe" style="margin-left: 100px;">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">STT</th>
+          <th scope="col">Admin</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+          <th scope="col" colspan="2">Avatar</th>
+          <th scope="col" class="text-center">Edit</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <% adminList.forEach(function(admin,index){ %>
+        <tr>
+          <th scope="row" class="text-center"><%= index + 1%></th>
+          <td><%= admin.account %></td>
+          <td><%= admin.email%></td>
+          <td> <% if (admin.role =="hrm_admin"){%><span class="badge badge-pill badge-primary">Quản trị nhân lực / hrm_admin</span> <%}else { %><span class="badge badge-pill badge-warning">Quản trị nội dung / manga_admin</span><% } %> </td>
+          <td> <%= admin.avatar%></td>
+          <td>
+            <% if (admin.avatar !== "avatar.png"){%><img class="avatar" src="/manage/admin_hrm/avatar/<%= admin.avatar%>" /> <% }else{%>
+            <img class="avatar" src="/image/avatar.png" />
+            <%} %>
+          </td>
+          <td class=" text-center">
+            <button class="btn btn-primary">Sửa</button>
+            <button class="btn btn-danger">Xóa</button>
+
+          </td>
+        </tr>
+        <% }); %>
+
+      </tbody>
+    </table>
+  </div>
+
+</body>
+<%- include("../partials/script") %>
+<script>
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+</script>
+
+</html>
