@@ -4,27 +4,29 @@
 <body>
   <div class="box-slide d-flex">
     <% slides.forEach(function(slide,index){ %>
+    <% if (slide.active === true) {%>
     <div class="slide <% if ( index=== 2) { %> active <%}%>" style="
-          background-image: url('<%= slide.image %>');
-        ">
+              background-image: url('<%= slide.image %>');
+            ">
       <div class="slide__info">
-        <h3><%= slide.name %>
-          <p class="slide__author">Tác giả: <%= slide.author %></p>
+        <h3><%= slide.manga.name %>
+          <p class="slide__author">Tác giả: <%= slide.manga.author %></p>
         </h3>
-        <span>Chapter: <b><%= slide.chapter %></b></span>
+        <span>Chapter: <b><%= slide.manga.chapters[0].chapterNumber %></b> - <b><%= slide.manga.chapters[0].chapterName %></b> </span>
         <p><b>Thể loại: </b>
-          <% slide.type.forEach(function(type){ %>
+          <% slide.manga.type.forEach(function(type){ %>
           <a href="#" class="slide__types"><%= type %></a>
           <% }) %>
         </p>
         <p class="slide__desc">
-          <%= slide.desc %>
+          <%= slide.manga.description %>
         </p>
         <div class="text-center">
-          <a href="#" class="btn btn-success">Đọc ngay</a>
+          <a href="/detail/<%= slide.manga.slug%>" class="btn btn-success">Đọc ngay</a>
         </div>
       </div>
     </div>
+    <%} %>
     <% }) %>
   </div>
 </body>

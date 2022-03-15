@@ -12,6 +12,13 @@
 #section-2 a {
   text-decoration: none; }
 
+.section a,
+#section-3 a,
+#section-4 a,
+#section-5 a,
+#section-6 a {
+  text-decoration: none; }
+
 .section .manga-card,
 #section-3 .manga-card,
 #section-4 .manga-card,
@@ -22,6 +29,18 @@
   width: 100%;
   border-radius: 10px;
   box-shadow: 3px 3px 6px 3px #888888; }
+  .section .manga-card .manga-tag__period,
+  #section-3 .manga-card .manga-tag__period,
+  #section-4 .manga-card .manga-tag__period,
+  #section-5 .manga-card .manga-tag__period,
+  #section-6 .manga-card .manga-tag__period {
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    padding: 2px 3px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white; }
   .section .manga-card .manga-tag__hot,
   #section-3 .manga-card .manga-tag__hot,
   #section-4 .manga-card .manga-tag__hot,

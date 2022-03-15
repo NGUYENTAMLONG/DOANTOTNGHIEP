@@ -29,11 +29,106 @@
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0 form-seach">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control mr-sm-2" type="search" placeholder="Tìm Manga ..." aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
         </form>
-        <button class="btn btn-primary my-2 my-sm-0" type="submit">Đăng nhập</button>
-        <button class="btn btn-warning ml-2 my-sm-0" type="submit">Đăng ký</button>
+        <!-- ******** REGISTER *************** -->
+
+        <button class="btn btn-warning mr-2 my-sm-0" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
+
+        <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body bg-dark text-white">
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control" id="username" placeholder="Enter Username">
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="Enter Email">
+                </div>
+                <div class="form-group">
+                  <label for="otp">OTP</label>
+                  <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+
+                </div>
+                <div class="d-flex solution">
+                  <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
+                </div>
+                <div class="text-center">
+                  <img src="/image/logo.png" width="20%" alt="">
+                </div>
+              </div>
+              <hr>
+              <div class="modal-footer d-flex justify-content-between">
+                <div class="oauth2">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-google-plus"></i>
+                </div>
+                <div class="handle">
+                  <button type="button" class="btn btn-primary loginBtn">Đăng ký</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ******** LOGIN *************** -->
+        <button class="btn btn-primary my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
+        <!-- Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body bg-dark text-white">
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control" id="username" placeholder="Enter Username">
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                </div>
+                <div class="d-flex solution">
+                  <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
+                  <a href="#">Quên mật khẩu ?</a>
+                </div>
+                <div class="text-center">
+                  <img src="/image/logo.png" width="20%" alt="">
+                </div>
+              </div>
+              <hr>
+              <div class="modal-footer d-flex justify-content-between">
+                <div class="oauth2">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-google-plus"></i>
+                </div>
+                <div class="handle">
+                  <button type="button" class="btn btn-primary loginBtn">Đăng nhập</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </nav>
@@ -76,18 +171,18 @@
           <li><a href="#">Top Tuần</a></li>
           <li> <a href="#">Top Tháng</a></li>
           <li> <a href="#">Yêu thích</a></li>
-          <li> <a href="#">Mới cập nhật</a></li>
+          <li> <a href="/popular/just-updated">Mới cập nhật</a></li>
           <li> <a href="#">Truyện mới</a></li>
           <li> <a href="#">Truyện full</a></li>
           <li> <a href="#">Truyện trường kỳ</a></li>
           <li> <a href="#">Ít đọc</a></li>
         </ul>
       </li>
-      <li> <a href="#">
+      <li> <a href="/popular/female">
           Con Gái
         </a>
       </li>
-      <li> <a href="#">
+      <li> <a href="/popular/male">
           Con Trai
         </a>
       </li>
@@ -95,7 +190,7 @@
           Thảo Luận
         </a>
       </li>
-      <li> <a href="#">
+      <li> <a href="https://www.facebook.com/truyentranh" target="_blank">
           Fanpage
         </a>
       </li>

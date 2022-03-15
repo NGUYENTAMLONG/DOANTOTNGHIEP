@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>Category</title>
+  <%- include("partials/link") %>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <h1><i class="fas fa-bookmark"></i> <%= title %> </h1>
+  <section class="section container" id="section-1">
+    <div class="row">
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
+      <% }); %>
+    </div>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+
+</html>

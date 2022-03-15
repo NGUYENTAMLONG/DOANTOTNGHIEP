@@ -1,27 +1,17 @@
 const mongoose = require("mongoose");
-const slug = require("mongoose-slug-updater");
-mongoose.plugin(slug);
+const Manga = require("../models/Manga");
 const SlideSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
-    author: { type: String, required: true },
     image: {
       type: String,
       required: true,
     },
-    chapter: {
+    manga: {
+      // type: mongoose.Schema.Types.ObjectId,
       type: String,
-      required: true,
+      ref: Manga,
     },
-    desc: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: Array,
-      required: true,
-    },
-    move: { type: String, slug: "name", unique: true },
+    active: { type: Boolean, default: false },
   },
   {
     timestamps: true,

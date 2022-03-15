@@ -24,8 +24,13 @@
         <li class="breadcrumb-item active" aria-current="page">chapter-<%= chapter.chapterNumber%></li>
       </ol>
     </nav>
-    <button class="btn btn-success">Chương trước</button>
-    <button class="btn btn-primary">Chương sau</button>
+    <p class="text-light">
+      <button class="btn btn-success">Chương trước</button>
+      <button class="btn btn-primary">Chương sau</button>
+      <span class="float-right">
+        Đăng lúc: <span class="badge badge-primary"><%= chapter.chapterUpdate%></span>
+      </span>
+    </p>
     <div class="text-light text-center">
       <b>Chương <%= chapter.chapterNumber%> - Tựa đề:</b>
       <h2>

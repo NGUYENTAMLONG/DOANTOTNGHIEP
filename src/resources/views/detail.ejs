@@ -67,7 +67,7 @@
               <%= manga.description %>
             </p>
             <div class="text-center">
-              <button class="show-more btn btn-primary">Show More</button>
+              <button class="show-more btn btn-primary"> Show More <i class="fas fa-angle-down"></i></button>
             </div>
           </div>
         </div>
@@ -96,9 +96,9 @@
                 Chương <%= chapter.chapterNumber%>
               </a> </td>
             <td><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
-                Chương <%= chapter.chapterName%>
+                <%= chapter.chapterName%>
               </a></td>
-            <td class="text-right">16/0/2000</td>
+            <td class="text-right"> <%= chapter.chapterUpdate%></td>
           </tr>
           <% }) %>
         </tbody>
@@ -200,11 +200,11 @@
   let flag = false;
   btnShowMore.onclick = function() {
     if (flag === false) {
-      btnShowMore.textContent = "Show Less";
+      btnShowMore.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
       textDesc.classList.remove("truncate");
       flag = true
     } else {
-      btnShowMore.textContent = "Show More";
+      btnShowMore.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
       textDesc.classList.add("truncate");
       flag = false
     }

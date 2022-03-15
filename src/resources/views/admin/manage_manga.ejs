@@ -16,9 +16,29 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
   </nav>
-  <div class="d-flex">
-    <h2>Danh sách manga</h2>
-    <input class="form-control mt-2 mb-2" style="width: 400px;margin-left: 100px;" id="myInput" type="text" placeholder="Tìm manga ...">
+  <div class="container mt-2">
+    <div class="row d-flex justify-content-center">
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <h2>Danh sách manga</h2>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex align-items-center">
+        <i class="fas fa-2x fa-search mr-2 text-info"></i> <input class="form-control" id="myInput" type="text" placeholder="Tìm manga ...">
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
+        <a href="slideDashboard" class="btn btn-dark">Slide Management <i class="fab fa-2x fa-slideshare"></i></a>
+        <a href="manga/publish" class="btn btn-success ml-2">Đăng Manga <i class="fas fa-2x fa-book-medical"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <p>
+        <b>Số lượng: </b> <span class="badge badge-primary mr-3"><%= mangas.length %> </span>
+        <b><i class="fas fa-mars text-primary"></i></b> <span class="badge badge-primary"><%= mangas.filter((manga)=>manga.serve === "male").length %> </span>
+        <b><i class="fas fa-venus text-danger"></i></b> <span class="badge badge-danger"><%= mangas.filter((manga)=>manga.serve === "female").length %> </span>
+        <b><i class="fas fa-venus-mars text-success"></i></b> <span class="badge badge-success"><%= mangas.filter((manga)=>manga.serve === "all").length %> </span>
+      </p>
+    </div>
   </div>
   <table class="table table-striped table-bordered table-sm " width="100%">
     <thead>
@@ -43,7 +63,7 @@
     <tbody id="myTable">
       <% mangas.forEach((manga,index) => { %>
       <tr class="manga-row">
-        <th scope="row" class="fit"><%= index + 1%> </th>
+        <th scope="row" class="fit"><%= index + 1%></th>
         <td scope="col">
           <img src="<%= manga.image %>" class="manga-image" width="100%" alt="">
           <!-- The Modal -->
@@ -99,23 +119,51 @@
             <i class="fas fa-comments"></i> <%= manga.statistical.comments %>
           </p>
         </td>
-        <td scope="col"><a href="#">Chi tiết</a></td>
+        <td scope="col" class="text-center">
+          <button type="button" class="btn btn-info btn-sm launch-modal" onclick='showChapters(this)' data-toggle="modal" data-target="#modalChapters" data-id="<%= manga._id%>" data-slug="<%= manga.slug%>">
+            Chi tiết
+          </button>
+          <div class="modal fade" id="modalChapters" tabindex="-1" role="dialog" aria-labelledby="modalChaptersLabel" aria-hidden="true">
+            <div class="modal-dialog mw-100 w-75" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalChaptersLabel">Các chương hiện tại
+                  </h5>
+                  <p class="ml-2" style="margin-top: 20px;">Tổng : <span class="badge badge-primary chapterSum"></span>
+                  </p>
+                  <input class="form-control mt-2 mb-2" style="width: 400px;margin-left: 100px;" id="myInput-Chapter" type="text" placeholder="Tìm chương ...">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="Close()" style="outline: none;">
+                    <span class="close-btn text-dark">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+
+                  <span></span>
+                  <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal" onclick="Close()">Close</button>
+                  <button type="button" class="btn btn-primary btn-back" hidden onclick="Back()">Back</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
         <td scope="col" class="text-center">
           <% if ( manga.fanmade === true ) { %><span class='badge badge-success'>true</span> <% }else { %> <span class='badge badge-danger'>false</span> <%}%>
           </td>
           <td scope="col"><%= manga.createdAt %></td>
         <td scope="col" class="text-center">
-          <button class="btn btn-primary">Sửa</button>
-          <button class="btn btn-danger mt-2">Xóa</button>
-          <a href="admin_manga/<%= manga.slug  %>/add_chapter" class="btn btn-warning mt-2">Thêm</a>
-
+          <a href="manga/<%= manga.slug  %>/update_manga" class="btn btn-primary ">Sửa</a>
+          <button class="btn btn-danger mt-2" data-id="<%= manga._id %>" onclick="deleteManga(this)">Xóa</button>
+          <a href="manga/<%= manga.slug  %>/add_chapter" class="btn btn-warning mt-2">Thêm</a>
         </td>
       </tr>
       <%}); %>
     </tbody>
   </table>
-
-
 </body>
 <%- include("../partials/script") %>
 <script>
@@ -137,12 +185,107 @@
       modal.style.display = "block";
       modalImg.src = this.src;
     }
-  })
+  });
 
 
   const span = document.getElementsByClassName("close-btn")[0];
   span.onclick = function() {
     modal.style.display = "none";
+  };
+</script>
+<script>
+  function showChapters(btn) {
+    const id = btn.dataset.id;
+    const slug = btn.dataset.slug;
+
+    fetch("/manage/admin_manga/manga/" + id).then(res => res.json()).then(data => {
+      document.querySelector(".chapterSum").innerHTML = data.chapters.length
+      let htmls = data.chapters.map((chapter, index) => {
+        return `<tr>
+           <th scope="row" class="text-center">
+             ${ index + 1}
+           </th>
+           <td class="text-center col-chapterNumber"> <span class="badge badge-primary ">${ chapter.chapterNumber}</span></td>
+           <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="${chapter.chapterName}" >${ chapter.chapterName}</td>
+           <td class="text-center">${ chapter.chapterUpdate}</td>
+           <td class="text-right d-flex justify-content-center"> 
+            <button type="button" class="btn btn-warning mr-3" data-id="${id}" data-location="${index}" onclick="Review(this)">Xem</button>
+            <button type="button" class="btn btn-primary mr-3">Sửa</button>
+            <button type="button" class="btn btn-danger" data-slug="${data.slug}" data-chapter="${chapter.chapterNumber}" onclick="deleteChapter(this)">Xóa</button></td>
+         </tr>`
+      })
+      document.querySelectorAll(".modal-body")[0].innerHTML = `<table class="table table-hover bg-dark text-light  tableChapters">
+        <thead class="bg-warning text-dark ">
+          <tr>
+            <th scope="col" class="text-center">STT</th>
+            <th scope="col" class="text-center col-chapterNumber" style="width:100px">Chương</th>
+            <th scope="col" class="text-center">Tên</th>
+            <th scope="col" class="text-center">Ngày đăng</th>
+            <th scope="col">Tác vụ</th>
+          </tr>
+        </thead>
+        <tbody id="myTable-Chapter">
+          ${htmls.join("")}
+        </tbody>
+      </table>
+      `
+      document.querySelector(".modal-footer span").innerHTML = `<a type="button" href="manga/${slug}/add_chapter" class="btn btn-success float-left btn-create-chapter">Đăng mới</a>
+      `
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+      $(document).ready(function() {
+        $("#myInput-Chapter").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#myTable-Chapter tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+    }).catch(error => console.log(error))
+
+  }
+</script>
+<script src="/js/manage_maga.js">
+</script>
+<script>
+  function deleteChapter(btn) {
+    const slug = btn.dataset.slug;
+    const chapter = btn.dataset.chapter;
+
+    if (confirm("Bạn có chắc chắn muốn xóa chương này không ?") == true) {
+      fetch("/manage/admin_manga/manga/" + slug + '/deleteChapter/' + chapter, {
+          method: 'DELETE',
+        })
+        .then(res => res.json()) // or res.json()
+        .then(data => {
+          if (data.flag === true) {
+            btn.parentElement.parentElement.remove();
+          } else {
+            alert(data.result)
+          }
+        }).catch(error => console.log(error))
+    } else {
+      return
+    }
+  }
+  const deleteManga = (btn) => {
+    const idManga = btn.dataset.id;
+    if (confirm("Bạn có chắc chắn muốn xóa manga này không ?") == true) {
+      fetch("/manage/admin_manga/manga/" + idManga, {
+          method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.flag === true) {
+            btn.parentElement.parentElement.remove();
+          } else {
+            alert(data.result)
+          }
+        }).catch(error => console.log(error))
+    } else {
+      return
+    }
   }
 </script>
 

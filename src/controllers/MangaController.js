@@ -20,7 +20,7 @@ class mangaController {
   }
   async findAllSlides(req, res, next) {
     try {
-      const listSlide = await Slide.find();
+      const listSlide = await Slide.find().populate("manga");
       if (!listSlide) {
         res
           .status(403)
@@ -33,18 +33,18 @@ class mangaController {
     }
   }
   async createSlide(req, res, next) {
-    const { name, author, image, chapter, desc, type } = req.body;
-    // res.json({ name,author, image, chapter, desc, type });
+    const { image, manga } = req.body;
+    // res.json(req.body);
+    const slide = new Slide({
+      image: image,
+      manga: manga,
+    });
     try {
-      const response = await Slide.create({
-        name,
-        author,
-        image,
-        chapter,
-        desc,
-        type,
-      });
-      res.status(200).json({ status: "ok", createdSlide: response });
+      const createdSlide = await slide.save();
+      if (!createdSlide) {
+        res.json(error);
+      }
+      res.status(200).json({ status: "ok", createdSlide: createdSlide });
     } catch (error) {
       console.log(error);
       res.status(500).json({ status: "error", error: error });
@@ -77,6 +77,25 @@ class mangaController {
       res.status(500).json({ status: "error", error: error });
     }
   }
+  async switchSlide(req, res, next) {
+    try {
+      const slide = await Slide.findById(req.params.id);
+      if (!slide) {
+        res.json({
+          result: "ERROR",
+          message: "Something went wrong while updating !!!",
+        });
+      }
+      let toggle = slide.active;
+      const slideUpdated = await Slide.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: { active: !toggle } }
+      );
+      res.json(slide);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async deleteSlide(req, res, next) {
     const idSlide = req.params.id;
     try {
@@ -98,7 +117,7 @@ class mangaController {
   async findSlideById(req, res, next) {
     const idSlide = req.params.id;
     try {
-      const slide = await Slide.findById(idSlide);
+      const slide = await Slide.findById(idSlide).populate("manga");
       if (!slide) {
         res.status(403).json({
           status: "error",

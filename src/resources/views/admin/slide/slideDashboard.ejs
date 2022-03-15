@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Management</title>
+
+  <link rel="stylesheet" href="/css/fullscreenImg.css">
+  <link rel="stylesheet" href="/css/slideDashboard.css">
+  <%- include("../../partials/link") %>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <div class="container mt-2">
+    <div class="row d-flex justify-content-center">
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <h2>Slide</h2>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex align-items-center">
+        <i class="fas fa-2x fa-search mr-2 text-info"></i><input class="form-control" id="myInput" type="text" placeholder="Tìm slide ...">
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
+        <a href="manga" class="btn btn-warning">Manga Management <i class="fas fa-2x fa-book"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <p>Tổng : <span class="badge badge-primary slideSum"><%= slides.length %> </span>
+      <p>Số slide hiển thị : <span class="badge badge-success"><%= slides.filter((slide)=>slide.active === true).length %> </span>
+      <p>Số slide ẩn: <span class="badge badge-warning"><%= slides.length - slides.filter((slide)=>slide.active === true).length %>%> </span>
+    </div>
+  </div>
+  <section>
+    <table class="table table-striped table-bordered table-sm " width="100%">
+      <thead>
+        <tr class="text-center">
+          <th scope="col">STT</th>
+          <th scope="col">Ảnh</th>
+          <th scope="col">Tên</th>
+          <th scope="col">Tác giả</th>
+          <th scope="col">Thể loại</th>
+          <th scope="col">Chương</th>
+          <th scope="col">Mô tả</th>
+          <th scope="col">Đã tạo</th>
+          <th scope="col">Đã cập nhật</th>
+          <th scope="col">Tác vụ</th>
+          <th scope="col">Active</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        <% slides.forEach((slide,index) => { %>
+        <tr class="manga-row" id="<%= slide._id %> ">
+          <th scope="row"><%= index + 1%> </th>
+          <td scope="row">
+            <img src="<%= slide.image %>" class="slide-image" width="100%" alt="">
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+              <span class="close-btn">&times;</span>
+              <img class="modal-content" id="preview-modal" style="zoom: 2;margin-top: 30px;">
+            </div>
+          </td>
+          <td scope="row">
+            <%= slide.manga.name %>
+          </td>
+          <td scope="row">
+            <%= slide.manga.author %>
+          </td>
+          <td scope="row">
+            <% slide.manga.type.forEach((type,index) => { %><span class="type bg-primary text-light "><%= type %></span>
+            <%}); %>
+          </td>
+          <td scope="row">
+            <%= slide.manga.chapters[0].chapterNumber %>
+          </td>
+          <td scope="row" class="desc_td">
+            <div class="desc">
+              <%= slide.manga.description %>
+            </div>
+          </td>
+          <td scope="row">
+            <%= slide.createdAt %>
+          </td>
+          <td scope="row">
+            <%= slide.updatedAt %>
+          </td>
+          <td scope="row">
+            <a href="#" class="btn btn-primary">Sửa</a>
+            <button class="btn btn-danger mt-2">Xóa</button>
+          </td>
+          <td scope="row">
+            <!-- Rounded switch -->
+            <label class="switch mt-2">
+              <input type="checkbox" class="toggleBtn" data-id="<%= slide._id%>" <% if(slide.active === true) { %> checked <%} %> />
+              <span class="slider round"></span>
+            </label>
+          </td>
+
+        </tr>
+        <%}); %>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+<%- include("../../partials/script") %>
+<script>
+  $(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+<script>
+  var modal = document.getElementById("myModal");
+
+  var modalImg = document.getElementById("preview-modal");
+  document.querySelectorAll(".slide-image").forEach((item, index) => {
+    item.onclick = function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+  });
+
+
+  const span = document.getElementsByClassName("close-btn")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+  };
+</script>
+<script>
+  document.querySelectorAll(".toggleBtn").forEach((btn, index) => {
+    btn.onchange = function(e) {
+      const idSlide = e.target.dataset.id;
+      fetch("/manage/admin_manga/slide/switch/" + idSlide, {
+          method: 'PUT', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      reloadStatistical()
+
+    }
+  })
+
+  function reloadStatistical() {
+    const array = [...document.querySelectorAll(".toggleBtn")];
+    const checkedCount = array.filter((item, index) => item.checked === true).length
+    document.querySelector(".statistical .badge-success").innerHTML = checkedCount;
+    document.querySelector(".statistical .badge-warning").innerHTML = array.length - checkedCount;
+  }
+</script>
+
+</html>

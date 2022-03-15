@@ -27,41 +27,67 @@
     </div>
   </section>
   <section class="section container" id="section-3">
-    <h3><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
+    <a href="/popular/just-updated">
+      <h3 class="text-info"><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
+    </a>
     <div class="row">
       <% mangas.forEach(function(manga,index){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
+    <div class="text-center m-4">
+      <a href="/popular/just-updated" class="btn btn-danger">Xem thêm nhiều truyện</a>
+    </div>
   </section>
   <section class="section container" id="section-4">
-    <h3 style="color:rgb(54, 211, 54)"><i class="fas fa-venus-mars"></i> Truyện tổng hợp</h3>
+    <a href="/popular/all">
+      <h3 style="color:rgb(54, 211, 54)"><i class="fas fa-venus-mars"></i> Truyện tổng hợp</h3>
+    </a>
     <div class="row">
       <% mangas.forEach(function(manga){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
+    <div class="text-center m-4">
+      <a href="/popular/all" class="btn btn-danger">Xem thêm nhiều truyện</a>
+    </div>
   </section>
   <section class="section container" id="section-5">
-    <h3 style="color:#3088F3"><i class="fas fa-mars"></i> Truyện con trai</h3>
+    <a href="/popular/male">
+      <h3 style="color:#3088F3"><i class="fas fa-mars"></i> Truyện con trai</h3>
+    </a>
     <div class="row">
       <% mangaForMale.forEach(function(manga){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
+    <div class="text-center m-4">
+      <a href="/popular/male" class="btn btn-danger">Xem thêm nhiều truyện</a>
+    </div>
   </section>
   <section class="section container mb-4" id="section-6">
-    <h3 style="color: #fa1c49"><i class="fas fa-venus"></i> Truyện con gái</h3>
+    <a href="/popular/female">
+      <h3 style="color: #fa1c49"><i class="fas fa-venus"></i> Truyện con gái</h3>
+    </a>
     <div class="row">
       <% mangaForFemale.forEach(function(manga){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
+    </div>
+    <div class="text-center m-4">
+      <a href="/popular/female" class="btn btn-danger">Xem thêm nhiều truyện</a>
     </div>
   </section>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
 <script>
+  ScrollReveal().reveal('.manga-card', {
+    // delay: 500,
+    interval: 100,
+    scale: 1.5,
+    // reset: true,
+  })
 </script>
 
 </html>

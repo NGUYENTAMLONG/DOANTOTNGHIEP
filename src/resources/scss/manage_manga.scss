@@ -11,8 +11,9 @@ table {
     flex: 1 1 auto;
     display: block;
     height: 500px;
-    // width: 120%;
+    // width: 100%;
     overflow: scroll;
+    // overflow-x: scroll;
     &::-webkit-scrollbar {
       width: 12px;
       background-color: #f5f5f5;
@@ -109,6 +110,118 @@ table {
         width: 40px;
         background-color: transparent;
       }
+    }
+  }
+}
+.modal-dialog {
+  .modal-content {
+    max-width: 1000px !important;
+  }
+  .modal-body {
+    table {
+      height: 320px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      thead {
+        tr {
+          th:nth-of-type(1) {
+            width: 50px;
+          }
+        }
+      }
+      tbody {
+        display: block;
+        // height: 300px !important;
+        // width: 120%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+          width: 12px;
+          background-color: #f5f5f5;
+          overflow: hidden;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 20px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: #555;
+        }
+        tr {
+          th:nth-of-type(1) {
+            width: 50px;
+          }
+        }
+        .col-chapterNumber {
+          width: 100px !important;
+        }
+        .col-chapterName {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+      }
+    }
+  }
+}
+/* The Modal 2 (background) */
+.modal_2 {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 200;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal_2-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.closeBtn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+@media all and (max-width: 1024px) {
+  table {
+    tbody {
+      overflow-x: scroll;
     }
   }
 }

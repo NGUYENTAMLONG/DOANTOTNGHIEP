@@ -1,0 +1,45 @@
+ <div class="col-sm-4 col-md-3 col-lg-2 p-2">
+   <div class="manga-card">
+     <% if (manga.hot === true) {
+            %>
+     <span class="manga-tag__hot">Hot</span>
+     <% } %>
+     <% if (period) {
+            %>
+     <span class="manga-tag__period"><%= period%></span>
+     <% } %>
+     <a href="/detail/<%= manga.slug %>">
+       <img class="card-img-top manga-img" src="<%= manga.image %>" alt="Card image cap" />
+     </a>
+     <div class="manga-title">
+       <a class=" manga-name" href="/detail/<%= manga.slug %>">
+         <h5><%= manga.name%></h5>
+       </a>
+       <a href="/detail/<%= manga.slug %>" class="manga-chapter">Chương 126</a>
+     </div>
+     <div class="info bg-dark text-light">
+       <h4 class="info__name"><%= manga.name%></h4>
+       <p class="info__another-name"><b>Tên khác:</b> <%= manga.anotherName%></p>
+       <ul class="info__follows">
+         <li>
+           Tình trạng: <b><%= manga.status%></b>
+         </li>
+         <li>
+           Lượt xem: <b><%= manga.statistical.views%></b>
+         </li>
+         <li>
+           Bình luận: <b><%= manga.statistical.comments%></b>
+         </li>
+       </ul>
+       <div class="info__type">
+         <b>Thể loại:</b>
+         <%manga.type.forEach(function(item){ %>
+         <a href="/category/<%= item  %>"><%= item  %></a>
+         <% }); %>
+       </div>
+       <p class="info__desc">
+         <%= manga.description%>
+       </p>
+     </div>
+   </div>
+ </div>

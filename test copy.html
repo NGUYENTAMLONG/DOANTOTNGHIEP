@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* .triangle {
+      height: 0px;
+      width: 0px;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 90px solid red;
+
+    } */
+    form {
+      width: 500px;
+      height: 500px;
+      border: 2px dashed black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: tahoma;
+    }
+
+    .inputForm {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      position: relative;
+    }
+
+    .label {
+      position: absolute;
+      background-color: white;
+      height: 20px;
+      top: 5px;
+      left: 10px;
+      font-size: 23px;
+      transition: 0.5s ease-in-out;
+    }
+
+    .label.active {
+      padding: 3px 5px;
+      left: 10px;
+      top: -10px;
+      font-size: 15px;
+
+    }
+
+    #username,
+    #password {
+      padding: 10px 15px;
+      border-radius: 10px;
+      outline: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <div class="triangle">
+  </div> -->
+  <form action="#">
+    <div class="inputForm">
+      <label for="username" class="label">Username</label>
+      <input type="text" name="username" id="username">
+    </div>
+    <div class="inputForm">
+      <label for="password" class="label">password</label>
+      <input type="text" name="password" id="password">
+    </div>
+  </form>
+</body>
+<script>
+  const inputForms = document.querySelectorAll(".inputForm");
+  const labels = document.querySelectorAll(".label");
+  inputForms.forEach((element, index) => {
+    element.onmousedown = () => {
+      labels[index].classList.add("active")
+    }
+
+  });
+</script>
+
+</html>

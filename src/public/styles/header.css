@@ -14,6 +14,41 @@ header .navbar {
     header .navbar .form-seach .btn-search {
       position: absolute;
       right: 13px; }
+  header .navbar #loginModal h4,
+  header .navbar #registerModal h4 {
+    width: 100%;
+    text-align: center; }
+  header .navbar #loginModal .close,
+  header .navbar #registerModal .close {
+    outline: none; }
+    header .navbar #loginModal .close span,
+    header .navbar #registerModal .close span {
+      zoom: 2; }
+  header .navbar #loginModal .solution,
+  header .navbar #registerModal .solution {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    header .navbar #loginModal .solution a,
+    header .navbar #registerModal .solution a {
+      text-decoration: none; }
+  header .navbar #loginModal .modal-footer .oauth2 .fa-facebook,
+  header .navbar #loginModal .modal-footer .oauth2 .fa-google-plus,
+  header .navbar #registerModal .modal-footer .oauth2 .fa-facebook,
+  header .navbar #registerModal .modal-footer .oauth2 .fa-google-plus {
+    cursor: pointer;
+    font-size: 35px;
+    transition: 0.3s ease-in-out; }
+  header .navbar #loginModal .modal-footer .oauth2 .fa-facebook:hover,
+  header .navbar #registerModal .modal-footer .oauth2 .fa-facebook:hover {
+    transform: scale(1.5) rotate(13deg);
+    color: #007bff;
+    margin-right: 10px; }
+  header .navbar #loginModal .modal-footer .oauth2 .fa-google-plus:hover,
+  header .navbar #registerModal .modal-footer .oauth2 .fa-google-plus:hover {
+    transform: scale(1.5) rotate(13deg);
+    color: #c4402f;
+    margin-left: 10px; }
 
 header .category {
   height: 50px;

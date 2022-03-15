@@ -1,3 +1,4 @@
+@import "variables.scss";
 header {
   .navbar {
     width: 100%;
@@ -18,6 +19,49 @@ header {
       .btn-search {
         position: absolute;
         right: 13px;
+      }
+    }
+    #loginModal,
+    #registerModal {
+      h4 {
+        width: 100%;
+        text-align: center;
+      }
+      .close {
+        outline: none;
+        span {
+          zoom: 2;
+        }
+      }
+      .solution {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        a {
+          text-decoration: none;
+        }
+      }
+      .modal-footer {
+        .oauth2 {
+          .fa-facebook,
+          .fa-google-plus {
+            cursor: pointer;
+            font-size: 35px;
+            transition: 0.3s ease-in-out;
+          }
+          .fa-facebook:hover {
+            transform: scale(1.5) rotate(13deg);
+            color: $color-3;
+            margin-right: 10px;
+          }
+          .fa-google-plus:hover {
+            transform: scale(1.5) rotate(13deg);
+            color: $color-7;
+            margin-left: 10px;
+          }
+        }
+        .handle {
+        }
       }
     }
   }
@@ -47,7 +91,6 @@ header {
         }
       }
       .sub-menu {
-        // position: relative;
         .sub-menu_container {
           position: absolute;
           z-index: 100;

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include("../../partials/link") %>
+  <link rel="stylesheet" href="/css/updateChapter.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <h1 class="text-center m-4">Cập nhật Manga</h1>
+  <section class="container">
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <div class="manga-img">
+          <div class="zoom-image" data-image="<%= manga.image%>">
+            <img src="<%= manga.image%>" width="100%" alt="">
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn btn-primary">Đổi bìa</button>
+        </div>
+      </div>
+      <div class="col-md-8 col-lg-4">
+        <form action="#" class="mt-4">
+          <div class="input_name">
+            <label for="name">
+              <h5>Tên truyện</h5>
+            </label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= manga.name%>">
+          </div>
+          <div class="input_anotherName">
+            <label for="anotherName">
+              <h5>Tên khác</h5>
+            </label>
+            <input type="text" class="form-control" id="anotherName" name="anotherName" value="<%= manga.anotherName%>">
+          </div>
+          <div class="input_author">
+            <label for="author">
+              <h5>Tác giả</h5>
+            </label>
+            <input type="text" class="form-control" id="author" name="author" value="<%= manga.author%>">
+          </div>
+          <div class="input_status">
+            <label for="status">
+              <h5>Tình trạng</h5>
+            </label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="in-process" value="Đang tiến hành" <% if(manga.status ==="Đang tiến hành"){%> checked <% } %>>
+              <label class="form-check-label" for="in-process">
+                Đang tiến hành
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Đã hoàn thành" <% if(manga.status==="Đã hoàn thành" ){%> checked <% } %>>
+              <label class="form-check-label" for="accomplished">
+                Đã hoàn thành
+              </label>
+            </div>
+          </div>
+          <p class="mt-2"><b>Thống kê</b> :
+            <span>
+              <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
+            </span>
+            <span>
+              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
+            </span>
+            <span>
+              <i class="far fa-eye"></i> <%= manga.statistical.views %>
+            </span>
+          </p>
+
+          <% manga.type.forEach(function(type,index){ %>
+          <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
+          <% }) %>
+        </form>
+
+      </div>
+      <div class="col-md-12 col-lg-5 pt-3">
+        <div class="input_description">
+          <label for="description">
+            <h5>Nội dung</h5>
+          </label>
+          <textarea name="description" id="description" class="form-control">
+              <%= manga.description %>
+          </textarea>
+        </div>
+        <button class="btn btn-success float-right mt-3 mb-4">Cập nhật chỉnh sửa</button>
+        <div class="list-chapter mt-4">
+          <table class="table bg-dark text-light">
+            <thead class="bg-warning text-dark">
+              <tr>
+                <th scope="col" class="text-center">STT</th>
+                <th scope="col" class="text-center">Chương</th>
+                <th scope="col" class="text-center">Tên</th>
+                <th scope="col" class="text-center">Ngày đăng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% manga.chapters.forEach(function(chapter,index){ %>
+              <tr>
+                <th scope="row" class="text-center">
+                  <%= index + 1%>
+                </th>
+                <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
+                <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName%></td>
+                <td class="text-right"><%= chapter.chapterUpdate%></td>
+              </tr>
+              <%})%>
+            </tbody>
+          </table>
+        </div>
+        <a href="/manage/admin_manga/<%= manga.slug  %>/add_chapter" class="btn btn-warning mt-2 float-right">Quản lí chương</a>
+      </div>
+    </div>
+  </section>
+
+</body>
+<%- include("../../partials/script") %>
+<script src="/js/zoomEffect.js"></script>
+
+<script>
+  //   const updateMangaBtn = document.querySelectorAll(".updateMangaBtn");
+  //   updateMangaBtn.forEach((btn, index) => {
+  //     btn.addEventListener("click", function(e) {
+  //       const idManga = e.target.dataset.id;
+  //       fetch('/manage/admin_manga/updateManga/' + idManga, {
+  //           method: 'PUT', // or 'PUT'
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //           // body: JSON.stringify(data),
+  //         })
+  //         .then(response => response.json())
+  //         .then(data => {
+  //           console.log(data);
+  //         })
+  //         .catch((error) => {
+  //           console.error('Error:', error);
+  //         });
+  //     })
+  //   })
+</script>
+
+</html>

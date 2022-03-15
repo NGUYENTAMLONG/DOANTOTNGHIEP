@@ -3,8 +3,8 @@ const Slide = require("../models/Slide");
 class siteController {
   home(req, res, next) {
     Promise.all([
-      Slide.find({}), //Lấy ra các slide
-      Manga.find({}), // Lấy ra tất cả các manga
+      Slide.find({}).populate("manga"), //Lấy ra các slide
+      Manga.find({}).limit(24), // Lấy ra tất cả các manga
       Manga.find({ serve: "male" }), //Lấy ra các manga dành cho nam
       Manga.find({ serve: "female" }), //Lấy ra các manga dành cho nữ
     ])
