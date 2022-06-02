@@ -17,13 +17,35 @@
     <%- include('partials/slide',{slides:slides}) %>
   </section>
   <section class="section container" id="section-2">
-    <h3><i class="fas fa-hourglass-half"></i> Lịch ra truyện ngày <%= new Date().getDate()   %>/<%= new Date().getMonth() + 1 %>/<%= new Date().getFullYear() %>
+    <h3>
+      <i class="far fa-newspaper"></i> Lịch ra truyện ngày <%= new Date().getDate()   %>/<%= new Date().getMonth() + 1 %>/<%= new Date().getFullYear() %>
     </h3>
-    <div class="timeline">
-      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
-      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
-      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
-      <p><b>10:30</b> <a href="#"> One Piece chapter 127 : last battle</a></p>
+    <div class="timeline" style="overflow-y: scroll;height: 200px;">
+      <% mangaToday.forEach(function(manga,index){  %>
+      <div class="d-flex border-bottom">
+        <p><i class="fas fa-dot-circle"></i> <b><%= manga.name %> : </b>
+        </p>
+        <div class="d-flex flex-column">
+          <% manga.chapters.reverse().forEach((chapter,index)=>{%>
+          <div class="flex ml-2">
+            [<%= chapter.chapterUpdate.split(" ")[1]%>]
+            <a href="/detail/<%= manga.slug %>">
+              Chương <%= chapter.chapterNumber %> -
+              <%= chapter.chapterName %>
+            </a>
+          </div>
+          <%}) %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <h3><i class="fas fa-hourglass-half"></i> Lịch Cập Nhật Gần Đây</h3>
+    <div class="timeline" style="overflow-y: scroll;height: 300px;">
+      <% recentlyReleasedManga.forEach(function(manga,index){  %>
+      <p><b><i class="fas fa-dot-circle"></i> <%= manga.name %> :</b> <span class="badge badge-primary text-capitalize"><%= manga.period %></span> [<%= manga.lastChapter.chapterUpdate %>] <a href="/detail/<%= manga.slug %>"> <% manga.name %> - Chương <%=  manga.lastChapter.chapterNumber%> : <%=  manga.lastChapter.chapterName%></a>
+        <span class="badge badge-danger"><%= manga.hot === true ? "Hot" : "" %></span>
+      </p>
+      <% }) %>
     </div>
   </section>
   <section class="section container" id="section-3">
@@ -31,8 +53,8 @@
       <h3 class="text-info"><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
     </a>
     <div class="row">
-      <% mangas.forEach(function(manga,index){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% mangaJustUpdated.forEach(function(manga,index){ %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -44,8 +66,8 @@
       <h3 style="color:rgb(54, 211, 54)"><i class="fas fa-venus-mars"></i> Truyện tổng hợp</h3>
     </a>
     <div class="row">
-      <% mangas.forEach(function(manga){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% mangaForAll.forEach(function(manga){ %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -58,7 +80,7 @@
     </a>
     <div class="row">
       <% mangaForMale.forEach(function(manga){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -71,7 +93,7 @@
     </a>
     <div class="row">
       <% mangaForFemale.forEach(function(manga){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -82,12 +104,12 @@
 </body>
 <%- include("partials/script") %>
 <script>
-  ScrollReveal().reveal('.manga-card', {
-    // delay: 500,
-    interval: 100,
-    scale: 1.5,
-    // reset: true,
-  })
+  // ScrollReveal().reveal('.manga-card', {
+  //   // delay: 500,
+  //   interval: 100,
+  //   scale: 1.5,
+  //   // reset: true,
+  // })
 </script>
 
 </html>

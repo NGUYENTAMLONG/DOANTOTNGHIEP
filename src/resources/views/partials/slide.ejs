@@ -12,15 +12,18 @@
         <h3><%= slide.manga.name %>
           <p class="slide__author">Tác giả: <%= slide.manga.author %></p>
         </h3>
-        <span>Chapter: <b><%= slide.manga.chapters[0].chapterNumber %></b> - <b><%= slide.manga.chapters[0].chapterName %></b> </span>
+        <span>Chapter: <b><%= slide.manga.chapters.slice(-1)[0].chapterNumber %></b> - <b><%= slide.manga.chapters.slice(-1)[0].chapterName %></b> </span>
+
         <p><b>Thể loại: </b>
           <% slide.manga.type.forEach(function(type){ %>
           <a href="#" class="slide__types"><%= type %></a>
           <% }) %>
         </p>
+
         <p class="slide__desc">
           <%= slide.manga.description %>
         </p>
+
         <div class="text-center">
           <a href="/detail/<%= slide.manga.slug%>" class="btn btn-success">Đọc ngay</a>
         </div>

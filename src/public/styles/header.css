@@ -14,6 +14,19 @@ header .navbar {
     header .navbar .form-seach .btn-search {
       position: absolute;
       right: 13px; }
+  header .navbar .user {
+    background-color: gray;
+    padding: 5px;
+    border-radius: 50px;
+    align-items: center; }
+    header .navbar .user #userAvatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%; }
+    header .navbar .user #userName {
+      line-height: 100%;
+      margin: 0px 7px;
+      font-size: 15px; }
   header .navbar #loginModal h4,
   header .navbar #registerModal h4 {
     width: 100%;

@@ -40,7 +40,7 @@
       </p>
     </div>
   </div>
-  <table class="table table-striped table-bordered table-sm " width="100%">
+  <table class="table table-striped table-bordered table-sm" width="100%">
     <thead>
       <tr>
         <th scope="col" class="fit">STT</th>
@@ -164,6 +164,11 @@
       <%}); %>
     </tbody>
   </table>
+  <div id="demo" data-total="<%= mangas.total %>" data-next="<% if (mangas.next){%>
+        <%= mangas.next %>
+    <% }%>">
+
+  </div>
 </body>
 <%- include("../partials/script") %>
 <script>
@@ -287,6 +292,19 @@
       return
     }
   }
+</script>
+<script>
+  $('#demo').pagination({
+    dataSource: [1, 2, 3, 4, 5, 6, 7, 9],
+    pageSize: 5,
+    showGoInput: true,
+    showGoButton: true,
+    callback: function(data, pagination) {
+      // template method of yourself
+      var html = template(data);
+      dataContainer.html(html);
+    }
+  })
 </script>
 
 </html>

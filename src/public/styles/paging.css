@@ -1,0 +1,39 @@
+.paginationjs {
+  background-color: red;
+  position: fixed;
+  right: 10px;
+  top: 100px;
+  display: flex;
+  flex-direction: column; }
+  .paginationjs ul {
+    display: flex;
+    align-items: center; }
+  .paginationjs ul li {
+    padding: 10px;
+    list-style: none;
+    border: solid 1px #007bff;
+    cursor: pointer;
+    margin: 0px 5px; }
+    .paginationjs ul li a {
+      text-decoration: none; }
+  .paginationjs .paginationjs-prev:hover,
+  .paginationjs .paginationjs-next:hover {
+    background-color: #007bff;
+    color: white; }
+  .paginationjs .paginationjs-prev:hover a,
+  .paginationjs .paginationjs-next:hover a {
+    color: white; }
+  .paginationjs .paginationjs-page.active {
+    background-color: #007bff;
+    color: white; }
+  .paginationjs .J-paginationjs-go-pagenumber {
+    width: 50px;
+    padding: 9px;
+    outline: none;
+    margin: 0px 10px; }
+  .paginationjs .J-paginationjs-go-button {
+    padding: 10px;
+    background-color: #be151b;
+    color: white;
+    border: none;
+    cursor: pointer; }

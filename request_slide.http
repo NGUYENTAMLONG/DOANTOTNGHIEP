@@ -7,12 +7,8 @@ POST http://localhost:3416/manage/admin_manga/slide
 content-type: application/json
 
 {
-    "name": "Daredevil",
-    "image": "/image/s6.jpg",
-    "author":"Stand Lee",
-    "chapter":"10",
-    "desc":"Daredevil: Season One (dài hơn 100 trang) nhằm mục đích hiện đại hóa và kể lại về cuộc đời của Daredevil cho một số đối tượng mới. Daredevil: Reborn là một Limited Series 4 tập của Marvel Comics. Sau sự kiện Shadowland, Matt Murdock đã rời bỏ Hell's Kitchen. Câu chuyện bắt đầu khi Matt bước vào một vụ án tại một thị trấn ở Mexico.",
-    "type":["Action","Hero","18+","Comic"]
+    "manga": "62230006bf95dc3c7ef51470",
+    "image": "/image/s8.jpg"
 }
 ### PUT - update slide
 PUT http://localhost:3416/manage/admin_manga/slide/62053212a4c9fb1746212865
@@ -27,3 +23,14 @@ content-type: application/json
 }
 ### DELETE - delete slide
 DELETE  http://localhost:3416/manage/admin_manga/slide/620535aed811d4c51bbd6222
+
+###
+POST http://localhost:3416/register/test
+content-type: application/json
+
+{
+    "mangaId":"6222f8f000f551bb0726d90b",
+    "userId":"620e670d8fb8729ea8545f9a",
+    "chapter":6,
+    "content":"Lorem Isum"
+}

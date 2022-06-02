@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>New Mangas</title>
+  <%- include("partials/link") %>
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/paging.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    </h1>
+    <section class="section container" id="section-1" style="padding: 20px;min-height: 800px;">
+      <div class="row manga-container">
+      </div>
+    </section>
+    <!-- <div id="paging-2">
+    </div> -->
+    <div id="paging-1">
+    </div>
+    <%- include('partials/footer') %>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/js/pagination.min.js"></script>
+<script>
+  const pagingObj = {
+    dataSource: "/newmanga/list",
+    locator: "newMangas",
+    showGoInput: true,
+    showGoButton: true,
+    totalNumberLocator: function(response) {
+      return response.newMangas.length;
+    },
+    pageSize: 10,
+    callback: showListAfterPaging,
+  }
+
+  $('#paging-1').pagination(pagingObj);
+  // $("#paging-2").pagination(pagingObj);
+
+  function showListAfterPaging(data, pagination) {
+    $(".manga-container").html("")
+    $.ajax({
+        url: `/newmanga/list?page=${pagination.pageNumber}&limit=${pagination.pageSize}`
+      })
+      .then(rs => {
+        console.log(rs.newMangas);
+        for (var i = 0; i < rs.newMangas.length; i++) {
+          const manga = rs.newMangas[i];
+          const htmls = `<div class="col-sm-4 col-md-3 col-lg-2 p-2">
+    <div class="manga-card">
+      ${manga.hot ? "<span class='manga-tag__hot'>Hot</span>" :""}
+      <a href="/detail/${manga.slug}">
+        <img class="card-img-top manga-img" src="${ manga.image}" alt="Card image cap" />
+      </a>
+      <div class="manga-title">
+        <a class=" manga-name" href="/detail/${ manga.slug }">
+          <h5>${ manga.name}</h5>
+        </a>
+        <a href="/detail/${ manga.slug }" class="manga-chapter">
+          ${manga.chapters.length == 0 ? "Chưa có chương": "Chương " + manga.chapters.slice(-1)[0].chapterNumber}
+        </a>
+      </div>
+      <div class="info bg-dark text-light">
+        <h4 class="info__name">${manga.name}</h4>
+        <p class="info__another-name"><b>Tên khác:</b> ${ manga.anotherName}</p>
+        <ul class="info__follows">
+          <li>
+            Tình trạng: <b>${manga.status}</b>
+          </li>
+          <li>
+            Lượt xem: <b>${manga.statistical.views}</b>
+          </li>
+          <li>
+            Bình luận: <b>${manga.statistical.comments}</b>
+          </li>
+        </ul>
+        <div class="info__type">
+          <b>Thể loại:</b>
+          ${
+          manga.type.map(function(item){
+          return `<a href="/category/${item}" class="mr-1"> ${item} </a>`
+          }).join("")
+          }
+        </div>
+        <p class="info__desc">
+          ${ manga.description}
+        </p>
+      </div>
+    </div>
+    </div>`
+          $(".manga-container").append(htmls)
+        }
+      })
+      .catch((error) => console.log(error))
+  }
+</script>
+
+</html>

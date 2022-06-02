@@ -2,11 +2,11 @@ const express = require("express");
 // const { findByIdAndUpdate, findById } = require("../../../models/Manga");
 const router = express.Router();
 // router.use(bodyParser.json());
-const mangaRouter = require("./manga/mangaRoute");
+const mangaRouter = require("./manga/manga.routes");
 
 const Slide = require("../../../models/Slide");
 // *************** Slide Controller ***********
-const slideRouter = require("./manga/slideRoute");
+const slideRouter = require("./manga/slide.routes");
 router.use("/slide", slideRouter);
 // show dashboard page
 router.get("/slideDashboard", async (req, res) => {

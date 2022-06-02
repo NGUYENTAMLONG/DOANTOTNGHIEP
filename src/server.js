@@ -6,13 +6,13 @@ const ejs = require("ejs");
 const reload = require("reload");
 const morgan = require("morgan");
 const database = require("./config/database");
-const route = require("./routers");
+const route = require("./routers/index.routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 // Khởi tạo server *******************************************
 const app = express();
-
+// const process = require("process");
 //********************* Khởi tạo cổng server
 const PORT = 3416 || process.env.PORT;
 app.listen(PORT, () => {
@@ -22,7 +22,7 @@ app.listen(PORT, () => {
 reload(app);
 app.use(cors()); // Cho phép chia sẻ api với localhost khác
 //********************* HTTP logger
-app.use(morgan("combined")); //thu vien morgan dung de log ra http request tu client -> server
+//app.use(morgan("combined")); //thu vien morgan dung de log ra http request tu client -> server
 //********************* HTTP logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,11 +39,11 @@ app.set("views", path.join(__dirname, "/resources/views"));
 app.set("view engine", "ejs");
 //********************* Connect to Database (MongoDB) - Kết nối tới cơ sở dữ liệu MONGODB
 database.connect();
-//********************* Config router app
-route(app);
+
 // ******************** Cofig CookieParser
 app.use(cookieParser());
-
+//********************* Config router app
+route(app);
 const MangaModel = require("./models/Manga");
 const Slide = require("./models/Slide");
 // MangaModel.deleteOne({ name: "Clover" })

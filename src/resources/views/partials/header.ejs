@@ -28,105 +28,129 @@
             </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0 form-seach">
-          <input class="form-control mr-sm-2" type="search" placeholder="Tìm Manga ..." aria-label="Search">
+        <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach">
+          <input class="form-control mr-sm-2" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
         </form>
-        <!-- ******** REGISTER *************** -->
 
-        <button class="btn btn-warning mr-2 my-sm-0" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
-
-        <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+        <!-- ******** PRIVATE ZONE *************** -->
+        <div class="authen">
+          <% if(user) {%>
+          <div class="dropdown">
+            <div class="btn btn-secondary dropdown-toggle user d-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div>
+                <img src="/getAvatar/<%= user.avatar %>" id="userAvatar" alt="">
               </div>
-              <div class="modal-body bg-dark text-white">
-                <div class="form-group">
-                  <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" placeholder="Enter Username">
-                </div>
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Enter Password">
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="Enter Email">
-                </div>
-                <div class="form-group">
-                  <label for="otp">OTP</label>
-                  <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+              <p id="userName"><%= user.username %></p>
+            </div>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">Danh sách theo dõi</a>
+              <a class="dropdown-item" href="#">Lịch sử đọc truyện</a>
+              <a class="dropdown-item" href="#">Cài đặt thông tin</a>
+              <a class="dropdown-item logoutBtn" href="/logout" onclick="logout(event)">Đăng xuất</a>
+            </div>
+          </div>
+          <% }else {%>
 
+          <!-- ******** REGISTER *************** -->
+
+          <button class="btn btn-warning mr-2 my-sm-0 btnShowRegister" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
+
+          <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-                <div class="d-flex solution">
-                  <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
+                <div class="modal-body bg-dark text-white">
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="usernameRegister" placeholder="Enter Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="passwordRegister" placeholder="Enter Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="emailRegister" placeholder="Enter Email">
+                  </div>
+                  <div class="form-group otp_field" hidden>
+                    <label for="otp">OTP</label>
+                    <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+
+                  </div>
+                  <div class="d-flex solution">
+                    <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
+                  </div>
+                  <div class="text-center">
+                    <img src="/image/logo.png" width="20%" alt="">
+                  </div>
                 </div>
-                <div class="text-center">
-                  <img src="/image/logo.png" width="20%" alt="">
-                </div>
-              </div>
-              <hr>
-              <div class="modal-footer d-flex justify-content-between">
-                <div class="oauth2">
-                  <i class="fab fa-facebook"></i>
-                  <i class="fab fa-google-plus"></i>
-                </div>
-                <div class="handle">
-                  <button type="button" class="btn btn-primary loginBtn">Đăng ký</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <hr>
+                <div class="modal-footer d-flex justify-content-between">
+                  <div class="oauth2">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-google-plus"></i>
+                  </div>
+                  <div class="handle">
+                    <button type="button" class="btn btn-primary submitBtn" onclick="verification ()">Gửi mã xác thực</button>
+                    <button type="button" class="btn btn-primary registerBtn" onclick="register()" disabled>Đăng ký</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- ******** LOGIN *************** -->
-        <button class="btn btn-primary my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
-        <!-- Modal -->
-        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body bg-dark text-white">
-                <div class="form-group">
-                  <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" placeholder="Enter Username">
+          <!-- ******** LOGIN *************** -->
+          <button class="btn btn-primary my-2 my-sm-0 btnShowLogin" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
+          <!-- Modal -->
+          <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                <div class="modal-body bg-dark text-white">
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="usernameLogin" placeholder="Enter Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="passwordLogin" placeholder="Enter Password">
+                  </div>
+                  <div class="d-flex solution">
+                    <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
+                    <a href="#">Quên mật khẩu ?</a>
+                  </div>
+                  <div class="text-center">
+                    <img src="/image/logo.png" width="20%" alt="">
+                  </div>
                 </div>
-                <div class="d-flex solution">
-                  <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
-                  <a href="#">Quên mật khẩu ?</a>
-                </div>
-                <div class="text-center">
-                  <img src="/image/logo.png" width="20%" alt="">
-                </div>
-              </div>
-              <hr>
-              <div class="modal-footer d-flex justify-content-between">
-                <div class="oauth2">
-                  <i class="fab fa-facebook"></i>
-                  <i class="fab fa-google-plus"></i>
-                </div>
-                <div class="handle">
-                  <button type="button" class="btn btn-primary loginBtn">Đăng nhập</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <hr>
+                <div class="modal-footer d-flex justify-content-between">
+                  <div class="oauth2">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-google-plus"></i>
+                  </div>
+                  <div class="handle">
+                    <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <% } %>
+
         </div>
 
       </div>
@@ -172,7 +196,7 @@
           <li> <a href="#">Top Tháng</a></li>
           <li> <a href="#">Yêu thích</a></li>
           <li> <a href="/popular/just-updated">Mới cập nhật</a></li>
-          <li> <a href="#">Truyện mới</a></li>
+          <li> <a href="/newmanga">Truyện mới</a></li>
           <li> <a href="#">Truyện full</a></li>
           <li> <a href="#">Truyện trường kỳ</a></li>
           <li> <a href="#">Ít đọc</a></li>
@@ -205,3 +229,185 @@
     </ul>
   </div>
 </header>
+<script>
+  const logoutBtn = document.querySelector(".logoutBtn");
+  const loginBtn = document.querySelector(".loginBtn");
+  const submitBtn = document.querySelector(".submitBtn");
+  const registerBtn = document.querySelector(".registerBtn");
+  const btnShowRegister = document.querySelector(".btnShowRegister");
+  const btnShowLogin = document.querySelector(".btnShowLogin");
+
+  function logout(event) {
+    event.preventDefault();
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/logout", {
+        method: "POST",
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess) {
+          location.reload()
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function login() {
+    const loginModal = document.getElementById("loginModal");
+    const usernameLogin = loginModal.querySelector("#usernameLogin");
+    const passwordLogin = loginModal.querySelector("#passwordLogin");
+    const payload = {
+      username: usernameLogin.value,
+      password: passwordLogin.value
+    }
+
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/login", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          location.reload();
+        } else {
+          swal({
+            title: "Đăng nhập không thành công!",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function verification() {
+    const registerModal = document.getElementById("registerModal");
+    const usernameRegister = registerModal.querySelector("#usernameRegister");
+    const passwordRegister = registerModal.querySelector("#passwordRegister");
+    const emailRegister = registerModal.querySelector("#emailRegister");
+
+    const payload = {
+      username: usernameRegister.value,
+      password: passwordRegister.value,
+      email: emailRegister.value
+    }
+    const headers = {
+      "content-Type": "application/json",
+    };
+
+    fetch("/register/authentication", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.isSuccess === true) {
+          swal({
+            title: "Thông báo",
+            text: "Xác thực qua email của bạn ngay nhé!",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            const otpInput = document.querySelector(".otp_field");
+            registerBtn.removeAttribute("disabled");
+            submitBtn.setAttribute("disabled", "");
+            usernameRegister.setAttribute("disabled", "");
+            passwordRegister.setAttribute("disabled", "");
+            emailRegister.setAttribute("disabled", "");
+            otpInput.removeAttribute("hidden");
+            window.open("https://accounts.google.com/", '_blank').focus();
+          });
+        } else {
+          swal({
+            title: "Đăng ký không thành công!",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function register() {
+    const registerModal = document.getElementById("registerModal");
+    const usernameRegister = registerModal.querySelector("#usernameRegister");
+    const passwordRegister = registerModal.querySelector("#passwordRegister");
+    const emailRegister = registerModal.querySelector("#emailRegister");
+    const otpRegister = registerModal.querySelector("#otp");
+
+    const payload = {
+      username: usernameRegister.value,
+      password: passwordRegister.value,
+      email: emailRegister.value,
+      otp: otpRegister.value
+    }
+    const headers = {
+      "content-Type": "application/json",
+    };
+
+    fetch("/register", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đăng ký thành công!",
+            text: "Vui lòng đăng nhập để trải nghiệm",
+            icon: "success",
+            button: "OK!",
+          }).then(location.reload());
+        } else {
+          swal({
+            title: "Đăng ký không thành công!",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+
+        // const otpInput = document.querySelector(".otp_field");
+        // registerBtn.removeAttribute("disabled");
+        // otpInput.removeAttribute("hidden");
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+</script>

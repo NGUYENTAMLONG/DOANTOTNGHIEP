@@ -76,7 +76,7 @@
             <%}); %>
           </td>
           <td scope="row">
-            <%= slide.manga.chapters[0].chapterNumber %>
+            <%= slide.manga.chapters.slice(-1)[0].chapterNumber %>
           </td>
           <td scope="row" class="desc_td">
             <div class="desc">
@@ -155,7 +155,6 @@
           console.error('Error:', error);
         });
       reloadStatistical()
-
     }
   })
 

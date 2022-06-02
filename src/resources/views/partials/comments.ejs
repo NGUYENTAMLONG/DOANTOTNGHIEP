@@ -1,0 +1,210 @@
+<h2><i class="fas fa-comments"></i> Bình luận (<%= comments.length %>)</h2>
+<span>Like Fanpage để ủng hộ Manga chúng mình và cập nhật các thông tin mới nhất về các bộ truyện nhé. </span>
+<div class="fb-like" data-href="/" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+<div id="fb-root"></div>
+<% if (user !== null) {%>
+<form action="#" method="POST">
+  <div class="myComment">
+    <div class="comment__user p-2 bg-primary d-inline-block">
+      <img class="comment__avatar" src="/getAvatar/<%= user.avatar %>" width="40px" alt="avatar">
+      <b class="comment__username text-light"> <%= user.username %> </b>
+    </div>
+    <textarea class="form-control" name="content" id="content" cols="30" rows="5" placeholder="Nội dung bình luận ...">
+         </textarea>
+  </div>
+  <div class="text-center mt-3">
+
+    <button type="submit" class="btn btn-primary" onclick="submitComment(event,`
+   <% if (chapter) { %>
+    <%= chapter %>
+  <%}else{%>
+    null
+  <%}%>
+   `,`<%= user._id %>`,`<%= manga._id %>`,`<%= user.username %>`,`<%= user.avatar %>`,`<%= moment().fromNow() %>`)">Gửi bình luận <i class="fas fa-paper-plane"></i> </button>
+  </div>
+</form>
+<% } else{ %>
+<h2>Hãy đăng nhập trước khi bình luận ^^ !</h2>
+<% }  %>
+
+<hr>
+
+<div class="comment-zone">
+  <span class="comment-span"></span>
+  <% comments.forEach(function(comment,index){ %>
+  <div class="comment" id="<%= comment._id %>">
+    <div class="d-flex">
+      <img class="comment__avatar" src="/getAvatar/<%= comment.userId.avatar %> " alt="avatar">
+      <div class="comment__detail">
+        <% if(comment.chapter === -1){ %>
+        <span class="badge badge-warning">
+          Tổng quan
+        </span>
+        <%}else{ %>
+        <span class="badge badge-success">
+          Chương <%= comment.chapter %>
+        </span>
+        <%} %>
+        <p class="comment__whose">
+          <b> <%= comment.userId.username%></b>
+          <span class="mr-1"> <%= comment.role === "M" && "Thành viên" %> </span>
+          <small> <i> <%= moment(comment.updatedAt).fromNow()  %></i> </small>
+        </p>
+        <p class="comment__content"> <%= comment.content %> </p>
+        <div>
+          <span class="like-comment">
+            <i class="fa fa-thumbs-up"></i> <%= comment.likes %>
+          </span>
+          <span class="response-comment">
+            <i class="fas fa-comment"></i> Trả lời
+          </span>
+          <% if (user !== null) {%>
+          <% if (user._id.toString() ===  comment.userId._id.toString()) {%> <span class="delete-comment" onclick="deleteComment(`<%= comment._id %>`)">
+            <i class="fas fa-trash"></i> Xóa
+          </span> <%}%>
+            <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="reply-zone">
+      <% if(comment.replies.length > 0 ) {%>
+      <div class="d-flex">
+        <img class="reply__avatar" src="/image/avatar.png" alt="avatar">
+        <div class="reply__detail">
+          <p class="reply__whose">
+            <b>Uchiha Shin</b> <span>Thành viên</span>
+            <small> <i>1 Phút trước</i> </small>
+          </p>
+          <p class="reply__content">Trả lời <span class="badge badge-warning">Kakashi</span> : Voluptate ex nulla fugit, laudantium dolores cum. !!!</p>
+          <div>
+            <span class="like-reply">
+              <i class="fa fa-thumbs-up"></i> 0
+            </span>
+            <span class="response-reply">
+              <i class="fas fa-comment"></i> Trả lời
+            </span>
+          </div>
+        </div>
+      </div>
+      <% }%>
+    </div>
+  </div>
+  <% }) %>
+</div>
+
+<script>
+  const commentSpan = document.querySelector(".comment-span");
+
+  function submitComment(event, chapter, userId, mangaId, username, avatar, time) {
+    event.preventDefault();
+
+    const content = document.querySelector("#content");
+
+    const payload = {
+      userId: userId,
+      content: content.value,
+      chapter: chapter.trim(),
+      mangaId: mangaId
+    }
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/comment", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+        if (result.isSuccess === true) {
+          commentSpan.insertAdjacentHTML("afterend", setComment({
+            chapter: chapter === "null" ? -1 : chapter,
+            avatar,
+            username,
+            role: "M",
+            time,
+            comment: content.value,
+            commentId: result.data._id
+          }))
+        } else {
+          swal({
+            title: "Có lỗi rồi !",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function setComment(payload) {
+    const html = `
+   <div class="comment" id="${payload.commentId }">
+     <div class="d-flex">
+       <img class="comment__avatar" src="/getAvatar/${payload.avatar} " alt="avatar">
+       <div class="comment__detail">
+       ${payload.chapter === -1 ? "<span class='badge badge-warning'> Tổng quan </span>":`<span class='badge badge-success'> Chương ${payload.chapter}</span>` }
+         <p class="comment__whose">
+           <b>${payload.username}</b>
+           <span class="mr-1"> ${payload.role === "M" && "Thành viên" } </span>
+           <small> <i>${payload.time}</i> </small>
+         </p>
+         <p class="comment__content">${payload.comment}</p>
+         <div>
+           <span class="like-comment">
+             <i class="fa fa-thumbs-up"></i> 0
+           </span>
+           <span class="response-comment">
+             <i class="fas fa-comment"></i> Trả lời
+           </span>
+            <span class="delete-comment" onclick="deleteComment('${payload.commentId }')">
+              <i class="fas fa-trash"></i> Xóa
+            </span>
+         </div>
+       </div>
+     </div>
+     <div class="reply-zone">
+     </div>
+   </div>`
+    return html
+  }
+
+  function deleteComment(commentId) {
+    swal({
+        title: "Bạn có chắc muốn xóa bình luận này không?",
+        text: "Khi xóa sẽ không thể khôi phục bình luận nữa :>",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          const headers = {
+            "content-Type": "application/json",
+          };
+          fetch(`/comment/${commentId}`, {
+              method: "DELETE",
+              headers,
+            })
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.isSuccess === true) {
+                document.getElementById(commentId).remove()
+              } else {
+                swal({
+                  title: "Có lỗi rồi",
+                  text: result.message,
+                  icon: "error",
+                  button: "OK!",
+                });
+              }
+            })
+            .catch((error) => console.log(error));
+        }
+      });
+
+
+  }
+</script>

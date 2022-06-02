@@ -6,8 +6,8 @@ const { showDashboardManga } = require("../../controllers/MangaController");
 const { login } = require("../../controllers/ManageController");
 const Authentication = require("../../middleware/authentication");
 const Authorization = require("../../middleware/authorization");
-const adminHrmRouter = require("./adminRoutes/hrmAdmin");
-const adminMangaRouter = require("./adminRoutes/mangaAdmin");
+const adminHrmRouter = require("./adminRoutes/hrmAdmin.routes");
+const adminMangaRouter = require("./adminRoutes/mangaAdmin.routes");
 
 const router = express.Router();
 

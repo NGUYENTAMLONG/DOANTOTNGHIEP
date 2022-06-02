@@ -1,7 +1,7 @@
 const express = require("express");
+const { Login } = require("../../controllers/AccountController");
 const router = express.Router();
 
-router.post("/", async (req, res, next) => {
-  res.json("XIN CHAO");
-});
+router.post("/", Login);
+
 module.exports = router;

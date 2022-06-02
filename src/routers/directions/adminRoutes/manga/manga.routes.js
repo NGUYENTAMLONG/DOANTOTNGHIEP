@@ -11,6 +11,8 @@ const { PagingModel } = require("../../../../middleware/paging");
 const {
   checkChapterNumber,
 } = require("../../../../middleware/validateChapter");
+
+const { nextTick } = require("process");
 const router = express.Router();
 
 // **************** Chapter Routes/Controller ****************
@@ -25,41 +27,8 @@ const storage = multer.diskStorage({
       `-${req.params.chapter}-` +
       Date.now() +
       path.extname(file.originalname);
+    req.newName = newName;
     cb(null, newName);
-
-    const options = {
-      apiKey: "fdda0f569f21b3ba10f0049d856be914",
-      imagePath: appRoot + "/images/chapters/" + newName,
-      name: newName,
-    };
-    imgbbUploader(options)
-      .then((response) => {
-        // console.log(response.display_url);
-        const dateTime = getTime();
-        async function myUpdate() {
-          try {
-            const updateImg = await Manga.findOneAndUpdate(
-              {
-                slug: req.params.slug,
-                "chapters.chapterNumber": Number(req.params.chapter),
-              },
-              { $push: { "chapters.$.chapterImages": response.display_url } }
-            );
-            const updateTime = await Manga.findOneAndUpdate(
-              {
-                slug: req.params.slug,
-                "chapters.chapterNumber": Number(req.params.chapter),
-              },
-              { $set: { "chapters.$.chapterUpdate": dateTime } }
-            );
-            clearImg(newName);
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        myUpdate();
-      })
-      .catch((error) => console.error(error));
   },
 });
 const upload = multer({ storage: storage }); //for manga
@@ -86,11 +55,58 @@ router.get("/:slug/add_chapter", async (req, res) => {
     res.status(500).json({ status: "error", error: error });
   }
 });
+// ********** GET ALL Manga *******
+router.get("/allManga", async (req, res) => {
+  try {
+    const listManga = await Manga.find();
+    res.status(200).json(listManga);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
 // ********** Publish Manga Chapter ***************
 router.post(
   "/:slug/add_chapterImg/:chapter",
   upload.single("chapterImg"),
+  async (req, res, next) => {
+    const options = {
+      apiKey: "7ccc66e82f97e39f3670daf9d6b9ec63",
+      imagePath: appRoot + "/images/chapters/" + req.newName,
+      name: req.newName,
+    };
+    imgbbUploader(options)
+      .then((response) => {
+        // console.log(response.display_url);
+        const dateTime = getTime();
+        async function myUpdate() {
+          try {
+            const updateImg = await Manga.findOneAndUpdate(
+              {
+                slug: req.params.slug,
+                "chapters.chapterNumber": Number(req.params.chapter),
+              },
+              { $push: { "chapters.$.chapterImages": response.display_url } }
+            );
+            const updateTime = await Manga.findOneAndUpdate(
+              {
+                slug: req.params.slug,
+                "chapters.chapterNumber": Number(req.params.chapter),
+              },
+              { $set: { "chapters.$.chapterUpdate": dateTime } }
+            );
+            clearImg(req.newName);
+          } catch (error) {
+            console.log("logerr1:", error);
+          }
+        }
+        myUpdate();
+        next();
+      })
+      .catch((error) => console.log("logerr2:", error));
+  },
   async (req, res) => {
+    console.log("HERE------>:", req.newName);
     try {
       const manga = await Manga.findOne({ slug: req.params.slug });
       const images = manga.chapters[req.params.chapter - 1].chapterImages;
@@ -204,10 +220,11 @@ router.post("/publish", async (req, res) => {
 });
 // ****************** UPDATE MANGA *************************
 //1. Get Page (UPDATE MANGA)
+const typeArr = require("../../../../helper/getTypes");
 router.get("/:slug/update_manga", async (req, res) => {
   try {
     const manga = await Manga.findOne({ slug: req.params.slug });
-    res.render("admin/manga/updateManga", { manga });
+    res.render("admin/manga/updateManga", { manga, typeArr });
   } catch (error) {
     console.log(error);
   }
@@ -232,6 +249,7 @@ router.delete("/:id", async (req, res) => {
 // ****************** GET MANGA *************************
 //1. Get Manga by Id
 // ex: /manage/admin_manga/manga/6223063c8a33d9fb7f629515
+
 router.get("/:id", async (req, res) => {
   try {
     const manga = await Manga.findOne({
@@ -250,7 +268,10 @@ router.get("/", PagingModel(Manga), async (req, res) => {
   try {
     const mangas = req.handlePaging;
     // const mangas = await Manga.find();
-    res.render("admin/manage_manga", { mangas: mangas.resultPage });
+    res.render("admin/manage_manga", {
+      mangas: mangas.resultPage,
+      another: mangas,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: "error", error: error });

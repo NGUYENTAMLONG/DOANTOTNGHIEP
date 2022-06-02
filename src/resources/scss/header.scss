@@ -21,6 +21,22 @@ header {
         right: 13px;
       }
     }
+    .user {
+      background-color: gray;
+      padding: 5px;
+      border-radius: 50px;
+      align-items: center;
+      #userAvatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+      #userName {
+        line-height: 100%;
+        margin: 0px 7px;
+        font-size: 15px;
+      }
+    }
     #loginModal,
     #registerModal {
       h4 {

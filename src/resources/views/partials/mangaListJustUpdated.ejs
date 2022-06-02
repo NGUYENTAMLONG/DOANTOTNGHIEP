@@ -6,7 +6,7 @@
      <% } %>
      <% if (period) {
             %>
-     <span class="manga-tag__period"><%= period%></span>
+     <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"><%= period%></span>
      <% } %>
      <a href="/detail/<%= manga.slug %>">
        <img class="card-img-top manga-img" src="<%= manga.image %>" alt="Card image cap" />
@@ -15,7 +15,7 @@
        <a class=" manga-name" href="/detail/<%= manga.slug %>">
          <h5><%= manga.name%></h5>
        </a>
-       <a href="/detail/<%= manga.slug %>" class="manga-chapter">Chương 126</a>
+       <a href="/detail/<%= manga.slug %>" class="manga-chapter">Chương <%=  manga.chapters.slice(-1)[0].chapterNumber %></a>
      </div>
      <div class="info bg-dark text-light">
        <h4 class="info__name"><%= manga.name%></h4>

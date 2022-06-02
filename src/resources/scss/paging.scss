@@ -1,0 +1,54 @@
+@import "variables.scss";
+
+.paginationjs {
+  background-color: red;
+  position: fixed;
+  right: 10px;
+  top: 100px;
+  display: flex;
+  // justify-content: center;
+  flex-direction: column;
+
+  ul {
+    display: flex;
+    // flex-direction: column;
+    align-items: center;
+  }
+  ul li {
+    padding: 10px;
+    list-style: none;
+    border: solid 1px $color-3;
+    cursor: pointer;
+    margin: 0px 5px;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .paginationjs-prev:hover,
+  .paginationjs-next:hover {
+    background-color: $color-3;
+    color: white;
+  }
+  .paginationjs-prev:hover a,
+  .paginationjs-next:hover a {
+    color: white;
+  }
+  .paginationjs-page.active {
+    background-color: $color-3;
+    color: white;
+  }
+  .J-paginationjs-go-pagenumber {
+    width: 50px;
+    padding: 9px;
+    outline: none;
+    margin: 0px 10px;
+  }
+  .J-paginationjs-go-button {
+    padding: 10px;
+    background-color: $color-2;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+}

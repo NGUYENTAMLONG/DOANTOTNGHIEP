@@ -20,11 +20,17 @@
       <div class="col-md-4 col-lg-3">
         <div class="manga-img">
           <div class="zoom-image" data-image="<%= manga.image%>">
-            <img src="<%= manga.image%>" width="100%" alt="">
+            <img src="<%= manga.image%>" class="cover" width="100%" alt="">
           </div>
         </div>
         <div class="text-center mt-3">
-          <button class="btn btn-primary">Đổi bìa</button>
+          <form action="#" class="form-upload" enctype="multipart/form-data">
+
+            <div class="custom-file">
+              <input type="file" id="gallery-photo-cover" hidden>
+              <label for="gallery-photo-cover" class="icon-upload btn btn-primary"> <i class="fas fa-2x fa-upload"></i><br>Đổi bìa</label>
+            </div>
+          </form>
         </div>
       </div>
       <div class="col-md-8 col-lg-4">
@@ -64,6 +70,38 @@
               </label>
             </div>
           </div>
+          <div class="input_hot">
+            <label for="hotcheck">
+              <h5 class="d-flex"> <span>Hot</span>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input ml-2" id="hotcheck" style="zoom: 1.5;" title="Hot" <%= manga.hot && "checked" %>>
+                </div>
+              </h5>
+            </label>
+          </div>
+          <div class="input_serve">
+            <label for="status">
+              <h5>Đối tượng</h5>
+            </label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="serve-male" value="male" <% if(manga.serve === "male"){%> checked <% } %>>
+              <label class="form-check-label" for="serve-male">
+                Male
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="serve-female" value="female" <% if(manga.serve === "female"){%> checked <% } %>>
+              <label class="form-check-label" for="serve-female">
+                Female
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="serve-all" value="all" <% if(manga.serve === "all"){%> checked <% } %>>
+              <label class="form-check-label" for="serve-all">
+                All
+              </label>
+            </div>
+          </div>
           <p class="mt-2"><b>Thống kê</b> :
             <span>
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
@@ -75,12 +113,30 @@
               <i class="far fa-eye"></i> <%= manga.statistical.views %>
             </span>
           </p>
+          <div class="input_fanmade">
+            <label for="fanmade">
+              <h5 class="d-flex"> <span>Fanmade</span>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input ml-2" id="fanmade" style="zoom: 1.5;" title="Fanmade" <%= manga.fanmade && "checked" %>>
+                </div>
+              </h5>
+            </label>
+          </div>
+          <label for="type">
+            <h5>Thể loại</h5>
 
-          <% manga.type.forEach(function(type,index){ %>
-          <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
-          <% }) %>
+          </label>
+          <div class="form-check row d-flex justify-content-between">
+            <div class="column">
+              <% typeArr.forEach(function(type,index){ %>
+              <div class="checkbox-type">
+                <input type="checkbox" class="form-checbox-type" id="<%= type%>" value="<%= type%>" <%= manga.type.includes(type) && "checked" %>>
+                <label class="form-check-label" for="<%= type%>"><%= type%></label>
+              </div>
+              <%})%>
+            </div>
+          </div>
         </form>
-
       </div>
       <div class="col-md-12 col-lg-5 pt-3">
         <div class="input_description">
@@ -96,7 +152,7 @@
           <table class="table bg-dark text-light">
             <thead class="bg-warning text-dark">
               <tr>
-                <th scope="col" class="text-center">STT</th>
+                <th scope="col" class="th-stt text-center">STT</th>
                 <th scope="col" class="text-center">Chương</th>
                 <th scope="col" class="text-center">Tên</th>
                 <th scope="col" class="text-center">Ngày đăng</th>
@@ -105,7 +161,7 @@
             <tbody>
               <% manga.chapters.forEach(function(chapter,index){ %>
               <tr>
-                <th scope="row" class="text-center">
+                <th scope="row" class="th-stt text-center">
                   <%= index + 1%>
                 </th>
                 <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
@@ -116,8 +172,9 @@
             </tbody>
           </table>
         </div>
-        <a href="/manage/admin_manga/<%= manga.slug  %>/add_chapter" class="btn btn-warning mt-2 float-right">Quản lí chương</a>
+        <a href="add_chapter" class="btn btn-warning mt-2 float-right">Quản lí chương</a>
       </div>
+
     </div>
   </section>
 
@@ -126,6 +183,35 @@
 <script src="/js/zoomEffect.js"></script>
 
 <script>
+  //Tooltip
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+  // Upload Cover
+  const zoomImage = document.querySelector(".zoom-image");
+  const cover = document.querySelector(".cover");
+
+  $('#gallery-photo-cover').on('change', function() {
+    const imageFile = document.querySelector('#gallery-photo-cover').files[0];
+    if (!imageFile) {
+      return
+    }
+    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && imageFile.name.endsWith(".png")) {
+      alert("ERROR")
+      return
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      zoomImage.setAttribute("data-image", e.target.result);
+      cover.setAttribute("src", e.target.result)
+    };
+    reader.readAsDataURL(imageFile);
+  });
+
+  function changeCover() {
+    alert("ABC")
+  }
   //   const updateMangaBtn = document.querySelectorAll(".updateMangaBtn");
   //   updateMangaBtn.forEach((btn, index) => {
   //     btn.addEventListener("click", function(e) {
