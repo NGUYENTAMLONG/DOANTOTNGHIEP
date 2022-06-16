@@ -2,6 +2,7 @@ const res = require("express/lib/response");
 const { MESSAGE, STATUS } = require("../config/httpResponse");
 const lodash = require("lodash");
 const Manga = require("../models/Manga");
+const filterPopular = require("../helper/filterPopular");
 
 module.exports = {
   async getNewMangas(req, res) {
@@ -24,7 +25,10 @@ module.exports = {
         };
       }
       result.mangas = await Manga.find().limit(limit).skip(startPage).exec();
-      res.render("showNewManga", { mangas: result.mangas });
+      res.render("showNewManga", {
+        mangas: result.mangas,
+        user: req.AuthPayload,
+      });
       // res.status(STATUS.SUCCESS).json({ newMangas: mangas });
     } catch (error) {
       console.log(error);
@@ -51,7 +55,8 @@ module.exports = {
         };
       }
       result.mangas = await Manga.find().limit(limit).skip(startPage).exec();
-      res.status(STATUS.SUCCESS).json({ newMangas: result.mangas });
+      const newMangas = filterPopular(result.mangas);
+      res.status(STATUS.SUCCESS).json({ newMangas });
     } catch (error) {
       console.log(error);
       res.status(STATUS.SERVER_ERROR).json({ message: MESSAGE.ERROR_SERVER });

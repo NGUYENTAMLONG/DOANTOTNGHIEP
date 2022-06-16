@@ -44,7 +44,7 @@
               <p id="userName"><%= user.username %></p>
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Danh sách theo dõi</a>
+              <a class="dropdown-item" href="/follow">Danh sách theo dõi</a>
               <a class="dropdown-item" href="#">Lịch sử đọc truyện</a>
               <a class="dropdown-item" href="#">Cài đặt thông tin</a>
               <a class="dropdown-item logoutBtn" href="/logout" onclick="logout(event)">Đăng xuất</a>
@@ -380,10 +380,6 @@
             button: "OK!",
           });
         }
-
-        // const otpInput = document.querySelector(".otp_field");
-        // registerBtn.removeAttribute("disabled");
-        // otpInput.removeAttribute("hidden");
       })
       .catch((error) => console.log(error));
   }

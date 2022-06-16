@@ -7,8 +7,8 @@ POST http://localhost:3416/manage/admin_manga/slide
 content-type: application/json
 
 {
-    "manga": "62230006bf95dc3c7ef51470",
-    "image": "/image/s8.jpg"
+    "manga": "6222f8f000f551bb0726d90b",
+    "image": "/image/s1.jpg"
 }
 ### PUT - update slide
 PUT http://localhost:3416/manage/admin_manga/slide/62053212a4c9fb1746212865

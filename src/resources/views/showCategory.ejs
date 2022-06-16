@@ -13,16 +13,19 @@
 
 <body>
   <%- include('partials/header') %>
-  <h1><i class="fas fa-bookmark"></i>Thể loại: </h1>
+  <div class="container">
+    <h3><i class="fas fa-bookmark"></i>Thể loại: </h3>
+  </div>
   <section class="section container" id="section-1">
     <div class="row">
       <% mangas.forEach(function(manga,index){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
       <% }); %>
     </div>
   </section>
   <%- include('partials/footer') %>
 </body>
-<%- include("partials/script") %>
 
 </html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>

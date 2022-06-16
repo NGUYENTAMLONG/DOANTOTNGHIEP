@@ -17,6 +17,9 @@
        </a>
        <a href="/detail/<%= manga.slug %>" class="manga-chapter">Chương <%=  manga.chapters.slice(-1)[0].chapterNumber %></a>
      </div>
+     <div class="text-center">
+       <i class="fas fa-ban" style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Bỏ theo dõi" onclick="unFollow('<%= manga._id%>')"></i>
+     </div>
      <div id="template-<%=manga._id%>" style="display: none;">
        <div class="info text-light">
          <h4 class="info__name"><%= manga.name%></h4>

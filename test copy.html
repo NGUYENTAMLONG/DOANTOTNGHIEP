@@ -2,52 +2,107 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skeleton Loading</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .card {
+      width: 250px;
+      margin: 20px auto;
+      border-radius: 5px;
+      background-color: white;
+      padding: 10px;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, .4);
+    }
+
+    .user-info {
+      display: flex;
+      margin-bottom: 5px;
+    }
+
+    .name {
+      margin-left: 5px;
+      width: 100%;
+    }
+
+    .loading .logo,
+    .loading .content,
+    .loading .name {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading .logo::before,
+    .loading .name::before,
+    .loading .content::before {
+      background-color: #dddddd;
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .loading .logo::after,
+    .loading .name::after,
+    .loading .content::after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, #dddddd, #ffffff 50%, #dddddd);
+      animation: skeletonLoading 2s infinite alternate;
+    }
+
+    @keyframes skeletonLoading {
+      from {
+        left: -50%;
+      }
+
+      to {
+        left: 50%;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
-</body>
-<script>
-  function getUsers(callback) {
-    if (typeof callback !== 'function') {
-      return false;
-    }
-    //let users = [];
+  <div class="card loading">
+    <div class="user-info">
+      <div class="logo">
+        <img src="https://picsum.photos/50/50" alt="logo">
+      </div>
+      <div class="name">HOLETEX</div>
+    </div>
+    <div class="content">
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit est
+      explicabo delectus, optio neque amet nostrum odit dicta? In ipsa
+      voluptate debitis voluptatem! Necessitatibus tempora excepturi error
+      nisi accusantium eum?
+    </div>
+  </div>
+  <script>
     setTimeout(() => {
-      // users = [
-      // {id: 1, name: 'Teo', email: 'teo@gmail'},
-      // {id: 2, name: 'Ty', email: 'ty@gmail'},
-      // ];
-      callback([{
-          id: 1,
-          name: 'Teo',
-          email: 'teo@gmail'
-        },
-        {
-          id: 2,
-          name: 'Ty',
-          email: 'ty@gmail'
-        },
-      ]);
-    }, 1000);
-    //return users;
-  }
+      document.getElementsByClassName('card')[0].classList.remove('loading');
+    }, 5000);
+  </script>
+</body>
 
-  function findUserById(id, callback) {
-    // const users = getUsers();
-    // const user = users.find(user => user.id === id);
-    // return user;
-    getUsers((users) => {
-      // tim user
-      const user = users.find(user => user.id === id);
-      callback(user);
-    });
-  }
-  findUserById(1, console.log)
+<script>
+
 </script>
 
 </html>

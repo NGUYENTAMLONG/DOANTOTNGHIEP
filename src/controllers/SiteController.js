@@ -4,6 +4,8 @@ const getChaptersOfDay = require("../helper/getChaptersOfDay");
 const Manga = require("../models/Manga");
 const Slide = require("../models/Slide");
 const path = require("path");
+const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
+const { ErrorResponse } = require("../helper/response");
 class siteController {
   home(req, res, next) {
     // return res.json(req.AuthPayload);
@@ -71,13 +73,13 @@ class siteController {
       res.render("search", {
         status: true,
         user: req.AuthPayload,
-        mangas: foundManga,
+        mangas: filterPopular(foundManga),
       });
-      req.mangas = foundManga;
-      // next();
     } catch (error) {
       console.log(error);
-      res.status(500).json({ msg: "ERROR", error });
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async getAvatar(req, res) {

@@ -154,8 +154,10 @@
     }
   }
   .comment-zone {
-    .comment,
-    .comment-span {
+    min-height: 600px;
+    padding: 10px;
+    .comment {
+      width: 100%;
       margin: 20px 0px;
       .comment__avatar {
         border-radius: 50%;
@@ -164,7 +166,7 @@
         margin-right: 10px;
       }
       .comment__detail {
-        width: 100%;
+        width: 90%;
         border-radius: 10px;
         padding: 15px;
         background-color: $color-6;
@@ -180,12 +182,14 @@
         .comment__content {
           text-indent: 25px;
           width: 100%;
-          -ms-word-break: break-all;
-          word-break: break-all;
+          word-wrap: break-word;
         }
         .like-comment,
         .response-comment,
-        .delete-comment {
+        .delete-comment,
+        .update-comment,
+        .submit-edit-comment,
+        .cancel-edit-comment {
           margin: 0px 5px;
           cursor: pointer;
           color: $color-2;
@@ -216,10 +220,11 @@
         }
         .reply__content {
           width: 100%;
-          -ms-word-break: break-all;
-          word-break: break-all;
+          word-wrap: break-word;
         }
         .like-reply,
+        .delete-reply,
+        .update-reply,
         .response-reply {
           cursor: pointer;
           color: $color-2;
@@ -230,4 +235,8 @@
 }
 .emojionearea-button {
   transform: scale(1.5);
+}
+.resize {
+  resize: vertical;
+  overflow: scroll;
 }

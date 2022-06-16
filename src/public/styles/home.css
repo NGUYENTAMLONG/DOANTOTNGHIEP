@@ -118,41 +118,7 @@
   #section-4 .manga-card .info,
   #section-5 .manga-card .info,
   #section-6 .manga-card .info {
-    background-color: gray;
-    position: absolute;
-    top: 0;
-    right: -320px;
-    z-index: 100;
-    width: 300px;
-    padding: 10px;
-    border-radius: 10px;
-    display: none; }
-    .section .manga-card .info::before,
-    #section-3 .manga-card .info::before,
-    #section-4 .manga-card .info::before,
-    #section-5 .manga-card .info::before,
-    #section-6 .manga-card .info::before {
-      position: absolute;
-      content: "";
-      left: -20px;
-      width: 0;
-      height: 0;
-      border-top: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-right: 20px solid #343a40; }
-    .section .manga-card .info::after,
-    #section-3 .manga-card .info::after,
-    #section-4 .manga-card .info::after,
-    #section-5 .manga-card .info::after,
-    #section-6 .manga-card .info::after {
-      position: absolute;
-      content: "";
-      display: block;
-      height: 300px;
-      left: -30px;
-      top: 0;
-      width: 40px;
-      background-color: transparent; }
+    width: 300px; }
     .section .manga-card .info .info__name,
     #section-3 .manga-card .info .info__name,
     #section-4 .manga-card .info .info__name,
@@ -196,10 +162,3 @@
       border-radius: 20px;
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
       background-color: #555; }
-
-.section .manga-card:hover .info,
-#section-3 .manga-card:hover .info,
-#section-4 .manga-card:hover .info,
-#section-5 .manga-card:hover .info,
-#section-6 .manga-card:hover .info {
-  display: block; }

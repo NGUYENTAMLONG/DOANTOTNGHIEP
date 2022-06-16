@@ -1,6 +1,7 @@
 const Comment = require("../models/Comment");
 const Manga = require("../models/Manga");
 const moment = require("moment");
+const User = require("../models/User");
 class detailController {
   async showDetailManga(req, res) {
     const slug = req.params.slug;
@@ -11,13 +12,19 @@ class detailController {
       })
         .populate("userId", "username avatar")
         .sort({ updatedAt: -1 });
-
+      let checkFollow = false;
+      if (req.AuthPayload !== undefined) {
+        const foundUser = await User.findById(req.AuthPayload._id);
+        checkFollow = foundUser.follows.includes(manga._id);
+        console.log(checkFollow);
+      }
       res.render("detail", {
         slug,
         manga,
         user: req.AuthPayload,
         comments,
         moment,
+        followFlag: checkFollow,
       });
     } catch (error) {
       console.log(error);

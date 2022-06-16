@@ -95,44 +95,11 @@
       }
     }
     .info {
-      background-color: gray;
-      position: absolute;
-      top: 0;
-      right: -320px;
-      z-index: 100;
       width: 300px;
-      padding: 10px;
-      border-radius: 10px;
-      // opacity: 0;
-      // right: -260px;
-      // transition: 0.5s ease-in;
-      display: none;
-      &::before {
-        position: absolute;
-        content: "";
-        left: -20px;
-        width: 0;
-        height: 0;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        border-right: 20px solid $color-4;
-      }
-      &::after {
-        position: absolute;
-        content: "";
-        display: block;
-        height: 300px;
-        left: -30px;
-        top: 0;
-        width: 40px;
-        background-color: transparent;
-      }
       .info__name {
         color: $color-3;
       }
       .info__follows {
-        li {
-        }
       }
       .info__type {
         a {
@@ -164,10 +131,5 @@
         background-color: #555;
       }
     }
-  }
-  .manga-card:hover .info {
-    // right: -220px;
-    // opacity: 1;
-    display: block;
   }
 }

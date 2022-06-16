@@ -21,9 +21,9 @@ module.exports.ROLES = {
 };
 
 module.exports.ADMIN_EMAIL = {
-  EMAIL: "hien18101966@gmail.com",
-  PASSWORD: "18101966",
-  SERVICE: "email",
+  EMAIL: "tamlong12032000@gmail.com",
+  PASSWORD: "uqoukvtmwpcjllzf",
+  SERVICE: "gmail",
 };
 
 module.exports.SECRET_KEY = "tamlongdev";

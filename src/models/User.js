@@ -16,6 +16,9 @@ const UserSchema = new Schema(
       type: String,
       default: "avatar_default.jpg",
     },
+    follows: {
+      type: Array,
+    },
   },
   { timestamps: true, collection: "Users" }
 );

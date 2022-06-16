@@ -9,6 +9,10 @@
   <title>DETAIL</title>
   <%- include("partials/link") %>
   <link rel="stylesheet" href="/css/detail.css">
+  <link rel="stylesheet" href="/css/paging.css">
+  <link rel="stylesheet" href="/css/skeleton.css">
+
+
 </head>
 
 <body>
@@ -54,9 +58,12 @@
             <a class="read" href="<%= manga.slug%>/read/chapter-<%= manga.chapters[0].chapterNumber%>">
               <i class="fas fa-book-open"></i> Đọc từ đầu
             </a>
-            <span class="follow ml-3 mr-3">
-              <i class="fas fa-heartbeat"></i> Theo dõi
-            </span>
+            <label class="follow ml-3 mr-3 form-check-label" for="checkFollow">
+              <span>
+                <% if (followFlag) { %><i class="fas fa-heart-broken"></i> Bỏ theo dõi <% }else{ %> <i class="fas fa-heartbeat"></i> Theo dõi <%}%> 
+              </span>
+              <input type="checkbox" class="form-check-input" id="checkFollow" <%= followFlag ? "checked" : ""%> onchange="handleFollow('<%= manga._id%>')" hidden />
+            </label>
             <span class="like">
               <i class="fas fa-thumbs-up"></i> Thích
             </span>
@@ -130,7 +137,7 @@
     <% } %>
   </section>
   <section class="section container" id="section-3">
-    <% if(user){ %>
+    <% if(user ){ %>
     <%- include("partials/comments",{chapter:null}) %>
     <% } else{%>
     <%- include("partials/comments",{user:null}) %>
@@ -217,6 +224,85 @@
        <% }) %>`
       $('[data-toggle="tooltip"]').tooltip()
     }
+  }
+</script>
+<script>
+  function handleFollow(mangaId) {
+    const checkedFollow = document.getElementById("checkFollow").checked;
+    const followBtn = document.querySelector(".follow");
+    if (checkedFollow) {
+      followBtn.querySelector("span").innerHTML = `<i class="fas fa-heart-broken"></i> Bỏ theo dõi`
+      addFollow(mangaId);
+    } else {
+      followBtn.querySelector("span").innerHTML = ` <i class="fas fa-heartbeat"></i> Theo dõi`
+      unFollow(mangaId);
+    }
+  }
+
+  function addFollow(mangaId) {
+    const payload = {
+      mangaId: mangaId
+    }
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/follow", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đang theo dõi",
+            text: "Nhớ dõi theo hàng tuần nha !",
+            icon: "success",
+            button: "OK!",
+          });
+        } else {
+          swal({
+            title: "Có lỗi rồi !",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function unFollow(mangaId) {
+    const payload = {
+      mangaId: mangaId
+    }
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/follow", {
+        method: "DELETE",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đã bỏ theo dõi",
+            text: "Cảm ơn bạn đã ủng hộ !",
+            icon: "success",
+            button: "OK!",
+          });
+        } else {
+          swal({
+            title: "Có lỗi rồi !",
+            text: result.message,
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
   }
 </script>
 

@@ -1,37 +1,33 @@
-.paginationjs {
-  background-color: red;
-  position: fixed;
-  right: 10px;
-  top: 100px;
+#paging-comment .paginationjs {
+  margin: 10px;
   display: flex;
-  flex-direction: column; }
-  .paginationjs ul {
-    display: flex;
-    align-items: center; }
-  .paginationjs ul li {
+  justify-content: center; }
+  #paging-comment .paginationjs ul {
+    display: flex; }
+  #paging-comment .paginationjs ul li {
     padding: 10px;
     list-style: none;
     border: solid 1px #007bff;
     cursor: pointer;
     margin: 0px 5px; }
-    .paginationjs ul li a {
+    #paging-comment .paginationjs ul li a {
       text-decoration: none; }
-  .paginationjs .paginationjs-prev:hover,
-  .paginationjs .paginationjs-next:hover {
+  #paging-comment .paginationjs .paginationjs-prev:hover,
+  #paging-comment .paginationjs .paginationjs-next:hover {
     background-color: #007bff;
     color: white; }
-  .paginationjs .paginationjs-prev:hover a,
-  .paginationjs .paginationjs-next:hover a {
+  #paging-comment .paginationjs .paginationjs-prev:hover a,
+  #paging-comment .paginationjs .paginationjs-next:hover a {
     color: white; }
-  .paginationjs .paginationjs-page.active {
+  #paging-comment .paginationjs .paginationjs-page.active {
     background-color: #007bff;
     color: white; }
-  .paginationjs .J-paginationjs-go-pagenumber {
+  #paging-comment .paginationjs .J-paginationjs-go-pagenumber {
     width: 50px;
     padding: 9px;
     outline: none;
     margin: 0px 10px; }
-  .paginationjs .J-paginationjs-go-button {
+  #paging-comment .paginationjs .J-paginationjs-go-button {
     padding: 10px;
     background-color: #be151b;
     color: white;
