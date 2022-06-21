@@ -1,11 +1,14 @@
 const Slide = require("../models/Slide");
 const jwt = require("jsonwebtoken");
+const { VALUES } = require("../config/default");
 
 class mangaController {
   async showDashboardManga(req, res) {
     // const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       // const admin = await Admin.findOne({ account: tokenVerify.account });
       // const adminList = await Admin.find();
       if (tokenVerify.role === "manga_admin") {

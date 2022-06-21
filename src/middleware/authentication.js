@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { VALUES } = require("../config/default");
 dotenv.config();
 async function Authentication(req, res, next) {
   const { account, password: plainTextPassword } = req.body;
@@ -18,7 +19,9 @@ async function Authentication(req, res, next) {
       res.status(401).json({ status: "error", error: "Invalid password !!!" });
     }
     const { password, _id, role, account, ...others } = admin._doc;
-    const token = jwt.sign({ _id, account, role }, process.env.TOKEN_SECRET);
+    // const token = jwt.sign({ _id, account, role }, process.env.TOKEN_SECRET);
+    const token = jwt.sign({ _id, account, role }, VALUES.TOKEN_SECRET);
+
     // req.token = token;
     res.cookie("token", token);
     res.status(200).json(role);

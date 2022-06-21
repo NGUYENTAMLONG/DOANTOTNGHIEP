@@ -5,12 +5,15 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
+const { VALUES } = require("../config/default");
 dotenv.config();
 class humanController {
   async showAvatar(req, res, next) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       // res.send(req.params.name);
       // C:/CODE/DO AN TOT NGHIEP/images
       // ../../../../images/
@@ -29,7 +32,9 @@ class humanController {
   async showDeletePage(req, res) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const adminList = await Admin.find();
       res.render("admin/delete", { admin, adminList });
@@ -41,7 +46,9 @@ class humanController {
   async showCreatePage(req, res) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const adminList = await Admin.find();
       res.render("admin/create", { admin, adminList });
@@ -53,7 +60,9 @@ class humanController {
   async showEditPage(req, res) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const adminList = await Admin.find();
       res.render("admin/edit", { admin, adminList });
@@ -65,7 +74,9 @@ class humanController {
   async showDashboardHrm(req, res) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const adminList = await Admin.find();
       res.render("admin/manage_hrm", { adminList, admin });
@@ -233,7 +244,9 @@ class humanController {
   async showUserAvatar(req, res, next) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       // C:/CODE/DO AN TOT NGHIEP/images
       // ../../../../images/
       // res.sendFile(path.join(__dirname, "../../../../images/" + req.params.name));
@@ -257,7 +270,9 @@ class humanController {
   async showDashboardUser(req, res, next) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const users = await User.find();
       if (!users) {
@@ -275,7 +290,9 @@ class humanController {
   async showUserCreationPage(req, res, next) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       res.render("admin/createUser", { admin });
     } catch (error) {
@@ -287,7 +304,9 @@ class humanController {
   async showUserDeletionPage(req, res, next) {
     const token = req.cookies.token;
     try {
-      const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
+      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
+
       const admin = await Admin.findOne({ account: tokenVerify.account });
       const userList = await User.find();
       res.render("admin/deleteUser", { admin, userList });

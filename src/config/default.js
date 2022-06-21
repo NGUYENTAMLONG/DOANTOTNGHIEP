@@ -3,6 +3,7 @@ module.exports.VALUES = {
   IS_FAILURE: false,
   LIKES: 0,
   COMPLETE_STATUS: "Hoàn thành",
+  TOKEN_SECRET: "manga",
 };
 
 module.exports.OPTION_COOKIE = { maxAge: 900000, httpOnly: true };
