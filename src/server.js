@@ -3,7 +3,6 @@
 const express = require("express");
 const path = require("path");
 const ejs = require("ejs");
-const reload = require("reload");
 const morgan = require("morgan");
 const database = require("./config/database");
 const route = require("./routers/index.routes");
@@ -19,7 +18,6 @@ app.listen(PORT, () => {
   console.log(`🐲🐲🐲 Server is running on PORT: ${PORT} !!! 🍀🍀🍀`);
 });
 
-reload(app);
 app.use(cors()); // Cho phép chia sẻ api với localhost khác
 //********************* HTTP logger
 //app.use(morgan("combined")); //thu vien morgan dung de log ra http request tu client -> server
