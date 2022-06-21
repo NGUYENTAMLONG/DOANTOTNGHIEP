@@ -54,8 +54,13 @@ module.exports = {
           limit: limit,
         };
       }
-      result.mangas = await Manga.find().limit(limit).skip(startPage).exec();
+      result.mangas = await Manga.find()
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
       const newMangas = filterPopular(result.mangas);
+
       res.status(STATUS.SUCCESS).json({ newMangas });
     } catch (error) {
       console.log(error);

@@ -14,7 +14,7 @@ const cors = require("cors");
 const app = express();
 // const process = require("process");
 //********************* Khởi tạo cổng server
-const PORT = 3416 || process.env.PORT;
+const PORT = process.env.PORT || 3416;
 app.listen(PORT, () => {
   console.log(`🐲🐲🐲 Server is running on PORT: ${PORT} !!! 🍀🍀🍀`);
 });

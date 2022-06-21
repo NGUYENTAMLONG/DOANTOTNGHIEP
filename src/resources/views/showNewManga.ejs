@@ -41,7 +41,6 @@
   }
 
   $('#paging-1').pagination(pagingObj);
-  // $("#paging-2").pagination(pagingObj);
 
   function showListAfterPaging(data, pagination) {
     $(".manga-container").html("")
@@ -55,7 +54,7 @@
           const htmls = `<div class="col-sm-4 col-md-3 col-lg-2 p-2">
     <div class="manga-card">
       ${manga.hot ? "<span class='manga-tag__hot'>Hot</span>" :""}
-      
+      ${(rs.newMangas[i].period) && `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"> ${rs.newMangas[i].period}</span>`}
       <a href="/detail/${manga.slug}">
         <img class="card-img-top manga-img" src="${manga.image}" alt="Card image cap" />
       </a>
@@ -84,8 +83,8 @@
           </ul>
           <div class="info__type">
             <b>Thể loại:</b>
-            ${manga.type.map(function(item){ 
-              return "<a href='/category/"+item+">"+item+"</a>"})}
+
+            ${manga.type.map((item)=>{  return `<a href="/category/${item}">${item}</a>`})}
           </div>
           <p class="info__desc">
             ${manga.description}

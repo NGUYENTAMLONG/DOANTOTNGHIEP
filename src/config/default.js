@@ -2,6 +2,7 @@ module.exports.VALUES = {
   IS_SUCCESS: true,
   IS_FAILURE: false,
   LIKES: 0,
+  COMPLETE_STATUS: "Hoàn thành",
 };
 
 module.exports.OPTION_COOKIE = { maxAge: 900000, httpOnly: true };

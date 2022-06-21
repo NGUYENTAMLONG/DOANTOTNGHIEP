@@ -9,6 +9,7 @@ const logoutRouter = require("./directions/logout.routes.js");
 const registerRouter = require("./directions/register.routes.js");
 const newMangaRouter = require("./directions/showNewManga.routes.js");
 const followMangaRouter = require("./directions/showFollowManga.routes.js");
+const completeRouter = require("./directions/complete.routes");
 const commentRouter = require("./directions/comment.routes.js");
 const AuthenUser = require("../middleware/authenUser");
 function route(app) {
@@ -16,6 +17,7 @@ function route(app) {
   app.use("/follow", AuthenUser, followMangaRouter);
   app.use("/category", AuthenUser, categoryRouter);
   app.use("/popular", AuthenUser, popularRouter);
+  app.use("/complete", AuthenUser, completeRouter);
   app.use("/manage", manageRouter);
   app.use("/detail", AuthenUser, detailRouter);
   app.use("/comment", commentRouter);
