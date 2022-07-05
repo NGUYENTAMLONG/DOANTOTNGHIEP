@@ -5,6 +5,8 @@ const appRoot = require("app-root-path");
 const bodyParser = require("body-parser");
 const imgbbUploader = require("imgbb-uploader");
 const Manga = require("../../../../models/Manga");
+const Chapter = require("../../../../models/Chapter");
+
 const getTime = require("../../../../helper/getTime");
 const clearImg = require("../../../../helper/clearImg");
 const { PagingModel } = require("../../../../middleware/paging");
@@ -12,7 +14,6 @@ const {
   checkChapterNumber,
 } = require("../../../../middleware/validateChapter");
 
-const { nextTick } = require("process");
 const router = express.Router();
 
 // **************** Chapter Routes/Controller ****************
@@ -181,43 +182,7 @@ const storageCover = multer.diskStorage({
 const uploadManga = multer({ storage: storageCover });
 //2. POST MANGA
 //ex: manage/admin_manga/manga/publish
-router.post("/publish/cover", uploadManga.single("cover"), async (req, res) => {
-  res.json(req.file);
-});
-router.post("/publish", async (req, res) => {
-  const {
-    name,
-    anotherName,
-    author,
-    type,
-    serve,
-    status,
-    hot,
-    description,
-    image,
-  } = req.body;
-  const newManga = new Manga({
-    name,
-    anotherName,
-    author,
-    type,
-    serve,
-    status,
-    hot,
-    description,
-    image,
-  });
-  try {
-    const createdManga = await newManga.save();
-    if (!createdManga) {
-      res.status(500).json("SOMETHING WENT WRONG WHILE CREATING MANGA");
-    }
-    res.status(200).json({ flag: true, result: createdManga });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json("ERROR");
-  }
-});
+
 // ****************** UPDATE MANGA *************************
 //1. Get Page (UPDATE MANGA)
 const typeArr = require("../../../../helper/getTypes");

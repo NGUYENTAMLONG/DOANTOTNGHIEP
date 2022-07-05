@@ -1,17 +1,21 @@
 const { VALUES } = require("../config/default");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
-const filterPopular = require("../helper/filterPopular");
 const { ErrorResponse } = require("../helper/response");
+const moment = require("moment");
 const Manga = require("../models/Manga");
+const { orderManga } = require("../helper/order");
 class CompleteController {
   async show(req, res, next) {
     try {
       const mangas = await Manga.find({
         status: { $regex: VALUES.COMPLETE_STATUS, $options: "i" },
+      }).populate("contentId", {
+        chapters: { $slice: -1 },
       });
       res.render("showComplete", {
         user: req.AuthPayload,
-        mangas: filterPopular(mangas),
+        moment: moment,
+        mangas: orderManga(mangas),
       });
     } catch (error) {
       console.log(error);

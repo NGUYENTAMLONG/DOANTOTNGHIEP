@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRASH DASHBOARD</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/manage_manga.css">
+  <link rel="stylesheet" href="/css/fullscreenImg.css">
+
+  <%- include("../../partials/link") %>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <div class="container mt-2">
+    <div class="row d-flex justify-content-center">
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <h3>Danh sách manga đã xóa</h3>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex align-items-center">
+        <i class="fas fa-2x fa-search mr-2 text-info"></i> <input class="form-control" id="myInput" type="text" placeholder="Tìm manga ...">
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
+        <a href="/management/content/manga" class="btn btn-success ml-2">Trang quản lí <i class="fas fa-2x fa-cash-register"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <p>
+        <b>Số lượng: </b> <span class="badge badge-primary mr-3"> <%= mangas.length %> </span>
+        <b><i class="fas fa-mars text-primary"></i></b> <span class="badge badge-primary"> <%= mangas.filter((item)=> item.serve === "male").length %> </span>
+        <b><i class="fas fa-venus text-danger"></i></b> <span class="badge badge-danger"> <%= mangas.filter((item)=> item.serve === "female").length %> </span>
+        <b><i class="fas fa-venus-mars text-success"></i></b> <span class="badge badge-success"> <%= mangas.filter((item)=> item.serve === "all").length %> </span>
+      </p>
+    </div>
+  </div>
+  <table class="table table-striped table-bordered table-sm" width="100%">
+    <thead>
+      <tr>
+        <th scope="col" class="fit">STT</th>
+        <th scope="col">Ảnh bìa</th>
+        <th scope="col">Tên</th>
+        <th scope="col">Tên khác</th>
+        <th scope="col">Tác giả</th>
+        <th scope="col">Thể loại</th>
+        <th scope="col" class="fit">
+          <p style="font-size: 13px;margin-bottom: -5px;">
+            Đối tượng
+          </p>
+        </th>
+        <th scope="col">Mô tả</th>
+        <th scope="col">Tình trạng</th>
+        <th scope="col" class="fit">Hot</th>
+        <th scope="col">Thống kê</th>
+        <th scope="col">Chương</th>
+        <th scope="col">Fanmade</th>
+        <th scope="col">Thời gian tạo</th>
+        <th scope="col">Tác vụ</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <% mangas.forEach((manga,index) => { %>
+      <tr class="manga-row">
+        <th scope="row" class="fit"><%= index + 1%></th>
+        <td scope="col">
+          <img src="<%= manga.image %>" class="manga-image" width="100%" alt="">
+          <!-- The Modal -->
+          <div id="myModal" class="modal">
+            <span class="close-btn">&times;</span>
+            <img class="modal-content" id="preview-modal">
+          </div>
+        </td>
+        <td scope="col"><%= manga.name %></td>
+        <td scope="col"><%= manga.anotherName %></td>
+        <td scope="col"><%= manga.author %></td>
+        <td scope="col"><% manga.type.forEach((type,index) => { %><span class="type bg-primary text-light"><%= type %></span>
+          <%}); %></td>
+        <td scope="col" class="fit text-center"><% if (manga.serve ==="male"){%>
+          <i class="fas fa-2x fa-mars text-primary" data-toggle="tooltip" data-placement="bottom" title="male"></i>
+          <% }else if(manga.serve ==="female"){ %>
+          <i class="fas fa-2x fa-venus text-danger" data-toggle="tooltip" data-placement="bottom" title="female"></i>
+          <% 
+            }else{ %>
+          <i class="fas fa-2x fa-venus-mars text-success" data-toggle="tooltip" data-placement="bottom" title="all"></i>
+          <% } %>
+        </td>
+
+        <td scope="col" class="desc">
+          <div class="desc__less">
+            <%= manga.description %>
+          </div>
+          <div class="desc__more bg-dark text-light">
+            <div class="text-center bg-warning text-dark rounded">
+              <b>
+                <%= manga.name%>
+              </b>
+            </div>
+            <b>Nội dung: </b>
+            <p>
+              <%= manga.description%>
+            </p>
+          </div>
+        </td>
+        <td scope="col"><%= manga.status %></td>
+        <td scope="col" class="text-center fit">
+          <% if (manga.hot === true) { %> <span class='badge badge-success'>true</span> <% }else { %> <span class='badge badge-danger'>false</span> <%}%>
+          </td>
+          <td scope="col">
+            <p>
+              <i class="fas fa-thumbs-up"></i> <%= manga.statistical.likes %>
+          </p>
+          <p>
+            <i class="fas fa-heart"></i><%= manga.statistical.hearts %>
+          </p>
+          <p>
+            <i class="far fa-eye"></i><%= manga.statistical.views %>
+          </p>
+          <p>
+            <i class="fas fa-comments"></i> <%= manga.statistical.comments %>
+          </p>
+        </td>
+        <td scope="col" class="text-center">
+          <button type="button" class="btn btn-info btn-sm launch-modal" onclick='showChapters(this)' data-toggle="modal" data-target="#modalChapters" data-id="<%= manga.contentId._id%>" data-slug="<%= manga.slug%>">
+            Chi tiết
+          </button>
+          <div class="modal fade" id="modalChapters" tabindex="-1" role="dialog" aria-labelledby="modalChaptersLabel" aria-hidden="true">
+            <div class="modal-dialog mw-100 w-75" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalChaptersLabel">Các chương hiện tại
+                  </h5>
+                  <p class="ml-2" style="margin-top: 20px;">Tổng : <span class="badge badge-primary chapterSum"></span>
+                  </p>
+                  <input class="form-control mt-2 mb-2" style="width: 400px;margin-left: 100px;" id="myInput-Chapter" type="text" placeholder="Tìm chương ...">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="Close()" style="outline: none;">
+                    <span class="close-btn text-dark">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <span></span>
+                  <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal" onclick="Close()">Close</button>
+                  <button type="button" class="btn btn-primary btn-back" hidden onclick="Back()">Back</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td scope="col" class="text-center">
+          <% if ( manga.fanmade === true ) { %><span class='badge badge-success'>true</span> <% }else { %> <span class='badge badge-danger'>false</span> <%}%>
+          </td>
+        <td scope="col"><%= manga.createdAt %></td>
+        <td scope="col" class="text-center">
+          <button class="btn btn-success mt-2 btn-sm" onclick="restoreManga('<%= manga.slug%>')">Khôi phục</button>
+          <button class="btn btn-dark mt-2 btn-sm" onclick="destroyManga('<%= manga.slug%>', '<%= manga.contentId._id%>','<%= manga.image%>')">Xóa</button>
+        </td>
+      </tr>
+      <%}); %>
+    </tbody>
+  </table>
+  <div id="demo" data-total="<%= mangas.total %>" data-next="<% if (mangas.next){%>
+        <%= mangas.next %>
+    <% }%>">
+
+  </div>
+</body>
+<%- include("../../partials/script") %>
+<script src="/js/moment.min.js"></script>
+<script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+  $(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+<script>
+  var modal = document.getElementById("myModal");
+
+  var modalImg = document.getElementById("preview-modal");
+  document.querySelectorAll(".manga-image").forEach((item, index) => {
+    item.onclick = function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+  });
+
+
+  const span = document.getElementsByClassName("close-btn")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+  };
+</script>
+<script>
+  function showChapters(btn) {
+    const id = btn.dataset.id;
+    const slug = btn.dataset.slug;
+    fetch(`/management/content/manga/deletedManga/allChapters/${id}`)
+      .then(res => res.json()).then(result => {
+        const chapters = result.data.chapters;
+        console.log(result)
+        document.querySelector(".chapterSum").innerHTML = chapters.length
+        let htmls = chapters.map((chapter, index) => {
+          return `<tr>
+             <th scope="row" class="text-center">
+               ${ index + 1}
+             </th>
+             <td class="text-center col-chapterNumber"> <span class="badge badge-primary ">${ chapter.chapterNumber}</span></td>
+             <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="${chapter.chapterName}" >${ chapter.chapterName}</td>
+             <td class="text-center">${ moment(chapter.createdTime).format("L")}</td>
+             <td class="text-right d-flex justify-content-center"> 
+              <button type="button" class="btn btn-warning mr-3" data-id="${id}" data-chapternumber="${chapter.chapterNumber}" data-location="${index}" onclick="Review(this)">Xem</button>
+              </td>
+           </tr>`
+        })
+        document.querySelectorAll(".modal-body")[0].innerHTML = `<table class="table table-hover bg-dark text-light  tableChapters">
+          <thead class="bg-warning text-dark ">
+            <tr>
+              <th scope="col" class="text-center">STT</th>
+              <th scope="col" class="text-center col-chapterNumber" style="width:100px">Chương</th>
+              <th scope="col" class="text-center">Tên</th>
+              <th scope="col" class="text-center">Ngày đăng</th>
+              <th scope="col">Tác vụ</th>
+            </tr>
+          </thead>
+          <tbody id="myTable-Chapter">
+            ${htmls.join("")}
+          </tbody>
+        </table>
+        `
+        $(function() {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+        $(document).ready(function() {
+          $("#myInput-Chapter").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable-Chapter tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+      }).catch(error => console.log(error))
+
+  }
+</script>
+<script src="/js/manage_maga.js">
+</script>
+<script>
+  function restoreManga(slug) {
+    fetch(`/management/content/manga/restoreManga/${slug}`, {
+        method: 'PATCH', // or 'PUT'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã khôi phục thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          })
+        }
+
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
+  }
+
+  function destroyManga(slug, contentId, imgPath) {
+    const payload = {
+      contentId,
+      imgName: imgPath.split("/")[2]
+    }
+    swal({
+      title: "Bạn có chắc chắn muốn xóa không",
+      text: "Nếu xóa bạn không thể khôi phục truyện !",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        fetch(`/management/content/manga/destroyManga/${slug}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.isSuccess) {
+              swal({
+                title: "Thành công",
+                text: "Đã xóa thành công !",
+                icon: "success",
+                button: "Ok!",
+              }).then(() => {
+                location.reload()
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          })
+      } else {
+        return;
+      }
+    });
+  }
+</script>
+
+</html>

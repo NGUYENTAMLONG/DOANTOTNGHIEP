@@ -49,3 +49,6 @@
     table-layout: fixed; }
   .table .th-stt {
     width: 50px; }
+
+.modal-body img {
+  width: 100% !important; }

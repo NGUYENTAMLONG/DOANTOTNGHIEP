@@ -8,6 +8,7 @@
   <!-- <meta http-equiv="refresh" content="5"> -->
   <title>DETAIL</title>
   <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/detail.css">
   <link rel="stylesheet" href="/css/paging.css">
   <link rel="stylesheet" href="/css/skeleton.css">
@@ -55,9 +56,11 @@
           <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
           <% }) %>
           <div class="d-flex mt-3">
-            <a class="read" href="<%= manga.slug%>/read/chapter-<%= manga.chapters[0].chapterNumber%>">
+            <% if (manga.contentId.chapters.length >0){ %>
+            <a class="read" href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[0].chapterNumber%>">
               <i class="fas fa-book-open"></i> Đọc từ đầu
             </a>
+            <%} %>
             <label class="follow ml-3 mr-3 form-check-label" for="checkFollow">
               <span>
                 <% if (followFlag) { %><i class="fas fa-heart-broken"></i> Bỏ theo dõi <% }else{ %> <i class="fas fa-heartbeat"></i> Theo dõi <%}%> 
@@ -83,7 +86,7 @@
 
   </section>
   <section class="section container" id="section-2">
-    <% if (manga.chapters.length === 0 ){%>
+    <% if (manga.contentId.chapters.length === 0 ){%>
     <div class="text-center">
       <h1 class="bg-danger text-light p-2 rounded">Chưa có chương mới</h1>
     </div>
@@ -103,8 +106,8 @@
         </label>
       </div>
       <input class="form-control" id="myInput" type="text" placeholder="Tìm chương..." style="width: 200px;">
-      <a href="<%= manga.slug%>/read/chapter-<%= manga.chapters[manga.chapters.length - 1 ].chapterNumber %>" class="btn btn-outline-warning">Đọc chương mới nhất <span class="badge badge-primary">
-          <%= manga.chapters[manga.chapters.length - 1 ].chapterNumber %>
+      <a href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[manga.contentId.chapters.length - 1 ].chapterNumber %>" class="btn btn-outline-warning">Đọc chương mới nhất <span class="badge badge-primary">
+          <%= manga.contentId.chapters[manga.contentId.chapters.length - 1 ].chapterNumber %>
         </span>
       </a>
     </div>
@@ -119,7 +122,7 @@
           </tr>
         </thead>
         <tbody class="chapterList" id="myTable">
-          <% manga.chapters.forEach(function(chapter,index){ %>
+          <% manga.contentId.chapters.forEach(function(chapter,index){ %>
           <tr>
             <th scope="row" class="stt"><%= index + 1%></th>
             <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
@@ -128,7 +131,7 @@
             <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
                 <%= chapter.chapterName%>
               </a></td>
-            <td class="text-right"> <%= chapter.chapterUpdate%></td>
+            <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
           </tr>
           <% }) %>
         </tbody>
@@ -196,30 +199,30 @@
 
   function checkSort(checkBtn) {
     if (checkBtn.value == "desc") {
-      chapterList.innerHTML = `<% manga.chapters.reverse().forEach(function(chapter,index){ %>
+      chapterList.innerHTML = `<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
      <tr>
        <th scope="row" class="stt"><%= index + 1%></th>
        <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
            Chương <%= chapter.chapterNumber%>
          </a> </td>
-       <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
+       <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
            <%= chapter.chapterName%>
          </a></td>
-       <td class="text-right"> <%= chapter.chapterUpdate%></td>
+       <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
      </tr>
      <% }) %>`
       $('[data-toggle="tooltip"]').tooltip()
     } else if (checkBtn.value == "asc") {
-      chapterList.innerHTML = `<% manga.chapters.reverse().forEach(function(chapter,index){ %>
+      chapterList.innerHTML = `<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
        <tr>
          <th scope="row" class="stt"><%= index + 1%></th>
          <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
              Chương <%= chapter.chapterNumber%>
            </a> </td>
-         <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
+         <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
              <%= chapter.chapterName%>
            </a></td>
-         <td class="text-right"> <%= chapter.chapterUpdate%></td>
+         <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
        </tr>
        <% }) %>`
       $('[data-toggle="tooltip"]').tooltip()

@@ -1,33 +1,44 @@
 const Manga = require("../models/Manga");
 const Slide = require("../models/Slide");
 const moment = require("moment");
-const filterPopular = require("../helper/filterPopular");
+const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
+const { ErrorResponse } = require("../helper/response");
+const { orderManga } = require("../helper/order");
+// const filterPopular = require("../helper/filterPopular");
 
 class PopularController {
   async showJustUpdated(req, res, next) {
     try {
-      const mangas = await Manga.find();
-      const slides = await Slide.find({ active: true }).populate("manga");
+      const mangas = await Manga.find().populate("contentId", {
+        chapters: { $slice: -1 },
+      });
+      // const slides = await Slide.find({ active: true }).populate("manga");
       res.render("showPopular", {
         user: req.AuthPayload,
+        moment: moment,
         title: `<i class="fab fa-hotjar"></i> Truyện mới cập nhật`,
-        slides,
-        mangas: filterPopular(mangas),
+        // slides,
+        mangas: orderManga(mangas),
       });
     } catch (error) {
       console.log(error);
-      res.status(500).json("ERROR:", error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async showAll(req, res, next) {
     try {
-      const mangas = await Manga.find({ serve: "all" });
-      const slides = await Slide.find({ active: true }).populate("manga");
+      const mangas = await Manga.find({ serve: "all" }).populate("contentId", {
+        chapters: { $slice: -1 },
+      });
+      // const slides = await Slide.find({ active: true }).populate("manga");
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-flag-checkered"></i> Truyện tổng hợp`,
-        slides,
-        mangas: filterPopular(mangas),
+        moment: moment,
+        // slides,
+        mangas: orderManga(mangas),
       });
     } catch (error) {
       console.log(error);
@@ -36,13 +47,16 @@ class PopularController {
   }
   async showMangaForMale(req, res, next) {
     try {
-      const mangas = await Manga.find({ serve: "male" });
-      const slides = await Slide.find({ active: true }).populate("manga");
+      const mangas = await Manga.find({ serve: "male" }).populate("contentId", {
+        chapters: { $slice: -1 },
+      });
+      // const slides = await Slide.find({ active: true }).populate("manga");
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-mars"></i> Truyện con trai`,
-        slides,
-        mangas: filterPopular(mangas),
+        moment: moment,
+        // slides,
+        mangas: orderManga(mangas),
       });
     } catch (error) {
       console.log(error);
@@ -51,13 +65,19 @@ class PopularController {
   }
   async showMangaForFemale(req, res, next) {
     try {
-      const mangas = await Manga.find({ serve: "female" });
-      const slides = await Slide.find({ active: true }).populate("manga");
+      const mangas = await Manga.find({ serve: "female" }).populate(
+        "contentId",
+        {
+          chapters: { $slice: -1 },
+        }
+      );
+      // const slides = await Slide.find({ active: true }).populate("manga");
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-venus"></i> Truyện con gái`,
-        slides,
-        mangas: filterPopular(mangas),
+        // slides,
+        moment: moment,
+        mangas: orderManga(mangas),
       });
     } catch (error) {
       console.log(error);

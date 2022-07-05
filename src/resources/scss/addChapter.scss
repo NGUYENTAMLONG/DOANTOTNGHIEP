@@ -47,6 +47,24 @@ section {
           overflow: hidden;
           text-overflow: ellipsis;
         }
+        td.handle {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          .fa-trash {
+            color: $color-1;
+            cursor: pointer;
+          }
+          button {
+            outline: none;
+            border: none;
+            background-color: transparent;
+            .fa-tools {
+              color: $color-3;
+              cursor: pointer;
+            }
+          }
+        }
       }
       tr {
         width: 100%;

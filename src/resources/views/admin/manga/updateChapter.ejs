@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update chapter</title>
+  <link rel="stylesheet" href="/css/addChapter.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css" integrity="sha512-UTNP5BXLIptsaj5WdKFrkFov94lDx+eBvbKyoe1YAfjeRPC+gT5kyZ10kOHCfNZqEui1sxmqvodNUx3KbuYI/A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <%- include("../../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/froalacss" />
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <section style="background-image: url('<%= manga.image%>');" id="general">
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <div class="manga-img">
+          <img src="<%= manga.image%>" alt="" />
+        </div>
+      </div>
+      <div class="col-md-8 col-lg-4">
+        <div class="manga-info">
+          <h3 class="manga-info__name"><%= manga.name%></h3>
+          <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
+          <p class="manga-info__author">Tác giả: <a href="#">
+              <%= manga.author %>
+            </a></p>
+          <p class="manga-info__status">Tình trạng: <%= manga.status %> </p>
+          <p class="manga-info__statistical">Thống kê:
+            <span>
+              <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
+            </span>
+            <span>
+              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
+            </span>
+            <span>
+              <i class="far fa-eye"></i> <%= manga.statistical.views %>
+            </span>
+          </p>
+          <% manga.type.forEach(function(type,index){ %>
+          <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
+          <% }) %>
+        </div>
+
+      </div>
+      <div class="col-md-12 col-lg-5 pt-3">
+        <div class="manga-info__desc">
+          <b>Nội dung:</b>
+          <p class="truncate">
+            <%= manga.description %>
+          </p>
+          <div class="text-center">
+            <button class="show-more btn btn-primary">Show More</button>
+          </div>
+        </div>
+        <div class="list-chapter mt-4">
+          <table class="table bg-dark text-light">
+            <thead class="bg-warning text-dark">
+              <tr>
+                <th scope="col" class="text-center">STT</th>
+                <th scope="col" class="text-center">Chương</th>
+                <th scope="col" class="text-center">Tên</th>
+                <th scope="col" class="text-center">Ngày đăng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% manga.contentId.chapters.forEach(function(chapter,index){ %>
+              <tr>
+                <th scope="row" class="text-center">
+                  <%= index + 1%>
+                </th>
+                <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
+                <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName%></td>
+                <td class="text-right"><%= moment(chapter.createdTime).format("L")%></td>
+              </tr>
+              <%})%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/management/content/manga/">Bảng điều khiển</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Sửa chương truyện</li>
+    </ol>
+  </nav>
+  <section class="container mt-4 mb-4" id="add-chapter">
+    <form class="form-submit" action="/" method="POST" data-manga="<%= manga.slug %>" data-chapterId="<%= manga.contentId._id %>">
+      <caption class="text-center">
+        <h2>
+          Sửa chương <%= chapter.chapterNumber %>
+        </h2>
+      </caption>
+      <div class="form-group">
+        <label for="number">Chương số</label>
+        <input type="text" class="form-control" required name="chapterNumber" value="<%= chapter.chapterNumber %>" data-old="<%= chapter.chapterNumber %>" id="chapterNumber" placeholder="Enter number of chapter/ Nhập chương số" />
+      </div>
+      <div class="form-group">
+        <label for="username">Tên chương</label>
+        <input type="text" class="form-control" required name="chapterName" value="<%= chapter.chapterName %>" id="chapterName" placeholder="Enter name of chapter/ Nhập tên chương" />
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" onclick="fixTitle(event,this)">Sửa</button>
+      </div>
+
+      <div class="form-group form-edit">
+      </div>
+    </form>
+  </section>
+</body>
+<%- include("../../partials/script") %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/froalajs"></script>
+<script src="/deleteImage"></script>
+<script>
+  const btnShowMore = document.querySelector(".show-more");
+  const textDesc = document.querySelector(".manga-info__desc p");
+
+  let flag = false;
+  btnShowMore.onclick = function() {
+    if (flag === false) {
+      btnShowMore.textContent = "Show Less";
+      textDesc.classList.remove("truncate");
+      flag = true
+    } else {
+      btnShowMore.textContent = "Show More";
+      textDesc.classList.add("truncate");
+      flag = false
+    }
+  }
+
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+</script>
+
+<script>
+  const chapterId = document.querySelector(".form-submit").getAttribute("data-chapterId");
+  const manga = document.querySelector(".form-submit").getAttribute("data-manga");
+
+  function fixTitle(event, it) {
+    event.preventDefault();
+    const chapterNumber = document.getElementById("chapterNumber");
+    const chapterName = document.getElementById("chapterName");
+    const payload = {
+      chapterId: chapterId.trim(),
+      chapterNumber: chapterNumber.value.trim(),
+      chapterName: chapterName.value.trim(),
+      oldChapterNumber: chapterNumber.getAttribute("data-old"),
+      manga,
+    }
+    fetch(`/management/content/manga/updateChapter/fixTitle`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (!result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi xảy ra !",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Đã sửa số chương và tên chương ^^ . Bạn có muốn sửa nội dung không ?",
+            icon: "success",
+            buttons: true,
+          }).then((willGo) => {
+            if (willGo) {
+              chapterNumber.setAttribute("disabled", "");
+              chapterName.setAttribute("disabled", "");
+              it.remove()
+              getEditForm(payload.chapterId, payload.chapterNumber, result.data)
+              console.log(result)
+            } else {
+              window.location.href = `/management/content/manga/post/${manga}`;
+            }
+          });
+        }
+      })
+      .catch((error) => console.log(error))
+  }
+
+  function getEditForm(chapterId, chapterNumber, replaceContent) {
+    document.querySelector(".form-edit").innerHTML = `<textarea id="froala-edit" name="editchapter"></textarea><br>
+  <div class="text-center">
+    <button type="submit" class="btn btn-warning">Hủy bỏ</button>
+    <button type="submit" class="btn btn-primary" data-id="${chapterId}" data-number="${chapterNumber}" onclick="submitChapter(event,this)">Đăng chương</button>
+  </div>`
+
+    document.querySelector("#froala-edit").innerHTML = `${replaceContent}`
+    const editor = new FroalaEditor("#froala-edit", {
+      // Set the image upload URL.
+      imageUploadURL: `/management/content/manga/post/${manga.trim()}/add/${chapterNumber}`,
+      events: {
+        'image.beforeUpload': function($img) {
+          console.log("ImageData", ImageData);
+
+        },
+        'image.removed': function($img) {
+          const data = {
+            path: $img.attr('src')
+          }
+          fetch(`/management/content/manga/post/${manga.trim()}/remove/${chapterNumber}`, {
+            method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            fileUploadParam: 'file_name',
+            body: JSON.stringify(data)
+          }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+        }
+      }
+    });
+  }
+
+  function submitChapter(event, it) {
+    event.preventDefault();
+    const chapterId = it.getAttribute("data-id");
+    const chapterNumber = it.getAttribute("data-number");
+    const chapterContent = document.getElementById("froala-edit").value;
+    const payload = {
+      chapterId: chapterId,
+      chapterContent: chapterContent,
+    }
+    fetch(`/management/content/manga/submit/update/${chapterNumber}`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (!result.isSuccess) {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Vui lòng kiểm tra lại",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Cập nhật thành công !",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            window.location.href = "/management/content/manga/post/one-piece"
+          })
+        }
+      })
+      .catch((error) => console.log(error))
+  }
+</script>
+
+</html>

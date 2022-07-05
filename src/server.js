@@ -1,5 +1,4 @@
 // Khai báo thư viện *******************************************
-
 const express = require("express");
 const path = require("path");
 const ejs = require("ejs");
@@ -25,25 +24,94 @@ app.use(cors()); // Cho phép chia sẻ api với localhost khác
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+//************************ Config Froala
+const appRootPath = require("app-root-path");
+app.use(
+  "/froalacss",
+  express.static(
+    path.join(
+      appRootPath.path,
+      "/node_modules/froala-editor/css/froala_editor.pkgd.min.css"
+    )
+  )
+);
 
+app.use(
+  "/froalajs",
+  express.static(
+    path.join(
+      appRootPath.path,
+      "/node_modules/froala-editor/js/froala_editor.pkgd.min.js"
+    )
+  )
+);
+app.use(
+  "/deleteImage",
+  express.static(
+    path.join(
+      appRootPath.path,
+      "/node_modules/froala-editor/js/plugins/image.min.js"
+    )
+  )
+);
 //********************* config imagesPath (public path)
+app.use("/public", express.static(__dirname + "/public"));
 app.use("/image", express.static(path.join(__dirname, "public/images")));
 app.use("/css", express.static(path.join(__dirname, "public/styles")));
 app.use("/js", express.static(path.join(__dirname, "public/javascripts")));
 
 app.use(express.static("public"));
+
 //********************* Config template ejs
 app.set("views", path.join(__dirname, "/resources/views"));
 app.set("view engine", "ejs");
+// //******************** Auth0 ******************* */
+// const { auth } = require("express-openid-connect");
+// const config = {
+//   // authRequired: false,
+//   // auth0Logout: true,
+//   // secret: process.env.SECRET,
+//   // baseURL: process.env.BASEURL,
+//   // clientID: process.env.BASEURL,
+//   // issuerBaseURL: process.env.ISSUER,
+
+//   authRequired: false,
+//   auth0Logout: true,
+//   secret:
+//     "oiumtsxnjpdbhkkwjueehzxebvtjjlgzierahwwjqrnuqyqyrsuzpuwffgizpegawtdzdbvkynrpbjipzxfcnnbyrdkdxzir",
+//   baseURL: "http://localhost:3416",
+//   clientID: "Dd0kzG9dTjvL52nTAwKgv7d7QDJJO8l6",
+//   issuerBaseURL: "https://dev-m7l5oz18.us.auth0.com",
+// };
+
+// // auth router attaches /login, /logout, and /callback routes to the baseURL
+// app.use(auth(config));
+
+// // req.isAuthenticated is provided from the auth router
+
+// app.get("/testAuth", (req, res) => {
+//   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
+// });
+// const { requiresAuth } = require("express-openid-connect");
+
+// app.get("/profile", requiresAuth(), (req, res) => {
+//   res.send(JSON.stringify(req.oidc.user));
+// });
+
+//***************************************** */
+
 //********************* Connect to Database (MongoDB) - Kết nối tới cơ sở dữ liệu MONGODB
+
 database.connect();
 
 // ******************** Cofig CookieParser
 app.use(cookieParser());
+
 //********************* Config router app
-route(app);
+route.adminRoute(app);
+route.userRoute(app);
 const MangaModel = require("./models/Manga");
-const Slide = require("./models/Slide");
+// const Slide = require("./models/Slide");
 // MangaModel.deleteOne({ name: "Clover" })
 //   .then(() => {
 //     console.log("deleted");
@@ -51,19 +119,18 @@ const Slide = require("./models/Slide");
 //   .catch((error) => console.log(error));
 
 // MangaModel.create({
-//   name: "Vùng đất linh hồn",
-//   anotherName:
-//     "Trở về vùng đất linh hồn, Spirited away, Sen to Chihiro no Kamikakushi",
-//   image: "/image/vdlh.jpg", // updating...(ex: require)
-//   author: "Miyazaki Hayao, Suzuki Toshio",
-//   type: ["Action", "Drama", "Kỳ ảo", "Tâm lí", "16+"],
+//   name: "Dragon Ball",
+//   anotherName: "Bảy viên ngọc rồng",
+//   image: "https://cdn-amz.fadoglobal.io/images/I/81S8xoiksVL.jpg", // updating...(ex: require)
+//   author: "Toriyama Akira",
+//   type: ["Action", "Phưu lưu", "Chiến dịch", "Kỳ ảo", "16+"],
 //   serve: "all",
 //   description:
-//     "Chihiro Ogino là một cô bé 10 tuổi, đang cùng gia đình chuyển đến nhà mới thì cha cô rẽ nhầm một con đường lạ. Họ vô tình bước vào một thế giới ma thuật mà cha của Chihiro kiên quyết khám phá. Khi cha mẹ của Chihiro ăn tại một nhà hàng không người, cô tìm thấy một nhà tắm công cộng tráng lệ. Cô gặp một chàng trai trẻ, Haku, người khuyên cô mau trở lại con sông trước khi trời tối. Dù vậy, Chihiro phát hiện ra đã quá trễ, cha mẹ cô đã bị biến thành heo và cô không thể vượt qua con sông khi thủy triều đang dâng cao, khiến cô bị mắc kẹt trong thế giới linh hồn.Sau khi gặp lại Chihiro, Haku tìm cho cô một công việc từ Kamaji, một người đàn ông làm việc tại nhà tắm công cộng. Kamaji và một nhân viên tên Rin dắt Chihiro đến phù thủy Yubaba, người cai quản nhà tắm. Yubaba cho cô một công việc và đặt cho cô một cái tên mới: Sen (千?). Lúc đến thăm cha mẹ mình tại chuồng heo, Sen tìm lại một tấm thiệp chia tay gửi đến Chihiro và nhận ra cô đã quên mất tên thật của mình. Haku cho cô bé biết rằng Yubaba điều khiển người giúp việc bằng cách lấy đi tên thật của họ và cô sẽ bị mắc kẹt lại thế giới linh hồn nếu không nhớ được tên của mình. Trong lúc làm việc, Sen mời một sinh vật luôn im lặng đeo mặt nạ có tên là Vô Diện vào trong nhà tắm công cộng, tin rằng đó là một khách hàng. Một 'linh hồn hôi thối' bất ngờ đến và là khách hàng đầu tiên của Sen. Cô bé nhận ra đây là vị thần của một con sông bị ô nhiễm. Để nhớ ơn người làm ông ta sạch sẽ, vị thần tặng cho cô một chiếc bánh bao thảo mộc thần kỳ. Trong lúc đó, Vô Diện dụ dỗ một nhân viên bằng vàng và nuốt chửng anh ta. Vô Diện đòi phục vụ thức ăn và trả tiền rất hậu hĩnh. Khi mọi người kéo đến mong chờ trả tiền, Vô Diện nuốt thêm hai nhân viên tham lam nữa.…",
-//   status: "Đã hoàn thành",
-//   hot: false,
-//   statistical: { likes: 2449, hearts: 100, comments: 328, views: 5224 }, // updating...(ex: require)
-//   chapters: [], // updating... (ex: require)
+//     "Một cậu bé có đuôi khỉ được tìm thấy bởi một ông lão sống một mình trong rừng, ông đặt tên là Son Goku và xem đứa bé như là cháu của mình. Một ngày nọ Goku tình cờ gặp một cô gái tên là Bulma trên đường đi bắt cá về, Goku và Bulma đã cùng nhau truy tìm bảy viên ngọc rồng. Các viên ngọc rồng này chứa đựng một bí mật có thể triệu hồi một con rồng và ban điều ước cho ai sở hữu chúng. Trên cuộc hành trình dài đi tìm những viên ngọc rồng, họ gặp những người bạn (Yamcha, Krillin,Yajirobe, Thiên, Giáo tử, Oolong,...) và những đấu sĩ huyền thoại cũng như nhiều ác quỷ. Họ trải qua những khó khăn và học hỏi các chiêu thức võ thuật đặc biệt để tham gia thi đấu trong đại hội võ thuật thế giới được tổ chức hằng năm. Ngoài các sự kiện đại hội võ thuật, Goku và các bạn còn phải đối phó với các thế lực độc ác như Đại vương Pilaf, Quân đoàn khăn đỏ của Độc nhãn tướng quân, Đại ma vương Picollo và những đứa con của hắn. Chiến binh người Saiya: Radiz, Hoàng tử Saiya Vegeta cùng tên cận vệ Nappa. Rồi họ đi đến Namek, gặp rồng thần của Namek; chạm trán Frieza, khi trở về Trái Đất đụng độ Nhóm android sát thủ (các Android 16, 17, 18,19, 20) và sau đó là quái vật từ tương lai Cell, Kẻ thù từ vũ trụ Majin Buu, thần hủy diệt Beerus, các đối thủ từ các vũ trụ song song, Đối thủ mạnh nhất với Goku là Jiren (đến từ vũ trụ 11)",
+//   status: "Đang tiến hành",
+//   hot: true,
+//   statistical: { likes: 2200, hearts: 5411, comments: 1210, views: 1230000 }, // updating...(ex: require)
+//   contentId: "62b94f45e599a225e0a674a0", // updating... (ex: require)
 //   fanmade: false,
 // })
 //   .then((data) => console.log(data))

@@ -4,12 +4,15 @@ body {
   background-color: #343a40;
 }
 
-#section-2 {
+#section-2 p {
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  img {
+    margin: 10px 0px;
+  }
 }
 #section-3 {
   h2,

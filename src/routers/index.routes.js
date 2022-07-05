@@ -12,7 +12,13 @@ const followMangaRouter = require("./directions/showFollowManga.routes.js");
 const completeRouter = require("./directions/complete.routes");
 const commentRouter = require("./directions/comment.routes.js");
 const AuthenUser = require("../middleware/authenUser");
-function route(app) {
+const {
+  createChapter,
+  publishChapter,
+  testPopulate,
+} = require("../controllers/CreateChapter");
+
+function userRoute(app) {
   app.use("/newmanga", AuthenUser, newMangaRouter);
   app.use("/follow", AuthenUser, followMangaRouter);
   app.use("/category", AuthenUser, categoryRouter);
@@ -26,4 +32,30 @@ function route(app) {
   app.use("/register", registerRouter);
   app.use("/", AuthenUser, siteRouter); //siteRouter
 }
-module.exports = route;
+
+const adminContentRouter = require("./admin/content.routes");
+const adminHumanRouter = require("./admin/human.routes");
+
+function adminRoute(app) {
+  app.use(
+    "/management/content",
+    (req, res, next) => {
+      // res.json("ADMIN PAGE");
+      next();
+    },
+    adminContentRouter
+  );
+  app.use(
+    "/management/human",
+    (req, res, next) => {
+      // res.json("ADMIN PAGE");
+      next();
+    },
+    adminHumanRouter
+  );
+  app.post("/createChapter/:mangaId", createChapter);
+  app.post("/publishChapter/:id", publishChapter);
+  app.get("/testPopulate/:mangaId", testPopulate);
+}
+
+module.exports = { adminRoute, userRoute };

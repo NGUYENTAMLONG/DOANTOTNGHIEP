@@ -3,21 +3,30 @@ const Schema = mongoose.Schema;
 const ChapterSchema = new Schema(
   {
     chapters: {
-      chapterName: {
-        type: String,
-        required: true,
-      },
-      chapterNumber: {
-        type: Number,
-        required: true,
-      },
-      chapterImages: {
-        type: Array,
-        required: true,
-      },
-      chapterUpload: {
-        type: String,
-        required: true,
+      type: Object,
+      default: [],
+      chapter: {
+        chapterNumber: {
+          type: Number,
+          required: true,
+          unique: true,
+        },
+        chapterName: {
+          type: String,
+          required: true,
+        },
+        chapterContent: {
+          type: String,
+          required: true,
+        },
+        createdTime: {
+          type: Date,
+          required: true,
+        },
+        updatedTime: {
+          type: Date,
+          required: true,
+        },
       },
     },
   },

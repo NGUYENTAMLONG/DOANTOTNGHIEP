@@ -2,7 +2,7 @@ const res = require("express/lib/response");
 const { MESSAGE, STATUS } = require("../config/httpResponse");
 const lodash = require("lodash");
 const Manga = require("../models/Manga");
-const filterPopular = require("../helper/filterPopular");
+const { orderManga } = require("../helper/order");
 
 module.exports = {
   async getNewMangas(req, res) {
@@ -54,13 +54,15 @@ module.exports = {
           limit: limit,
         };
       }
-      result.mangas = await Manga.find()
+      result.mangas = await Manga.find({})
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
         .sort({ createdAt: -1 })
         .limit(limit)
         .skip(startPage)
         .exec();
-      const newMangas = filterPopular(result.mangas);
-
+      const newMangas = orderManga(result.mangas);
       res.status(STATUS.SUCCESS).json({ newMangas });
     } catch (error) {
       console.log(error);

@@ -55,7 +55,9 @@ table {
       padding: 10px;
       border-radius: 10px;
       transition: 0.5s ease-in-out;
-      display: none; }
+      display: none;
+      -ms-word-break: break-all;
+      word-break: break-word; }
       table .desc .desc__more p {
         text-indent: 20px;
         height: 85%;

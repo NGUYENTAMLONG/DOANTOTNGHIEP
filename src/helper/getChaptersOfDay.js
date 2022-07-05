@@ -1,44 +1,33 @@
-const res = require("express/lib/response");
-const moment = require("moment");
 const getTime = require("./getTime");
-const lodash = require("lodash");
-const { isEmpty } = require("lodash");
-module.exports = function getChaptersOfDay(mangas) {
-  const presentTime = new Date();
+const Manga = require("../models/Manga");
+const { orderManga } = require("./order");
+module.exports = async function getChaptersOfDay() {
   const d = new Date(getTime());
   const getDate = d.getDate();
   const getMonth = d.getMonth();
   const getYear = d.getFullYear();
+  try {
+    const mangas = await Manga.find({}).populate("contentId");
+    const lastChapters = orderManga(mangas)
+      .map((manga, index) => {
+        if (manga.contentId.chapters.length !== 0) {
+          return {
+            name: manga.name,
+            slug: manga.slug,
+            chapters: manga.contentId.chapters.filter((chapter, index) => {
+              return (
+                getDate === new Date(chapter.createdTime).getDate() &&
+                getMonth === new Date(chapter.createdTime).getMonth() &&
+                getYear === new Date(chapter.createdTime).getFullYear()
+              );
+            }),
+          };
+        }
+      })
+      .filter((item) => item != undefined);
 
-  const lastChapters = mangas
-    .map((manga, index) => {
-      if (manga.chapters.length !== 0) {
-        return {
-          name: manga.name,
-          slug: manga.slug,
-          chapters: manga._doc.chapters.filter((chapter, index) => {
-            return (
-              getDate === new Date(chapter.chapterUpdate).getDate() &&
-              getMonth === new Date(chapter.chapterUpdate).getMonth() &&
-              getYear === new Date(chapter.chapterUpdate).getFullYear()
-            );
-          }),
-          order:
-            Math.abs(
-              presentTime -
-                new Date(
-                  manga.chapters[manga.chapters.length - 1].chapterUpdate
-                )
-            ) / 86400000,
-        };
-      }
-    })
-    .filter((item) => item != null);
-  const chaptersArray = lodash.remove(lastChapters, function (item) {
-    return isEmpty(item.chapters) === false;
-  });
-  const getJustUpdatedChapters = chaptersArray.sort(
-    (firstItem, secondItem) => firstItem.order - secondItem.order
-  );
-  return getJustUpdatedChapters;
+    return lastChapters;
+  } catch (error) {
+    console.log(error);
+  }
 };

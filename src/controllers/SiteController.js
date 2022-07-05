@@ -1,51 +1,63 @@
 const lodash = require("lodash");
-const filterPopular = require("../helper/filterPopular");
+const moment = require("moment");
 const getChaptersOfDay = require("../helper/getChaptersOfDay");
 const Manga = require("../models/Manga");
 const Slide = require("../models/Slide");
 const path = require("path");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
+const { orderManga } = require("../helper/order");
+const getRecentlyChapters = require("../helper/getRecentlyChapters");
+const { redirect } = require("../service/redirect");
 class siteController {
   home(req, res, next) {
-    // return res.json(req.AuthPayload);
     Promise.all([
-      Slide.find().populate("manga"), //Lấy ra các slide
-      Manga.find({}), // Lấy ra tất cả các manga
-      Manga.find({ serve: "all" }).limit(24), // Lấy ra tất cả các manga cho mọi lứa tuổi giới tính,...(giới hạn 24 bản ghi)
-      Manga.find({ serve: "male" }), //Lấy ra các manga dành cho nam
-      Manga.find({ serve: "female" }), //Lấy ra các manga dành cho nữ
+      Slide.find().populate({
+        path: "manga",
+        populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+      }), //Lấy ra các slide
+      getChaptersOfDay(),
+      getRecentlyChapters(),
+      Manga.find({}).populate("contentId", {
+        chapters: { $slice: -1 },
+      }),
+      // .limit(24), // Lấy ra tất cả các manga
+      Manga.find({ serve: "all" })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(24), // Lấy ra tất cả các manga cho mọi lứa tuổi giới tính,...(giới hạn 24 bản ghi)
+      Manga.find({ serve: "male" })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(24), //Lấy ra các manga dành cho nam
+      Manga.find({ serve: "female" })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(24), //Lấy ra các manga dành cho nữ
     ])
       .then(
         ([
           slides,
+          chaptersOfDay,
+          recentlyChapters,
           mangaJustUpdated,
           mangaForAll,
           mangaForMale,
           mangaForFemale,
         ]) => {
-          const recentlyReleasedManga = filterPopular(mangaJustUpdated).map(
-            (item, index) => {
-              return {
-                name: item.manga.name,
-                slug: item.manga.slug,
-                lastChapter: lodash.last(item.manga.chapters),
-                period: item.period,
-                hot: item.manga.hot,
-              };
-            }
-          );
-
-          // return res.json(getChaptersOfDay(mangaJustUpdated));
           res.render("home", {
+            moment: moment,
             user: req.AuthPayload,
             slides: slides,
-            mangaToday: getChaptersOfDay(mangaJustUpdated), // Lấy ra các manga -> lọc các  manga ra chương mới trong ngày
-            recentlyReleasedManga, // Lấy ra các manga -> lọc các manga ra chương mới gần đây
-            mangaJustUpdated: filterPopular(mangaJustUpdated), // Lấy ra tất cả các manga mới cập nhật
-            mangaForAll: filterPopular(mangaForAll),
-            mangaForMale: filterPopular(mangaForMale),
-            mangaForFemale: filterPopular(mangaForFemale),
+            mangaToday: chaptersOfDay, // Lấy ra các manga -> lọc các  manga ra chương mới trong ngày
+            recentlyReleasedManga: recentlyChapters, // Lấy ra các manga -> lọc các manga ra chương mới gần đây
+            mangas: orderManga(mangaJustUpdated),
+            mangaForAll: orderManga(mangaForAll),
+            mangaForMale: orderManga(mangaForMale),
+            mangaForFemale: orderManga(mangaForFemale),
           });
         }
       )
@@ -57,8 +69,9 @@ class siteController {
   async search(req, res, next) {
     // const regex = new RegExp(escapeRegex(req.query.q), "gi");
     // next();
-    const searchStr = req.query.q.trim();
+
     try {
+      const searchStr = req.query.q.trim();
       const foundManga = await Manga.find({
         // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
         $or: [
@@ -66,20 +79,17 @@ class siteController {
           { anotherName: { $regex: searchStr, $options: "i" } },
           { author: { $regex: searchStr, $options: "i" } },
         ],
-      });
-      if (!foundManga) {
-        res.render("search", { status: false, msg: "Not Found !!!" });
-      }
+      }).populate("contentId");
+
       res.render("search", {
         status: true,
+        moment: moment,
         user: req.AuthPayload,
-        mangas: filterPopular(foundManga),
+        mangas: foundManga,
       });
     } catch (error) {
-      console.log(error);
-      res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+      console.log("HETE", error);
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
   async getAvatar(req, res) {

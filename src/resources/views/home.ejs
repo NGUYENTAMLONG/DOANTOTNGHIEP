@@ -8,6 +8,7 @@
   <!-- <meta http-equiv="refresh" content="5"> -->
   <title>HOME</title>
   <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
 </head>
 
@@ -18,17 +19,18 @@
   </section>
   <section class="section container" id="section-2">
     <h3>
-      <i class="far fa-newspaper"></i> Lịch ra truyện ngày <%= new Date().getDate()   %>/<%= new Date().getMonth() + 1 %>/<%= new Date().getFullYear() %>
+      <i class="far fa-newspaper"></i> Lịch ra truyện ngày <%= new Date().getDate()%>/<%= new Date().getMonth() + 1 %>/<%= new Date().getFullYear() %>
     </h3>
     <div class="timeline" style="overflow-y: scroll;height: 200px;">
       <% mangaToday.forEach(function(manga,index){  %>
+      <% if (manga.chapters.length !== 0){ %>
       <div class="d-flex border-bottom">
         <p><i class="fas fa-dot-circle"></i> <b><%= manga.name %> : </b>
         </p>
         <div class="d-flex flex-column">
           <% manga.chapters.reverse().forEach((chapter,index)=>{%>
           <div class="flex ml-2">
-            [<%= chapter.chapterUpdate.split(" ")[1]%>]
+            [ <%=  moment(chapter.createdTime).locale("vi").fromNow() %> ]
             <a href="/detail/<%= manga.slug %>">
               Chương <%= chapter.chapterNumber %> -
               <%= chapter.chapterName %>
@@ -37,14 +39,25 @@
           <%}) %>
         </div>
       </div>
+      <%} %>
       <% }) %>
     </div>
+    <hr>
     <h3><i class="fas fa-hourglass-half"></i> Lịch Cập Nhật Gần Đây</h3>
     <div class="timeline" style="overflow-y: scroll;height: 300px;">
       <% recentlyReleasedManga.forEach(function(manga,index){  %>
-      <p><b><i class="fas fa-dot-circle"></i> <%= manga.name %> :</b> <span class="badge badge-primary text-capitalize"><%= manga.period %></span> [<%= manga.lastChapter.chapterUpdate %>] <a href="/detail/<%= manga.slug %>"> <% manga.name %> - Chương <%=  manga.lastChapter.chapterNumber%> : <%=  manga.lastChapter.chapterName%></a>
+      <% if(manga.lastChapter) { %>
+      <p class="border-bottom">
+        <b><i class="fas fa-dot-circle"></i> <%= manga.name %> :</b>
+        <span class="badge badge-primary text-capitalize">
+          <%= moment(manga.lastChapter.createdTime).locale("vi").fromNow() %>
+        </span>
+        <a href="/detail/<%= manga.slug %>">
+          <% manga.name %> Chương <%=  manga.lastChapter.chapterNumber%> : <%=  manga.lastChapter.chapterName%>
+        </a>
         <span class="badge badge-danger"><%= manga.hot === true ? "Hot" : "" %></span>
       </p>
+      <% }%>
       <% }) %>
     </div>
   </section>
@@ -53,8 +66,8 @@
       <h3 class="text-info"><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
     </a>
     <div class="row">
-      <% mangaJustUpdated.forEach(function(manga,index){ %>
-      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -66,9 +79,11 @@
       <h3 style="color:rgb(54, 211, 54)"><i class="fas fa-venus-mars"></i> Truyện tổng hợp</h3>
     </a>
     <div class="row">
+
       <% mangaForAll.forEach(function(manga){ %>
-      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
-      <% }); %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%})%>
+
     </div>
     <div class="text-center m-4">
       <a href="/popular/all" class="btn btn-danger">Xem thêm nhiều truyện</a>
@@ -80,7 +95,7 @@
     </a>
     <div class="row">
       <% mangaForMale.forEach(function(manga){ %>
-      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">
@@ -93,7 +108,7 @@
     </a>
     <div class="row">
       <% mangaForFemale.forEach(function(manga){ %>
-      <%- include('partials/mangaListJustUpdated.ejs',{manga:manga.manga,period:manga.period}) %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
     <div class="text-center m-4">

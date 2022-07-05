@@ -8,6 +8,7 @@
   <!-- <meta http-equiv="refresh" content="5"> -->
   <title>New Mangas</title>
   <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/paging.css">
 </head>
@@ -27,7 +28,10 @@
 <%- include("partials/script") %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="/js/pagination.min.js"></script>
+<script src="/js/moment.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
 <script>
+  console.log(moment)
   const pagingObj = {
     dataSource: "/newmanga/list",
     locator: "newMangas",
@@ -36,7 +40,7 @@
     totalNumberLocator: function(response) {
       return response.newMangas.length;
     },
-    pageSize: 10,
+    pageSize: 2,
     callback: showListAfterPaging,
   }
 
@@ -50,11 +54,13 @@
       .then(rs => {
         console.log(rs.newMangas);
         for (var i = 0; i < rs.newMangas.length; i++) {
-          const manga = rs.newMangas[i].manga;
+          const manga = rs.newMangas[i];
           const htmls = `<div class="col-sm-4 col-md-3 col-lg-2 p-2">
     <div class="manga-card">
       ${manga.hot ? "<span class='manga-tag__hot'>Hot</span>" :""}
-      ${(rs.newMangas[i].period) && `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"> ${rs.newMangas[i].period}</span>`}
+      ${(manga.contentId.chapters.length !== 0) ? `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"> ${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`:`<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"> 
+        Chưa công bố
+        </span>`}
       <a href="/detail/${manga.slug}">
         <img class="card-img-top manga-img" src="${manga.image}" alt="Card image cap" />
       </a>
@@ -63,7 +69,7 @@
           <h5>${ manga.name}</h5>
         </a>
         <a href="/detail/${ manga.slug }" class="manga-chapter">
-          ${manga.chapters.length == 0 ? "Chưa có chương": "Chương " + manga.chapters.slice(-1)[0].chapterNumber}
+          ${manga.contentId.chapters.length == 0 ? "Chưa công bố": "Chương " + manga.contentId.chapters.slice(-1)[0].chapterNumber}
         </a>
       </div>
       <div id="template-${manga._id}" style="display: none;">
@@ -83,7 +89,6 @@
           </ul>
           <div class="info__type">
             <b>Thể loại:</b>
-
             ${manga.type.map((item)=>{  return `<a href="/category/${item}">${item}</a>`})}
           </div>
           <p class="info__desc">
@@ -110,8 +115,6 @@
           placement: "right-end",
           arrow: true,
         });
-
-
       })
       .catch((error) => console.log(error))
   }

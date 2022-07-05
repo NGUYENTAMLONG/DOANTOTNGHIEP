@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const slug = require("mongoose-slug-updater");
+const Chapter = require("./Chapter");
 mongoose.plugin(slug);
 const MangaSchema = new Schema(
   {
@@ -22,7 +23,10 @@ const MangaSchema = new Schema(
         views: 0,
       },
     }, // updating...(ex: require)
-    chapters: { type: Array, default: [] }, // updating... (ex: require)
+    contentId: {
+      type: String,
+      ref: Chapter,
+    }, // updating... (ex: require)
     fanmade: {
       type: Boolean,
       // required: true,
@@ -32,7 +36,15 @@ const MangaSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: "Manga",
+    collection: "Mangas",
   }
 );
+
+// khai bao su dung thu vien da cai dat (mongoose-delete)-> de thuc hien trien khai chuc nang xoa mem soft delete
+const mongooseDelete = require("mongoose-delete");
+MangaSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+  deletedAt: true,
+});
+
 module.exports = mongoose.model("manga", MangaSchema);

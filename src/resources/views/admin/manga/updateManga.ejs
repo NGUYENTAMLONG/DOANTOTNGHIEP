@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Update Manga</title>
   <%- include("../../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/updateChapter.css">
 </head>
 
@@ -14,10 +15,19 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
   </nav>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/management/content/manga/">Bảng điều khiển</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Sửa truyện</li>
+    </ol>
+  </nav>
+
   <h1 class="text-center m-4">Cập nhật Manga</h1>
-  <section class="container">
+
+  <section class="container mb-4">
     <div class="row">
-      <div class="col-md-4 col-lg-3">
+      <div class="col-md-4 col-lg-4">
         <div class="manga-img">
           <div class="zoom-image" data-image="<%= manga.image%>">
             <img src="<%= manga.image%>" class="cover" width="100%" alt="">
@@ -25,15 +35,14 @@
         </div>
         <div class="text-center mt-3">
           <form action="#" class="form-upload" enctype="multipart/form-data">
-
-            <div class="custom-file">
-              <input type="file" id="gallery-photo-cover" hidden>
-              <label for="gallery-photo-cover" class="icon-upload btn btn-primary"> <i class="fas fa-2x fa-upload"></i><br>Đổi bìa</label>
-            </div>
+            <!-- <div class="custom-file"> -->
+            <input type="file" id="gallery-photo-cover" hidden>
+            <label for="gallery-photo-cover" class="icon-upload btn btn-primary"> <i class="fas fa-2x fa-upload"></i><br>Đổi bìa</label>
+            <!-- </div> -->
           </form>
         </div>
       </div>
-      <div class="col-md-8 col-lg-4">
+      <div class="col-md-8 col-lg-8">
         <form action="#" class="mt-4">
           <div class="input_name">
             <label for="name">
@@ -58,15 +67,15 @@
               <h5>Tình trạng</h5>
             </label>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="status" id="in-process" value="Đang tiến hành" <% if(manga.status ==="Đang tiến hành"){%> checked <% } %>>
+              <input class="form-check-input" type="radio" name="status" id="in-process" value="Đang tiến hành" <% if(manga.status === "Đang tiến hành"){%> checked <% } %> />
               <label class="form-check-label" for="in-process">
                 Đang tiến hành
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Đã hoàn thành" <% if(manga.status==="Đã hoàn thành" ){%> checked <% } %>>
+              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Đã hoàn thành" <% if(manga.status === "Hoàn thành"){%> checked <% } %> />
               <label class="form-check-label" for="accomplished">
-                Đã hoàn thành
+                Hoàn thành
               </label>
             </div>
           </div>
@@ -74,7 +83,7 @@
             <label for="hotcheck">
               <h5 class="d-flex"> <span>Hot</span>
                 <div class="form-check">
-                  <input type="checkbox" class="form-check-input ml-2" id="hotcheck" style="zoom: 1.5;" title="Hot" <%= manga.hot && "checked" %>>
+                  <input type="checkbox" class="form-check-input ml-2" id="hot" name="hot" style="zoom: 1.5;" title="Hot" <%= manga.hot && "checked" %> />
                 </div>
               </h5>
             </label>
@@ -124,21 +133,31 @@
           </div>
           <label for="type">
             <h5>Thể loại</h5>
-
-          </label>
-          <div class="form-check row d-flex justify-content-between">
-            <div class="column">
-              <% typeArr.forEach(function(type,index){ %>
+            <div class="form-check row d-flex justify-content-between">
+              <% types.forEach(function(type,index){ %>
+              <% if(index=== 10 || index === 20 || index === 30) { %>
+            </div>
+            <% } %>
+            <% if(index=== 0 || index === 10 || index === 20) { %>
+            <div class="column m-4">
               <div class="checkbox-type">
-                <input type="checkbox" class="form-checbox-type" id="<%= type%>" value="<%= type%>" <%= manga.type.includes(type) && "checked" %>>
-                <label class="form-check-label" for="<%= type%>"><%= type%></label>
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" <%= manga.type.includes(type) ? "checked" : "" %> />
+                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
               </div>
+              <% }else{ %>
+              <div class="checkbox-type">
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" <%= manga.type.includes(type) ? "checked" : "" %> />
+                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
+              </div>
+              <% } %>
               <%})%>
             </div>
-          </div>
+          </label>
         </form>
       </div>
-      <div class="col-md-12 col-lg-5 pt-3">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-12 pt-3">
         <div class="input_description">
           <label for="description">
             <h5>Nội dung</h5>
@@ -147,7 +166,7 @@
               <%= manga.description %>
           </textarea>
         </div>
-        <button class="btn btn-success float-right mt-3 mb-4">Cập nhật chỉnh sửa</button>
+        <button class="btn btn-success float-right mt-3 mb-4" onclick="updateManga(event,'<%=  manga.slug %>')">Cập nhật chỉnh sửa</button>
         <div class="list-chapter mt-4">
           <table class="table bg-dark text-light">
             <thead class="bg-warning text-dark">
@@ -155,26 +174,58 @@
                 <th scope="col" class="th-stt text-center">STT</th>
                 <th scope="col" class="text-center">Chương</th>
                 <th scope="col" class="text-center">Tên</th>
+                <th scope="col" class="text-center">Review</th>
                 <th scope="col" class="text-center">Ngày đăng</th>
               </tr>
             </thead>
             <tbody>
-              <% manga.chapters.forEach(function(chapter,index){ %>
+              <% manga.contentId.chapters.forEach(function(chapter,index){ %>
               <tr>
                 <th scope="row" class="th-stt text-center">
                   <%= index + 1%>
                 </th>
                 <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
-                <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName%></td>
-                <td class="text-right"><%= chapter.chapterUpdate%></td>
+                <td class="text-center col-chapterName" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName%></td>
+                <td class="text-center">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalChapter<%= chapter.chapterNumber %>">
+                    Xem
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="modalChapter<%= chapter.chapterNumber %>" tabindex="-1" role="dialog" aria-labelledby="modal-chapter<%= chapter.chapterNumber %>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="modal-chapter<%= chapter.chapterNumber %>">Chương <%= chapter.chapterNumber %> </h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <%- chapter.chapterContent %>
+                        </div>
+                        <div class="modal-footer">
+                          <form action="/management/content/manga/updateChapter" method="POST">
+                            <input type="text" name="chapterId" value="<%= manga.contentId._id %>" hidden>
+                            <input type="text" name="manga" value="<%= manga.slug %>" hidden>
+                            <input type="text" name="chapterNumber" value="<%= chapter.chapterNumber %>" hidden>
+                            <button type="submit" class="btn btn-primary">Sửa</button>
+                          </form>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-right"><%= chapter.createdTime%></td>
               </tr>
               <%})%>
             </tbody>
           </table>
         </div>
-        <a href="add_chapter" class="btn btn-warning mt-2 float-right">Quản lí chương</a>
+        <a href="/management/content/manga/post/<%= manga.slug %>" class="btn btn-warning mt-2 mb-4 float-right">Quản lí chương</a>
       </div>
-
     </div>
   </section>
 
@@ -209,29 +260,83 @@
     reader.readAsDataURL(imageFile);
   });
 
-  function changeCover() {
-    alert("ABC")
+  function updateManga(event, slug) {
+    event.preventDefault();
+    //find content
+    const name = document.getElementById("name").value;
+    const anotherName = document.getElementById("anotherName").value;
+    const author = document.getElementById("author").value;
+    const typeArray = [];
+    const serve = $("input[name='serve']:checked").val();
+    const status = $("input[name='status']:checked").val();
+    const hot = document.querySelector("input[name='hot']").checked;
+    const description = document.getElementById("description").value;
+
+    document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
+      typeArray.push(type.value)
+    });
+
+    const mangaInfo = {
+      name,
+      anotherName,
+      author,
+      type: typeArray,
+      serve,
+      status,
+      hot,
+      description
+    }
+    const imgFiles = document.getElementById("gallery-photo-cover");
+
+    //set up avatar file 
+    const formData = new FormData();
+    formData.append("cover", imgFiles.files[0]);
+    console.log("FILE CLIENT UPLOAD", imgFiles.files[0])
+    if (imgFiles.files[0]) {
+      fetch(`/management/content/manga/updateManga/cover`, {
+          method: 'POST', // or 'PUT'
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          mangaInfo.image = `/image/${data.filename}`;
+          submitPayload(slug, mangaInfo)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      mangaInfo.image = null;
+      submitPayload(slug, mangaInfo)
+    }
   }
-  //   const updateMangaBtn = document.querySelectorAll(".updateMangaBtn");
-  //   updateMangaBtn.forEach((btn, index) => {
-  //     btn.addEventListener("click", function(e) {
-  //       const idManga = e.target.dataset.id;
-  //       fetch('/manage/admin_manga/updateManga/' + idManga, {
-  //           method: 'PUT', // or 'PUT'
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //           // body: JSON.stringify(data),
-  //         })
-  //         .then(response => response.json())
-  //         .then(data => {
-  //           console.log(data);
-  //         })
-  //         .catch((error) => {
-  //           console.error('Error:', error);
-  //         });
-  //     })
-  //   })
+
+  function submitPayload(slug, mangaInfo) {
+    fetch(`/management/content/manga/updateManga/${slug}`, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mangaInfo),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã cập nhật thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          })
+        }
+
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
+  }
 </script>
 
 </html>

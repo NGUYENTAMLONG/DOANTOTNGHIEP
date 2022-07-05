@@ -25,7 +25,7 @@
         <i class="fas fa-2x fa-search mr-2 text-info"></i><input class="form-control" id="myInput" type="text" placeholder="Tìm slide ...">
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
-        <a href="manga" class="btn btn-warning">Manga Management <i class="fas fa-2x fa-book"></i></a>
+        <a href="manga" class="btn btn-warning">Quản lí manga <i class="fas fa-2x fa-book"></i></a>
       </div>
     </div>
   </div>
@@ -75,8 +75,10 @@
             <% slide.manga.type.forEach((type,index) => { %><span class="type bg-primary text-light "><%= type %></span>
             <%}); %>
           </td>
-          <td scope="row">
-            <%= slide.manga.chapters.slice(-1)[0].chapterNumber %>
+          <td scope="row" class="text-center">
+            <span class="badge badge-success">
+              <%= slide.manga.contentId.chapters[0].chapterNumber %>
+            </span>
           </td>
           <td scope="row" class="desc_td">
             <div class="desc">

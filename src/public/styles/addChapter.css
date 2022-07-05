@@ -30,6 +30,20 @@ section {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
+    #general .list-chapter table tbody td.handle {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center; }
+      #general .list-chapter table tbody td.handle .fa-trash {
+        color: #e9282f;
+        cursor: pointer; }
+      #general .list-chapter table tbody td.handle button {
+        outline: none;
+        border: none;
+        background-color: transparent; }
+        #general .list-chapter table tbody td.handle button .fa-tools {
+          color: #007bff;
+          cursor: pointer; }
   #general .list-chapter table tr {
     width: 100%;
     display: table;

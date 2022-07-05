@@ -1,29 +1,33 @@
 @import "variables.scss";
 
-.manga-img {
-  width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  border: 2px dashed $color-4;
-  transition: 0.3s ease-in;
-  cursor: pointer;
-  .icon-upload {
-    cursor: pointer;
-  }
-}
-.form-upload {
-  position: relative;
-  width: 100%;
-  .fa-retweet {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+section {
+  margin-bottom: 100px;
+  .manga-img {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px dashed $color-4;
     transition: 0.3s ease-in;
+    cursor: pointer;
+    .icon-upload {
+      pointer-events: auto;
+      cursor: pointer;
+    }
   }
-  &:hover .fa-retweet {
-    opacity: 1.8;
+  .form-upload {
+    position: relative;
+    width: 100%;
+    .fa-retweet {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: 0.3s ease-in;
+    }
+    &:hover .fa-retweet {
+      opacity: 1.8;
+    }
   }
 }

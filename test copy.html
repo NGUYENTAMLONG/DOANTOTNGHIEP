@@ -2,6 +2,60 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  let employees = [{
+      firstName: 'John',
+      lastName: 'Doe',
+      age: 27,
+      joinedDate: 'December 15, 2017'
+    },
+
+    {
+      firstName: 'Ana',
+      lastName: 'Rosy',
+      age: 25,
+      joinedDate: 'January 15, 2019'
+    },
+
+    {
+      firstName: 'Zion',
+      lastName: 'Albert',
+      age: 30,
+      joinedDate: 'February 15, 2011'
+    }, {
+      firstName: 'Tam',
+      lastName: 'Long',
+      age: 10,
+      joinedDate: 'February 15, 2011'
+    }
+  ];
+  console.log(employees)
+
+  employees.sort((a, b) => {
+    return a.age - b.age;
+  });
+  // employees.forEach((e) => {
+  //   console.log(`${e.firstName} ${e.lastName} ${e.age}`);
+  // });
+  employees.so
+  console.log(employees)
+</script>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -105,4 +159,4 @@
 
 </script>
 
-</html>
+</html> -->

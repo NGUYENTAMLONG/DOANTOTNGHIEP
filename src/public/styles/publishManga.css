@@ -1,23 +1,25 @@
-.manga-img {
-  width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  border: 2px dashed #343a40;
-  transition: 0.3s ease-in;
-  cursor: pointer; }
-  .manga-img .icon-upload {
+section {
+  margin-bottom: 100px; }
+  section .manga-img {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px dashed #343a40;
+    transition: 0.3s ease-in;
     cursor: pointer; }
-
-.form-upload {
-  position: relative;
-  width: 100%; }
-  .form-upload .fa-retweet {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: 0.3s ease-in; }
-  .form-upload:hover .fa-retweet {
-    opacity: 1.8; }
+    section .manga-img .icon-upload {
+      pointer-events: auto;
+      cursor: pointer; }
+  section .form-upload {
+    position: relative;
+    width: 100%; }
+    section .form-upload .fa-retweet {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: 0.3s ease-in; }
+    section .form-upload:hover .fa-retweet {
+      opacity: 1.8; }

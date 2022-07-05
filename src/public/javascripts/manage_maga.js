@@ -16,23 +16,23 @@ function Close() {
   backBtn.setAttribute("hidden", "");
 }
 function Review(btn, i) {
+  const chapterNumber = btn.dataset.chapternumber;
+  console.log(chapterNumber);
   const id = btn.dataset.id;
   const location = btn.dataset.location;
   modalBody_1.style.display = "none";
   modalBody_2.style.display = "block";
 
   backBtn.removeAttribute("hidden");
-  fetch("/manage/admin_manga/manga/" + id)
+  fetch("/management/content/manga/allchapters/" + id)
     .then((res) => res.json())
-    .then((data) => {
-      let htmls = data.chapters[location].chapterImages.map((img, index) => {
-        return `
-        <div class="row d-flex justify-content-center m-2">
-        <img src="${img}" alt="img-chapter" />
-        </div>
-        `;
+    .then((result) => {
+      const chapters = result.data.chapters;
+
+      let getChapter = chapters.find((chapter, index) => {
+        return chapter.chapterNumber === parseFloat(chapterNumber);
       });
-      modalBody_2.innerHTML = htmls.join("");
+      modalBody_2.innerHTML = getChapter.chapterContent;
     })
     .catch((error) => console.log(error));
 }

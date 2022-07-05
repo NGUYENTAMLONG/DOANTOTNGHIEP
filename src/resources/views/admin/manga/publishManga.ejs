@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publish Manga</title>
   <%- include("../../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/publishManga.css">
 </head>
 
@@ -14,12 +15,19 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
   </nav>
-  <h1 class="text-center m-4">Xuất bản Manga</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/management/content/manga/">Bảng điều khiển</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Xuất bản truyện</li>
+    </ol>
+  </nav>
+
+  <h2 class="text-center m-4">Xuất bản Manga</h2>
   <section class="container">
     <div class="row">
       <div class="col-md-4 col-lg-3">
         <form action="#" class="form-upload" enctype="multipart/form-data">
-          <i class="fas fa-4x text-info fa-retweet" hidden></i>
           <label for="gallery-photo-cover" class="manga-img cover text-center">
             <img class="img-cover" width="100%" alt="img-cover" hidden />
             <label for="gallery-photo-cover" class="icon-upload"> <i class="fas fa-5x fa-upload"></i><br> Upload Manga Cover</label>
@@ -33,190 +41,116 @@
         <form action="#" class="mt-4">
           <div class="input_name">
             <label for="name">
-              <h5>Tên truyện</h5>
+              <h6>Tên truyện</h6>
             </label>
-            <input type="text" class="form-control" id="name" name="name" value="">
+            <input type="text" class="form-control" id="name" name="name" value="" required>
           </div>
           <div class="input_anotherName">
             <label for="anotherName">
-              <h5>Tên khác</h5>
+              <h6>Tên khác</h6>
             </label>
-            <input type="text" class="form-control" id="anotherName" name="anotherName" value="">
+            <input type="text" class="form-control" id="anotherName" name="anotherName" value="" required>
           </div>
           <div class="input_author">
             <label for="author">
-              <h5>Tác giả</h5>
+              <h6>Tác giả</h6>
             </label>
-            <input type="text" class="form-control" id="author" name="author" value="">
+            <input type="text" class="form-control" id="author" name="author" value="" required>
           </div>
           <div class="input_type">
             <label for="type">
-              <h5>Thể loại</h5>
+              <h6>Thể loại</h6>
             </label>
             <div class="form-check row d-flex justify-content-between">
-              <div class="column">
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_1" value="Action">
-                  <label class="form-check-label" for="type_1">Action</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_2" value="Phưu lưu">
-                  <label class="form-check-label" for="type_2">Phưu lưu</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_3" value="Magic">
-                  <label class="form-check-label" for="type_3">Magic</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_4" value="Kỳ ảo">
-                  <label class="form-check-label" for="type_4">Kỳ ảo</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_5" value="16+">
-                  <label class="form-check-label" for="type_5">16+</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_6" value="Ninja">
-                  <label class="form-check-label" for="type_6">Ninja</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_7" value="Đấu trí">
-                  <label class="form-check-label" for="type_7">Đấu trí</label>
-                </div>
+              <% types.forEach(function(type,index){ %>
+              <% if(index=== 10 || index === 20 || index === 30) { %>
+            </div>
+            <% } %>
+            <% if(index=== 0 || index === 10 || index === 20) { %>
+            <div class="column">
+              <div class="checkbox-type">
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" />
+                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
               </div>
-              <div class="column">
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_8" value="Chiến dịch">
-                  <label class="form-check-label" for="type_8">Chiến dịch</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_9" value="Trung cổ">
-                  <label class="form-check-label" for="type_9">Trung cổ</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_10" value="Lãng mạn">
-                  <label class="form-check-label" for="type_10">Lãng mạn</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_11" value="Drama">
-                  <label class="form-check-label" for="type_11">Drama</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_12" value="Ngôn tình">
-                  <label class="form-check-label" for="type_12">Ngôn tình</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_13" value="Trinh thám">
-                  <label class="form-check-label" for="type_13">Trinh thám</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_14" value="School Life">
-                  <label class="form-check-label" for="type_14">School Life</label>
-                </div>
+              <% }else{ %>
+              <div class="checkbox-type">
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>">
+                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
               </div>
-              <div class="column">
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_15" value="Slice Of Life">
-                  <label class="form-check-label" for="type_15">Slice Of Life</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_16" value="Sports">
-                  <label class="form-check-label" for="type_16">Sports</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_17" value="Mystery">
-                  <label class="form-check-label" for="type_17">Mystery</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_18" value="Psychological">
-                  <label class="form-check-label" for="type_18">Psychological</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_19" value="Võ thuật">
-                  <label class="form-check-label" for="type_19">Võ thuật</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_20" value="Truyện màu">
-                  <label class="form-check-label" for="type_20">Truyện màu</label>
-                </div>
-                <div class="checkbox-type">
-                  <input type="checkbox" class="form-checbox-type" id="type_21" value="Tâm lí">
-                  <label class="form-check-label" for="type_21">Tâm lí</label>
-                </div>
-              </div>
+              <% } %>
+              <%})%>
             </div>
           </div>
         </form>
-
       </div>
-      <div class="col-md-12 col-lg-5 pt-3">
-        <form action="#" class="mt-4">
-          <div class="input_serve">
-            <label for="serve">
-              <h5>Đối tượng đọc</h5>
-            </label>
-            <div class="d-flex justify-content-around">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="serve" id="male" value="male">
-                <label class="form-check-label" for="male">
-                  male <i class="fas fa-mars text-primary"></i>
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="serve" id="female" value="female">
-                <label class="form-check-label" for="female">
-                  female <i class="fas fa-venus text-danger"></i>
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="serve" id="all" value="all">
-                <label class="form-check-label" for="all">
-                  all <i class="fas fa-venus-mars text-success"></i>
-                </label>
-              </div>
+    </div>
+    <div class="col-md-12 col-lg-5 pt-3">
+      <form action="#" class="mt-4">
+        <div class="input_serve">
+          <label for="serve">
+            <h6>Đối tượng đọc</h6>
+          </label>
+          <div class="d-flex justify-content-around">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="male" value="male">
+              <label class="form-check-label" for="male">
+                male <i class="fas fa-mars text-primary"></i>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="female" value="female">
+              <label class="form-check-label" for="female">
+                female <i class="fas fa-venus text-danger"></i>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serve" id="all" value="all">
+              <label class="form-check-label" for="all">
+                all <i class="fas fa-venus-mars text-success"></i>
+              </label>
             </div>
           </div>
-          <div class="input_status">
-            <label for="status">
-              <h5>Tình trạng</h5>
-            </label>
-            <div class="d-flex justify-content-around">
-              <div class="form-check ">
-                <input class="form-check-input" type="radio" name="status" id="in-process" value="Đang tiến hành">
-                <label class="form-check-label" for="in-process">
-                  Đang tiến hành
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="status" id="accomplished" value="Đã hoàn thành">
-                <label class="form-check-label" for="accomplished">
-                  Đã hoàn thành
-                </label>
-              </div>
+        </div>
+        <div class="input_status">
+          <label for="status">
+            <h6>Tình trạng</h6>
+          </label>
+          <div class="d-flex justify-content-around">
+            <div class="form-check ">
+              <input class="form-check-input" type="radio" name="status" id="in-process" value="Đang tiến hành">
+              <label class="form-check-label" for="in-process">
+                Đang tiến hành
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Hoàn thành">
+              <label class="form-check-label" for="accomplished">
+                Hoàn thành
+              </label>
             </div>
           </div>
-          <div class="input_hot d-flex">
-            <label for="hot">
-              <h5>Hot</h5>
-            </label>
-            <div class="form-check ml-3">
-              <input type="checkbox" class="form-check-input" id="hot" name="hot" value="true">
-            </div>
+        </div>
+        <div class="input_hot d-flex">
+          <label for="hot">
+            <h6>Hot</h6>
+          </label>
+          <div class="form-check ml-3">
+            <input type="checkbox" class="form-check-input" id="hot" name="hot" value="true">
           </div>
-          <div class="input_description">
-            <label for="description">
-              <h5>Nội dung</h5>
-            </label>
-            <textarea name="description" id="description" class="form-control">
+        </div>
+        <div class="input_description">
+          <label for="description">
+            <h6>Nội dung</h6>
+          </label>
+          <textarea name="description" id="description" class="form-control">
           </textarea>
-          </div>
-          <!-- <a href="#" class="btn btn-warning mt-2 float-right btn-sm">Đăng trương đầu tiên</a> -->
-          <div class="row d-flex justify-content-center mt-3">
-            <button class="btn btn-secondary mr-2">Hủy bỏ <i class="fas fa-eraser"></i></button>
-            <button class="btn btn-success publishBtn">Xuất bản <i class="fas fa-rocket"></i></button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <!-- <a href="#" class="btn btn-warning mt-2 float-right btn-sm">Đăng trương đầu tiên</a> -->
+        <div class="row d-flex justify-content-center mt-3">
+          <button class="btn btn-secondary mr-2">Hủy bỏ <i class="fas fa-eraser"></i></button>
+          <button class="btn btn-success publishBtn">Xuất bản <i class="fas fa-rocket"></i></button>
+        </div>
+      </form>
     </div>
   </section>
 
@@ -229,17 +163,15 @@
     if (!imageFile) {
       return
     }
-    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && imageFile.name.endsWith(".png")) {
+    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && !imageFile.name.endsWith(".png")) {
       alert("ERROR")
       return
     }
     // imagesPreview(this, 'div.gallery');
     var reader = new FileReader();
     reader.onload = function(e) {
-      // document.querySelector(".cover").innerHTML = `<img src="${e.target.result}" width="100%" alt="img-cover" />`
       document.querySelector(".img-cover").setAttribute("src", e.target.result);
       document.querySelector(".img-cover").removeAttribute("hidden");
-      document.querySelector(".fa-retweet").removeAttribute("hidden");
 
       if (document.querySelector(".icon-upload")) {
         document.querySelector(".icon-upload").remove()
@@ -260,12 +192,22 @@
     const typeArray = [];
     const serve = $("input[name='serve']:checked").val();
     const status = $("input[name='status']:checked").val();
-    const hot = $("input[name='hot']:checked").val();
+    const hot = document.querySelector("input[name='hot']").checked;
     const description = document.getElementById("description").value;
 
     document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
       typeArray.push(type.value)
     });
+
+    if (!name || !anotherName || !author || typeArray.length === 0 || !serve || !status || !description) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải điền đầy đủ thông tin >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
     // console.log({
     //   name,
     //   anotherName,
@@ -283,22 +225,35 @@
       type: typeArray,
       serve,
       status,
-      // hot: (hot === 'true'),
-      hot: JSON.parse(hot), //convert "true/false" String to Boolean
+      hot,
       description
     }
-    const imgFiles = document.getElementById("gallery-photo-cover")
+    const imgFiles = document.getElementById("gallery-photo-cover");
+
+    if (!imgFiles.files[0]) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải upload trang bìa của manga >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
     //set up avatar file
     const formData = new FormData();
     formData.append("cover", imgFiles.files[0])
-    fetch('/manage/admin_manga/manga/publish/cover', {
+    fetch('/management/content/manga/publish/cover', {
         method: 'POST', // or 'PUT'
         body: formData,
       })
       .then(response => response.json())
       .then(data => {
+        console.log({
+          formData,
+          data
+        })
         mangaInfo.image = `/image/${data.filename}`;
-        fetch('/manage/admin_manga/manga/publish', {
+        fetch('/management/content/manga/publish', {
             method: 'POST', // or 'PUT'
             headers: {
               'Content-Type': 'application/json',
@@ -313,10 +268,13 @@
               text: "Đã xuất bản thành công !",
               icon: "success",
               button: "Ok!",
-            });
+            }).then(() => {
+              location.reload()
+            })
+
           })
           .catch((error) => {
-            console.error('Error:', error);
+            console.log('Error:', error);
           })
       })
       .catch((error) => {

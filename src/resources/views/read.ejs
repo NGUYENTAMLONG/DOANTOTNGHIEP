@@ -8,11 +8,17 @@
   <!-- <meta http-equiv="refresh" content="5"> -->
   <title>READ</title>
   <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/read.css">
 </head>
 
 <body>
 
+  <% if(!chapter){%>
+
+  "NOT FOUND"
+
+  <%}else{%>
   <%- include('partials/header') %>
   <section class="section container mt-3" id="section-1">
     <nav aria-label="breadcrumb">
@@ -28,7 +34,7 @@
       <button class="btn btn-success">Chương trước</button>
       <button class="btn btn-primary">Chương sau</button>
       <span class="float-right">
-        Đăng lúc: <span class="badge badge-primary"><%= chapter.chapterUpdate%></span>
+        Đăng lúc: <span class="badge badge-primary"><%= moment(chapter.createdTime).format("L") %></span>
       </span>
     </p>
     <div class="text-light text-center">
@@ -39,9 +45,7 @@
     </div>
   </section>
   <section class="section container" id="section-2">
-    <% chapter.chapterImages.forEach((img,index) => { %>
-    <img src="<%= img %>" class="m-2" alt="">
-    <%}); %>
+    <%- chapter.chapterContent %>
   </section>
   <section class="section container text-light" id="section-3">
     <% if(user){ %>
@@ -49,7 +53,6 @@
     <% } else{%>
     <%- include("partials/comments",{user:null}) %>
     <%} %>
-  </section>
   </section>
   <section class="section " id="section-4">
     <div class="chapter-nav text-light">
@@ -67,7 +70,7 @@
         <li class="nav">
           <i class="fas fa-2x  fa-caret-left mr-4"></i>
           <select class="form-control">
-            <% manga.chapters.forEach((chapter,index) => { %>
+            <% manga.contentId.chapters.forEach((chapter,index) => { %>
             <option value="chapter-<%= chapter.chapterNumber%>">
               <%= chapter.chapterNumber%>
             </option>
@@ -90,43 +93,44 @@
   </section>
 
   <%- include('partials/footer') %>
+  <%}%>
 </body>
 <!-- CDN script Facebook for DEV -->
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=929579514428909&autoLogAppEvents=1" nonce="OSNlapej"></script>
 
 <%- include("partials/script") %>
-<!-- CDN script Emoji -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+  <!-- CDN script Emoji -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
 
-<script>
-  // const btnShowMore = document.querySelector(".show-more");
-  // const textDesc = document.querySelector(".manga-info__desc p");
+  <script>
+    // const btnShowMore = document.querySelector(".show-more");
+    // const textDesc = document.querySelector(".manga-info__desc p");
 
-  // let flag = false;
-  // btnShowMore.onclick = function() {
-  //   if (flag === false) {
-  //     btnShowMore.textContent = "Show Less";
-  //     textDesc.classList.remove("truncate");
-  //     flag = true
-  //   } else {
-  //     btnShowMore.textContent = "Show More";
-  //     textDesc.classList.add("truncate");
-  //     flag = false
-  //   }
-  // }
-</script>
-<script>
-  $("#content").emojioneArea({
-    pickerPosition: "bottom",
-  })
+    // let flag = false;
+    // btnShowMore.onclick = function() {
+    //   if (flag === false) {
+    //     btnShowMore.textContent = "Show Less";
+    //     textDesc.classList.remove("truncate");
+    //     flag = true
+    //   } else {
+    //     btnShowMore.textContent = "Show More";
+    //     textDesc.classList.add("truncate");
+    //     flag = false
+    //   }
+    // }
+  </script>
+  <script>
+    $("#content").emojioneArea({
+      pickerPosition: "bottom",
+    })
 
-  $('select').on('change', function(e) {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
-    alert(valueSelected)
-    window.location = valueSelected
-  });
-</script>
+    $('select').on('change', function(e) {
+      var optionSelected = $("option:selected", this);
+      var valueSelected = this.value;
+      alert(valueSelected)
+      window.location = valueSelected
+    });
+  </script>
 
 </html>

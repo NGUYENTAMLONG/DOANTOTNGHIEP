@@ -24,7 +24,7 @@ const ReplySchema = new Schema(
       default: VALUES.LIKES,
     },
   },
-  { timestamps: true, collection: "replies" }
+  { timestamps: true, collection: "Replies" }
 );
 
 module.exports = mongoose.model("reply", ReplySchema);
