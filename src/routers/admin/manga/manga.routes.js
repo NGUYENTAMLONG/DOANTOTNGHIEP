@@ -17,6 +17,22 @@ const FroalaEditor = require(path.join(
 ));
 
 const router = express.Router();
+
+router.get("/api/mangas/:id", async (req, res) => {
+  const mangaId = req.params.id;
+  try {
+    const foundManga = await Manga.findById(mangaId);
+    res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.SUCCESS, foundManga));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS.SERVER_ERROR)
+      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+  }
+});
+
 // router.use(bodyParser.json());
 // ****************** MANGA MANAGEMENT *************************
 //1. Get Page (MANGA MANAGEMENT)
@@ -263,7 +279,7 @@ router.delete("/deleteManga/:slug", async (req, res) => {
 router.get("/trash", async (req, res) => {
   try {
     const foundMangas = await Manga.findDeleted({}).populate("contentId");
-    res.render("admin/manga/trash", {
+    res.render("admin/manga/mangaTrash", {
       mangas: foundMangas,
     });
   } catch (error) {
@@ -309,7 +325,9 @@ router.patch("/restoreManga/:slug", async (req, res) => {
   }
   try {
     await Manga.restore({ slug: slug });
-    res.status(STATUS.SUCCESS).json(new SuccessResponse(MESSAGE.SUCCESS, null));
+    res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
   } catch (error) {
     console.log(error);
     res

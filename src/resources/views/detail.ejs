@@ -139,12 +139,17 @@
     </div>
     <% } %>
   </section>
-  <section class="section container" id="section-3">
-    <% if(user ){ %>
-    <%- include("partials/comments",{chapter:null}) %>
-    <% } else{%>
-    <%- include("partials/comments",{user:null}) %>
-    <%} %>
+  <section class="section container text-center" id="section-3">
+    <h3>Bình luận tổng quan <i class="fas fa-comments"></i></h3>
+    <!-- Plugin Comments Facebook -->
+    <div class="comments-area bg-light">
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
+
+      <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
+      </div>
+    </div>
+    <!-- ******************************** -->
   </section>
   <%- include('partials/footer') %>
 </body>

@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createSlide);
 router.put("/:id", updateSlide);
 router.put("/switch/:id", switchSlide);
-router.delete("/:id", deleteSlide);
+router.delete("/delete/:id", deleteSlide);
 router.get("/:id", findSlideById);
 router.get("/", findAllSlides);
 module.exports = router;

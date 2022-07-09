@@ -3,24 +3,6 @@ const jwt = require("jsonwebtoken");
 const { VALUES } = require("../config/default");
 
 class mangaController {
-  async showDashboardManga(req, res) {
-    // const token = req.cookies.token;
-    try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      // const admin = await Admin.findOne({ account: tokenVerify.account });
-      // const adminList = await Admin.find();
-      if (tokenVerify.role === "manga_admin") {
-        res.render("admin/manage_manga");
-      } else {
-        res.status(403).json({ message: "You are not manga admin !!!" });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error, message: "No Authentication" });
-    }
-  }
   async findAllSlides(req, res, next) {
     try {
       const listSlide = await Slide.find().populate("manga");

@@ -1,37 +1,57 @@
 const express = require("express");
-const { STATUS } = require("../../../config/httpResponse");
+const multer = require("multer");
+const path = require("path");
+const appRoot = require("app-root-path");
 const {
+  getSlideDashboard,
   createSlide,
-  updateSlide,
+  getUpdateSlidePage,
   switchSlide,
   deleteSlide,
   findSlideById,
   findAllSlides,
-} = require("../../../controllers/MangaController");
-const Chapter = require("../../../models/Chapter");
-const Slide = require("../../../models/Slide");
-const { redirect } = require("../../../service/redirect");
+  destroySlide,
+  restoreSlide,
+  getSlideTrash,
+  getCreateSlidePage,
+  updateSlide,
+} = require("../../../controllers/SlideController");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const slides = await Slide.find().populate({
-      path: "manga",
-      populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
-    });
-    res.render("admin/slide/slideDashboard", { slides });
-  } catch (error) {
-    console.log(error);
-    redirect(req, res, STATUS.SERVER_ERROR);
-  }
-});
+// route:-> /management/content/slide/...
+router.get("/update/:id", getUpdateSlidePage);
+router.get("/create", getCreateSlidePage);
+router.get("/trash", getSlideTrash);
+router.get("/", getSlideDashboard);
 
-// route:-> /manage/admin_manga/slide/...
-router.post("/", createSlide);
-router.put("/:id", updateSlide);
-router.put("/switch/:id", switchSlide);
-router.delete("/:id", deleteSlide);
-router.get("/:id", findSlideById);
-router.get("/", findAllSlides);
+//route (API-JSON): -> /management/content/slide/api
+const storageSlide = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(appRoot.path, "/src/public/images"));
+  },
+  filename: (req, file, cb) => {
+    req.file = file;
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const uploadSlide = multer({ storage: storageSlide });
+
+router.post(
+  "/api/upload/slideImg",
+  uploadSlide.single("slide"),
+  async (req, res) => {
+    console.log(req.file);
+    res.json(req.file);
+  }
+);
+
+router.post("/api/create", createSlide);
+router.get("/api/slides", findAllSlides);
+router.get("/api/slides/:id", findSlideById);
+router.delete("/api/delete/:id", deleteSlide);
+router.delete("/api/destroy/:id", destroySlide);
+router.patch("/api/restore/:id", restoreSlide);
+router.put("/api/switch/:id", switchSlide);
+router.post("/api/update/:id", updateSlide);
 
 module.exports = router;

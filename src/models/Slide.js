@@ -11,6 +11,9 @@ const SlideSchema = new mongoose.Schema(
       type: String,
       ref: Manga,
     },
+    content: {
+      type: String,
+    },
     active: { type: Boolean, default: false },
   },
   {
@@ -18,4 +21,11 @@ const SlideSchema = new mongoose.Schema(
     collection: "Slides",
   }
 );
+
+const mongooseDelete = require("mongoose-delete");
+SlideSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+  deletedAt: true,
+});
+
 module.exports = mongoose.model("slide", SlideSchema);

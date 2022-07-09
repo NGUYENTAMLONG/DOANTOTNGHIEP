@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slide Management</title>
-  <link rel="icon" href="/image/tablogo.png">
+  <title>TRASH DASHBOARD</title>
+
   <link rel="stylesheet" href="/css/fullscreenImg.css">
   <link rel="stylesheet" href="/css/slideDashboard.css">
   <%- include("../../partials/link") %>
@@ -19,27 +19,23 @@
   <div class="container mt-2">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-sm-12 col-md-4 col-lg-4">
-        <h2>Slide</h2>
+        <h2>Slide đã xóa</h2>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex align-items-center">
         <i class="fas fa-2x fa-search mr-2 text-info"></i><input class="form-control" id="myInput" type="text" placeholder="Tìm slide ...">
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
-        <a href="/management/content/manga" class="btn btn-warning">Quản lí manga <i class="fas fa-book"></i></a>
-        <a href="/management/content/slide/create" class="btn btn-primary ml-2">Tạo Slide <i class="fas fa-plus-circle"></i></a>
-        <a href="/management/content/slide/trash" class="btn btn-danger ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
+        <a href="/management/content/slide" class="btn btn-warning">Quản lí slide <i class="fab fa-2x fa-slideshare"></i></a>
       </div>
     </div>
   </div>
   <div class="container">
-    <div class="row statistical">
+    <div class="row">
       <p>Tổng : <span class="badge badge-primary slideSum"><%= slides.length %> </span>
-      <p>Số slide hiển thị : <span class="badge badge-success"><%= slides.filter((slide)=>slide.active === true).length %> </span>
-      <p>Số slide ẩn: <span class="badge badge-warning"><%= slides.length - slides.filter((slide)=>slide.active === true).length %>%> </span>
     </div>
   </div>
   <section>
-    <table class="table table-striped table-bordered table-sm " width="100%">
+    <table class="table table-striped table-bordered table-sm" width="100%">
       <thead>
         <tr class="text-center">
           <th scope="col">STT</th>
@@ -50,9 +46,8 @@
           <th scope="col">Chương</th>
           <th scope="col">Mô tả</th>
           <th scope="col">Đã tạo</th>
-          <th scope="col">Đã cập nhật</th>
+          <th scope="col">Đã xóa</th>
           <th scope="col">Tác vụ</th>
-          <th scope="col">Active</th>
         </tr>
       </thead>
       <tbody id="myTable">
@@ -95,20 +90,14 @@
             <%= slide.createdAt %>
           </td>
           <td scope="row">
-            <%= slide.updatedAt %>
+            <%= slide.deletedAt %>
           </td>
           <td scope="row">
-            <a href="/management/content/slide/update/<%= slide._id %> " class="btn btn-primary">Sửa</a>
-            <button class="btn btn-danger mt-2" onclick="deleteSlide('<%= slide._id%>')">Xóa</button>
+            <div class="text-center">
+              <button class="btn btn-success mt-2" onclick="restoreSlide('<%= slide._id %>')">Khôi phục</button>
+              <button class="btn btn-danger mt-2" onclick="destroySlide('<%= slide._id %>','<%= slide.image %>')">Xóa</button>
+            </div>
           </td>
-          <td scope="row">
-            <!-- Rounded switch -->
-            <label class="switch mt-2">
-              <input type="checkbox" class="toggleBtn" data-id="<%= slide._id%>" <% if(slide.active === true) { %> checked <%} %> />
-              <span class="slider round"></span>
-            </label>
-          </td>
-
         </tr>
         <%}); %>
       </tbody>
@@ -139,51 +128,56 @@
   });
 
 
+  const span = document.getElementsByClassName("close-btn")[0];
+
   function closeModal() {
     modal.style.display = "none";
   };
 </script>
 <script>
-  document.querySelectorAll(".toggleBtn").forEach((btn, index) => {
-    btn.onchange = function(e) {
-      const idSlide = e.target.dataset.id;
-      fetch("/manage/admin_manga/slide/switch/" + idSlide, {
-          method: 'PUT', // or 'PUT'
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-          // console.log(data)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-      reloadStatistical()
-    }
-  })
+  function restoreSlide(slideId) {
+    fetch(`/management/content/slide/api/restore/${slideId}`, {
+        method: 'PATCH', // or 'PUT'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã khôi phục thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          })
+        }
 
-  function reloadStatistical() {
-    const array = [...document.querySelectorAll(".toggleBtn")];
-    const checkedCount = array.filter((item, index) => item.checked === true).length
-    document.querySelector(".statistical .badge-success").innerHTML = checkedCount;
-    document.querySelector(".statistical .badge-warning").innerHTML = array.length - checkedCount;
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 <script>
-  function deleteSlide(slideId) {
+  function destroySlide(slideId, slideImg) {
+    const payload = {
+      image: slideImg.split("/")[2]
+    }
     swal({
       title: "Bạn có chắc chắn muốn xóa không",
-      text: "Nếu xóa bạn vẫn có thể khôi phục slide !",
+      text: "Nếu xóa bạn không thể khôi phục slide !",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        fetch(`/management/content/slide/api/delete/${slideId}`, {
-            method: 'DELETE', // or 'PUT'
+        fetch(`/management/content/slide/api/destroy/${slideId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(payload)
           })
           .then(response => response.json())
           .then(data => {
@@ -197,7 +191,6 @@
                 location.reload()
               })
             }
-
           })
           .catch((error) => {
             console.log('Error:', error);

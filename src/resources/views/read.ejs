@@ -47,13 +47,22 @@
   <section class="section container" id="section-2">
     <%- chapter.chapterContent %>
   </section>
-  <section class="section container text-light" id="section-3">
-    <% if(user){ %>
-    <%- include("partials/comments",{chapter:chapter.chapterNumber}) %>
-    <% } else{%>
-    <%- include("partials/comments",{user:null}) %>
-    <%} %>
+  <section class="section container text-light text-center" id="section-3">
+    <h3 class="text-dark">Bình luận chương <span class="badge badge-success text-light">
+        <%= chapter.chapterNumber %>
+      </span> <i class="fas fa-comments"></i></h3>
+    <!-- Plugin Comments Facebook -->
+    <div class="comments-area container bg-light">
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
+
+      <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %> /read/chapter-<%=chapter.chapterNumber %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
+      </div>
+    </div>
+    <!-- ******************************** -->
+
   </section>
+
   <section class="section " id="section-4">
     <div class="chapter-nav text-light">
       <ul>

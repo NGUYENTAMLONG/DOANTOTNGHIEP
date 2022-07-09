@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PUBLISH NEW SLIDE</title>
+  <%- include("../../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/publishManga.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/management/content/slide/">Bảng điều khiển</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Tạo slide</li>
+    </ol>
+  </nav>
+
+  <h2 class="text-center m-4">Tạo Slide</h2>
+  <section class="container">
+    <div class="row">
+      <div class="col-md-2 col-lg-2">
+      </div>
+      <div class="col-md-8 col-lg-8">
+        <form action="#" class="form-upload" enctype="multipart/form-data">
+          <label for="gallery-photo-slide" class="manga-img cover text-center">
+            <img class="img-cover" width="100%" alt="img-cover" hidden />
+            <label for="gallery-photo-slide" class="icon-upload"> <i class="fas fa-5x fa-upload"></i><br> Tải ảnh từ thiết bị</label>
+          </label>
+          <div class="text-center mt-3 ">
+            <input type="file" id="gallery-photo-slide" name="cover" hidden>
+          </div>
+        </form>
+        <form action="#" class="mt-4">
+          <div class="input_manga">
+            <label for="manga">
+              <h6>Thuộc truyện</h6>
+            </label>
+            <select class="form-select form-control" id="manga" name="manga" aria-label="Default select example" onchange="selectManga(this)">
+              <option selected disabled>Các manga hiện có</option>
+              <% mangas.forEach((manga)=>{ %>
+              <option value="<%= manga._id %>"><%= manga.name %> </option>
+              <%}) %>
+            </select>
+          </div>
+          <div class="input_content">
+
+          </div>
+        </form>
+      </div>
+      <div class="col-md-2 col-lg-2">
+      </div>
+    </div>
+  </section>
+
+</body>
+<%- include("../../partials/script") %>
+<script>
+  const cover = document.querySelector(".cover");
+  $('#gallery-photo-slide').on('change', function() {
+    const imageFile = document.querySelector('#gallery-photo-slide').files[0];
+    if (!imageFile) {
+      return
+    }
+    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && !imageFile.name.endsWith(".png")) {
+      alert("File của bạn phải là định dạng .jpg, .png hoặc .jpeg")
+      return
+    }
+    // imagesPreview(this, 'div.gallery');
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.querySelector(".img-cover").setAttribute("src", e.target.result);
+      document.querySelector(".img-cover").removeAttribute("hidden");
+
+      if (document.querySelector(".icon-upload")) {
+        document.querySelector(".icon-upload").remove()
+      }
+    };
+    reader.readAsDataURL(imageFile);
+  });
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+</script>
+<script>
+  function selectManga(it) {
+    fetch(`/management/content/manga/api/mangas/${it.value}`).then(res => res.json()).then((result) => {
+      const manga = result.data
+      document.querySelector(".input_content").innerHTML = `
+      <label for="author">
+        <h6>Tác giả</h6>
+      </label>
+      <input type="text" class="form-control" value="${manga.author}" id="author" disabled />
+      <label for="types">
+        <h6>Thể loại</h6>
+      </label>
+       ${manga.type.map((type)=> `
+        <span class="badge badge-success">${type}</span>
+        `).join("")}
+        <br>
+      <label for="content">
+        <h6>Nội dung</h6>
+      </label>
+      <textarea class="form-control" style="height:200px" id="content">${manga.description}</textarea>
+      <div class="text-center m-4">
+      <button class="btn btn-primary" data-manga="${manga._id}" onclick="createSlide(this)">Tạo slide</button>
+      </div>
+      `
+    }).catch((error) => console.log(error))
+  }
+
+  function createSlide(it) {
+    const imgFiles = document.getElementById("gallery-photo-slide");
+    const slideContent = document.getElementById("content").value;
+    const mangaId = it.getAttribute("data-manga");
+
+    const slideInfo = {
+      content: slideContent,
+      manga: mangaId
+    }
+    if (!imgFiles.files[0]) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải upload trang bìa của manga >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    } //set up avatar file 
+    const formData = new FormData();
+    formData.append("slide", imgFiles.files[0])
+    fetch('/management/content/slide/api/upload/slideImg', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log({
+          formData,
+          data
+        })
+
+        slideInfo.image = `/image/${data.filename}`;
+
+        fetch('/management/content/slide/api/create', {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(slideInfo),
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("CREATED SLIDE:", data)
+            swal({
+              title: "Thành công",
+              text: "Đã tạo slide thành công !",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => {
+              location.reload()
+            })
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+
+</html>

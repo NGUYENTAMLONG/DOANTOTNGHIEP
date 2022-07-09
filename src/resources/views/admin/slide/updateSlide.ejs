@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPDATE SLIDE</title>
+  <%- include("../../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/publishManga.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/management/content/slide/">Bảng điều khiển</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Cập nhật slide</li>
+    </ol>
+  </nav>
+
+  <h2 class="text-center m-4">Cập nhật Slide</h2>
+  <section class="container">
+    <div class="row">
+      <div class="col-md-2 col-lg-2">
+      </div>
+      <div class="col-md-8 col-lg-8">
+        <form action="#" class="form-upload" enctype="multipart/form-data">
+          <label for="gallery-photo-slide" class="manga-img cover text-center">
+            <img class="img-cover" width="100%" alt="img-cover" src="<%= slide.image %> " />
+            <label for="gallery-photo-slide" class="icon-upload mt-2"> <i class="fas fa-5x fa-upload"></i><br> Tải ảnh mới nếu muốn thay đổi</label>
+          </label>
+          <div class="text-center mt-3 ">
+            <input type="file" id="gallery-photo-slide" name="cover" hidden>
+          </div>
+        </form>
+        <form action="#" class="mt-4">
+          <div class="input_manga">
+            <label for="manga">
+              <h6>Thuộc truyện</h6>
+            </label>
+            <div class="alert alert-success" role="alert">
+              <%= slide.manga.name %>
+            </div>
+          </div>
+          <div class="input_content">
+            <label for="author">
+              <h6>Tác giả</h6>
+            </label>
+            <div class="alert alert-success" role="alert">
+              <%= slide.manga.author %>
+            </div>
+            <label for="types">
+              <h6>Thể loại</h6>
+            </label>
+            <% slide.manga.type.forEach((type)=>{ %>
+            <span class="badge badge-success"><%=type%></span>
+            <%  }) %>
+            <br>
+            <label for="content">
+              <h6>Nội dung</h6>
+            </label>
+            <textarea class="form-control" style="height:200px" id="content" onchange="changeContent(this)"><%= slide.content %> </textarea>
+            <div class="ml-4">
+              <input type="checkbox" class="form-check-input" id="checkContent" onchange="toggleContent()" />
+              <label class="form-check-label" for="checkContent">Đặt nội dung silde thành nội dung truyện</label>
+            </div>
+            <div class="text-center m-4">
+              <button class="btn btn-primary" data-slide="<%= slide._id %>" data-img="<%= slide.image %>" onclick="updateSlide(this)">Cập nhật slide</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-2 col-lg-2">
+      </div>
+    </div>
+  </section>
+  <p id="mangaDesc" hidden>
+    <%= slide.manga.description %>
+  </p>
+  <p id="editContent" hidden>
+    <%= slide.content %>
+  </p>
+</body>
+<%- include("../../partials/script") %>
+<script>
+  const cover = document.querySelector(".cover");
+  $('#gallery-photo-slide').on('change', function() {
+    const imageFile = document.querySelector('#gallery-photo-slide').files[0];
+    if (!imageFile) {
+      return
+    }
+    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && !imageFile.name.endsWith(".png")) {
+      alert("File của bạn phải là định dạng .jpg, .png hoặc .jpeg")
+      return
+    }
+    // imagesPreview(this, 'div.gallery');
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.querySelector(".img-cover").setAttribute("src", e.target.result);
+      document.querySelector(".img-cover").removeAttribute("hidden");
+
+      if (document.querySelector(".icon-upload")) {
+        document.querySelector(".icon-upload").remove()
+      }
+    };
+    reader.readAsDataURL(imageFile);
+  });
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+
+  const mangaDesc = document.getElementById("mangaDesc").innerHTML;
+  const editContent = document.getElementById("editContent");
+
+  function changeContent(it) {
+    editContent.textContent = it.value
+  }
+
+  function toggleContent() {
+    const textareaContent = document.getElementById("content");
+    if (document.getElementById('checkContent').checked) {
+      document.getElementById("content").value = mangaDesc
+    } else {
+      document.getElementById("content").value = editContent.textContent
+    }
+  }
+</script>
+<script>
+  function updateSlide(it) {
+    const imgFiles = document.getElementById("gallery-photo-slide");
+    const slideContent = document.getElementById("content").value;
+    const slideId = it.getAttribute("data-slide");
+    const oldSlideImg = it.getAttribute("data-img");
+
+    const slideInfo = {
+      content: slideContent,
+      oldImgSlide: oldSlideImg.split("/")[2]
+    }
+    const formData = new FormData();
+    formData.append("slide", imgFiles.files[0])
+    if (imgFiles.files[0]) {
+      fetch('/management/content/slide/api/upload/slideImg', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+
+          slideInfo.image = `/image/${data.filename}`;
+
+          fetch('/management/content/slide/api/update/' + slideId, {
+              method: 'POST', // or 'PUT'
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(slideInfo),
+            })
+            .then(response => response.json())
+            .then(data => {
+              swal({
+                title: "Thành công",
+                text: "Đã câp nhật slide thành công !",
+                icon: "success",
+                button: "Ok!",
+              }).then(() => {
+                location.reload()
+              })
+            })
+            .catch((error) => {
+              console.log('Error:', error);
+            })
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      submitUpdatePayload(slideId, slideInfo)
+    }
+  }
+
+  function submitUpdatePayload(slideId, slideInfo) {
+    fetch('/management/content/slide/api/update/' + slideId, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(slideInfo),
+      })
+      .then(response => response.json())
+      .then(data => {
+        swal({
+          title: "Thành công",
+          text: "Đã câp nhật slide thành công !",
+          icon: "success",
+          button: "Ok!",
+        }).then(() => {
+          location.reload()
+        })
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
+  }
+</script>
+
+</html>
