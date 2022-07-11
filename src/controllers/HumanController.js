@@ -8,27 +8,6 @@ const path = require("path");
 const { VALUES } = require("../config/default");
 dotenv.config();
 class humanController {
-  async showAvatar(req, res, next) {
-    const token = req.cookies.token;
-    try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      // res.send(req.params.name);
-      // C:/CODE/DO AN TOT NGHIEP/images
-      // ../../../../images/
-      // res.sendFile(path.join(__dirname, "../../../../images/" + req.params.name));
-      res.sendFile(
-        path.join(
-          "C:/CODE/DO AN TOT NGHIEP/",
-          "images/admins/" + req.params.name
-        )
-      );
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error });
-    }
-  }
   async showDeletePage(req, res) {
     const token = req.cookies.token;
     try {
@@ -71,15 +50,10 @@ class humanController {
       res.status(400).json({ error: error });
     }
   }
-  async showDashboardHrm(req, res) {
-    const token = req.cookies.token;
+  async showAdminDashboard(req, res) {
     try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      const admin = await Admin.findOne({ account: tokenVerify.account });
-      const adminList = await Admin.find();
-      res.render("admin/manage_hrm", { adminList, admin });
+      // const admin = await Admin.findOne({ account: tokenVerify.account });
+      res.json("HEERER");
     } catch (error) {
       console.log(error);
       res.status(400).json({ error: error, message: "No Authentication" });
@@ -240,27 +214,6 @@ class humanController {
     }
   }
   //************* User Controller ******************
-  //show User avatar
-  async showUserAvatar(req, res, next) {
-    const token = req.cookies.token;
-    try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      // C:/CODE/DO AN TOT NGHIEP/images
-      // ../../../../images/
-      // res.sendFile(path.join(__dirname, "../../../../images/" + req.params.name));
-      res.sendFile(
-        path.join(
-          "C:/CODE/DO AN TOT NGHIEP/",
-          "images/users/" + req.params.name
-        )
-      );
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error });
-    }
-  }
   // upload user avatar
   async storeImageUser(req, res, next) {
     console.log(req.file);

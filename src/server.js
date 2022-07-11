@@ -108,9 +108,10 @@ database.connect();
 app.use(cookieParser());
 
 //********************* Config router app
-route.adminRoute(app);
-route.userRoute(app);
-const MangaModel = require("./models/Manga");
+route.adminRoute(app); // For Admin
+route.userRoute(app); // For User
+
+// const MangaModel = require("./models/Manga");
 // const Slide = require("./models/Slide");
 // MangaModel.deleteOne({ name: "Clover" })
 //   .then(() => {

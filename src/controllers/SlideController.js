@@ -61,7 +61,6 @@ class SlideController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
-
   //Get All Slides
   async findAllSlides(req, res, next) {
     try {
@@ -105,6 +104,7 @@ class SlideController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  //Create Slide
   async createSlide(req, res, next) {
     const { image, manga, content } = req.body;
     if (!image || !manga) {
@@ -134,6 +134,7 @@ class SlideController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  //Update Slide
   async updateSlide(req, res, next) {
     const idSlide = req.params.id;
     const { image, content, oldImgSlide } = req.body;

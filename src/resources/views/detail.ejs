@@ -12,12 +12,9 @@
   <link rel="stylesheet" href="/css/detail.css">
   <link rel="stylesheet" href="/css/paging.css">
   <link rel="stylesheet" href="/css/skeleton.css">
-
-
 </head>
 
 <body>
-
   <%- include('partials/header',{user:user}) %>
 
   <section class="section container" id="section-1">
@@ -83,7 +80,6 @@
         </div>
       </div>
     </div>
-
   </section>
   <section class="section container" id="section-2">
     <% if (manga.contentId.chapters.length === 0 ){%>
@@ -151,15 +147,11 @@
     </div>
     <!-- ******************************** -->
   </section>
+
   <%- include('partials/footer') %>
 </body>
-<!-- CDN script Facebook for DEV -->
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=929579514428909&autoLogAppEvents=1" nonce="OSNlapej"></script>
+
 <%- include("partials/script") %>
-
-<!-- CDN script Emoji -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
 
 <script>
   const btnShowMore = document.querySelector(".show-more");
@@ -177,11 +169,6 @@
       flag = false
     }
   }
-</script>
-<script>
-  $("#content").emojioneArea({
-    pickerPosition: "bottom",
-  })
 </script>
 <script>
   $(document).ready(function() {

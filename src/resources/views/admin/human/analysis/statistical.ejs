@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STATISTICAL</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <!----======== CSS ======== -->
+  <link rel="stylesheet" href="/css/menu.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <!----===== Fontawesome Icon CSS ===== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.0/css/all.min.css">
+  <!--<title>Dashboard Sidebar Menu</title>-->
+  <link rel="stylesheet" href="/css/manage_human.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <%- include("../../../partials/menu") %>
+  <section class="home" style="padding: 0px 20px;">
+    <div class="text"> <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+    </div>
+    <div class="mother-box">
+      <h1>
+        Thống kê
+      </h1>
+      <div class="row" id="row-1">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
+        </div>
+      </div>
+      <div class="row" id="row-2" style="margin: 0px 20px;">
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
+          <canvas id="myDoughnutChart"></canvas>
+        </div>
+      </div>
+  </section>
+
+</body>
+<%- include("../../../partials/scriptSidebar") %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const dataDoughnut = {
+    labels: [
+      'Likes',
+      'Views',
+      'Comments'
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: [300, 50, 100],
+      backgroundColor: [
+        'black',
+        'red',
+        'orange'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configDoughnut = {
+    type: 'doughnut',
+    data: dataDoughnut,
+  };
+  const myDoughnutChart = new Chart(
+    document.getElementById('myDoughnutChart'),
+    configDoughnut
+  );
+</script>
+
+</html>

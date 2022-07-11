@@ -3,7 +3,6 @@ const moment = require("moment");
 const path = require("path");
 const fs = require("fs");
 const appRoot = require("app-root-path");
-const bodyParser = require("body-parser");
 const Manga = require("../../../models/Manga");
 const Chapter = require("../../../models/Chapter");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../../config/httpResponse");
@@ -202,6 +201,7 @@ router.post("/updateManga/:slug", async (req, res) => {
     hot,
     description,
     image,
+    oldImage,
   } = req.body;
   const slug = req.params.slug;
   if (
@@ -212,7 +212,8 @@ router.post("/updateManga/:slug", async (req, res) => {
     type.length === 0 ||
     !serve ||
     !status ||
-    !description
+    !description ||
+    !oldImage
   ) {
     return res
       .status(STATUS.BAD_REQUEST)
@@ -234,6 +235,9 @@ router.post("/updateManga/:slug", async (req, res) => {
 
     if (image) {
       payload.image = image;
+      fs.unlinkSync(
+        path.join(appRoot.path, `/src/public/images/${oldImage.split("/")[2]}`)
+      );
     }
 
     await Manga.findOneAndUpdate({ slug: slug }, payload);

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADMIN MANAGEMENT</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <!----======== CSS ======== -->
+  <link rel="stylesheet" href="/css/menu.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <!--<title>Dashboard Sidebar Menu</title>-->
+  <link rel="stylesheet" href="/css/manage_human.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <%- include("../../../partials/menu") %>
+  <section class="home">
+    <div class="text"> <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></div>
+    <div class="container">
+      <h3><i class="fas fa-table"></i> Danh sách tài khoản quản trị viên</h3>
+      <table class="table table-dark table-hover table-striped table-responsive text-nowrap">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">STT</th>
+            <th scope="col">Admin</th>
+            <th scope="col">Email</th>
+            <th scope="col">Vai trò</th>
+            <th scope="col" colspan="2">Avatar</th>
+            <th scope="col">Tạo</th>
+            <th scope="col">Cập nhật</th>
+            <th scope="col"><i class='bx bx-edit icon'></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% adminList.forEach(function(admin,index){ %>
+          <tr>
+            <th scope="row" class="text-center"><%= index + 1%></th>
+            <td><%= admin.account %></td>
+            <td><%= admin.email%></td>
+            <td> <% if (admin.role =="hrm_admin"){%><span class="badge badge-pill badge-primary">Quản trị nhân lực / hrm_admin</span> <%}else { %><span class="badge badge-pill badge-warning">Quản trị nội dung / manga_admin</span><% } %> </td>
+            <td> <%= admin.avatar%></td>
+            <td>
+              <% if (admin.avatar !== "avatar.png"){%><img class="avatar" src="/public/avatars/admin/<%= admin.avatar%>" /> <% }else{%>
+              <img class="avatar" src="/image/avatar.png" />
+              <%} %>
+            </td>
+            <td>
+              <%= moment(admin.createdAt).locale("vi").format("LL") %>
+              <br>
+              <%= moment(admin.createdAt).format('LTS'); %>
+            </td>
+            <td>
+              <%= moment(admin.updatedAt).locale("vi").format("LL") %>
+              <br>
+              <%= moment(admin.updatedAt).format('LTS'); %>
+            </td>
+            <td class=" text-center">
+              <button class="btn btn-primary">Sửa</button>
+              <button class="btn btn-danger">Xóa</button>
+            </td>
+          </tr>
+          <% }); %>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</body>
+<%- include("../../../partials/scriptSidebar") %>
+
+
+</html>

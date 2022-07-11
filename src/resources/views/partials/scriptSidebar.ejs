@@ -1,0 +1,57 @@
+<script>
+  const body = document.querySelector('body'),
+    sidebar = body.querySelector('nav'),
+    toggle = body.querySelector(".toggle"),
+    searchBtn = body.querySelector(".search-box"),
+    modeSwitch = body.querySelector(".toggle-switch"),
+    modeText = body.querySelector(".mode-text");
+
+
+  toggle.addEventListener("click", () => {
+    sidebar.classList.toggle("close");
+  })
+
+  searchBtn.addEventListener("click", () => {
+    sidebar.classList.remove("close");
+  })
+
+  modeSwitch.addEventListener("click", () => {
+    body.classList.toggle("dark");
+
+    if (body.classList.contains("dark")) {
+      modeText.innerText = "Light mode";
+    } else {
+      modeText.innerText = "Dark mode";
+
+    }
+  });
+
+  function changeActive(id) {
+    const menuActiveEl = document.querySelector('.active');
+    console.log(menuActiveEl)
+    menuActiveEl.classList.remove('active')
+    document.getElementById(id).classList.add('active')
+  }
+  switch (window.location.pathname) {
+    case "/management/human/":
+      changeActive("nav-1")
+      break;
+    case "/management/human/admin/notification":
+      changeActive("nav-2")
+      break;
+    case "/management/human/admin/statistical":
+      changeActive("nav-3")
+      break;
+    case "/management/human/admin/analysis":
+      changeActive("nav-4")
+      break;
+    case "/management/human/admin/manage_admin":
+      changeActive("nav-5")
+      break;
+    case "/management/human/user/manage_user":
+      changeActive("nav-6")
+      break;
+    default:
+      break;
+  }
+</script>

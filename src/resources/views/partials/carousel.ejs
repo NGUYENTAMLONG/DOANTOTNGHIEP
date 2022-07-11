@@ -49,10 +49,10 @@
         <div class="caption">
           <h3><%= slide.manga.name %></h3>
           <div>
-            <span class="badge badge-primary">Chương <%= slide.manga.chapters.slice(-1)[0].chapterNumber %></span>
+            <span class="badge badge-primary">Chương <%= slide.manga.contentId.chapters[0].chapterNumber %></span>
             <a class="badge badge-success text-decoration-none" href="/detail/<%= slide.manga.slug %>">Đọc ngay</a>
           </div>
-          <p><%= slide.manga.description %></p>
+          <p><%= slide.content %></p>
         </div>
       </div>
       <% }) %>

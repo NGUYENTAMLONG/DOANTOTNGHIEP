@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin HRM</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/manage_hrm.css">
+  <link rel="stylesheet" href="/css/fullscreenImg.css">
+
+  <%- include("../partials/link") %>
+  <!-- {{!-- Link fontawesome 5 --}} -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+    </nav>
+  </header>
+  <%- include("../partials/sidebar",{admin}) %>
+  <div class="container">
+    <h1 class="text-center" style="margin-top: 70px;">USER CREATION PAGE</h1>
+  </div>
+  <div class="container" style="width: 400px;">
+    <!-- enctype="multipart/form-data" -->
+    <form action="/manage/admin_hrm/user" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="username">Tài khoản</label>
+        <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username/ Nhập tài khoản user" />
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" class="form-control" required name="password" id="password" placeholder=" Enter password/ Nhập mật khẩu user" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" required name="email" id="email" placeholder="Enter email/ Nhập email user" />
+      </div>
+      <div class="input-group mb-3 uploadAvatar">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Avatar</span>
+        </div>
+        <div class="custom-file ">
+          <input type="file" class="custom-file-input" name="avatar" id="avatar">
+          <label class="custom-file-label">Choose file</label>
+        </div>
+      </div>
+      <div class="preview-zone">
+        <p class="bg-warning boderred">Preview Avatar</p>
+        <img id="preview" src="#" alt="your avatar">
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+          <span class="close-btn">&times;</span>
+          <img class="modal-content" id="preview-modal">
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Thêm người dùng <i class="fa-solid fa-plus"></i></button>
+      </div>
+    </form>
+  </div>
+  </div>
+</body>
+<%- include("../partials/script") %>
+<script>
+  // Add the following code if you want the name of the file appear on select
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+  window.onsubmit = function(event) {
+    event.preventDefault();
+    //find content
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const imgFiles = document.getElementById("avatar")
+
+    const formData = new FormData();
+    formData.append("avatar", imgFiles.files[0])
+    const obj = {
+      username: username,
+      password: password,
+      email: email,
+    }
+
+    //Kiem tra tai khoan co avatar khong?
+    if (typeof imgFiles.files[0] === "undefined") {
+      //neu khong thi set default cho hinh anh
+      fetch('/manage/admin_hrm/user', {
+          method: 'POST', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(obj),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      fetch('/manage/admin_hrm/user/images', {
+          method: 'POST', // or 'PUT'
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          obj.avatar = data.filename;
+          console.log({
+            obj: obj
+          })
+
+          fetch('/manage/admin_hrm/user', {
+              method: 'POST', // or 'PUT'
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(obj),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              console.log(obj)
+
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  }
+</script>
+<script>
+  avatar.onchange = () => {
+    const [file] = avatar.files
+    if (file) {
+      preview.src = URL.createObjectURL(file)
+    }
+  }
+
+  var modal = document.getElementById("myModal");
+
+  // Get the image and insert it inside the modal - use its "alt" text as a caption
+  var img = document.getElementById("preview");
+  var modalImg = document.getElementById("preview-modal");
+  img.onclick = function() {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+  }
+
+  // Get the <span> element that close-btns the modal
+  var span = document.getElementsByClassName("close-btn")[0];
+
+  // When the user clicks on <span> (x), close-btn the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+</script>
+
+</html>

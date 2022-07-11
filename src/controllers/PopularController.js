@@ -4,7 +4,6 @@ const moment = require("moment");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
 const { orderManga } = require("../helper/order");
-// const filterPopular = require("../helper/filterPopular");
 
 class PopularController {
   async showJustUpdated(req, res, next) {
@@ -12,12 +11,15 @@ class PopularController {
       const mangas = await Manga.find().populate("contentId", {
         chapters: { $slice: -1 },
       });
-      // const slides = await Slide.find({ active: true }).populate("manga");
+      const slides = await Slide.find({ active: true }).populate({
+        path: "manga",
+        populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+      });
       res.render("showPopular", {
         user: req.AuthPayload,
         moment: moment,
         title: `<i class="fab fa-hotjar"></i> Truyện mới cập nhật`,
-        // slides,
+        slides,
         mangas: orderManga(mangas),
       });
     } catch (error) {
@@ -32,12 +34,15 @@ class PopularController {
       const mangas = await Manga.find({ serve: "all" }).populate("contentId", {
         chapters: { $slice: -1 },
       });
-      // const slides = await Slide.find({ active: true }).populate("manga");
+      const slides = await Slide.find({ active: true }).populate({
+        path: "manga",
+        populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+      });
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-flag-checkered"></i> Truyện tổng hợp`,
         moment: moment,
-        // slides,
+        slides,
         mangas: orderManga(mangas),
       });
     } catch (error) {
@@ -50,12 +55,15 @@ class PopularController {
       const mangas = await Manga.find({ serve: "male" }).populate("contentId", {
         chapters: { $slice: -1 },
       });
-      // const slides = await Slide.find({ active: true }).populate("manga");
+      const slides = await Slide.find({ active: true }).populate({
+        path: "manga",
+        populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+      });
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-mars"></i> Truyện con trai`,
         moment: moment,
-        // slides,
+        slides,
         mangas: orderManga(mangas),
       });
     } catch (error) {
@@ -71,11 +79,14 @@ class PopularController {
           chapters: { $slice: -1 },
         }
       );
-      // const slides = await Slide.find({ active: true }).populate("manga");
+      const slides = await Slide.find({ active: true }).populate({
+        path: "manga",
+        populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+      });
       res.render("showPopular", {
         user: req.AuthPayload,
         title: `<i class="fas fa-venus"></i> Truyện con gái`,
-        // slides,
+        slides,
         moment: moment,
         mangas: orderManga(mangas),
       });

@@ -104,42 +104,7 @@
   <%- include('partials/footer') %>
   <%}%>
 </body>
-<!-- CDN script Facebook for DEV -->
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0&appId=929579514428909&autoLogAppEvents=1" nonce="OSNlapej"></script>
-
 <%- include("partials/script") %>
-  <!-- CDN script Emoji -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
 
-  <script>
-    // const btnShowMore = document.querySelector(".show-more");
-    // const textDesc = document.querySelector(".manga-info__desc p");
-
-    // let flag = false;
-    // btnShowMore.onclick = function() {
-    //   if (flag === false) {
-    //     btnShowMore.textContent = "Show Less";
-    //     textDesc.classList.remove("truncate");
-    //     flag = true
-    //   } else {
-    //     btnShowMore.textContent = "Show More";
-    //     textDesc.classList.add("truncate");
-    //     flag = false
-    //   }
-    // }
-  </script>
-  <script>
-    $("#content").emojioneArea({
-      pickerPosition: "bottom",
-    })
-
-    $('select').on('change', function(e) {
-      var optionSelected = $("option:selected", this);
-      var valueSelected = this.value;
-      alert(valueSelected)
-      window.location = valueSelected
-    });
-  </script>
 
 </html>

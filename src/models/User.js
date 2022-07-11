@@ -12,9 +12,17 @@ const UserSchema = new Schema(
       required: true,
     },
     email: { type: String, required: false, unique: true },
+    dob: {
+      type: Date, //dob: Date of Birth
+      required: true,
+    },
     avatar: {
       type: String,
       default: "avatar_default.jpg",
+    },
+    active: {
+      type: Boolean,
+      default: false,
     },
     follows: {
       type: Array,

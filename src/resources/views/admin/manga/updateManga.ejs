@@ -166,7 +166,7 @@
               <%= manga.description %>
           </textarea>
         </div>
-        <button class="btn btn-success float-right mt-3 mb-4" onclick="updateManga(event,'<%=  manga.slug %>')">Cập nhật chỉnh sửa</button>
+        <button class="btn btn-success float-right mt-3 mb-4" onclick="updateManga(event,'<%=  manga.slug %>','<%= manga.image %>')">Cập nhật chỉnh sửa</button>
         <div class="list-chapter mt-4">
           <table class="table bg-dark text-light">
             <thead class="bg-warning text-dark">
@@ -181,7 +181,7 @@
             <tbody>
               <% manga.contentId.chapters.forEach(function(chapter,index){ %>
               <tr>
-                <th scope="row" class="th-stt text-center">
+                <th scope=" row" class="th-stt text-center">
                   <%= index + 1%>
                 </th>
                 <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
@@ -260,7 +260,7 @@
     reader.readAsDataURL(imageFile);
   });
 
-  function updateManga(event, slug) {
+  function updateManga(event, slug, oldImage) {
     event.preventDefault();
     //find content
     const name = document.getElementById("name").value;
@@ -275,7 +275,15 @@
     document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
       typeArray.push(type.value)
     });
-
+    if (name === "" || anotherName === "" || author === "" || typeArray.length === 0 || description === "") {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải điền đầy đủ thông tin >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
     const mangaInfo = {
       name,
       anotherName,
@@ -284,7 +292,8 @@
       serve,
       status,
       hot,
-      description
+      description,
+      oldImage
     }
     const imgFiles = document.getElementById("gallery-photo-cover");
 

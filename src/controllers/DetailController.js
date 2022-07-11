@@ -1,4 +1,3 @@
-const Comment = require("../models/Comment");
 const Manga = require("../models/Manga");
 const moment = require("moment");
 const User = require("../models/User");
@@ -12,11 +11,6 @@ class detailController {
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
       }
-      const comments = await Comment.find({
-        mangaId: manga._id,
-      })
-        .populate("userId", "username avatar")
-        .sort({ updatedAt: -1 });
 
       let checkFollow = false;
       if (req.AuthPayload !== undefined) {
@@ -29,7 +23,6 @@ class detailController {
         slug,
         manga,
         user: req.AuthPayload,
-        comments,
         moment,
         followFlag: checkFollow,
       });
@@ -45,12 +38,6 @@ class detailController {
       }).populate("contentId");
       const chapterNumber = req.params.chapter.split("-")[1];
 
-      const comments = await Comment.find({
-        mangaId: foundManga._id,
-      })
-        .populate("userId", "username avatar")
-        .sort({ updatedAt: -1 });
-
       const foundChapter = foundManga.contentId.chapters.filter(
         (chapter) => chapter.chapterNumber == chapterNumber
       )[0];
@@ -62,7 +49,6 @@ class detailController {
         user: req.AuthPayload,
         manga: foundManga,
         chapter: foundChapter,
-        comments,
         moment,
       });
     } catch (error) {

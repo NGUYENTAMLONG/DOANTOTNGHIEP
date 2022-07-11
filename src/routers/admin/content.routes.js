@@ -24,9 +24,12 @@ const router = express.Router();
 const mangaRouter = require("./manga/manga.routes");
 const slideRouter = require("./manga/slide.routes");
 
-//path: /management/content...
+//path: /management/content/...
 router.use("/manga", mangaRouter);
 
 router.use("/slide", slideRouter);
 
+router.use("/", (req, res) => {
+  res.json("CONTENT MANAGEMENT DASHBOARD");
+});
 module.exports = router;

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANALYSIS</title>
+  <!----======== CSS ======== -->
+  <link rel="stylesheet" href="/css/menu.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <!----===== Fontawesome Icon CSS ===== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.0/css/all.min.css">
+  <!--<title>Dashboard Sidebar Menu</title>-->
+  <link rel="stylesheet" href="/css/manage_human.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <%- include("../../../partials/menu") %>
+  <section class="home" style="padding: 0px 20px;">
+    <div class="text"> <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+    </div>
+    <div class="mother-box">
+      <h1>
+        Phân tích
+      </h1>
+
+      <div class="row" id="row-1">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
+          <a class="card bg-dark" href="#">
+            <div class="card-body">
+              <h5 class="card-title"><i class='bx bxs-user-pin text-primary'></i> Quản trị viên</h5>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row" id="row-2" style="margin: 0px 20px;">
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-8 p-2">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
+          <canvas id="myDoughnutChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+<%- include("../../../partials/scriptSidebar") %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: {}
+  };
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+
+  const dataDoughnut = {
+    labels: [
+      'Likes',
+      'Views',
+      'Comments'
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: [300, 50, 100],
+      backgroundColor: [
+        '#28a745',
+        '#007bff',
+        '#dc3545'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configDoughnut = {
+    type: 'doughnut',
+    data: dataDoughnut,
+  };
+  const myDoughnutChart = new Chart(
+    document.getElementById('myDoughnutChart'),
+    configDoughnut
+  );
+</script>
+
+</html>
