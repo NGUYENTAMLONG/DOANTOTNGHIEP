@@ -59,5 +59,7 @@ module.exports.types = [
   "Mecha",
   "18+",
 ];
-
+module.exports.PAGING = {
+  LIMIT: 3,
+};
 module.exports.SECRET_KEY = "tamlongdev";

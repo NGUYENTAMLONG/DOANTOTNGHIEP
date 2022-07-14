@@ -9,20 +9,18 @@ $(document).ready(function () {
 });
 
 //Turn on turn off modal
-var modal = document.getElementById("myModal");
+function zoomImg(it) {
+  var modal = document.getElementById("myModal");
+  var modalImg = document.getElementById("preview-modal");
 
-var modalImg = document.getElementById("preview-modal");
-document.querySelectorAll(".manga-image").forEach((item, index) => {
-  item.onclick = function () {
-    modal.style.display = "block";
-    modalImg.src = this.src;
-  };
-});
+  modal.style.display = "block";
+  modalImg.src = it.src;
+}
 
-const span = document.getElementsByClassName("close-btn")[0];
-span.onclick = function () {
+function closeModal() {
+  var modal = document.getElementById("myModal");
   modal.style.display = "none";
-};
+}
 
 //Show Chapter List Of Manga
 function showChapters(btn) {

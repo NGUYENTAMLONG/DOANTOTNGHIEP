@@ -1,93 +1,52 @@
+/* Light Mode Button Styles
+    --------------------------- */
+.light-mode-button {
+  background: 0;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0);
+  margin-top: 20px; }
+
+.light-mode-button:focus {
+  outline: none;
+  /* Not ideal for accessibility */ }
+
+.light-mode-button span:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  background-color: #d6d7db;
+  box-shadow: inset 1px 1px 3px 0 black;
+  transition: 0.3s; }
+
+.light-mode-button span:nth-child(2) {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 1px 1px 2px 0 black;
+  transition: 0.3s; }
+
 table {
-  display: flex;
-  flex-flow: column;
-  width: 100%; }
-  table thead {
-    flex: 0 0 auto;
-    margin-right: 12px; }
-  table tbody {
-    flex: 1 1 auto;
-    display: block;
-    height: 500px;
-    overflow: scroll; }
-    table tbody::-webkit-scrollbar {
-      width: 12px;
-      background-color: #f5f5f5;
-      overflow: hidden; }
-    table tbody::-webkit-scrollbar-thumb {
-      border-radius: 20px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      background-color: #555; }
-  table tr {
-    width: 100%;
-    display: table;
-    table-layout: fixed; }
-  table th {
-    text-align: center; }
-  table td {
-    padding: 5px;
-    overflow-wrap: break-word; }
-  table .fit {
-    width: 50px; }
-  table .type {
-    padding: 2px 3px;
-    font-size: 11px;
-    border-radius: 3px; }
+  font-size: 13px; }
   table .manga-row {
     overflow: scroll; }
-  table .desc {
-    position: relative; }
-    table .desc:hover .desc__more {
-      display: block; }
-    table .desc .desc__less {
-      display: -webkit-box;
-      -webkit-line-clamp: 5;
-      -webkit-box-orient: vertical;
-      overflow: hidden; }
-    table .desc .desc__more {
-      position: absolute;
-      background-color: gray;
-      top: 0;
-      right: -320px;
-      z-index: 100;
-      width: 300px;
-      height: 300px;
-      padding: 10px;
-      border-radius: 10px;
-      transition: 0.5s ease-in-out;
-      display: none;
-      -ms-word-break: break-all;
-      word-break: break-word; }
-      table .desc .desc__more p {
-        text-indent: 20px;
-        height: 85%;
-        overflow-y: scroll; }
-        table .desc .desc__more p::-webkit-scrollbar {
-          width: 12px;
-          background-color: #f5f5f5;
-          border-radius: 20px; }
-        table .desc .desc__more p::-webkit-scrollbar-thumb {
-          border-radius: 20px;
-          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-          background-color: #555; }
-      table .desc .desc__more::before {
-        position: absolute;
-        content: "";
-        left: -20px;
-        width: 0;
-        height: 0;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        border-right: 20px solid #343a40; }
-      table .desc .desc__more::after {
-        position: absolute;
-        content: "";
-        display: block;
-        height: 200px;
-        left: -30px;
-        top: 0;
-        width: 40px;
-        background-color: transparent; }
+  table .manga-image {
+    width: 100px; }
+  table .desc__less {
+    width: 250px;
+    height: 200px;
+    overflow-y: scroll; }
 
 .modal-dialog .modal-content {
   max-width: 1000px !important; }
@@ -169,7 +128,3 @@ table {
   color: black;
   text-decoration: none;
   cursor: pointer; }
-
-@media all and (max-width: 1024px) {
-  table tbody {
-    overflow-x: scroll; } }

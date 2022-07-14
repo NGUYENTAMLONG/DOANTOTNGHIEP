@@ -104,6 +104,51 @@ class SlideController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  //Get Slide List
+  async getSlideList(req, res, next) {
+    const { search, sort, order, offset, limit } = req.query;
+
+    try {
+      const slides = await Slide.find({})
+        .populate({
+          path: "manga",
+          populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+        })
+        .skip(Number(offset))
+        .limit(Number(limit));
+      res.status(STATUS.SUCCESS).json({
+        rows: slides,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+
+  //Get Slide List
+  async getDeletedList(req, res, next) {
+    const { search, sort, order, offset, limit } = req.query;
+
+    try {
+      const slides = await Slide.findDeleted({})
+        .populate({
+          path: "manga",
+          populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
+        })
+        .skip(Number(offset))
+        .limit(Number(limit));
+      res.status(STATUS.SUCCESS).json({
+        rows: slides,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   //Create Slide
   async createSlide(req, res, next) {
     const { image, manga, content } = req.body;

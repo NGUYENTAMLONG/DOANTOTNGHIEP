@@ -1,118 +1,64 @@
 @import "variables.scss";
+
+/* Light Mode Button Styles
+    --------------------------- */
+.light-mode-button {
+  background: 0;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0);
+  margin-top: 20px;
+}
+
+.light-mode-button:focus {
+  outline: none;
+  /* Not ideal for accessibility */
+}
+
+.light-mode-button span:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  background-color: #d6d7db;
+  box-shadow: inset 1px 1px 3px 0 black;
+  transition: 0.3s;
+}
+
+.light-mode-button span:nth-child(2) {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 1px 1px 2px 0 black;
+  transition: 0.3s;
+}
+
 table {
-  display: flex;
-  flex-flow: column;
-  width: 100%;
+  font-size: 13px;
   thead {
-    flex: 0 0 auto;
-    margin-right: 12px;
   }
   tbody {
-    flex: 1 1 auto;
-    display: block;
-    height: 500px;
-    // width: 100%;
-    overflow: scroll;
-    // overflow-x: scroll;
-    &::-webkit-scrollbar {
-      width: 12px;
-      background-color: #f5f5f5;
-      overflow: hidden;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 20px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      background-color: #555;
-    }
-  }
-
-  tr {
-    width: 100%;
-    display: table;
-    table-layout: fixed;
-  }
-  th {
-    text-align: center;
-  }
-  td {
-    padding: 5px;
-    overflow-wrap: break-word;
-  }
-  .fit {
-    width: 50px;
-  }
-  .type {
-    padding: 2px 3px;
-    font-size: 11px;
-    border-radius: 3px;
   }
   .manga-row {
     overflow: scroll;
   }
-
-  .desc {
-    position: relative;
-    &:hover .desc__more {
-      display: block;
-    }
-    .desc__less {
-      display: -webkit-box;
-      -webkit-line-clamp: 5;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .desc__more {
-      position: absolute;
-      background-color: gray;
-      top: 0;
-      right: -320px;
-      z-index: 100;
-      width: 300px;
-      height: 300px;
-      padding: 10px;
-      border-radius: 10px;
-      transition: 0.5s ease-in-out;
-      display: none;
-      -ms-word-break: break-all;
-      word-break: break-word;
-      p {
-        text-indent: 20px;
-        height: 85%;
-        overflow-y: scroll;
-        &::-webkit-scrollbar {
-          width: 12px;
-          background-color: #f5f5f5;
-          border-radius: 20px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          border-radius: 20px;
-          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-          background-color: #555;
-        }
-      }
-      &::before {
-        position: absolute;
-        content: "";
-        left: -20px;
-        width: 0;
-        height: 0;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        border-right: 20px solid $color-4;
-      }
-      &::after {
-        position: absolute;
-        content: "";
-        display: block;
-        height: 200px;
-        left: -30px;
-        top: 0;
-        width: 40px;
-        background-color: transparent;
-      }
-    }
+  .manga-image {
+    width: 100px;
+  }
+  .desc__less {
+    width: 250px;
+    height: 200px;
+    overflow-y: scroll;
   }
 }
 .modal-dialog {
@@ -219,11 +165,4 @@ table {
   color: black;
   text-decoration: none;
   cursor: pointer;
-}
-@media all and (max-width: 1024px) {
-  table {
-    tbody {
-      overflow-x: scroll;
-    }
-  }
 }

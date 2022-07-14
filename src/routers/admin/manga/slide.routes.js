@@ -15,6 +15,8 @@ const {
   getSlideTrash,
   getCreateSlidePage,
   updateSlide,
+  getSlideList,
+  getDeletedList,
 } = require("../../../controllers/SlideController");
 const router = express.Router();
 
@@ -44,7 +46,8 @@ router.post(
     res.json(req.file);
   }
 );
-
+router.get("/api/getList", getSlideList);
+router.get("/api/getDeletedList", getDeletedList);
 router.post("/api/create", createSlide);
 router.get("/api/slides", findAllSlides);
 router.get("/api/slides/:id", findSlideById);

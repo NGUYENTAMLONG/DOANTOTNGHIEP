@@ -8,7 +8,7 @@ const Chapter = require("../../../models/Chapter");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../../../helper/response");
 const multer = require("multer");
-const { types } = require("../../../config/default");
+const { types, PAGING } = require("../../../config/default");
 const { redirect } = require("../../../service/redirect");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -38,12 +38,49 @@ router.get("/api/mangas/:id", async (req, res) => {
 // ex: /management/content/manga - Method: GET
 router.get("/", async (req, res) => {
   try {
-    const mangas = await Manga.find({}).populate("contentId", {
-      chapters: { $slice: -1 },
-    });
+    const allMangas = await Manga.find({});
     res.render("admin/manga/mangaDashboard", {
-      mangas: mangas,
-      moment: moment,
+      allMangas,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS.SERVER_ERROR)
+      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+  }
+});
+//paging api
+router.get("/api/getList", async (req, res) => {
+  const { search, sort, order, offset, limit } = req.query;
+  try {
+    const mangas = await Manga.find({})
+      .populate("contentId", {
+        chapters: { $slice: -1 },
+      })
+      .skip(Number(offset))
+      .limit(Number(limit));
+    res.status(STATUS.SUCCESS).json({
+      rows: mangas,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS.SERVER_ERROR)
+      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+  }
+});
+//paging deleted api
+router.get("/api/getDeletedList", async (req, res) => {
+  const { search, sort, order, offset, limit } = req.query;
+  try {
+    const mangas = await Manga.findDeleted({})
+      .populate("contentId", {
+        chapters: { $slice: -1 },
+      })
+      .skip(Number(offset))
+      .limit(Number(limit));
+    res.status(STATUS.SUCCESS).json({
+      rows: mangas,
     });
   } catch (error) {
     console.log(error);

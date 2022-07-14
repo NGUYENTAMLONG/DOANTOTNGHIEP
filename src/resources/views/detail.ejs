@@ -144,6 +144,7 @@
 
       <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
       </div>
+      <span class="fb-comments-count" data-href="http://localhost.local/detail/<%= manga.slug %>"></span>
     </div>
     <!-- ******************************** -->
   </section>
@@ -153,151 +154,44 @@
 
 <%- include("partials/script") %>
 
+<script src="/js/plugins/detail.js"></script>
 <script>
-  const btnShowMore = document.querySelector(".show-more");
-  const textDesc = document.querySelector(".manga-info__desc p");
-
-  let flag = false;
-  btnShowMore.onclick = function() {
-    if (flag === false) {
-      btnShowMore.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
-      textDesc.classList.remove("truncate");
-      flag = true
-    } else {
-      btnShowMore.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
-      textDesc.classList.add("truncate");
-      flag = false
-    }
-  }
-</script>
-<script>
-  $(document).ready(function() {
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#myTable tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-  });
-</script>
-<script>
-  // Tooltips
-  $(function() {
-    $('[data-toggle="tooltip"]').tooltip()
-  }); // chạy ngay khi render giao diện 
-
+  // Sorting Top Bottom list
   const checkSortButtons = document.querySelectorAll("[name='sort']");
-  const chapterList = document.querySelector(".chapterList")
+  const chapterList = document.querySelector(".chapterList");
 
   function checkSort(checkBtn) {
     if (checkBtn.value == "desc") {
-      chapterList.innerHTML = `<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
-     <tr>
-       <th scope="row" class="stt"><%= index + 1%></th>
-       <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
-           Chương <%= chapter.chapterNumber%>
-         </a> </td>
-       <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
-           <%= chapter.chapterName%>
-         </a></td>
-       <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
-     </tr>
-     <% }) %>`
-      $('[data-toggle="tooltip"]').tooltip()
+      chapterList.innerHTML = `
+<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
+<tr>
+  <th scope="row" class="stt"><%= index + 1%></th>
+  <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
+      Chương <%= chapter.chapterNumber%>
+    </a> </td>
+  <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
+      <%= chapter.chapterName%>
+    </a></td>
+  <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
+</tr>
+<% }) %>`;
+      $('[data-toggle="tooltip"]').tooltip();
     } else if (checkBtn.value == "asc") {
-      chapterList.innerHTML = `<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
-       <tr>
-         <th scope="row" class="stt"><%= index + 1%></th>
-         <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
-             Chương <%= chapter.chapterNumber%>
-           </a> </td>
-         <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
-             <%= chapter.chapterName%>
-           </a></td>
-         <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
-       </tr>
-       <% }) %>`
-      $('[data-toggle="tooltip"]').tooltip()
+      chapterList.innerHTML = `
+<% manga.contentId.chapters.reverse().forEach(function(chapter,index){ %>
+<tr>
+  <th scope="row" class="stt"><%= index + 1%></th>
+  <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
+      Chương <%= chapter.chapterNumber%>
+    </a> </td>
+  <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
+      <%= chapter.chapterName%>
+    </a></td>
+  <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
+</tr>
+<% }) %>`;
+      $('[data-toggle="tooltip"]').tooltip();
     }
-  }
-</script>
-<script>
-  function handleFollow(mangaId) {
-    const checkedFollow = document.getElementById("checkFollow").checked;
-    const followBtn = document.querySelector(".follow");
-    if (checkedFollow) {
-      followBtn.querySelector("span").innerHTML = `<i class="fas fa-heart-broken"></i> Bỏ theo dõi`
-      addFollow(mangaId);
-    } else {
-      followBtn.querySelector("span").innerHTML = ` <i class="fas fa-heartbeat"></i> Theo dõi`
-      unFollow(mangaId);
-    }
-  }
-
-  function addFollow(mangaId) {
-    const payload = {
-      mangaId: mangaId
-    }
-    const headers = {
-      "content-Type": "application/json",
-    };
-    fetch("/follow", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.isSuccess === true) {
-          swal({
-            title: "Đang theo dõi",
-            text: "Nhớ dõi theo hàng tuần nha !",
-            icon: "success",
-            button: "OK!",
-          });
-        } else {
-          swal({
-            title: "Có lỗi rồi !",
-            text: result.message,
-            icon: "error",
-            button: "OK!",
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-  }
-
-  function unFollow(mangaId) {
-    const payload = {
-      mangaId: mangaId
-    }
-    const headers = {
-      "content-Type": "application/json",
-    };
-    fetch("/follow", {
-        method: "DELETE",
-        body: JSON.stringify(payload),
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.isSuccess === true) {
-          swal({
-            title: "Đã bỏ theo dõi",
-            text: "Cảm ơn bạn đã ủng hộ !",
-            icon: "success",
-            button: "OK!",
-          });
-        } else {
-          swal({
-            title: "Có lỗi rồi !",
-            text: result.message,
-            icon: "error",
-            button: "OK!",
-          });
-        }
-      })
-      .catch((error) => console.log(error));
   }
 </script>
 
