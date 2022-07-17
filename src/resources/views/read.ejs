@@ -13,12 +13,6 @@
 </head>
 
 <body>
-
-  <% if(!chapter){%>
-
-  "NOT FOUND"
-
-  <%}else{%>
   <%- include('partials/header') %>
   <section class="section container mt-3" id="section-1">
     <nav aria-label="breadcrumb">
@@ -34,7 +28,7 @@
       <button class="btn btn-success">Chương trước</button>
       <button class="btn btn-primary">Chương sau</button>
       <span class="float-right">
-        Đăng lúc: <span class="badge badge-primary"><%= moment(chapter.createdTime).format("L") %></span>
+        Đăng lúc: <span class="badge badge-primary"><%= moment(chapter.createdTime).format("L") %> - <%= moment(chapter.createdTime).format("LT") %></span>
       </span>
     </p>
     <div class="text-light text-center">
@@ -62,7 +56,6 @@
     <!-- ******************************** -->
 
   </section>
-
   <section class="section " id="section-4">
     <div class="chapter-nav text-light">
       <ul>
@@ -77,15 +70,21 @@
           </a>
         </li>
         <li class="nav">
-          <i class="fas fa-2x  fa-caret-left mr-4"></i>
-          <select class="form-control">
-            <% manga.contentId.chapters.forEach((chapter,index) => { %>
-            <option value="chapter-<%= chapter.chapterNumber%>">
-              <%= chapter.chapterNumber%>
+          <a href="#"><i class="fas fa-2x  fa-caret-left mr-4"></i></a>
+          <select class="form-control" onchange="navSelectChapter(this)">
+            <% manga.contentId.chapters.forEach((chap,index) => { %>
+            <% if(chap.chapterNumber === chapter.chapterNumber) {%>
+            <option value="chapter-<%= chap.chapterNumber%>" selected>
+              <%= chap.chapterNumber%>
             </option>
+            <% }else{%>
+            <option value="/detail/<%= manga.slug %>/read/chapter-<%= chap.chapterNumber%>">
+              <%= chap.chapterNumber%>
+            </option>
+            <%} %>
             <%}); %>
           </select>
-          <i class="fas fa-2x fa-caret-right ml-4"></i>
+          <a href="#"><i class="fas fa-2x fa-caret-right ml-4"></i></a>
         </li>
         <li>
           <span>
@@ -102,9 +101,8 @@
   </section>
 
   <%- include('partials/footer') %>
-  <%}%>
 </body>
 <%- include("partials/script") %>
-
+<script src="/js/plugins/read.js"></script>
 
 </html>

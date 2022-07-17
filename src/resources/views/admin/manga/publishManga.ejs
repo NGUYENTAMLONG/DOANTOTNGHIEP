@@ -138,6 +138,18 @@
             <input type="checkbox" class="form-check-input" id="hot" name="hot" value="true">
           </div>
         </div>
+        <div class="input_country">
+          <label for="country">
+            <h6>Quốc gia</h6>
+          </label>
+          <select class="form-control form-select" id="country">
+            <option selected disabled>Chọn quốc gia</option>
+            <option value="Nhật Bản">Nhật Bản</option>
+            <option value="Trung Quốc">Trung Quốc</option>
+            <option value="Mỹ">Mỹ</option>
+            <option value="Hàn Quốc">Hàn Quốc</option>
+          </select>
+        </div>
         <div class="input_description">
           <label for="description">
             <h6>Nội dung</h6>
@@ -194,12 +206,13 @@
     const status = $("input[name='status']:checked").val();
     const hot = document.querySelector("input[name='hot']").checked;
     const description = document.getElementById("description").value;
+    const country = document.getElementById("country").value;
 
     document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
       typeArray.push(type.value)
     });
 
-    if (!name || !anotherName || !author || typeArray.length === 0 || !serve || !status || !description) {
+    if (!name || !anotherName || !author || typeArray.length === 0 || !serve || !status || !description || !country) {
       swal({
         title: "Thông báo",
         text: "Bạn phải điền đầy đủ thông tin >.<",
@@ -226,7 +239,8 @@
       serve,
       status,
       hot,
-      description
+      description,
+      country
     }
     const imgFiles = document.getElementById("gallery-photo-cover");
 

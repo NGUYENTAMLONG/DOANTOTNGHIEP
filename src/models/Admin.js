@@ -15,7 +15,7 @@ const AdminSchema = new Schema(
     email: { type: String, required: false, unique: true },
     avatar: {
       type: String,
-      default: "avatar.png",
+      default: "admin_avatar_default.png",
       required: false,
     },
   },

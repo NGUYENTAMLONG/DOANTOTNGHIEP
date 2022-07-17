@@ -44,25 +44,25 @@
       </div>
       <div class="col-md-8 col-lg-8">
         <form action="#" class="mt-4">
-          <div class="input_name">
+          <div class="input_name mb-1">
             <label for="name">
               <h5>Tên truyện</h5>
             </label>
             <input type="text" class="form-control" id="name" name="name" value="<%= manga.name%>">
           </div>
-          <div class="input_anotherName">
+          <div class="input_anotherName mb-1">
             <label for="anotherName">
               <h5>Tên khác</h5>
             </label>
             <input type="text" class="form-control" id="anotherName" name="anotherName" value="<%= manga.anotherName%>">
           </div>
-          <div class="input_author">
+          <div class="input_author mb-1">
             <label for="author">
               <h5>Tác giả</h5>
             </label>
             <input type="text" class="form-control" id="author" name="author" value="<%= manga.author%>">
           </div>
-          <div class="input_status">
+          <div class="input_status mb-1">
             <label for="status">
               <h5>Tình trạng</h5>
             </label>
@@ -79,7 +79,7 @@
               </label>
             </div>
           </div>
-          <div class="input_hot">
+          <div class="input_hot mb-1">
             <label for="hotcheck">
               <h5 class="d-flex"> <span>Hot</span>
                 <div class="form-check">
@@ -88,7 +88,18 @@
               </h5>
             </label>
           </div>
-          <div class="input_serve">
+          <div class="input_country mb-1">
+            <label for="country">
+              <h5>Quốc gia</h5>
+            </label>
+            <select class="form-control form-select" id="country">
+              <option value="Nhật Bản" <%= (manga.country === "Nhật Bản") ? "selected" : "" %>>Nhật Bản</option>
+              <option value="Trung Quốc" <%= (manga.country === "Trung Quốc") ? "selected" : "" %>>Trung Quốc</option>
+              <option value="Mỹ" <%= (manga.country === "Mỹ") ? "selected" : "" %>>Mỹ</option>
+              <option value="Hàn Quốc" <%= (manga.country === "Hàn Quốc") ? "selected" : "" %>>Hàn Quốc</option>
+            </select>
+          </div>
+          <div class="input_serve mb-1">
             <label for="status">
               <h5>Đối tượng</h5>
             </label>
@@ -111,18 +122,7 @@
               </label>
             </div>
           </div>
-          <p class="mt-2"><b>Thống kê</b> :
-            <span>
-              <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
-            </span>
-            <span>
-              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
-            </span>
-            <span>
-              <i class="far fa-eye"></i> <%= manga.statistical.views %>
-            </span>
-          </p>
-          <div class="input_fanmade">
+          <div class="input_fanmade mb-1">
             <label for="fanmade">
               <h5 class="d-flex"> <span>Fanmade</span>
                 <div class="form-check">
@@ -162,10 +162,31 @@
           <label for="description">
             <h5>Nội dung</h5>
           </label>
-          <textarea name="description" id="description" class="form-control">
+          <textarea name="description" id="description" class="form-control" rows="15">
               <%= manga.description %>
           </textarea>
         </div>
+        <p class="mt-2 d-flex justify-content-around bg-info text-light">
+          <b>Thống kê :</b>
+          <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
+            <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
+          </span>
+          <span data-toggle="tooltip" data-placement="bottom" title="Số lượt theo dõi">
+            <i class="fas fa-heart"></i> <%= manga.statistical.follows %>
+          </span>
+          <span data-toggle="tooltip" data-placement="bottom" title="Lượng views">
+            <i class="far fa-eye"></i> <%= manga.statistical.views %>
+          </span>
+          <span data-toggle="tooltip" data-placement="bottom" title="Thứ hạng">
+            <i class="fas fa-mountain"></i> <%= manga.statistical.ranks %>
+          </span>
+          <span data-toggle="tooltip" data-placement="bottom" title="Điểm đánh giá">
+            <i class="fas fa-star"></i> <%= manga.statistical.rating %>
+          </span>
+          <span data-toggle="tooltip" data-placement="bottom" title="Số lượng đánh giá">
+            <i class="fas fa-abacus"></i> <%= manga.statistical.counting %>
+          </span>
+        </p>
         <button class="btn btn-success float-right mt-3 mb-4" onclick="updateManga(event,'<%=  manga.slug %>','<%= manga.image %>')">Cập nhật chỉnh sửa</button>
         <div class="list-chapter mt-4">
           <table class="table bg-dark text-light">
@@ -232,6 +253,7 @@
 </body>
 <%- include("../../partials/script") %>
 <script src="/js/zoomEffect.js"></script>
+<script src="/js/zoomEffect.js"></script>
 
 <script>
   //Tooltip
@@ -271,6 +293,7 @@
     const status = $("input[name='status']:checked").val();
     const hot = document.querySelector("input[name='hot']").checked;
     const description = document.getElementById("description").value;
+    const country = document.getElementById("country").value;
 
     document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
       typeArray.push(type.value)
@@ -293,7 +316,8 @@
       status,
       hot,
       description,
-      oldImage
+      oldImage,
+      country
     }
     const imgFiles = document.getElementById("gallery-photo-cover");
 

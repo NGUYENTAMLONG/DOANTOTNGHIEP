@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Update chapter</title>
+  <title>UPDATE CHAPTER</title>
   <link rel="stylesheet" href="/css/addChapter.css">
   <%- include("../../partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
@@ -33,14 +33,24 @@
             </a></p>
           <p class="manga-info__status">Tình trạng: <%= manga.status %> </p>
           <p class="manga-info__statistical">Thống kê:
-            <span>
+
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
             </span>
-            <span>
-              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượt theo dõi">
+              <i class="fas fa-heart"></i> <%= manga.statistical.follows %>
             </span>
-            <span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Lượng views">
               <i class="far fa-eye"></i> <%= manga.statistical.views %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Thứ hạng">
+              <i class="fas fa-mountain"></i> <%= manga.statistical.ranks %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Điểm đánh giá">
+              <i class="fas fa-star"></i> <%= manga.statistical.rating %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượng đánh giá">
+              <i class="fas fa-abacus"></i> <%= manga.statistical.counting %>
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>

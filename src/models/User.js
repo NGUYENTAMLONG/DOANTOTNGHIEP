@@ -18,7 +18,7 @@ const UserSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: "avatar_default.jpg",
+      default: "user_avatar_default.jpg",
     },
     active: {
       type: Boolean,

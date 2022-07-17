@@ -24,7 +24,27 @@ module.exports = {
           limit: limit,
         };
       }
-      result.mangas = await Manga.find().limit(limit).skip(startPage).exec();
+      // const match = { status: "Đang tiến hành" };
+      const status =
+        req.query.status === "true" ? "Hoàn thành" : "Đang tiến hành";
+      let serve = "";
+      if (req.query.serve === "male") {
+        serve = "male";
+      } else if (req.query.serve === "female") {
+        serve = "female";
+      } else {
+        serve = "all";
+      }
+      const match = {
+        status,
+        serve,
+      };
+      result.mangas = await Manga.find(match)
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      return res.json(result);
       res.render("showNewManga", {
         mangas: result.mangas,
         user: req.AuthPayload,

@@ -32,7 +32,6 @@ module.exports.types = [
   "Phưu lưu",
   "Magic",
   "Kỳ ảo",
-  "16+",
   "Ninja",
   "Đấu trí",
   "Truyện scan",
@@ -57,6 +56,7 @@ module.exports.types = [
   "Tâm lí",
   "Thiếu nhi",
   "Mecha",
+  "16+",
   "18+",
 ];
 module.exports.PAGING = {

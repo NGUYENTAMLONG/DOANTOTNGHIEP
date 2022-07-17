@@ -28,6 +28,7 @@ class detailController {
       });
     } catch (error) {
       console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
 
@@ -37,14 +38,15 @@ class detailController {
         slug: req.params.slug,
       }).populate("contentId");
       const chapterNumber = req.params.chapter.split("-")[1];
-
       const foundChapter = foundManga.contentId.chapters.filter(
-        (chapter) => chapter.chapterNumber == chapterNumber
+        (chapter) => chapter.chapterNumber === Number(chapterNumber)
       )[0];
+      console.log(foundManga.contentId.chapters[0].chapterNumber);
 
       if (!foundChapter) {
         redirect(req, res, STATUS.NOT_FOUND);
       }
+
       res.render("read", {
         user: req.AuthPayload,
         manga: foundManga,
@@ -52,7 +54,7 @@ class detailController {
         moment,
       });
     } catch (error) {
-      console.log(error);
+      console.log("GEAFSDF", error);
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }

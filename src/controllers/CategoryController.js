@@ -1,14 +1,13 @@
-const matchType = require("../helper/matchType");
 const moment = require("moment");
 const Manga = require("../models/Manga");
 const { orderManga } = require("../helper/order");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
 const { redirect } = require("../service/redirect");
+const { types } = require("../config/default");
 class MangaController {
   show(req, res, next) {
-    const arrayType = matchType(req.params.type);
-    Manga.find({ type: { $in: arrayType } })
+    Manga.find({ type: { $in: req.params.type } })
       .populate("contentId", {
         chapters: { $slice: -1 },
       })

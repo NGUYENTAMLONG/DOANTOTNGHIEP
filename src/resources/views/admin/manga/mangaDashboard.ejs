@@ -12,7 +12,8 @@
 
   <%- include("../../partials/link") %>
 
-
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
   <link href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css" rel="stylesheet">
   <link href="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
@@ -37,11 +38,12 @@
         </p>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex">
-        <a href="/management/content/slide" class="btn btn-sm btn-warning">Slides<i class="fab fa-slideshare"></i></a>
+        <a href="/management/content/slide" class="btn btn-sm btn-warning">Slides <i class="fab fa-slideshare"></i></a>
         <a href="/management/content/manga/publish" class="btn btn-sm btn-success ml-2">Đăng Manga <i class="fas fa-book-medical"></i></a>
         <a href="/management/content/manga/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
       </div>
-      <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-end align-items-center">
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center">
+        <a href="#" class="btn btn-sm btn-info">Thống kê <i class='bx bxs-pie-chart-alt-2'></i></a>
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
           <span></span>
           <span></span>
@@ -64,7 +66,8 @@
           <th scope="col" data-field="hot" data-sortable="true" data-formatter="hotFormatter">Hot</th>
           <th scope="col" data-field="statistical" data-sortable="true" data-formatter="statisticalFormatter">Thống kê</th>
           <th scope="col" data-field="contentId" data-formatter="chapterFormatter">Chương</th>
-          <th scope="col" data-field="Fanmade" data-sortable="true" data-formatter="fanmadeFormatter">Fanmade</th>
+          <th scope="col" data-field="fanmade" data-sortable="true" data-formatter="fanmadeFormatter">Fanmade</th>
+          <th scope="col" data-field="country" data-sortable="true" data-formatter="countryFormatter">Quốc gia</th>
           <th scope="col" data-field="createdAt" data-sortable="true" data-formatter="createdAtFormatter">Tạo</th>
           <th scope="col" data-field="updatedAt" data-sortable="true" data-formatter="updatedAtFormatter">Cập nhật</th>
           <th data-field="state" data-checkbox="true"></th>
@@ -146,33 +149,34 @@
 
   function statisticalFormatter(data) {
     return `
-    <div class="text-center">
-       <p>
-         <i class="fas fa-thumbs-up"></i> <br>
-       <p>
-         ${data.likes}
-       </p>
-       </p>
-       <p>
-         <i class="fas fa-heart"></i> <br>
-       <p>
-         ${data.hearts}
-       </p>
-       </p>
-       <p>
-         <i class="far fa-eye"></i> <br>
-       <p>
-         ${data.views}
-       </p>
-       </p>
-       <p>
-         <i class="fas fa-comments"></i> <br>
-       <p>
-         ${data.comments}
-       </p>
-       </p>
+    <div class="text-center container">
+      <div class="d-flex justify-content-between">
+        <span title="Số lượt thích">
+          <i class="far fa-thumbs-up"></i> <br> ${ data.likes } <br>
+        </span>
+        <span title="Số lượt theo dõi">
+          <i class="fas fa-heart"></i> <br> ${ data.follows } <br>
+        </span>
+        </div>
+      <div class="d-flex justify-content-between">
+       <span title="Lượng views">
+         <i class="far fa-eye"></i> <br> ${ data.views } <br>
+       </span>
+       <span title="Thứ hạng">
+         <i class="fas fa-mountain"></i> <br> ${ data.ranks } <br>
+       </span>
+        </div>
+      <div class="d-flex justify-content-between">
+       <span title="Điểm đánh giá">
+         <i class="fas fa-star"></i> <br> ${ data.rating } <br>
+       </span>
+       <span title="Số lượng đánh giá">
+         <i class="fas fa-abacus"></i> <br> ${ data.counting } <br>
+       </span>
+        </div>
       </div>
    `
+
   }
 
   function chapterFormatter(data, manga, index) {
@@ -218,6 +222,10 @@
     } else {
       return `<div class="text-center"><span class='badge badge-danger'>false</span> </div>`;
     }
+  }
+
+  function countryFormatter(data) {
+    return `<div class="text-center"> <span class='badge badge-light'><h6>${data}</h6></span> </div>`;
   }
 
   function createdAtFormatter(data) {

@@ -11,7 +11,6 @@
   height: 30px;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0);
-  margin-top: 20px;
 }
 
 .light-mode-button:focus {
@@ -64,6 +63,11 @@ table {
 .modal-dialog {
   .modal-content {
     max-width: 1000px !important;
+    img {
+      object-fit: contain;
+      width: 80% !important;
+      margin: 5px 0px;
+    }
   }
   .modal-body {
     table {

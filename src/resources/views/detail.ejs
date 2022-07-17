@@ -36,17 +36,32 @@
           <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
           <p class="manga-info__author">Tác giả: <a href="#">
               <%= manga.author %>
-            </a></p>
-          <p class="manga-info__status">Tình trạng: <%= manga.status %> </p>
+            </a> - Quốc gia: <a href="#">
+              <%= manga.country %>
+            </a>
+          </p>
+          <p class="manga-info__status">Tình trạng: <a href="#"><%= manga.status %></a></p>
           <p class="manga-info__statistical">Thống kê:
-            <span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
             </span>
-            <span>
-              <i class="fas fa-heart"></i> <%= manga.statistical.hearts %>
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượt theo dõi">
+              <i class="fas fa-heart"></i> <%= manga.statistical.follows %>
             </span>
-            <span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Lượng views">
               <i class="far fa-eye"></i> <%= manga.statistical.views %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Thứ hạng">
+              <i class="fas fa-mountain"></i> <%= manga.statistical.ranks %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Điểm đánh giá">
+              <i class="fas fa-star"></i> <%= manga.statistical.rating %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Số lượng đánh giá">
+              <i class="fas fa-abacus"></i> <%= manga.statistical.counting %>
+            </span>
+            <span data-toggle="tooltip" data-placement="bottom" title="Tổng số bình luận">
+              <i class="fas fa-comments"></i><span class="fb-comments-count" data-href="http://localhost.local/detail/<%= manga.slug %>"></span>
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
@@ -141,10 +156,8 @@
     <div class="comments-area bg-light">
       <div id="fb-root"></div>
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
-
       <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
       </div>
-      <span class="fb-comments-count" data-href="http://localhost.local/detail/<%= manga.slug %>"></span>
     </div>
     <!-- ******************************** -->
   </section>

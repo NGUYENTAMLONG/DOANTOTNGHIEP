@@ -8,8 +8,7 @@
   width: 70px;
   height: 30px;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0);
-  margin-top: 20px; }
+  border: 1px solid rgba(255, 255, 255, 0); }
 
 .light-mode-button:focus {
   outline: none;
@@ -50,6 +49,10 @@ table {
 
 .modal-dialog .modal-content {
   max-width: 1000px !important; }
+  .modal-dialog .modal-content img {
+    object-fit: contain;
+    width: 80% !important;
+    margin: 5px 0px; }
 
 .modal-dialog .modal-body table {
   height: 320px;

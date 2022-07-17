@@ -18,9 +18,11 @@ const MangaSchema = new Schema(
       type: Object,
       default: {
         likes: 0,
-        hearts: 0,
-        comments: 0,
+        follows: 0,
         views: 0,
+        ranks: 0,
+        rating: 0,
+        counting: 0,
       },
     }, // updating...(ex: require)
     contentId: {
@@ -31,6 +33,10 @@ const MangaSchema = new Schema(
       type: Boolean,
       // required: true,
       default: false,
+    },
+    country: {
+      type: String,
+      required: true,
     },
     slug: { type: String, slug: "name", unique: true },
   },
