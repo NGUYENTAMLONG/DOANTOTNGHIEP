@@ -94,3 +94,23 @@ header .category {
     header .category ul .sub-menu:hover .sub-menu_container {
       display: flex;
       flex-wrap: wrap; }
+
+.category-menu {
+  background-color: #343a40;
+  /* Change the link color to #111 (black) on hover */ }
+  .category-menu ul {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none; }
+  .category-menu li a {
+    display: block;
+    color: white !important;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none; }
+  .category-menu li a:hover {
+    background-color: #e9282f; }
+
+#sub-menu .nav-link {
+  color: white !important; }

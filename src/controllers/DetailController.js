@@ -3,10 +3,12 @@ const moment = require("moment");
 const User = require("../models/User");
 const { redirect } = require("../service/redirect");
 const { STATUS } = require("../config/httpResponse");
+const counterVisitor = require("../service/counterVisiter");
 class detailController {
   async showDetailManga(req, res) {
     const slug = req.params.slug;
     try {
+      await counterVisitor(req, res);
       const manga = await Manga.findOne({ slug: slug }).populate("contentId");
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
@@ -34,6 +36,7 @@ class detailController {
 
   async readDetailManga(req, res) {
     try {
+      await counterVisitor(req, res);
       const foundManga = await Manga.findOne({
         slug: req.params.slug,
       }).populate("contentId");

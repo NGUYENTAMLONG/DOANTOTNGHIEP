@@ -18,7 +18,7 @@ router.use("/user", userManagementRouter);
 router.use("/", async (req, res) => {
   Promise.all([Admin.find(), User.find(), Manga.find(), Slide.find()])
     .then(([adminList, userList, mangaList, slideList]) => {
-      res.render("admin/dashboard", {
+      res.render("admin/humanDashboard", {
         adminList,
         userList,
         mangaList,

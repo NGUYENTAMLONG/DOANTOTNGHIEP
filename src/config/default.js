@@ -62,4 +62,27 @@ module.exports.types = [
 module.exports.PAGING = {
   LIMIT: 3,
 };
+module.exports.SERVE = {
+  MALE: "male",
+  FEMALE: "female",
+  ALL: "all",
+};
+module.exports.COUNTRY = {
+  JP: "Nhật Bản",
+  CN: "Trung Quốc",
+  US: "Mỹ",
+  KR: "Hàn Quốc",
+};
+module.exports.VIEW_TYPE = {
+  MANGA: "MANGA",
+  PAGE: "PAGE",
+  BLOG: "BLOG",
+  NOVEL: "NOVEL",
+  FANMADE: "FANMADE",
+};
+module.exports.MANGA_STATUS = {
+  FINISHED: "Hoàn thành",
+  UNFINISHED: "Đang tiến hành",
+};
+module.exports.RANDOM_SIZE = 12;
 module.exports.SECRET_KEY = "tamlongdev";

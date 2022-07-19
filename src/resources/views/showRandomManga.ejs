@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Completed Mangas</title>
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>RANDOM MANGA</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
@@ -14,21 +15,27 @@
 <body>
   <%- include('partials/header') %>
   <h2 class="container mt-3 bg-dark rounded text-light">
-    <i class="fas fa-check-circle"></i> Truyện Đã hoàn thành
+    <%- title %>
+    <div class="random" style="position: fixed; right:10px;bottom: 10px;">
+      <a href="/filter/random" class="btn btn-primary m-2"><i class="fas fa-redo"></i></a>
+    </div>
   </h2>
-  <div class="container text-right">Tổng số <span class="badge badge-secondary"> <%= mangas.length %>
-    </span></div>
   <section class="section container" id="section-1">
     <div class="row">
+      <% if(mangas.length !==0 ) {%>
       <% mangas.forEach(function(manga,index){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
+      <% }else {%>
+      <div class="text-center">
+        <h2 class="text-light bg-dark p-3"><i class="fas fa-heart-broken"></i> Chưa có truyện nào phù hợp :(</h2>
+      </div>
+      <% } %>
     </div>
   </section>
   <%- include('partials/footer') %>
 </body>
-<%- include("partials/script") %>
-<script src="/js/tooltip.js"></script>
-
 
 </html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>

@@ -32,6 +32,7 @@ const {
   deleteChapter,
   updateChapter,
   fixTitle,
+  submitUpdateChapter,
 } = require("../../../controllers/MangaController");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -186,36 +187,6 @@ router.post("/updateChapter/fixTitle", fixTitle);
 
 //11. Submit Update chapter content
 //ex:/management/content/manga/post/:slug/submit/update/:chapterNumber- Method: POST
-router.post("/submit/update/:chapterNumber", async (req, res) => {
-  const { chapterNumber } = req.params;
-  const { chapterId, chapterContent } = req.body;
-  try {
-    await Chapter.findOneAndUpdate(
-      { _id: chapterId, "chapters.chapterNumber": Number(chapterNumber) },
-      {
-        $set: {
-          "chapters.$.chapterContent": chapterContent,
-          "chapters.$.updatedTime": moment().format(),
-        },
-      }
-    );
-    await Chapter.findOneAndUpdate(
-      { _id: chapterId },
-      { $push: { chapters: { $each: [], $sort: 1 } } }
-    );
-    res
-      .status(STATUS.SUCCESS)
-      .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
-  } catch (error) {
-    console.log(error);
-    res
-      .status(STATUS.SERVER_ERROR)
-      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-  }
-});
-// **************** Chapter Routes/Controller ****************
-// ********** Publish Manga Chapter ***************
-
-// ***************** DELETE CHAPTER ************************
+router.post("/submit/update/:chapterNumber", submitUpdateChapter);
 
 module.exports = router;

@@ -664,6 +664,34 @@ class MangaController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  //17.Submit update chapter
+  async submitUpdateChapter(req, res) {
+    const { chapterNumber } = req.params;
+    const { chapterId, chapterContent } = req.body;
+    try {
+      await Chapter.findOneAndUpdate(
+        { _id: chapterId, "chapters.chapterNumber": Number(chapterNumber) },
+        {
+          $set: {
+            "chapters.$.chapterContent": chapterContent,
+            "chapters.$.updatedTime": moment().format(),
+          },
+        }
+      );
+      await Chapter.findOneAndUpdate(
+        { _id: chapterId },
+        { $push: { chapters: { $each: [], $sort: 1 } } }
+      );
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
 }
 
 module.exports = new MangaController();

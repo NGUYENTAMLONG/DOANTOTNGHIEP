@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>JUST UPDATED</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <%- title %>
+  </h2>
+  <div class="container rounded p-2">
+    <div class="filterZone">
+      <div class="rows d-flex align-items-center">
+        <b>Thể loại : </b>
+        <select class="form-select form-select-sm form-control mb-1 ml-1" aria-label="Default select example" style="width: 200px" onchange="changeTypeQuery(this)">
+          <option selected disabled>Lọc theo thể loại</option>
+          <% categories.forEach((category,index)=>{ %>
+          <option value="<%= category %>" <%= (navigator.filter.type === category) && "selected" %>><%= category %></option>
+          <%})%>
+        </select>
+      </div>
+      <div class="rows">
+        <div><b>Tình trạng : </b>
+          <button type="button" onclick="changeQuery('status','true')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Hoàn thành") ? 'btn-info':'btn-outline-info' %>">Hoàn thành</button>
+          <button type="button" onclick="changeQuery('status','false')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Đang tiến hành") ? 'btn-info':'btn-outline-info' %>">Đang tiến hành</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Quốc gia : </b>
+          <button type="button" onclick="changeQuery('country','Nhật Bản')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Nhật Bản") ? 'btn-info':'btn-outline-info' %>">Nhật Bản</button>
+          <button type="button" onclick="changeQuery('country','Trung Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Trung Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Trung Quốc</button>
+          <button type="button" onclick="changeQuery('country','Mỹ')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Mỹ") ? 'btn-info':'btn-outline-info' %> ml-1">Mỹ</button>
+          <button type="button" onclick="changeQuery('country','Hàn Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Hàn Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Hàn Quốc</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Đối tượng : </b> <button type="button" onclick="changeQuery('serve','male')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "male") ? 'btn-info':'btn-outline-info' %>">Con trai</button><button type="button" onclick="changeQuery('serve','female')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "female") ? 'btn-info':'btn-outline-info' %> ml-1">Con gái</button><button type="button" onclick="changeQuery('serve','all')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "all") ? 'btn-info':'btn-outline-info' %> ml-1">Tất cả</button></div>
+      </div>
+    </div>
+  </div>
+  <section class="section container" id="section-1">
+    <div class="row">
+      <% if(mangas.length !==0 ) {%>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+      <% }else {%>
+      <div class="text-center">
+        <h2 class="text-light bg-dark p-3"><i class="fas fa-heart-broken"></i> Chưa có truyện nào phù hợp :(</h2>
+      </div>
+      <% } %>
+    </div>
+  </section>
+  <div class="container mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','<%= (navigator.previous) && navigator.previous.previousPage %>','limit','<%= navigator.limit %>')">Previous</button></li>
+        <% for(var i=1; i<=navigator.totalPages; i++) {%>
+        <li class=" page-item <%= (navigator.activePage === i) && 'active' %>"><a class="page-link" onclick="changeQueryPaging('page','<%= i %>','limit','<%= navigator.limit %>')"><%= i %></a></li>
+        <% }%>
+        <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= (navigator.next) && navigator.next.nextPage %>', 'limit', '<%= navigator.limit %>')">Next</button></li>
+
+        <li class="page-item">
+          <select class="form-select form-control ml-2" onchange="changeLimitQuery(this)">
+            <option selected>Giới hạn</option>
+            <option value="2" <%= (navigator.limit === 2) && "selected" %>>2</option>
+            <option value="3" <%= (navigator.limit === 3) && "selected" %>>3</option>
+            <option value=" 5" <%= (navigator.limit === 5) && "selected" %>>5</option>
+            <option value="10" <%= (navigator.limit === 10) && "selected" %>>10</option>
+            <option value="20" <%= (navigator.limit === 20) && "selected" %>>20</option>
+            <option value="30" <%= (navigator.limit === 30) && "selected" %>>30</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+
+</html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>
+<script>
+  function changeQuery(feild, value) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(feild, value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeTypeQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('type', it.value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeQueryPaging(page, pageValue, limit, limitValue) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(page, pageValue);
+    urlParams.set(limit, limitValue);
+
+    window.location.search = urlParams;
+  }
+
+  function changeLimitQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set('limit', it.value);
+
+    window.location.search = urlParams;
+  }
+
+  function setActive(field, value) {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get(field) === value) {
+      return "active"
+    }
+    return
+  }
+</script>

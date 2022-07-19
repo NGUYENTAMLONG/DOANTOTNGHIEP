@@ -26,9 +26,9 @@
       <div class="col-sm-12 col-md-4 col-lg-4">
         <h3>Quản lí Slide</h3>
         <div class="statistical d-flex">
-          <p>Tổng : <span class="badge badge-primary slideSum"><%= slides.length %> </span></p>
-          <p class="ml-1 mr-1">Số slide hiển thị : <span class="badge badge-success"><%= slides.filter((slide)=>slide.active === true).length %> </span></p>
-          <p>Số slide ẩn: <span class="badge badge-warning"><%= slides.length - slides.filter((slide)=>slide.active === true).length %>%> </span></p>
+          <p>Tổng : <span class="badge badge-primary slideSum"><%= slides.length %> </span> | </p>
+          <p class="ml-1 mr-1"><span class="badge badge-success"><%= slides.filter((slide)=>slide.active === true).length %> </span> slide hiển thị</p>
+          <p><span class="badge badge-warning"><%= slides.length - slides.filter((slide)=>slide.active === true).length %></span> slide ẩn </p>
         </div>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-2">

@@ -40,7 +40,7 @@
               <%= manga.country %>
             </a>
           </p>
-          <p class="manga-info__status">Tình trạng: <a href="#"><%= manga.status %></a></p>
+          <p class="manga-info__status">Tình trạng: <a href="/just-updated?page=1&limit=2&status=<%= manga.status === 'Hoàn thành' ? true : false %>"><%= manga.status %></a></p>
           <p class="manga-info__statistical">Thống kê:
             <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
@@ -65,7 +65,7 @@
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
-          <a href="#" class="btn btn-outline-danger manga-info__type"><%= type%></a>
+          <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-outline-danger manga-info__type"><%= type%></a>
           <% }) %>
           <div class="d-flex mt-3">
             <% if (manga.contentId.chapters.length >0){ %>
@@ -79,8 +79,11 @@
               </span>
               <input type="checkbox" class="form-check-input" id="checkFollow" <%= followFlag ? "checked" : ""%> onchange="handleFollow('<%= manga._id%>')" hidden />
             </label>
-            <span class="like">
+            <span class="like mr-3">
               <i class="fas fa-thumbs-up"></i> Thích
+            </span>
+            <span class="rate">
+              <i class="fas fa-star"></i> Đánh giá
             </span>
           </div>
           <div class="manga-info__desc">
@@ -103,7 +106,8 @@
     </div>
     <%} else{%>
     <div class="d-flex justify-content-between  align-items-center">
-      <h2><i class="fas fa-list"></i> Danh sách chương</h2>
+      <h3><i class="fas fa-list"></i> Danh sách</h3>
+      <span class="badge badge-primary"><%= manga.contentId.chapters.length %> chương đã đăng</span>
       <div class="form-check">
         <input class="form-check-input" type="radio" name="sort" onchange="checkSort(this)" id="sortAsc" value="asc" checked>
         <label class="form-check-label" for="sortAsc">

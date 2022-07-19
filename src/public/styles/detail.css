@@ -24,7 +24,8 @@
     margin: 0px 5px; }
   .manga-info .read,
   .manga-info .follow,
-  .manga-info .like {
+  .manga-info .like,
+  .manga-info .rate {
     border-radius: 5px;
     cursor: pointer;
     color: white;
@@ -37,6 +38,8 @@
     background-color: #ff2853; }
   .manga-info .like {
     background-color: #bd10e0; }
+  .manga-info .rate {
+    background-color: #ffc107; }
   .manga-info .manga-info__desc {
     transition: display 5s ease-in-out; }
     .manga-info .manga-info__desc p {

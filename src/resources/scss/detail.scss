@@ -42,7 +42,8 @@
   }
   .read,
   .follow,
-  .like {
+  .like,
+  .rate {
     border-radius: 5px;
     cursor: pointer;
     color: white;
@@ -58,6 +59,9 @@
   }
   .like {
     background-color: #bd10e0;
+  }
+  .rate {
+    background-color: #ffc107;
   }
   .manga-info__desc {
     transition: display 5s ease-in-out;

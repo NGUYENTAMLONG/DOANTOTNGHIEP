@@ -1,431 +1,508 @@
-<header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
 
-      <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" alt="logo"></a>
+        <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" alt="logo"></a>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <!-- <span class="navbar-toggler-icon"></span> -->
+          <i class='bx bx-menu-alt-right'></i>
+        </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/blogs">Blogs</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Mua truyện tranh</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Về chúng tôi
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Giới thiệu</a>
-              <a class="dropdown-item" href="#">Tải App</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item text-light bg-success" href="#">Ủng hộ</a>
-            </div>
-          </li>
-        </ul>
-        <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach">
-          <input class="form-control mr-sm-2" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
-        </form>
-
-        <!-- ******** PRIVATE ZONE *************** -->
-        <div class="authen">
-          <% if(user) {%>
-          <div class="dropdown">
-            <div class="btn btn-secondary dropdown-toggle user d-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <div>
-                <img src="/getAvatar/<%= user.avatar %>" id="userAvatar" alt="">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/blogs">Blogs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Mua truyện tranh</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Về chúng tôi
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Giới thiệu</a>
+                <a class="dropdown-item" href="#">Tải App</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-light bg-success" href="#">Ủng hộ</a>
               </div>
-              <p id="userName"><%= user.username %></p>
-            </div>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="/follow">Danh sách theo dõi</a>
-              <a class="dropdown-item" href="#">Lịch sử đọc truyện</a>
-              <a class="dropdown-item" href="#">Cài đặt thông tin</a>
-              <a class="dropdown-item logoutBtn" href="/logout" onclick="logout(event)">Đăng xuất</a>
-            </div>
-          </div>
-          <% }else {%>
+            </li>
+          </ul>
+          <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach d-flex justify-content-end">
+            <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
+          </form>
 
-          <!-- ******** REGISTER *************** -->
-
-          <button class="btn btn-warning mr-2 my-sm-0 btnShowRegister" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
-
-          <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+          <!-- ******** PRIVATE ZONE *************** -->
+          <div class="authen float-right">
+            <% if(user) {%>
+            <div class="dropdown">
+              <div class="btn btn-secondary dropdown-toggle user d-flex" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div>
+                  <img src="/getAvatar/<%= user.avatar %>" id="userAvatar" alt="">
                 </div>
-                <div class="modal-body bg-dark text-white">
-                  <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="usernameRegister" placeholder="Enter Username">
-                  </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="passwordRegister" placeholder="Enter Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="emailRegister" placeholder="Enter Email">
-                  </div>
-                  <div class="form-group otp_field" hidden>
-                    <label for="otp">OTP</label>
-                    <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
-
-                  </div>
-                  <div class="d-flex solution">
-                    <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
-                  </div>
-                  <div class="text-center">
-                    <img src="/image/logo.png" width="20%" alt="">
-                  </div>
-                </div>
-                <hr>
-                <div class="modal-footer d-flex justify-content-between">
-                  <div class="oauth2">
-                    <i class="fab fa-facebook"></i>
-                    <i class="fab fa-google-plus"></i>
-                  </div>
-                  <div class="handle">
-                    <button type="button" class="btn btn-primary submitBtn" onclick="verification ()">Gửi mã xác thực</button>
-                    <button type="button" class="btn btn-primary registerBtn" onclick="register()" disabled>Đăng ký</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                  </div>
-                </div>
+                <p id="userName"><%= user.username %></p>
+              </div>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/follow">Danh sách theo dõi</a>
+                <a class="dropdown-item" href="#">Lịch sử đọc truyện</a>
+                <a class="dropdown-item" href="#">Cài đặt thông tin</a>
+                <a class="dropdown-item logoutBtn" href="/logout" onclick="logout(event)">Đăng xuất</a>
               </div>
             </div>
-          </div>
+            <% }else {%>
 
-          <!-- ******** LOGIN *************** -->
-          <button class="btn btn-primary my-2 my-sm-0 btnShowLogin" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
-          <!-- Modal -->
-          <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body bg-dark text-white">
-                  <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="usernameLogin" placeholder="Enter Username">
+            <!-- ******** REGISTER *************** -->
+
+            <button class="btn btn-warning mr-2 my-sm-0 btnShowRegister" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
+
+            <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="passwordLogin" placeholder="Enter Password">
+                  <div class="modal-body bg-dark text-white">
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input type="text" class="form-control" id="usernameRegister" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="passwordRegister" placeholder="Enter Password">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="emailRegister" placeholder="Enter Email">
+                    </div>
+                    <div class="form-group otp_field" hidden>
+                      <label for="otp">OTP</label>
+                      <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+
+                    </div>
+                    <div class="d-flex solution">
+                      <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
+                    </div>
+                    <div class="text-center">
+                      <img src="/image/logo.png" width="20%" alt="">
+                    </div>
                   </div>
-                  <div class="d-flex solution">
-                    <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
-                    <a href="#">Quên mật khẩu ?</a>
-                  </div>
-                  <div class="text-center">
-                    <img src="/image/logo.png" width="20%" alt="">
-                  </div>
-                </div>
-                <hr>
-                <div class="modal-footer d-flex justify-content-between">
-                  <div class="oauth2">
-                    <i class="fab fa-facebook"></i>
-                    <i class="fab fa-google-plus"></i>
-                  </div>
-                  <div class="handle">
-                    <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                  <hr>
+                  <div class="modal-footer d-flex justify-content-between">
+                    <div class="oauth2">
+                      <i class="fab fa-facebook"></i>
+                      <i class="fab fa-google-plus"></i>
+                    </div>
+                    <div class="handle">
+                      <button type="button" class="btn btn-primary submitBtn" onclick="verification ()">Gửi mã xác thực</button>
+                      <button type="button" class="btn btn-primary registerBtn" onclick="register()" disabled>Đăng ký</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- ******** LOGIN *************** -->
+            <button class="btn btn-primary my-2 my-sm-0 btnShowLogin" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
+            <!-- Modal -->
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body bg-dark text-white">
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input type="text" class="form-control" id="usernameLogin" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="passwordLogin" placeholder="Enter Password">
+                    </div>
+                    <div class="d-flex solution">
+                      <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
+                      <a href="#">Quên mật khẩu ?</a>
+                    </div>
+                    <div class="text-center">
+                      <img src="/image/logo.png" width="20%" alt="">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="modal-footer d-flex justify-content-between">
+                    <div class="oauth2">
+                      <i class="fab fa-facebook"></i>
+                      <i class="fab fa-google-plus"></i>
+                    </div>
+                    <div class="handle">
+                      <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
           </div>
-          <% } %>
 
         </div>
-
       </div>
-    </div>
-  </nav>
-  <div class="category">
-    <ul class="container rows">
-      <li> <a href="/">
-          <i class="fa fa-home" aria-hidden="true"></i>
-          Trang Chủ
-        </a>
-      </li>
-      <li class="sub-menu"> <a href="#">
-          Thể loại <i class="fas fa-angle-down"></i>
-        </a>
-        <ul class="sub-menu_container">
-          <li><a href="/category/Action">Action</a></li>
-          <li><a href="/category/Phưu lưu">Phưu lưu</a></li>
-          <li><a href="/category/Magic">Magic</a></li>
-          <li><a href="/category/Kỳ ảo">Kỳ ảo</a></li>
-          <li><a href="/category/Ninja">Ninja</a></li>
-          <li><a href="/category/Đấu trí">Đấu trí</a></li>
-          <li><a href="/category/Truyện scan">Truyện scan</a></li>
-          <li><a href="/category/Supernatural">Supernatural</a></li>
-          <li><a href="/category/Chuyển sinh">Chuyển sinh</a></li>
-          <li><a href="/category/Chiến dịch">Chiến dịch</a></li>
-          <li><a href="/category/Trung cổ">Trung cổ</a></li>
-          <li><a href="/category/Lãng mạn">Lãng mạn</a></li>
-          <li><a href="/category/Drama">Drama</a></li>
-          <li><a href="/category/Ngôn tình">Ngôn tình</a></li>
-          <li><a href="/category/Trinh thám">Trinh thám</a></li>
-          <li><a href="/category/School Life">School Life</a></li>
-          <li><a href="/category/Webtoon">Webtoon</a></li>
-          <li><a href="/category/Hài kịch">Hài kịch</a></li>
-          <li><a href="/category/Chuyển thể">Chuyển thể</a></li>
-          <li><a href="/category/Slice Of Life">Slice Of Life</a></li>
-          <li><a href="/category/Sports">Sports</a></li>
-          <li><a href="/category/Mystery">Mystery</a></li>
-          <li><a href="/category/Psychological">Psychological</a></li>
-          <li><a href="/category/Võ thuật">Võ thuật</a></li>
-          <li><a href="/category/Truyện màu">Truyện màu</a></li>
-          <li><a href="/category/Tâm lí">Tâm lí</a></li>
-          <li><a href="/category/Thiếu nhi">Thiếu nhi</a></li>
-          <li><a href="/category/Mecha">Mecha</a></li>
-          <li><a href="/category/16+">16+</a></li>
-          <li><a href="/category/18+">18+</a></li>
-        </ul>
-      </li>
-      <li class="sub-menu"> <a href="#">
-          Sắp Xếp <i class="fas fa-angle-down"></i>
-        </a>
-        <ul class="sub-menu_container">
-          <li><a href="#">Top Ngày</a></li>
-          <li><a href="#">Top Tuần</a></li>
-          <li> <a href="#">Top Tháng</a></li>
-          <li> <a href="#">Yêu thích</a></li>
-          <li> <a href="/popular/just-updated">Mới cập nhật</a></li>
-          <li> <a href="/newmanga">Truyện mới</a></li>
-          <li> <a href="/complete">Truyện full</a></li>
-          <li> <a href="#">Truyện trường kỳ</a></li>
-          <li> <a href="#">Ít đọc</a></li>
-        </ul>
-      </li>
-      <li class="sub-menu"> <a href="#">
-          Quốc gia <i class="fas fa-angle-down"></i>
-        </a>
-        <ul class="sub-menu_container">
-          <li><a href="#">Trung Quốc</a></li>
-          <li><a href="#">Mỹ</a></li>
-          <li> <a href="#">Nhật Bản</a></li>
-          <li> <a href="#">Hàn Quốc</a></li>
-        </ul>
-      </li>
-      <li> <a href="/popular/female">
-          Con Gái
-        </a>
-      </li>
-      <li> <a href="/popular/male">
-          Con Trai
-        </a>
-      </li>
-      <li> <a href="/discussion">
-          Thảo Luận
-        </a>
-      </li>
-      <li> <a href="https://www.facebook.com/truyentranh" target="_blank">
-          Fanpage
-        </a>
-      </li>
-      <li> <a href="/novel">
-          Tiểu thuyết
-        </a>
-      </li>
-      <li> <a href="/fanmade">
-          Truyện Fanmade
-        </a>
-      </li>
-    </ul>
-  </div>
-</header>
-<script>
-  const logoutBtn = document.querySelector(".logoutBtn");
-  const loginBtn = document.querySelector(".loginBtn");
-  const submitBtn = document.querySelector(".submitBtn");
-  const registerBtn = document.querySelector(".registerBtn");
-  const btnShowRegister = document.querySelector(".btnShowRegister");
-  const btnShowLogin = document.querySelector(".btnShowLogin");
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#be151b;">
+      <div class=" container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sub-menu" aria-controls="sub-menu" aria-expanded="false" aria-label="Toggle navigation">
+          <i class='bx bx-menu-alt-right'></i>
+        </button>
+        <div class="collapse navbar-collapse" id="sub-menu">
+          <ul class="navbar-nav mr-auto  text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                Trang Chủ
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Thể loại
+              </a>
+              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-150px ; width: 91vw;">
+                <ul>
+                  <li>
+                    <a href="/category/Action?page=1&limit=2">Action</a>
+                  </li>
+                  <li>
+                    <a href="/category/Phưu lưu?page=1&limit=2">Phưu lưu</a>
+                  </li>
+                  <li>
+                    <a href="/category/Magic?page=1&limit=2">Magic</a>
+                  </li>
+                  <li>
+                    <a href="/category/Kỳ ảo?page=1&limit=2">Kỳ ảo</a>
+                  </li>
+                  <li>
+                    <a href="/category/Ninja?page=1&limit=2">Ninja</a>
+                  </li>
+                  <li>
+                    <a href="/category/Đấu trí?page=1&limit=2">Đấu trí</a>
+                  </li>
+                  <li>
+                    <a href="/category/Truyện scan?page=1&limit=2">Truyện scan</a>
+                  </li>
+                  <li>
+                    <a href="/category/Supernatural?page=1&limit=2">Supernatural</a>
+                  </li>
+                  <li>
+                    <a href="/category/Chuyển sinh?page=1&limit=2">Chuyển sinh</a>
+                  </li>
+                  <li>
+                    <a href="/category/Chiến dịch?page=1&limit=2">Chiến dịch</a>
+                  </li>
+                  <li>
+                    <a href="/category/Trung cổ?page=1&limit=2">Trung cổ</a>
+                  </li>
+                  <li>
+                    <a href="/category/Lãng mạn?page=1&limit=2">Lãng mạn</a>
+                  </li>
+                  <li>
+                    <a href="/category/Drama?page=1&limit=2">Drama</a>
+                  </li>
+                  <li>
+                    <a href="/category/Ngôn tình?page=1&limit=2">Ngôn tình</a>
+                  </li>
+                  <li>
+                    <a href="/category/Trinh thám?page=1&limit=2">Trinh thám</a>
+                  </li>
+                  <li>
+                    <a href="/category/School Life?page=1&limit=2">School Life</a>
+                  </li>
+                  <li>
+                    <a href="/category/Webtoon?page=1&limit=2">Webtoon</a>
+                  </li>
+                  <li>
+                    <a href="/category/Hài kịch?page=1&limit=2">Hài kịch</a>
+                  </li>
+                  <li>
+                    <a href="/category/Chuyển thể?page=1&limit=2">Chuyển thể</a>
+                  </li>
+                  <li>
+                    <a href="/category/Slice Of Life?page=1&limit=2">Slice Of Life</a>
+                  </li>
+                  <li>
+                    <a href="/category/Sports?page=1&limit=2">Sports</a>
+                  </li>
+                  <li>
+                    <a href="/category/Mystery?page=1&limit=2">Mystery</a>
+                  </li>
+                  <li>
+                    <a href="/category/Psychological?page=1&limit=2">Psychological</a>
+                  </li>
+                  <li>
+                    <a href="/category/Võ thuật?page=1&limit=2">Võ thuật</a>
+                  </li>
+                  <li>
+                    <a href="/category/Truyện màu?page=1&limit=2">Truyện màu</a>
+                  </li>
+                  <li>
+                    <a href="/category/Tâm lí?page=1&limit=2">Tâm lí</a>
+                  </li>
+                  <li>
+                    <a href="/category/Thiếu nhi?page=1&limit=2">Thiếu nhi</a>
+                  </li>
+                  <li>
+                    <a href="/category/Mecha?page=1&limit=2">Mecha</a>
+                  </li>
+                  <li>
+                    <a href="/category/16+?page=1&limit=2">16+</a>
+                  </li>
+                  <li>
+                    <a href="/category/18+?page=1&limit=2">18+</a>
+                  </li>
+                </ul>
+              </div>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sắp xếp
+              </a>
+              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-250px ; width: 91vw;">
+                <ul>
+                  <li><a href="#">Top Ngày</a></li>
+                  <li><a href="#">Top Tuần</a></li>
+                  <li> <a href="#">Top Tháng</a></li>
+                  <li> <a href="#">Yêu thích nhất</a></li>
+                  <li> <a href="/just-updated?page=1&limit=2">Mới cập nhật</a></li>
+                  <li> <a href="/filter/new?page=1&limit=2">Truyện mới</a></li>
+                  <li> <a href="/filter/complete?page=1&limit=2">Truyện full</a></li>
+                  <li> <a href="/filter/unfinished?page=1&limit=2">Truyện đang tiến hành</a></li>
+                  <li> <a href="#">Truyện trường kỳ</a></li>
+                  <li> <a href="/filter/random">Truyện ngẫu nhiên</a></li>
+                  <li> <a href="#">Ít đọc</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Quốc gia
+              </a>
+              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-350px ; width: 91vw;">
+                <ul>
+                  <li><a href="/country/Trung Quốc?page=1&limit=2">Trung Quốc</a></li>
+                  <li><a href="/country/Mỹ?page=1&limit=2">Mỹ</a></li>
+                  <li><a href="/country/Nhật Bản?page=1&limit=2">Nhật Bản</a></li>
+                  <li><a href="/country/Hàn Quốc?page=1&limit=2">Hàn Quốc</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/popular/female?page=1&limit=2">Con gái</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/popular/male?page=1&limit=2">Con trai</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Thảo luận</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Fanpage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Tiểu thuyết</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Truyện famade</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Lịch sử</a>
+            </li>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const logoutBtn = document.querySelector(".logoutBtn");
+    const loginBtn = document.querySelector(".loginBtn");
+    const submitBtn = document.querySelector(".submitBtn");
+    const registerBtn = document.querySelector(".registerBtn");
+    const btnShowRegister = document.querySelector(".btnShowRegister");
+    const btnShowLogin = document.querySelector(".btnShowLogin");
 
-  function logout(event) {
-    event.preventDefault();
-    const headers = {
-      "content-Type": "application/json",
-    };
-    fetch("/logout", {
-        method: "POST",
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.isSuccess) {
-          location.reload()
-        }
-      })
-      .catch((error) => console.log(error));
-  }
-
-  function login() {
-    const loginModal = document.getElementById("loginModal");
-    const usernameLogin = loginModal.querySelector("#usernameLogin");
-    const passwordLogin = loginModal.querySelector("#passwordLogin");
-    const payload = {
-      username: usernameLogin.value,
-      password: passwordLogin.value
+    function logout(event) {
+      event.preventDefault();
+      const headers = {
+        "content-Type": "application/json",
+      };
+      fetch("/logout", {
+          method: "POST",
+          headers,
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.isSuccess) {
+            location.reload()
+          }
+        })
+        .catch((error) => console.log(error));
     }
 
-    const headers = {
-      "content-Type": "application/json",
-    };
-    fetch("/login", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.isSuccess === true) {
-          location.reload();
-        } else {
-          swal({
-            title: "Đăng nhập không thành công!",
-            text: result.message,
-            icon: "error",
-            button: "OK!",
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-  }
-
-  function verification() {
-    const registerModal = document.getElementById("registerModal");
-    const usernameRegister = registerModal.querySelector("#usernameRegister");
-    const passwordRegister = registerModal.querySelector("#passwordRegister");
-    const emailRegister = registerModal.querySelector("#emailRegister");
-
-    const payload = {
-      username: usernameRegister.value,
-      password: passwordRegister.value,
-      email: emailRegister.value
-    }
-    const headers = {
-      "content-Type": "application/json",
-    };
-
-    fetch("/register/authentication", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        if (result.isSuccess === true) {
-          swal({
-            title: "Thông báo",
-            text: "Xác thực qua email của bạn ngay nhé!",
-            icon: "success",
-            button: "OK!",
-          }).then(() => {
-            const otpInput = document.querySelector(".otp_field");
-            registerBtn.removeAttribute("disabled");
-            submitBtn.setAttribute("disabled", "");
-            usernameRegister.setAttribute("disabled", "");
-            passwordRegister.setAttribute("disabled", "");
-            emailRegister.setAttribute("disabled", "");
-            otpInput.removeAttribute("hidden");
-            window.open("https://accounts.google.com/", '_blank').focus();
-          });
-        } else {
-          swal({
-            title: "Đăng ký không thành công!",
-            text: result.message,
-            icon: "error",
-            button: "OK!",
-          });
-        }
-
-      })
-      .catch((error) => console.log(error));
-  }
-
-  function register() {
-    const registerModal = document.getElementById("registerModal");
-    const usernameRegister = registerModal.querySelector("#usernameRegister");
-    const passwordRegister = registerModal.querySelector("#passwordRegister");
-    const emailRegister = registerModal.querySelector("#emailRegister");
-    const otpRegister = registerModal.querySelector("#otp");
-
-    const payload = {
-      username: usernameRegister.value,
-      password: passwordRegister.value,
-      email: emailRegister.value,
-      otp: otpRegister.value
-    }
-    const headers = {
-      "content-Type": "application/json",
-    };
-
-    fetch("/register", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers,
-      })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        if (result.isSuccess === true) {
-          swal({
-            title: "Đăng ký thành công!",
-            text: "Vui lòng đăng nhập để trải nghiệm",
-            icon: "success",
-            button: "OK!",
-          }).then(location.reload());
-        } else {
-          swal({
-            title: "Đăng ký không thành công!",
-            text: result.message,
-            icon: "error",
-            button: "OK!",
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-  }
-
-  function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
-
-  function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
+    function login() {
+      const loginModal = document.getElementById("loginModal");
+      const usernameLogin = loginModal.querySelector("#usernameLogin");
+      const passwordLogin = loginModal.querySelector("#passwordLogin");
+      const payload = {
+        username: usernameLogin.value,
+        password: passwordLogin.value
       }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
+
+      const headers = {
+        "content-Type": "application/json",
+      };
+      fetch("/login", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers,
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.isSuccess === true) {
+            location.reload();
+          } else {
+            swal({
+              title: "Đăng nhập không thành công!",
+              text: result.message,
+              icon: "error",
+              button: "OK!",
+            });
+          }
+        })
+        .catch((error) => console.log(error));
     }
-    return "";
-  }
-</script>
+
+    function verification() {
+      const registerModal = document.getElementById("registerModal");
+      const usernameRegister = registerModal.querySelector("#usernameRegister");
+      const passwordRegister = registerModal.querySelector("#passwordRegister");
+      const emailRegister = registerModal.querySelector("#emailRegister");
+
+      const payload = {
+        username: usernameRegister.value,
+        password: passwordRegister.value,
+        email: emailRegister.value
+      }
+      const headers = {
+        "content-Type": "application/json",
+      };
+
+      fetch("/register/authentication", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers,
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.isSuccess === true) {
+            swal({
+              title: "Thông báo",
+              text: "Xác thực qua email của bạn ngay nhé!",
+              icon: "success",
+              button: "OK!",
+            }).then(() => {
+              const otpInput = document.querySelector(".otp_field");
+              registerBtn.removeAttribute("disabled");
+              submitBtn.setAttribute("disabled", "");
+              usernameRegister.setAttribute("disabled", "");
+              passwordRegister.setAttribute("disabled", "");
+              emailRegister.setAttribute("disabled", "");
+              otpInput.removeAttribute("hidden");
+              window.open("https://accounts.google.com/", '_blank').focus();
+            });
+          } else {
+            swal({
+              title: "Đăng ký không thành công!",
+              text: result.message,
+              icon: "error",
+              button: "OK!",
+            });
+          }
+
+        })
+        .catch((error) => console.log(error));
+    }
+
+    function register() {
+      const registerModal = document.getElementById("registerModal");
+      const usernameRegister = registerModal.querySelector("#usernameRegister");
+      const passwordRegister = registerModal.querySelector("#passwordRegister");
+      const emailRegister = registerModal.querySelector("#emailRegister");
+      const otpRegister = registerModal.querySelector("#otp");
+
+      const payload = {
+        username: usernameRegister.value,
+        password: passwordRegister.value,
+        email: emailRegister.value,
+        otp: otpRegister.value
+      }
+      const headers = {
+        "content-Type": "application/json",
+      };
+
+      fetch("/register", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers,
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.isSuccess === true) {
+            swal({
+              title: "Đăng ký thành công!",
+              text: "Vui lòng đăng nhập để trải nghiệm",
+              icon: "success",
+              button: "OK!",
+            }).then(location.reload());
+          } else {
+            swal({
+              title: "Đăng ký không thành công!",
+              text: result.message,
+              icon: "error",
+              button: "OK!",
+            });
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+  </script>

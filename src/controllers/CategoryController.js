@@ -5,31 +5,45 @@ const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
 const { redirect } = require("../service/redirect");
 const { types } = require("../config/default");
+const filterMangas = require("../service/filterMangas");
+const pagination = require("../service/pagination");
 class MangaController {
-  show(req, res, next) {
-    Manga.find({ type: { $in: req.params.type } })
-      .populate("contentId", {
-        chapters: { $slice: -1 },
-      })
-      .lean()
-      .then((mangas) => {
-        if (mangas.length === 0) {
-          redirect(req, res, STATUS.NOT_FOUND);
-        }
-        res.render("showCategory", {
-          user: req.AuthPayload,
-          moment: moment,
-          mangas: orderManga(mangas),
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        res
-          .status(STATUS.SERVER_ERROR)
-          .json(
-            new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
-          );
+  async show(req, res, next) {
+    try {
+      const match = filterMangas(req);
+      match.type = { $in: req.params.type };
+      const totalMangas = await Manga.countDocuments(match);
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+      res.render("showCategory", {
+        user: req.AuthPayload,
+        moment: moment,
+        mangas: orderManga(result.mangas),
+        category: req.params.type,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
       });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
   }
 }
 module.exports = new MangaController();

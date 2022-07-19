@@ -6,125 +6,127 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>New Mangas</title>
+  <title>NEW MANGAS</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet" href="/css/paging.css">
 </head>
 
 <body>
   <%- include('partials/header') %>
   <h2 class="container mt-3 bg-dark rounded text-light">
-    </h1>
-    <section class="section container" id="section-1" style="padding: 20px;min-height: 800px;">
-      <div class="row manga-container">
+    <%- title %>
+  </h2>
+  <div class="container rounded p-2">
+    <div class="filterZone">
+      <div class="rows d-flex align-items-center">
+        <b>Thể loại : </b>
+        <select class="form-select form-select-sm form-control mb-1 ml-1" aria-label="Default select example" style="width: 200px" onchange="changeTypeQuery(this)">
+          <option selected disabled>Lọc theo thể loại</option>
+          <% categories.forEach((category,index)=>{ %>
+          <option value="<%= category %>" <%= (navigator.filter.type === category) && "selected" %>><%= category %></option>
+          <%})%>
+        </select>
       </div>
-    </section>
-    <div id="paging-1">
-    </div>
-    <%- include('partials/footer') %>
-</body>
-<%- include("partials/script") %>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="/js/pagination.min.js"></script>
-<script src="/js/moment.min.js"></script>
-<script src="/js/moment-with-locales.min.js"></script>
-<script src="/js/pagination.min.js"></script>
-<script src="/js/moment.min.js"></script>
-<script src="/js/moment-with-locales.min.js"></script>
-<script>
-  console.log(moment)
-  const pagingObj = {
-    dataSource: "/newmanga/list",
-    locator: "newMangas",
-    showGoInput: true,
-    showGoButton: true,
-    totalNumberLocator: function(response) {
-      return response.newMangas.length;
-    },
-    pageSize: 2,
-    callback: showListAfterPaging,
-  }
-  $('#paging-1').pagination(pagingObj);
-
-  function showListAfterPaging(data, pagination) {
-    $(".manga-container").html("")
-    $.ajax({
-        url: `/newmanga/list?page=${pagination.pageNumber}&limit=${pagination.pageSize}`
-      })
-      .then(rs => {
-        console.log(rs.newMangas);
-        for (var i = 0; i
-
-          <
-          rs.newMangas.length; i++) {
-          const manga = rs.newMangas[i];
-          const htmls = `<div class="col-sm-4 col-md-3 col-lg-2 p-2">
-  <div class="manga-card">
-    ${manga.hot ? "<span class='manga-tag__hot'>Hot</span>" :""}
-    ${(manga.contentId.chapters.length !== 0) ? `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"> ${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`:`<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">
-      Chưa công bố
-    </span>`}
-    <a href="/detail/${manga.slug}">
-      <img class="card-img-top manga-img" src="${manga.image}" alt="Card image cap" />
-    </a>
-    <div class="manga-title div-template" data-template="${manga._id}">
-      <a class="manga-name" href="/detail/${ manga.slug }">
-        <h5>${ manga.name}</h5>
-      </a>
-      <a href="/detail/${ manga.slug }" class="manga-chapter">
-        ${manga.contentId.chapters.length == 0 ? "Chưa công bố": "Chương " + manga.contentId.chapters.slice(-1)[0].chapterNumber}
-      </a>
-    </div>
-    <div id="template-${manga._id}" style="display: none;">
-      <div class="info text-light">
-        <h4 class="info__name">${manga.name}</h4>
-        <p class="info__another-name"><b>Tên khác:</b> ${manga.anotherName}</p>
-        <ul class="info__follows">
-          <li>
-            Tình trạng: <b>${manga.status}</b>
-          </li>
-          <li>
-            Lượt xem: <b>${manga.statistical.views}</b>
-          </li>
-          <li>
-            Bình luận: <b>${manga.statistical.comments}</b>
-          </li>
-        </ul>
-        <div class="info__type">
-          <b>Thể loại:</b>
-          ${manga.type.map((item)=>{ return `<a href="/category/${item}">${item}</a>`})}
+      <div class="rows">
+        <div><b>Tình trạng : </b>
+          <button type="button" onclick="changeQuery('status','true')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Hoàn thành") ? 'btn-info':'btn-outline-info' %>">Hoàn thành</button>
+          <button type="button" onclick="changeQuery('status','false')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Đang tiến hành") ? 'btn-info':'btn-outline-info' %>">Đang tiến hành</button>
         </div>
-        <p class="info__desc">
-          ${manga.description}
-        </p>
+      </div>
+      <div class="rows">
+        <div><b>Quốc gia : </b>
+          <button type="button" onclick="changeQuery('country','Nhật Bản')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Nhật Bản") ? 'btn-info':'btn-outline-info' %>">Nhật Bản</button>
+          <button type="button" onclick="changeQuery('country','Trung Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Trung Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Trung Quốc</button>
+          <button type="button" onclick="changeQuery('country','Mỹ')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Mỹ") ? 'btn-info':'btn-outline-info' %> ml-1">Mỹ</button>
+          <button type="button" onclick="changeQuery('country','Hàn Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Hàn Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Hàn Quốc</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Đối tượng : </b> <button type="button" onclick="changeQuery('serve','male')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "male") ? 'btn-info':'btn-outline-info' %>">Con trai</button><button type="button" onclick="changeQuery('serve','female')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "female") ? 'btn-info':'btn-outline-info' %> ml-1">Con gái</button><button type="button" onclick="changeQuery('serve','all')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "all") ? 'btn-info':'btn-outline-info' %> ml-1">Tất cả</button></div>
       </div>
     </div>
   </div>
-  </div>`
-          $(".manga-container").append(htmls)
-        }
-      })
-      .then(() => {
-        // Tippy tooltip js library
-        tippy(`.div-template`, {
-          content(reference) {
-            const id = reference.getAttribute("data-template");
-            const template = document.getElementById(`template-${id}`);
-            return template.innerHTML;
-          },
-          allowHTML: true,
-          interactive: true,
-          followCursor: true,
-          placement: "right-end",
-          arrow: true,
-        });
-      })
-      .catch((error) => console.log(error))
-  }
-</script>
-<script src="/js/tooltip.js"></script>
+  <section class="section container" id="section-1">
+    <div class="row">
+      <% if(mangas.length !==0 ) {%>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+      <% }else {%>
+      <div class="text-center">
+        <h2 class="text-light bg-dark p-3"><i class="fas fa-heart-broken"></i> Chưa có truyện nào phù hợp :(</h2>
+      </div>
+      <% } %>
+    </div>
+  </section>
+  <div class="container mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','<%= (navigator.previous) && navigator.previous.previousPage %>','limit','<%= navigator.limit %>')">Previous</button></li>
+        <% for(var i=1; i<=navigator.totalPages; i++) {%>
+        <li class=" page-item <%= (navigator.activePage === i) && 'active' %>"><a class="page-link" onclick="changeQueryPaging('page','<%= i %>','limit','<%= navigator.limit %>')"><%= i %></a></li>
+        <% }%>
+        <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= (navigator.next) && navigator.next.nextPage %>', 'limit', '<%= navigator.limit %>')">Next</button></li>
 
+        <li class="page-item">
+          <select class="form-select form-control ml-2" onchange="changeLimitQuery(this)">
+            <option selected>Giới hạn</option>
+            <option value="2" <%= (navigator.limit === 2) && "selected" %>>2</option>
+            <option value="3" <%= (navigator.limit === 3) && "selected" %>>3</option>
+            <option value=" 5" <%= (navigator.limit === 5) && "selected" %>>5</option>
+            <option value="10" <%= (navigator.limit === 10) && "selected" %>>10</option>
+            <option value="20" <%= (navigator.limit === 20) && "selected" %>>20</option>
+            <option value="30" <%= (navigator.limit === 30) && "selected" %>>30</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <%- include('partials/footer') %>
+</body>
 
 </html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>
+<script>
+  function changeQuery(feild, value) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(feild, value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeTypeQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('type', it.value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeQueryPaging(page, pageValue, limit, limitValue) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(page, pageValue);
+    urlParams.set(limit, limitValue);
+
+    window.location.search = urlParams;
+  }
+
+  function changeLimitQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set('limit', it.value);
+
+    window.location.search = urlParams;
+  }
+
+  function setActive(field, value) {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get(field) === value) {
+      return "active"
+    }
+    return
+  }
+</script>

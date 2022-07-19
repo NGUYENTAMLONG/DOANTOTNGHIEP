@@ -125,3 +125,28 @@ header {
     }
   }
 }
+.category-menu {
+  background-color: #343a40;
+  ul {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+  }
+  li a {
+    display: block;
+    color: white !important;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  /* Change the link color to #111 (black) on hover */
+  li a:hover {
+    background-color: #e9282f;
+  }
+}
+#sub-menu {
+  .nav-link {
+    color: white !important;
+  }
+}
