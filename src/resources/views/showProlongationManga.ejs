@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>MANGA</title>
+  <title>PROLONGATION MANGA</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
@@ -35,15 +35,71 @@
         </div>
       </div>
       <div class="rows">
+        <div><b>Quốc gia : </b>
+          <button type="button" onclick="changeQuery('country','Nhật Bản')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Nhật Bản") ? 'btn-info':'btn-outline-info' %>">Nhật Bản</button>
+          <button type="button" onclick="changeQuery('country','Trung Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Trung Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Trung Quốc</button>
+          <button type="button" onclick="changeQuery('country','Mỹ')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Mỹ") ? 'btn-info':'btn-outline-info' %> ml-1">Mỹ</button>
+          <button type="button" onclick="changeQuery('country','Hàn Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Hàn Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Hàn Quốc</button>
+        </div>
+      </div>
+      <div class="rows">
         <div><b>Đối tượng : </b> <button type="button" onclick="changeQuery('serve','male')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "male") ? 'btn-info':'btn-outline-info' %>">Con trai</button><button type="button" onclick="changeQuery('serve','female')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "female") ? 'btn-info':'btn-outline-info' %> ml-1">Con gái</button><button type="button" onclick="changeQuery('serve','all')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "all") ? 'btn-info':'btn-outline-info' %> ml-1">Tất cả</button></div>
       </div>
     </div>
+
   </div>
   <section class="section container" id="section-1">
     <div class="row">
       <% if(mangas.length !==0 ) {%>
       <% mangas.forEach(function(manga,index){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <div class="col-sm-4 col-md-3 col-lg-2 p-2">
+        <div class="manga-card">
+          <% if (manga.hot === true) {%>
+          <span class="manga-tag__hot">Hot</span>
+          <% } %>
+          <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"><%= moment(manga.Chapters.chapters.createdTime).locale("vi").fromNow() %></span>
+          <a href="/detail/<%= manga.slug %>">
+            <img class="card-img-top manga-img" src="<%= manga.image %>" alt="Card image cap" />
+          </a>
+          <div class="manga-title div-template" data-template="<%=manga._id%>">
+            <a class=" manga-name" href="/detail/<%= manga.slug %>">
+              <h5><%= manga.name%></h5>
+            </a>
+            <a href="/detail/<%= manga.slug %>" class="manga-chapter">
+              Chương <%= manga.Chapters.chapters.chapterNumber %>
+            </a>
+          </div>
+          <div id="template-<%=manga._id%>" style="display: none;">
+            <div class="info text-light">
+              <h4 class="info__name"><%= manga.name%></h4>
+              <p class="info__another-name"><b>Tên khác:</b> <%= manga.anotherName%></p>
+              <ul class="info__follows">
+                <li>
+                  Tình trạng: <b><%= manga.status%></b>
+                </li>
+                <li>
+                  Lượt xem: <b><%= manga.statistical.views%></b>
+                </li>
+                <li>
+                  Đánh giá: <b><%= manga.statistical.rating%></b>
+                </li>
+                <li>
+                  Xếp hạng: <b><%= manga.statistical.ranks%></b>
+                </li>
+              </ul>
+              <div class="info__type">
+                <b>Thể loại:</b>
+                <%manga.type.forEach(function(item){ %>
+                <a href="/category/<%= item  %>"><%= item  %></a>
+                <% }); %>
+              </div>
+              <p class="info__desc">
+                <%= manga.description%>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <% }); %>
       <% }else {%>
       <div class="text-center">

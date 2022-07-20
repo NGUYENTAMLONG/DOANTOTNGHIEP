@@ -19,38 +19,38 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
         <li class="breadcrumb-item">
-          <a href="/detail/<%= manga.slug%>"> <%= manga.slug%></a>
+          <a href="/detail/<%= reading.slug%>"> <%= reading.slug%></a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">chapter-<%= chapter.chapterNumber%></li>
+        <li class="breadcrumb-item active" aria-current="page">chapter-<%= reading.Chapters.chapters.chapterNumber%></li>
       </ol>
     </nav>
     <p class="text-light">
       <button class="btn btn-success">Chương trước</button>
       <button class="btn btn-primary">Chương sau</button>
       <span class="float-right">
-        Đăng lúc: <span class="badge badge-primary"><%= moment(chapter.createdTime).format("L") %> - <%= moment(chapter.createdTime).format("LT") %></span>
+        Đăng lúc: <span class="badge badge-primary"><%= moment(reading.Chapters.chapters.createdTime).format("L") %> - <%= moment(reading.Chapters.chapters.createdTime).format("LT") %></span>
       </span>
     </p>
     <div class="text-light text-center">
-      <b>Chương <%= chapter.chapterNumber%> - Tựa đề:</b>
+      <b>Chương <%= reading.Chapters.chapters.chapterNumber%> - Tựa đề:</b>
       <h2>
-        <%= chapter.chapterName%>
+        <%= reading.Chapters.chapters.chapterName%>
       </h2>
     </div>
   </section>
   <section class="section container" id="section-2">
-    <%- chapter.chapterContent %>
+    <%- reading.Chapters.chapters.chapterContent %>
   </section>
   <section class="section container text-light text-center" id="section-3">
     <h3 class="text-dark">Bình luận chương <span class="badge badge-success text-light">
-        <%= chapter.chapterNumber %>
+        <%= reading.Chapters.chapters.chapterNumber %>
       </span> <i class="fas fa-comments"></i></h3>
     <!-- Plugin Comments Facebook -->
     <div class="comments-area container bg-light">
       <div id="fb-root"></div>
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
 
-      <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %> /read/chapter-<%=chapter.chapterNumber %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
+      <div class="fb-comments" data-href="http://localhost.local/detail/<%= reading.slug %> /read/chapter-<%=reading.Chapters.chapters.chapterNumber %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
       </div>
     </div>
     <!-- ******************************** -->
@@ -70,21 +70,6 @@
           </a>
         </li>
         <li class="nav">
-          <a href="#"><i class="fas fa-2x  fa-caret-left mr-4"></i></a>
-          <select class="form-control" onchange="navSelectChapter(this)">
-            <% manga.contentId.chapters.forEach((chap,index) => { %>
-            <% if(chap.chapterNumber === chapter.chapterNumber) {%>
-            <option value="chapter-<%= chap.chapterNumber%>" selected>
-              <%= chap.chapterNumber%>
-            </option>
-            <% }else{%>
-            <option value="/detail/<%= manga.slug %>/read/chapter-<%= chap.chapterNumber%>">
-              <%= chap.chapterNumber%>
-            </option>
-            <%} %>
-            <%}); %>
-          </select>
-          <a href="#"><i class="fas fa-2x fa-caret-right ml-4"></i></a>
         </li>
         <li>
           <span>
@@ -103,6 +88,43 @@
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
-<script src="/js/plugins/read.js"></script>
+<script>
+  function renderNavigationBar(slug) {
+    const chapterNumber = Number(window.location.href.split("chapter-")[1]);
+    fetch(`/detail/${slug}/navigator`)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.isSuccess) {
+          const chapters = result.data.Chapters.chapters;
+          var indexChapter = chapters.findIndex(
+            (chapter) => chapter.chapterNumber === chapterNumber
+          );
+          let htmls = [];
+          console.log(indexChapter);
+          chapters.forEach((chapter, index) => {
+            htmls.push(`<option value="chapter-${chapter.chapterNumber}" 
+            ${chapterNumber===chapter.chapterNumber && "selected" }>
+                     <a href="/detail/${slug}/read/chapter-${chapter.chapterNumber}">${chapter.chapterNumber}</a>
+                      </option>`);
+          });
+          document
+            .querySelector(".chapter-nav")
+            .querySelector(".nav").innerHTML = `${indexChapter !== 0 ? `<a href='/detail/${slug}/read/chapter-${
+                  chapters[indexChapter - 1].chapterNumber}'><i class='fas fa-2x  fa-caret-left mr-4'></i></a>`: ""
+                }<select class="form-control" onchange="redirectChapter(this)">
+                  ${htmls.join("")}
+                        </select>
+                      ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
+                   chapters[indexChapter + 1].chapterNumber}"><i class="fas fa-2x fa-caret-right ml-4"></i></a>`:""}`;
+        }
+      });
+  }
+
+  function redirectChapter(it) {
+    location.replace(`${it.value}`);
+  }
+  renderNavigationBar('<%= reading.slug %>');
+</script>
 
 </html>

@@ -2,13 +2,16 @@ const Manga = require("../models/Manga");
 const moment = require("moment");
 const User = require("../models/User");
 const { redirect } = require("../service/redirect");
-const { STATUS } = require("../config/httpResponse");
+const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const counterVisitor = require("../service/counterVisiter");
+const { ErrorResponse, SuccessResponse } = require("../helper/response");
+const { saveHistory } = require("../service/storeHistory");
 class detailController {
   async showDetailManga(req, res) {
     const slug = req.params.slug;
     try {
       await counterVisitor(req, res);
+      saveHistory(slug);
       const manga = await Manga.findOne({ slug: slug }).populate("contentId");
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
@@ -35,30 +38,91 @@ class detailController {
   }
 
   async readDetailManga(req, res) {
+    const { slug } = req.params;
     try {
       await counterVisitor(req, res);
-      const foundManga = await Manga.findOne({
-        slug: req.params.slug,
-      }).populate("contentId");
-      const chapterNumber = req.params.chapter.split("-")[1];
-      const foundChapter = foundManga.contentId.chapters.filter(
-        (chapter) => chapter.chapterNumber === Number(chapterNumber)
-      )[0];
-      console.log(foundManga.contentId.chapters[0].chapterNumber);
-
-      if (!foundChapter) {
+      saveHistory(slug);
+      const results = await Manga.aggregate([
+        {
+          $match: { slug: req.params.slug },
+        },
+        {
+          $addFields: {
+            contentId: { $toObjectId: "$contentId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "Chapters",
+            localField: "contentId",
+            foreignField: "_id",
+            as: "Chapters",
+          },
+        },
+        {
+          $unwind: "$Chapters",
+        },
+        {
+          $unwind: "$Chapters.chapters",
+        },
+        {
+          $match: {
+            "Chapters.chapters.chapterNumber": Number(
+              req.params.chapter.split("-")[1]
+            ),
+          },
+        },
+      ]);
+      if (!results[0]) {
         redirect(req, res, STATUS.NOT_FOUND);
       }
-
       res.render("read", {
         user: req.AuthPayload,
-        manga: foundManga,
-        chapter: foundChapter,
+        reading: results[0],
         moment,
       });
     } catch (error) {
-      console.log("GEAFSDF", error);
+      console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+
+  async navigator(req, res) {
+    try {
+      const mangas = await Manga.aggregate([
+        { $match: { slug: req.params.slug } },
+        {
+          $addFields: {
+            contentId: { $toObjectId: "$contentId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "Chapters",
+            localField: "contentId",
+            foreignField: "_id",
+            as: "Chapters",
+          },
+        },
+        {
+          $unwind: "$Chapters",
+        },
+        {
+          $addFields: {
+            countChapter: {
+              $size: "$Chapters.chapters",
+            },
+          },
+        },
+      ]);
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, mangas[0]));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
 }

@@ -121,7 +121,7 @@
       </caption>
       <div class="form-group">
         <label for="number">Chương số</label>
-        <input type="text" class="form-control" required name="chapterNumber" id="chapterNumber" placeholder="Enter number of chapter/ Nhập chương số" />
+        <input type="number" class="form-control" required name="chapterNumber" id="chapterNumber" placeholder="Enter number of chapter/ Nhập chương số" />
       </div>
       <div class="form-group">
         <label for="username">Tên chương</label>
@@ -179,11 +179,20 @@
       })
       return;
     }
+    if (!Number(chapterNumber.value.trim())) {
+      swal({
+        title: "Thông báo",
+        text: "Số chương phải là một số",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
 
 
     const payload = {
       chapterId: chapterId.trim(),
-      chapterNumber: chapterNumber.value.trim(),
+      chapterNumber: Number(chapterNumber.value.trim()),
       chapterName: chapterName.value.trim(),
     }
     fetch(`/management/content/manga/post/${manga}/init`, {

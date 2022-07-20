@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>ADVANCED SEARCHING</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/home.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <i class='bx bx-search-alt mt-1'></i> Tìm kiếm nâng cao
+  </h2>
+
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+  <div class="container d-flex flex-wrap">
+    <% categories.forEach(function(type,index){ %>
+    <div class="btn-group-toggle m-2" data-toggle="buttons">
+      <input type="radio" name="<%= type %>" value="2" checked hidden>
+      <input type="radio" name="<%= type %>" value="1" hidden>
+      <input type="radio" name="<%= type %>" value="0" hidden>
+      <button type="button" id="btn-<%= index %>" onclick="setCheck('<%= index %>','<%= type %>')" class="btn focus btn-secondary"><%= type %></button>
+    </div>
+    Result:
+    <div id='result-<%= index %>' class="mr-3"></div>
+    <%}) %>
+  </div>
+  <div class="btn btn-warning" onclick="submit()">
+    SUBMIT
+  </div>
+  <%- include('partials/footer') %>
+</body>
+
+</html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>
+
+<script script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+<script>
+  const rootArr = [];
+  const includeArr = [];
+  const exceptArr = [];
+
+
+  function setCheck(index, name) {
+    var $radios = $(`input[type="radio"][name="${name}"]`);
+    console.log($radios)
+    $(`#result-${index}`).html($radios.filter(':checked').val());
+    var colorClasses = ["btn-danger", "btn-success", "btn-secondary"];
+    var $checked = $radios.filter(':checked');
+    var $next = $radios.eq($radios.index($checked) + 1);
+    if (!$next.length) {
+      $next = $radios.first();
+    }
+    $next.prop("checked", true);
+    var newValue = $radios.filter(':checked').val();
+    $(`#btn-${index}`)
+      .removeClass(colorClasses.join(" "))
+      .addClass(colorClasses[newValue]);
+    $(`#result-${index}`).html(newValue);
+    if (Number(newValue) === 1) {
+      includeArr.push(name)
+    } else if (
+      Number(newValue) === 0
+    ) {
+      _.remove(includeArr, function(e) {
+        return e === name;
+      });
+      exceptArr.push(name)
+    }
+  }
+
+  function submit() {
+    const defaultRadios = document.querySelectorAll(`input[type="radio"][value="2"]:checked`);
+    const defaultArr = [...[...defaultRadios].map((item) => item.name)]
+
+    // advanced - search / result
+    const data = {
+      includeArr,
+      exceptArr,
+      defaultArr
+    };
+
+    fetch('/advanced-search/result', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+
+  
+</script>

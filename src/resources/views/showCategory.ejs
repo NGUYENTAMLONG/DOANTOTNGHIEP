@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>Category</title>
+  <title>CATEGORY</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
@@ -103,6 +103,7 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     urlParams.set('limit', it.value);
+    urlParams.set("page", "1");
 
     window.location.search = urlParams;
   }

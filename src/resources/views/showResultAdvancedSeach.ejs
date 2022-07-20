@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>RESULT</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/home.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <i class='bx bxs-magic-wand'></i> Kết Quả tìm kiếm nâng cao
+  </h2>
+
+  <section class="section container" id="section-1">
+    <div class="row">
+      <% if(mangas.length !==0 ) {%>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <% }); %>
+      <% }else {%>
+      <div class="text-center">
+        <h2 class="text-light bg-dark p-3"><i class="fas fa-heart-broken"></i> Chưa có truyện nào phù hợp :(</h2>
+      </div>
+      <% } %>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+
+</html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>

@@ -84,5 +84,6 @@ module.exports.MANGA_STATUS = {
   FINISHED: "Hoàn thành",
   UNFINISHED: "Đang tiến hành",
 };
+module.exports.PROLONGATION = 2;
 module.exports.RANDOM_SIZE = 12;
 module.exports.SECRET_KEY = "tamlongdev";

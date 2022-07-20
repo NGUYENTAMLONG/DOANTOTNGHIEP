@@ -1,16 +1,16 @@
-const { VALUES, types } = require("../config/default");
-const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
-const { ErrorResponse } = require("../helper/response");
-const moment = require("moment");
 const Manga = require("../models/Manga");
-const { orderManga } = require("../helper/order");
+const moment = require("moment");
+const { redirect } = require("../service/redirect");
+const { STATUS } = require("../config/httpResponse");
+const { getHistory, clearHistory } = require("../service/storeHistory");
 const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
-class CountryController {
-  async show(req, res, next) {
+const { types } = require("../config/default");
+class historyController {
+  async showHistory(req, res) {
     try {
       const match = filterMangas(req);
-      match.country = req.params.slug;
+      match.slug = { $in: getHistory() };
       const totalMangas = await Manga.countDocuments(match);
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
@@ -26,13 +26,12 @@ class CountryController {
         .limit(limit)
         .skip(startPage)
         .exec();
-      return res.json(result);
-      res.render("showCountryManga", {
+      // return res.json(result.mangas);
+      res.render("showHistory", {
         user: req.AuthPayload,
-        moment: moment,
-        title: `<i class="fas fa-globe-africa"></i> ${req.params.slug}`,
-        mangas: orderManga(result.mangas),
+        moment,
         categories: types,
+        mangas: result.mangas,
         navigator: {
           previous: result.previous,
           next: result.next,
@@ -44,10 +43,22 @@ class CountryController {
       });
     } catch (error) {
       console.log(error);
-      res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async storeHistoryData(req, res) {
+    try {
+      var LocalStorage = require("node-localstorage").LocalStorage;
+      const localStorage = new LocalStorage("./scratch");
+      console.log(localStorage);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  clearHistory(req, res) {
+    clearHistory();
+    res.redirect("back");
+  }
 }
-module.exports = new CountryController();
+
+module.exports = new historyController();

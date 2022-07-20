@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>MANGA</title>
+  <title>HISTORY</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/home.css">
@@ -15,7 +15,10 @@
 <body>
   <%- include('partials/header') %>
   <h2 class="container mt-3 bg-dark rounded text-light">
-    <%- title %>
+    <i class='bx bx-history'></i> Lịch sử đọc truyện
+    <div class="clear-history" style="position: fixed; right:10px;bottom: 10px;">
+      <a href="/history/clear-history" class="btn btn-danger m-2"><i class="fas fa-eraser"></i></a>
+    </div>
   </h2>
   <div class="container rounded p-2">
     <div class="filterZone">
@@ -32,6 +35,14 @@
         <div><b>Tình trạng : </b>
           <button type="button" onclick="changeQuery('status','true')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Hoàn thành") ? 'btn-info':'btn-outline-info' %>">Hoàn thành</button>
           <button type="button" onclick="changeQuery('status','false')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Đang tiến hành") ? 'btn-info':'btn-outline-info' %>">Đang tiến hành</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Quốc gia : </b>
+          <button type="button" onclick="changeQuery('country','Nhật Bản')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Nhật Bản") ? 'btn-info':'btn-outline-info' %>">Nhật Bản</button>
+          <button type="button" onclick="changeQuery('country','Trung Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Trung Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Trung Quốc</button>
+          <button type="button" onclick="changeQuery('country','Mỹ')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Mỹ") ? 'btn-info':'btn-outline-info' %> ml-1">Mỹ</button>
+          <button type="button" onclick="changeQuery('country','Hàn Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Hàn Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Hàn Quốc</button>
         </div>
       </div>
       <div class="rows">

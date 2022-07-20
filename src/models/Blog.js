@@ -26,6 +26,15 @@ const BlogSchema = new Schema(
         required: true,
       },
     },
+    statistical: {
+      type: Object,
+      default: {
+        likes: 0,
+        views: 0,
+        rating: 0,
+        counting: 0,
+      },
+    }, // updating...(ex: require)
     source: {
       type: String,
       required: true,

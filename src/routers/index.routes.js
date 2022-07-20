@@ -11,6 +11,8 @@ const followMangaRouter = require("./directions/showFollowManga.routes.js");
 const countryRouter = require("./directions/country.routes");
 const managementRouter = require("./admin/index.routes");
 const viewsRouter = require("./directions/views.api.routes");
+const advancedSearchRouter = require("./directions/advancedSearch.routes");
+const historyRouter = require("./directions/history.routes");
 const AuthenUser = require("../middleware/authenUser");
 
 function configRoute(app) {
@@ -26,6 +28,9 @@ function configRoute(app) {
   app.use("/register", registerRouter);
   app.use("/management", managementRouter); //For Admin
   app.use("/views", viewsRouter); //For Admin
+  app.use("/advanced-search", AuthenUser, advancedSearchRouter); //For Admin
+  app.use("/history", AuthenUser, historyRouter);
+
   app.use("/", AuthenUser, siteRouter);
 }
 

@@ -395,7 +395,7 @@ class MangaController {
     try {
       const chapterRepository = await Chapter.findById(chapterId);
       const checkChapter = chapterRepository.chapters.find(
-        (chapter) => chapter.chapterNumber === parseFloat(chapterNumber)
+        (chapter) => chapter.chapterNumber === chapterNumber
       );
       if (checkChapter) {
         return res
@@ -590,6 +590,17 @@ class MangaController {
     const { chapterId, chapterNumber, chapterName, oldChapterNumber, manga } =
       req.body;
     try {
+      // const chapterRepository = await Chapter.findById(chapterId);
+      // const checkChapter = chapterRepository.chapters.find(
+      //   (chapter) => chapter.chapterNumber === chapterNumber
+      // );
+      // if (checkChapter) {
+      //   return res
+      //     .status(STATUS.BAD_REQUEST)
+      //     .json(
+      //       new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.CREATE_FAIL)
+      //     );
+      // }
       const foundChapter = await Chapter.findOne(
         {
           _id: chapterId,
@@ -640,8 +651,8 @@ class MangaController {
           appRoot.path,
           `/src/public/mangas/${manga}/chapter-${chapterNumber}/`
         ),
-        function (err) {
-          if (err) {
+        function (error) {
+          if (error) {
             console.log(error);
             return res
               .status(STATUS.ERROR_SERVER)

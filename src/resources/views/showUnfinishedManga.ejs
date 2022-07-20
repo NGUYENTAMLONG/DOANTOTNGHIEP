@@ -112,6 +112,7 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     urlParams.set('limit', it.value);
+    urlParams.set("page", "1");
 
     window.location.search = urlParams;
   }
