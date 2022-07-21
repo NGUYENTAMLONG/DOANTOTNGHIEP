@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>AUTHOR LIST</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <%- title %>
+  </h2>
+  <div class="container rounded p-2">
+    <div class="filterZone">
+      <span class="badge badge-warning">Các tác giả : </span>
+      <div class="rows d-flex flex-wrap justify-content-center align-items-center">
+        <% authorList.forEach((author,index)=>{ %>
+        <a href="/filter/author/<%= author._id %>?page=1&limit=2" class="btn btn-outline-success m-2"><%= author._id %> </a>
+        <%})%>
+      </div>
+    </div>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+
+</html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>

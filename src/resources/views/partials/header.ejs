@@ -32,7 +32,7 @@
             </li>
           </ul>
           <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach d-flex justify-content-end">
-            <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search" onkeyup="liveSearch(this)" autocomplete="off">
+            <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search" onkeyup="liveSearch(this)" onclick="liveSearch(this)" autocomplete="off">
             <section id="result-live-search" class="bg-dark text-light d-none">
               <!-- <div class="found-manga d-flex">
                 <img src="http://localhost:3416/image/1658053540044.jpg" width="60px" alt="">
@@ -295,12 +295,13 @@
                   <li><a href="#">Top Ngày</a></li>
                   <li><a href="#">Top Tuần</a></li>
                   <li> <a href="#">Top Tháng</a></li>
-                  <li> <a href="#">Yêu thích nhất</a></li>
+                  <li> <a href="/filter/favourite?page=1&limit=2">Yêu thích nhất</a></li>
+                  <li> <a href="/filter/highest-views?page=1&limit=2">Lượt views cao nhất</a></li>
                   <li> <a href="/just-updated?page=1&limit=2">Mới cập nhật</a></li>
                   <li> <a href="/filter/new?page=1&limit=2">Truyện mới</a></li>
                   <li> <a href="/filter/complete?page=1&limit=2">Truyện full</a></li>
                   <li> <a href="/filter/unfinished?page=1&limit=2">Truyện đang tiến hành</a></li>
-                  <li> <a href="/filter/author?page=1&limit=2">Truyện đồng tác giả</a></li>
+                  <li> <a href="/filter/author">Truyện đồng tác giả</a></li>
                   <li><a href="/filter/prolongation?page=1&limit=2">Truyện trường kỳ</a></li>
                   <li><a href="/filter/random">Truyện ngẫu nhiên</a></li>
                   <li><a href="/filter/flop?page=1&limit=2">Truyện ít đọc</a></li>
@@ -327,7 +328,7 @@
               <a class="nav-link" href="/popular/male?page=1&limit=2">Con trai</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Fanpage</a>
+              <a class="nav-link" href="https://www.facebook.com/truyentranh" target="_blank">Fanpage</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Tiểu thuyết</a>
@@ -341,7 +342,7 @@
             <li class="nav-item">
               <form action="/history?page=1&limit=2" method="post" id="form-history">
                 <input type="text" name="visit" id="visit" value="" hidden>
-                <button class="btn btn-info" type="submit">Lịch sử</button>
+                <button class="btn btn-info" type="submit"><i class='bx bxs-time'></i> Lịch sử</button>
               </form>
             </li>
         </div>
@@ -529,6 +530,9 @@
   <script>
     // Live Searching
     function liveSearch(e) {
+      if (e.value === "") {
+        return
+      }
       fetch("/liveSearch", {
         method: "POST",
         headers: {
@@ -539,8 +543,8 @@
         })
       }).then(res => res.json()).then(result => {
         const htmls = result.data.map((manga) => `<a href="/detail/${manga.slug}"> 
-          <div class="found-manga d-flex">
-          <div class="found-manga__cover">
+          <div class="found-manga d-flex aligh-items-center">
+          <div class="found-manga__cover mt-2">
             <img src="${manga.image}" width="60px" alt="">
           </div>
           <div class="found-manga__info">

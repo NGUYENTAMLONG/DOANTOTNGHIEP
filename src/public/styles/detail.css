@@ -57,124 +57,26 @@
 
 #section-2 {
   margin-bottom: 100px; }
-  #section-2 table {
-    display: flex;
-    flex-flow: column;
-    width: 100%; }
-    #section-2 table thead {
-      flex: 0 0 auto;
-      margin-right: 12px; }
-    #section-2 table tbody {
-      flex: 1 1 auto;
-      display: block;
-      height: 200px;
-      overflow-y: scroll; }
-      #section-2 table tbody::-webkit-scrollbar {
-        width: 12px;
-        background-color: #f5f5f5;
-        overflow: hidden; }
-      #section-2 table tbody::-webkit-scrollbar-thumb {
-        border-radius: 20px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        background-color: #555; }
-    #section-2 table tr {
-      width: 100%;
-      display: table;
-      table-layout: fixed; }
-    #section-2 table .stt {
-      width: 100px;
-      text-align: center; }
-    #section-2 table .chapter {
-      width: 200px; }
-    #section-2 table .tdTruncate {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis; }
+  #section-2 table .tdTruncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
 
-#section-3 .form-group input {
-  width: 45%; }
+.owl-prev,
+.owl-next {
+  zoom: 2 !important;
+  outline: none !important; }
+  .owl-prev span,
+  .owl-next span {
+    margin: 10px 15px !important; }
 
-#section-3 .myComment {
-  position: relative; }
-  #section-3 .myComment .fa-grin {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    cursor: pointer; }
-  #section-3 .myComment .comment__user {
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px; }
-    #section-3 .myComment .comment__user .comment__avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%; }
+.owl-prev:hover {
+  background-color: #007bff !important;
+  color: white !important; }
 
-#section-3 .comment-zone {
-  min-height: 600px;
-  padding: 10px; }
-  #section-3 .comment-zone .comment {
-    width: 100%;
-    margin: 20px 0px; }
-    #section-3 .comment-zone .comment .comment__avatar {
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      margin-right: 10px; }
-    #section-3 .comment-zone .comment .comment__detail {
-      width: 90%;
-      border-radius: 10px;
-      padding: 15px;
-      background-color: #ebebeb; }
-      #section-3 .comment-zone .comment .comment__detail .comment__whose span {
-        padding: 3px;
-        border: #007bff solid 1px;
-        color: #007bff;
-        border-radius: 4px;
-        font-size: 13px; }
-      #section-3 .comment-zone .comment .comment__detail .comment__content {
-        text-indent: 25px;
-        width: 100%;
-        word-wrap: break-word; }
-      #section-3 .comment-zone .comment .comment__detail .like-comment,
-      #section-3 .comment-zone .comment .comment__detail .response-comment,
-      #section-3 .comment-zone .comment .comment__detail .delete-comment,
-      #section-3 .comment-zone .comment .comment__detail .update-comment,
-      #section-3 .comment-zone .comment .comment__detail .submit-edit-comment,
-      #section-3 .comment-zone .comment .comment__detail .cancel-edit-comment {
-        margin: 0px 5px;
-        cursor: pointer;
-        color: #be151b; }
-  #section-3 .comment-zone .reply-zone {
-    margin: 20px 40px; }
-    #section-3 .comment-zone .reply-zone .reply__avatar {
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      margin-right: 10px; }
-    #section-3 .comment-zone .reply-zone .reply__detail {
-      width: 100%;
-      border-radius: 10px;
-      padding: 15px;
-      background-color: #ebebeb; }
-      #section-3 .comment-zone .reply-zone .reply__detail .reply__whose span {
-        padding: 3px;
-        border: #007bff solid 1px;
-        color: #007bff;
-        border-radius: 4px;
-        font-size: 13px; }
-      #section-3 .comment-zone .reply-zone .reply__detail .reply__content {
-        width: 100%;
-        word-wrap: break-word; }
-      #section-3 .comment-zone .reply-zone .reply__detail .like-reply,
-      #section-3 .comment-zone .reply-zone .reply__detail .delete-reply,
-      #section-3 .comment-zone .reply-zone .reply__detail .update-reply,
-      #section-3 .comment-zone .reply-zone .reply__detail .response-reply {
-        cursor: pointer;
-        color: #be151b; }
+.owl-next:hover {
+  background-color: #007bff !important;
+  color: white !important; }
 
-.emojionearea-button {
-  transform: scale(1.5); }
-
-.resize {
-  resize: vertical;
-  overflow: scroll; }
+.owl-dots .owl-dot {
+  outline: none !important; }

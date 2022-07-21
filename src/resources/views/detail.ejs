@@ -12,9 +12,13 @@
   <link rel="stylesheet" href="/css/detail.css">
   <link rel="stylesheet" href="/css/paging.css">
   <link rel="stylesheet" href="/css/skeleton.css">
+  <link rel="stylesheet" href="/css/home.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 </head>
 
-<body>
+<body onload="getRelatedMangas('<%= manga._id %>','<%= manga.type %>')">
   <%- include('partials/header',{user:user}) %>
 
   <section class="section container" id="section-1">
@@ -34,9 +38,9 @@
         <div class="manga-info">
           <h3 class="manga-info__name"><%= manga.name%></h3>
           <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
-          <p class="manga-info__author">Tác giả: <a href="#">
+          <p class="manga-info__author">Tác giả: <a href="/filter/author/<%= manga.author %>?page=1&limit=2">
               <%= manga.author %>
-            </a> - Quốc gia: <a href="#">
+            </a> - Quốc gia: <a href="/country/<%=manga.country%>?page=1&limit=2">
               <%= manga.country %>
             </a>
           </p>
@@ -65,7 +69,7 @@
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
-          <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-outline-danger manga-info__type"><%= type%></a>
+          <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-outline-danger mb-1 manga-info__type"><%= type%></a>
           <% }) %>
           <div class="d-flex mt-3">
             <% if (manga.contentId.chapters.length >0){ %>
@@ -105,7 +109,7 @@
       <h1 class="bg-danger text-light p-2 rounded">Chưa có chương mới</h1>
     </div>
     <%} else{%>
-    <div class="d-flex justify-content-between  align-items-center">
+    <div class="d-flex flex-wrap justify-content-between  align-items-center">
       <h3><i class="fas fa-list"></i> Danh sách</h3>
       <span class="badge badge-primary"><%= manga.contentId.chapters.length %> chương đã đăng</span>
       <div class="form-check">
@@ -121,13 +125,13 @@
         </label>
       </div>
       <input class="form-control" id="myInput" type="text" placeholder="Tìm chương..." style="width: 200px;">
-      <a href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[manga.contentId.chapters.length - 1 ].chapterNumber %>" class="btn btn-outline-warning">Đọc chương mới nhất <span class="badge badge-primary">
+      <a href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[manga.contentId.chapters.length - 1 ].chapterNumber %>" class="btn btn-outline-warning mt-1 mb-1">Đọc chương mới nhất <span class="badge badge-primary">
           <%= manga.contentId.chapters[manga.contentId.chapters.length - 1 ].chapterNumber %>
         </span>
       </a>
     </div>
     <div>
-      <table class="table table-striped">
+      <table class="table table-striped table-reponsive">
         <thead>
           <tr>
             <th scope="col" class="stt">STT</th>
@@ -165,7 +169,20 @@
     </div>
     <!-- ******************************** -->
   </section>
-
+  <div class="text-center">
+    <h3><i class="fas fa-lightbulb"></i> Truyện cùng thể loại</h3>
+  </div>
+  <section class="section container text-center" id="section-4">
+    <div class="d-flex justify-content-around">
+      <% [0,1,2,3,4].forEach((item)=>{ %>
+      <div class="card">
+        <p></p>
+        <h2></h2>
+        <h3></h3>
+      </div>
+      <%}) %>
+    </div>
+  </section>
   <%- include('partials/footer') %>
 </body>
 
@@ -173,6 +190,9 @@
 <%- include("partials/visitHistory") %>
 
 <script src="/js/plugins/detail.js"></script>
+<script src="/js/moment.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+
 <script>
   // Sorting Top Bottom list
   const checkSortButtons = document.querySelectorAll("[name='sort']");
@@ -212,6 +232,81 @@
     }
   }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+  function getRelatedMangas(mangaId, types) {
+    const data = {
+      types: types.split(",")
+    }
+    fetch('/filter/related', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Success:', result);
+        let htmls = result.data.map((manga, index) => {
+          if (manga._id !== mangaId) {
+            return `<div class="item p-2">
+            <div class="manga-card">
+              ${ (manga.hot === true)  ?
+              `<span class="manga-tag__hot">Hot</span>`:""
+               } 
+            ${(manga.contentId.chapters.length > 0) ?
+              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`
+             :
+              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">Chưa công bố</span>`
+            }
+              <a href="/detail/${manga.slug}">
+                <img class="card-img-top manga-img" src="${ manga.image }" alt="Cover Manga"/>
+              </a>
+              <div class="manga-title">
+                <a class="manga-name" href="/detail/${ manga.slug }">
+                  <h5>${ manga.name }</h5>
+                </a>
+                <a href="/detail/${ manga.slug }" class="manga-chapter">
+                  ${ (manga.contentId.chapters.length > 0) ?
+                  `Chương ${ manga.contentId.chapters.slice(-1)[0].chapterNumber }
+                  `:
+                  "Chưa công bố"
+                  }
+                </a>
+                </div>
+                </div>
+                </div>
+                `
+          }
+        }).join("")
 
+        document.getElementById("section-4").innerHTML = `
+        <div class="owl-carousel owl-theme">
+         ${htmls}
+        </div>`
+
+        $('.owl-carousel').owlCarousel({
+          loop: true,
+          margin: 10,
+          nav: true,
+          responsive: {
+            0: {
+              items: 1
+            },
+            600: {
+              items: 2
+            },
+            1000: {
+              items: 5
+            }
+          }
+        })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
 
 </html>

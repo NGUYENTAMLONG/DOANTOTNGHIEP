@@ -6,6 +6,11 @@ const {
   showUnfinishedManga,
   showProlongationManga,
   showFlopManga,
+  showAllAuthors,
+  showMangasOfAuthor,
+  getRelatedMangas,
+  showFavouriteManga,
+  showHighestViewsManga,
 } = require("../../controllers/FilterController");
 const router = express.Router();
 
@@ -15,5 +20,11 @@ router.get("/complete", showCompleteManga);
 router.get("/unfinished", showUnfinishedManga);
 router.get("/prolongation", showProlongationManga);
 router.get("/flop", showFlopManga);
+router.get("/author/:slug", showMangasOfAuthor);
+router.get("/author", showAllAuthors);
+router.get("/favourite", showFavouriteManga);
+router.get("/highest-views", showHighestViewsManga);
+
+router.post("/related", getRelatedMangas);
 
 module.exports = router;

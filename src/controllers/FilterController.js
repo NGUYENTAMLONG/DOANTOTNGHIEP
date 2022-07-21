@@ -1,7 +1,7 @@
 const Manga = require("../models/Manga");
 const moment = require("moment");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
-const { ErrorResponse } = require("../helper/response");
+const { ErrorResponse, SuccessResponse } = require("../helper/response");
 const lodash = require("lodash");
 const {
   RANDOM_SIZE,
@@ -130,7 +130,7 @@ class FilterController {
       res.render("showUnfinishedManga", {
         user: req.AuthPayload,
         moment: moment,
-        title: `<i class="fas fa-fire"></i> Truyện đang tiến hành`,
+        title: `<i class='bx bxs-leaf'></i> Truyện đang tiến hành`,
         mangas: result.mangas,
         categories: types,
         navigator: {
@@ -208,7 +208,7 @@ class FilterController {
       res.render("showProlongationManga", {
         user: req.AuthPayload,
         moment: moment,
-        title: `<i class="fas fa-fire"></i> Truyện trường kỳ`,
+        title: `<i class="fas fa-mountain"></i> Truyện trường kỳ`,
         mangas: result.mangas,
         categories: types,
         navigator: {
@@ -230,16 +230,15 @@ class FilterController {
   async showFlopManga(req, res, next) {
     try {
       const match = filterMangas(req);
-      const totalMangas = await Manga.find({ "statistical.views": { $gt: 3 } })
-        .find(match)
+      const totalMangas = await Manga.find(match)
+        .sort({ "statistical.views": 1 })
         .countDocuments();
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
       const startPage = (page - 1) * limit;
       const result = pagination(req, totalMangas);
-      result.mangas = await Manga.find({ "statistical.views": { $gt: 3 } })
-        .find(match)
-        .sort({ "statistical.views": "desc" })
+      result.mangas = await Manga.find(match)
+        .sort({ "statistical.views": 1 })
         .populate("contentId", {
           chapters: { $slice: -1 },
         })
@@ -251,6 +250,169 @@ class FilterController {
         user: req.AuthPayload,
         moment: moment,
         title: `<i class='bx bx-trending-down'></i> Truyện ít đọc`,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showAllAuthors(req, res, next) {
+    try {
+      const authorList = await Manga.aggregate([
+        { $group: { _id: "$author" } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      res.render("showAuthorList", {
+        user: req.AuthPayload,
+        moment: moment,
+        title: `<i class='bx bx-palette'></i> Lọc truyện theo tác giả`,
+        authorList,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showMangasOfAuthor(req, res, next) {
+    const { slug } = req.params;
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find({ author: slug })
+        .find(match)
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find({ author: slug })
+        .find(match)
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("showMangasOfAuthor", {
+        user: req.AuthPayload,
+        moment: moment,
+        title: `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm của ${slug}`,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getRelatedMangas(req, res, next) {
+    const { types } = req.body;
+    try {
+      const relatedMangas = await Manga.find({ types: { $in: types } })
+        .sort({ "statistical.views": "desc" })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(11);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, relatedMangas));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showFavouriteManga(req, res, next) {
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find(match)
+        .sort({ "statistical.likes": -1 })
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .sort({ "statistical.likes": -1 })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("showFavoriteManga", {
+        user: req.AuthPayload,
+        moment: moment,
+        title: `<i class='bx bx-happy-heart-eyes'></i> Truyện được yêu thích nhiều nhất`,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showHighestViewsManga(req, res, next) {
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find(match)
+        .sort({ "statistical.views": -1 })
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .sort({ "statistical.views": -1 })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("showFavoriteManga", {
+        user: req.AuthPayload,
+        moment: moment,
+        title: `<i class='bx bxs-plane-take-off'></i> Truyện có lượt views cao nhất`,
         mangas: result.mangas,
         categories: types,
         navigator: {

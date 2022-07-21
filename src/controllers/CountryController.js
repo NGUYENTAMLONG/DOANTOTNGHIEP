@@ -26,7 +26,7 @@ class CountryController {
         .limit(limit)
         .skip(startPage)
         .exec();
-      return res.json(result);
+      // return res.json(result);
       res.render("showCountryManga", {
         user: req.AuthPayload,
         moment: moment,

@@ -13,6 +13,7 @@ class historyController {
     try {
       const { visit } = req.body;
       visitedMangas = JSON.parse(visit);
+      console.log(visitedMangas);
       const match = filterMangas(req);
       match.slug = { $in: visitedMangas };
       const totalMangas = await Manga.countDocuments(match);
@@ -53,6 +54,7 @@ class historyController {
     try {
       const match = filterMangas(req);
       match.slug = { $in: visitedMangas };
+      console.log(visitedMangas);
       const totalMangas = await Manga.countDocuments(match);
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);

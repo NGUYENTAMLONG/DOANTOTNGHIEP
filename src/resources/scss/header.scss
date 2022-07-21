@@ -28,6 +28,7 @@ header {
         max-height: 300px;
         padding: 5px;
         overflow-y: scroll;
+        border: solid $color-4 5px;
         .found-manga {
           border-bottom: $color-6 solid 1px;
           .found-manga__cover {
@@ -41,9 +42,6 @@ header {
           .found-manga__info {
             padding: 0px 5px;
           }
-        }
-        .found-manga:hover .found-manga {
-          background-color: white !important;
         }
       }
     }

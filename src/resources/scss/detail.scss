@@ -85,45 +85,45 @@
 #section-2 {
   margin-bottom: 100px;
   table {
-    display: flex;
-    flex-flow: column;
-    width: 100%;
-    thead {
-      flex: 0 0 auto;
-      margin-right: 12px;
-    }
-    tbody {
-      flex: 1 1 auto;
-      display: block;
-      height: 200px;
-      // width: 100%;
-      overflow-y: scroll;
-      // overflow-x: scroll;
-      &::-webkit-scrollbar {
-        width: 12px;
-        background-color: #f5f5f5;
-        overflow: hidden;
-      }
+    // display: flex;
+    // flex-flow: column;
+    // width: 100%;
+    // thead {
+    //   flex: 0 0 auto;
+    //   margin-right: 12px;
+    // }
+    // tbody {
+    //   flex: 1 1 auto;
+    //   display: block;
+    //   height: 200px;
+    //   // width: 100%;
+    //   overflow-y: scroll;
+    //   // overflow-x: scroll;
+    //   &::-webkit-scrollbar {
+    //     width: 12px;
+    //     background-color: #f5f5f5;
+    //     overflow: hidden;
+    //   }
 
-      &::-webkit-scrollbar-thumb {
-        border-radius: 20px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        background-color: #555;
-      }
-    }
+    //   &::-webkit-scrollbar-thumb {
+    //     border-radius: 20px;
+    //     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    //     background-color: #555;
+    //   }
+    // }
 
-    tr {
-      width: 100%;
-      display: table;
-      table-layout: fixed;
-    }
-    .stt {
-      width: 100px;
-      text-align: center;
-    }
-    .chapter {
-      width: 200px;
-    }
+    // tr {
+    //   width: 100%;
+    //   display: table;
+    //   table-layout: fixed;
+    // }
+    // .stt {
+    //   width: 100px;
+    //   text-align: center;
+    // }
+    // .chapter {
+    //   width: 200px;
+    // }
     .tdTruncate {
       white-space: nowrap;
       overflow: hidden;
@@ -131,116 +131,25 @@
     }
   }
 }
-#section-3 {
-  .form-group {
-    input {
-      width: 45%;
-    }
-  }
-  .myComment {
-    position: relative;
-    .fa-grin {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      cursor: pointer;
-    }
-    .comment__user {
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      .comment__username {
-      }
-      .comment__avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
-    }
-  }
-  .comment-zone {
-    min-height: 600px;
-    padding: 10px;
-    .comment {
-      width: 100%;
-      margin: 20px 0px;
-      .comment__avatar {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
-      }
-      .comment__detail {
-        width: 90%;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: $color-6;
-        .comment__whose {
-          span {
-            padding: 3px;
-            border: $color-3 solid 1px;
-            color: $color-3;
-            border-radius: 4px;
-            font-size: 13px;
-          }
-        }
-        .comment__content {
-          text-indent: 25px;
-          width: 100%;
-          word-wrap: break-word;
-        }
-        .like-comment,
-        .response-comment,
-        .delete-comment,
-        .update-comment,
-        .submit-edit-comment,
-        .cancel-edit-comment {
-          margin: 0px 5px;
-          cursor: pointer;
-          color: $color-2;
-        }
-      }
-    }
-    .reply-zone {
-      margin: 20px 40px;
-      .reply__avatar {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
-      }
-      .reply__detail {
-        width: 100%;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: $color-6;
-        .reply__whose {
-          span {
-            padding: 3px;
-            border: $color-3 solid 1px;
-            color: $color-3;
-            border-radius: 4px;
-            font-size: 13px;
-          }
-        }
-        .reply__content {
-          width: 100%;
-          word-wrap: break-word;
-        }
-        .like-reply,
-        .delete-reply,
-        .update-reply,
-        .response-reply {
-          cursor: pointer;
-          color: $color-2;
-        }
-      }
-    }
+.owl-prev,
+.owl-next {
+  // width: 50px;
+  zoom: 2 !important;
+  outline: none !important;
+  span {
+    margin: 10px 15px !important;
   }
 }
-.emojionearea-button {
-  transform: scale(1.5);
+.owl-prev:hover {
+  background-color: $color-3 !important;
+  color: white !important;
 }
-.resize {
-  resize: vertical;
-  overflow: scroll;
+.owl-next:hover {
+  background-color: $color-3 !important;
+  color: white !important;
+}
+.owl-dots {
+  .owl-dot {
+    outline: none !important;
+  }
 }
