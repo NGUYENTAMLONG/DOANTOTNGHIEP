@@ -4,10 +4,11 @@ const {
   blogs,
   search,
   getAvatar,
+  liveSearch,
 } = require("../../controllers/SiteController");
-const { PagingSearched } = require("../../middleware/paging");
 const router = express.Router();
 router.use("/blogs", blogs);
+router.use("/liveSearch", liveSearch);
 router.use("/search", search);
 router.use("/getAvatar/:avatar", getAvatar);
 router.use("/", home);

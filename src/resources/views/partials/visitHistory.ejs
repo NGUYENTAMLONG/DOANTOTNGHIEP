@@ -1,0 +1,12 @@
+<script>
+  if (localStorage.getItem("visits")) {
+    const visits = JSON.parse(localStorage.getItem("visits"));
+    if (!visits.includes("<%= manga.slug%>")) {
+      const myMangas = ["<%= manga.slug%>", ...visits];
+      localStorage.setItem("visits", JSON.stringify(myMangas));
+    }
+  } else {
+    const myMangas = ["<%= manga.slug%>"];
+    localStorage.setItem("visits", JSON.stringify(myMangas));
+  }
+</script>

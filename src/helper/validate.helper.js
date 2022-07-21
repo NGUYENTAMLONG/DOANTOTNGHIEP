@@ -1,20 +1,20 @@
 class Validate {
   ValidatePassword(password) {
     // Minimum six and maximum 20 characters, at least one uppercase letter, one lowercase letter, one number and one special character:
-    var regExp =
+    const regExp =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
     return regExp.test(password);
   }
 
   ValidateEmail(email) {
-    var regex =
+    const regex =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     return regex.test(String(email).toLowerCase());
   }
 
   //   ValidatePhone(phoneNumber) {
-  //     var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  //     const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   //     return re.test(phoneNumber);
   //   }

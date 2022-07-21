@@ -32,7 +32,23 @@
             </li>
           </ul>
           <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach d-flex justify-content-end">
-            <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search">
+            <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search" onkeyup="liveSearch(this)" autocomplete="off">
+            <section id="result-live-search" class="bg-dark text-light d-none">
+              <!-- <div class="found-manga d-flex">
+                <img src="http://localhost:3416/image/1658053540044.jpg" width="60px" alt="">
+                <div class="found-manga__info">
+                  <b class="found-manga__info__name">
+                    Con nha giau
+                  </b>
+                  <p class="found-manga__info__anothername">
+                    Con nha giau 2
+                  </p>
+                  <span class="badge badge-primary">
+                    Chuong 1
+                  </span>
+                </div>
+              </div> -->
+            </section>
             <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
           </form>
 
@@ -162,7 +178,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#be151b;">
       <div class=" container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sub-menu" aria-controls="sub-menu" aria-expanded="false" aria-label="Toggle navigation">
-          <i class='bx bx-menu-alt-right'></i>
+          <i class='bx bx-menu-alt-left'></i>
         </button>
         <div class="collapse navbar-collapse" id="sub-menu">
           <ul class="navbar-nav mr-auto  text-center">
@@ -320,10 +336,13 @@
               <a class="nav-link" href="#">Truyện famade</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/history?page=1&limit=2">Lịch sử</a>
+              <a class="nav-link" href="/advanced-search">Tìm truyện</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/advanced-search">Tìm truyện</a>
+              <form action="/history?page=1&limit=2" method="post" id="form-history">
+                <input type="text" name="visit" id="visit" value="" hidden>
+                <button class="btn btn-info" type="submit">Lịch sử</button>
+              </form>
             </li>
         </div>
       </div>
@@ -506,4 +525,59 @@
       }
       return "";
     }
+  </script>
+  <script>
+    // Live Searching
+    function liveSearch(e) {
+      fetch("/liveSearch", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          payload: e.value
+        })
+      }).then(res => res.json()).then(result => {
+        const htmls = result.data.map((manga) => `<a href="/detail/${manga.slug}"> 
+          <div class="found-manga d-flex">
+          <div class="found-manga__cover">
+            <img src="${manga.image}" width="60px" alt="">
+          </div>
+          <div class="found-manga__info">
+            <a href="/detail/${manga.slug}" class="found-manga__info__name">
+              ${manga.name}
+            </a>
+            <p class="found-manga__info__anothername">
+              ${manga.anotherName}
+            </p>
+               ${manga.contentId.chapters.length !== 0 ?`<span class="badge badge-primary">Chương ${manga.contentId.chapters[0].chapterNumber}</span>` : `<span class="badge badge-danger">Chưa cập nhật</span>`}
+           </div>
+          </div>
+        </a>`).join("")
+        document.querySelector("#result-live-search").classList.remove("d-none");
+        document.getElementById("result-live-search").innerHTML = htmls
+      }).catch(error => console.log(error));
+    };
+
+
+
+    document.addEventListener('click', function(event) {
+      const ignoreClickOnMeElement = document.getElementById('result-live-search');
+      const isClickInsideElement = ignoreClickOnMeElement.contains(event.target);
+      if (!isClickInsideElement) {
+        ignoreClickOnMeElement.classList.add("d-none");
+      }
+    });
+
+    // Set History
+    document.getElementById('form-history').addEventListener('submit', function(event) {
+      // block form submit event
+      event.preventDefault();
+
+      // Do some stuff here
+      document.getElementById("visit").setAttribute("value", `${localStorage.getItem("visits")}`);
+
+      // Continue the form submit
+      event.currentTarget.submit();
+    })
   </script>

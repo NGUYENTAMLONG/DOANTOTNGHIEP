@@ -30,7 +30,6 @@ function configRoute(app) {
   app.use("/views", viewsRouter); //For Admin
   app.use("/advanced-search", AuthenUser, advancedSearchRouter); //For Admin
   app.use("/history", AuthenUser, historyRouter);
-
   app.use("/", AuthenUser, siteRouter);
 }
 

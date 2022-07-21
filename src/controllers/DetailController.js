@@ -5,13 +5,12 @@ const { redirect } = require("../service/redirect");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const counterVisitor = require("../service/counterVisiter");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
-const { saveHistory } = require("../service/storeHistory");
+
 class detailController {
   async showDetailManga(req, res) {
     const slug = req.params.slug;
     try {
       await counterVisitor(req, res);
-      saveHistory(slug);
       const manga = await Manga.findOne({ slug: slug }).populate("contentId");
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
@@ -41,7 +40,6 @@ class detailController {
     const { slug } = req.params;
     try {
       await counterVisitor(req, res);
-      saveHistory(slug);
       const results = await Manga.aggregate([
         {
           $match: { slug: req.params.slug },

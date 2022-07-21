@@ -17,7 +17,7 @@
   <h2 class="container mt-3 bg-dark rounded text-light">
     <i class='bx bx-history'></i> Lịch sử đọc truyện
     <div class="clear-history" style="position: fixed; right:10px;bottom: 10px;">
-      <a href="/history/clear-history" class="btn btn-danger m-2"><i class="fas fa-eraser"></i></a>
+      <button onclick="clearVisitHistory()" class="btn btn-danger m-2"><i class="fas fa-eraser"></i></button>
     </div>
   </h2>
   <div class="container rounded p-2">
@@ -132,5 +132,38 @@
       return "active"
     }
     return
+  }
+
+  function clearVisitHistory() {
+    localStorage.removeItem("visits");
+    fetch('/history/clear-visits', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (!result.isSuccess) {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Có thể lỗi do hệ thống :<",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Đã xóa lịch sử !",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            location.reload()
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 </script>

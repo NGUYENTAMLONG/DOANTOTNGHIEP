@@ -13,7 +13,9 @@ class PopularController {
       await handleResponse(req, res, SERVE.ALL);
     } catch (error) {
       console.log(error);
-      res.status(500).json("ERROR:", error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async showMangaForMale(req, res, next) {
@@ -21,7 +23,9 @@ class PopularController {
       await handleResponse(req, res, SERVE.MALE);
     } catch (error) {
       console.log(error);
-      res.status(500).json("ERROR:", error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async showMangaForFemale(req, res, next) {
@@ -29,7 +33,9 @@ class PopularController {
       await handleResponse(req, res, SERVE.FEMALE);
     } catch (error) {
       console.log(error);
-      res.status(500).json("ERROR:", error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
 }
@@ -59,7 +65,7 @@ async function handleResponse(req, res, serve) {
   res.render("showPopular", {
     user: req.AuthPayload,
     moment: moment,
-    title: `<i class="fas fa-venus"></i> Truyện con gái`,
+    title: title,
     mangas: orderManga(result.mangas),
     categories: types,
     navigator: {

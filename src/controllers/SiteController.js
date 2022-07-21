@@ -5,7 +5,7 @@ const Manga = require("../models/Manga");
 const Slide = require("../models/Slide");
 const path = require("path");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
-const { ErrorResponse } = require("../helper/response");
+const { ErrorResponse, SuccessResponse } = require("../helper/response");
 const { orderManga } = require("../helper/order");
 const getRecentlyChapters = require("../helper/getRecentlyChapters");
 const { redirect } = require("../service/redirect");
@@ -79,7 +79,9 @@ class siteController {
           { anotherName: { $regex: searchStr, $options: "i" } },
           { author: { $regex: searchStr, $options: "i" } },
         ],
-      }).populate("contentId");
+      }).populate("contentId", {
+        chapters: { $slice: -1 },
+      });
 
       res.render("search", {
         status: true,
@@ -100,6 +102,30 @@ class siteController {
       );
     } catch (error) {
       res.status(400).json({ error: error });
+    }
+  }
+  async liveSearch(req, res) {
+    const payload = req.body.payload.trim();
+    try {
+      let search = await Manga.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { name: { $regex: payload, $options: "i" } },
+          { anotherName: { $regex: payload, $options: "i" } },
+          { author: { $regex: payload, $options: "i" } },
+        ],
+      }).populate("contentId", {
+        chapters: { $slice: -1 },
+      });
+
+      search = search.slice(0, 10);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, search));
+    } catch (error) {
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.SERVER_ERROR, MESSAGE.ERROR_SERVER));
     }
   }
 }

@@ -14,6 +14,26 @@ header .navbar {
     header .navbar .form-seach .btn-search {
       position: absolute;
       right: 13px; }
+    header .navbar .form-seach #result-live-search {
+      position: absolute;
+      top: 50px;
+      z-index: 100;
+      width: 100%;
+      max-height: 300px;
+      padding: 5px;
+      overflow-y: scroll; }
+      header .navbar .form-seach #result-live-search .found-manga {
+        border-bottom: #ebebeb solid 1px; }
+        header .navbar .form-seach #result-live-search .found-manga .found-manga__cover {
+          width: 65px;
+          height: 100px; }
+          header .navbar .form-seach #result-live-search .found-manga .found-manga__cover img {
+            object-fit: contain;
+            margin-bottom: 5px; }
+        header .navbar .form-seach #result-live-search .found-manga .found-manga__info {
+          padding: 0px 5px; }
+      header .navbar .form-seach #result-live-search .found-manga:hover .found-manga {
+        background-color: white !important; }
   header .navbar .user {
     background-color: gray;
     padding: 5px;
