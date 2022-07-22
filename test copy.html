@@ -6,170 +6,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <style>
-    /* Some Custom Styles
-    --------------------------- */
-
-    body {
-      font-family: "Inter", sans-serif;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    h1 {
-      font-weight: 600;
-      margin-top: 0;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      min-height: 100%;
-      position: absolute;
-      top: 0;
-    }
-
-    p {
-      max-width: 420px;
-    }
-
-    a {
-      color: #333;
-    }
-
-    /* Light Mode Button Styles
-    --------------------------- */
-
-    .light-mode-button {
-      background: 0;
-      border: 0;
-      box-sizing: border-box;
-      cursor: pointer;
-      height: 40px;
-      width: 100px;
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0);
-      margin-top: 20px;
-    }
-
-    .light-mode-button:focus {
-      outline: none;
-      /* Not ideal for accessibility */
-    }
-
-    .light-mode-button span:nth-child(1) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100px;
-      height: 40px;
-      border-radius: 20px;
-      background-color: #d6d7db;
-      box-shadow: inset 1px 1px 3px 0 rgb(0 0 0 / 40%);
-      transition: 0.3s;
-    }
-
-    .light-mode-button span:nth-child(2) {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      width: 30px;
-      height: 30px;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 1px 1px 2px 0 rgb(0 0 0 / 40%);
-      transition: 0.3s;
-    }
-
-    /* Light & Dark Mode Styles
-    --------------------------- */
-
-    body {
-      background-color: #f6f6f6;
-      transition: background-color 0.3s;
-    }
-
-    body[light-mode="dark"] {
-      background-color: #141516;
-      color: #ced4e2;
-    }
-
-    body[light-mode="dark"] .light-mode-button span:nth-child(1) {
-      background-color: #ced4e2;
-      color: #141516;
-    }
-
-    body[light-mode="dark"] .light-mode-button span:nth-child(2) {
-      left: 65px;
-      background-color: #141516;
-    }
-
-    body[light-mode="dark"] a {
-      color: #141516;
-    }
-  </style>
 </head>
 
-
-
 <body>
-  <div class="container">
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function() {
+      this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document,
+        s = d.createElement('script');
+      s.src = 'https://my-site-zlkjtgow8a.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
 
-    <h1>Dark Mode Toggle</h1>
-    <p>A simple dark mode toggle that uses HTML localStorage to store and apply settings.</p>
-    <p>Steps / tutorial <a href="https://henryegloff.com/how-to-code-a-simple-dark-mode-toggle">on my website</a>.</p>
-    <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
-      <span></span>
-      <span></span>
-    </button>
-
-  </div>
-
+  <script id="dsq-count-scr" src="http://127.0.0.1:5500/test%20copy.html" async></script>
 </body>
-
-
-<script>
-  var app = document.getElementsByTagName("BODY")[0];
-  if (localStorage.lightMode == "dark") {
-    app.setAttribute("light-mode", "dark");
-  }
-</script>
-<script>
-  /*
-  Steps / article on my website:
-  https://henryegloff.com/how-to-code-a-simple-dark-mode-toggle/
-
-  */
-
-  function toggle_light_mode() {
-    var app = document.getElementsByTagName("BODY")[0];
-    if (localStorage.lightMode == "dark") {
-      localStorage.lightMode = "light";
-      app.setAttribute("light-mode", "light");
-    } else {
-      localStorage.lightMode = "dark";
-      app.setAttribute("light-mode", "dark");
-    }
-  }
-
-  window.addEventListener(
-    "storage",
-    function() {
-      if (localStorage.lightMode == "dark") {
-        app.setAttribute("light-mode", "dark");
-      } else {
-        app.setAttribute("light-mode", "light");
-      }
-    },
-    false
-  );
-</script>
-<script>
-  const arr = [1, 2, 3]
-  console.log(arr[3]);
-</script>
 
 </html>

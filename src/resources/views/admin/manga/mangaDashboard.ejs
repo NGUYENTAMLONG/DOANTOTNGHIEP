@@ -23,7 +23,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" onclick="myFunction()">
     <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
   </nav>
   <div class="container mt-2">
@@ -44,6 +44,7 @@
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center">
         <a href="#" class="btn btn-sm btn-info">Thống kê <i class='bx bxs-pie-chart-alt-2'></i></a>
+        <a href="https://my-site-zlkjtgow8a.disqus.com/admin/moderate/pending" class="btn btn-sm btn-danger" target="_blank">Quản lí bình luận <i class='bx bx-message-dots'></i></a>
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
           <span></span>
           <span></span>
@@ -173,6 +174,12 @@
        <span title="Số lượng đánh giá">
          <i class="fas fa-abacus"></i> <br> ${ data.counting } <br>
        </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span title="Số bình luận">
+            <i class="fas fa-comments"></i> <br>
+            <h1><span class="fb-comments-count" data-href="http://localhost.local/detail/one-piece"></span></h1> <br>
+          </span>
         </div>
       </div>
    `

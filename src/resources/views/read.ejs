@@ -24,15 +24,15 @@
         <li class="breadcrumb-item active" aria-current="page">chapter-<%= reading.Chapters.chapters.chapterNumber%></li>
       </ol>
     </nav>
-    <p class="text-light">
-      <button class="btn btn-success">Chương trước</button>
-      <button class="btn btn-primary">Chương sau</button>
+    <div class="text-light d-flex justify-content-between">
+      <div class="btns-nav">
+      </div>
       <span class="float-right">
         Đăng lúc: <span class="badge badge-primary"><%= moment(reading.Chapters.chapters.createdTime).format("L") %> - <%= moment(reading.Chapters.chapters.createdTime).format("LT") %></span>
       </span>
-    </p>
+    </div>
     <div class="text-light text-center">
-      <b>Chương <%= reading.Chapters.chapters.chapterNumber%> - Tựa đề:</b>
+      <span class="badge badge-secondary">Chương <%= reading.Chapters.chapters.chapterNumber%> - Tựa đề:</span>
       <h2>
         <%= reading.Chapters.chapters.chapterName%>
       </h2>
@@ -47,10 +47,7 @@
       </span> <i class="fas fa-comments"></i></h3>
     <!-- Plugin Comments Facebook -->
     <div class="comments-area container bg-light">
-      <div id="fb-root"></div>
-      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
-
-      <div class="fb-comments" data-href="http://localhost.local/detail/<%= reading.slug %> /read/chapter-<%=reading.Chapters.chapters.chapterNumber %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
+      <div id="disqus_thread">
       </div>
     </div>
     <!-- ******************************** -->
@@ -117,6 +114,12 @@
                         </select>
                       ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
                    chapters[indexChapter + 1].chapterNumber}"><i class="fas fa-2x fa-caret-right ml-4"></i></a>`:""}`;
+
+          document.querySelector(".btns-nav").innerHTML = `${indexChapter !== 0 ? `<a href='/detail/${slug}/read/chapter-${
+                  chapters[indexChapter - 1].chapterNumber}' class="btn btn-success">Chương trước</a>`: ""
+          }
+          ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
+                   chapters[indexChapter + 1].chapterNumber}" class="btn btn-primary">Chương sau</a>`:""}`
         }
       });
   }
@@ -125,6 +128,15 @@
     location.replace(`${it.value}`);
   }
   renderNavigationBar('<%= reading.slug %>');
+</script>
+<script>
+  (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document,
+      s = d.createElement('script');
+    s.src = 'https://my-site-zlkjtgow8a.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
 </script>
 
 </html>

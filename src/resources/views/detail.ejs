@@ -65,7 +65,7 @@
               <i class="fas fa-abacus"></i> <%= manga.statistical.counting %>
             </span>
             <span data-toggle="tooltip" data-placement="bottom" title="Tổng số bình luận">
-              <i class="fas fa-comments"></i><span class="fb-comments-count" data-href="http://localhost.local/detail/<%= manga.slug %>"></span>
+              <i class="fas fa-comments"></i> FIX
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
@@ -161,11 +161,9 @@
   <section class="section container text-center" id="section-3">
     <h3>Bình luận tổng quan <i class="fas fa-comments"></i></h3>
     <!-- Plugin Comments Facebook -->
-    <div class="comments-area bg-light">
-      <div id="fb-root"></div>
-      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="Jmfm3uJg"></script>
-      <div class="fb-comments" data-href="http://localhost.local/detail/<%= manga.slug %>" data-colorscheme="dark" data-width="100%" data-numposts="5">
-      </div>
+    <!-- ******************************** -->
+    <!-- Bình luận ver 2 -->
+    <div id="disqus_thread">
     </div>
     <!-- ******************************** -->
   </section>
@@ -290,6 +288,9 @@
           loop: true,
           margin: 10,
           nav: true,
+          autoplay: true,
+          autoplayTimeout: 4000,
+          autoplayHoverPause: true,
           responsive: {
             0: {
               items: 1
@@ -307,6 +308,15 @@
         console.error('Error:', error);
       });
   }
+</script>
+<script>
+  (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document,
+      s = d.createElement('script');
+    s.src = 'https://my-site-zlkjtgow8a.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
 </script>
 
 </html>
