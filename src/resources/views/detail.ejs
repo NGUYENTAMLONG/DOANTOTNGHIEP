@@ -137,6 +137,7 @@
             <th scope="col" class="stt">STT</th>
             <th scope="col" class="chapter">Chương</th>
             <th scope="col">Tên chương</th>
+            <th scope="col" class="text-center"><i class="fas fa-chart-pie"></i></th>
             <th scope="col" class="text-right">Ngày đăng</th>
           </tr>
         </thead>
@@ -150,6 +151,9 @@
             <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
                 <%= chapter.chapterName%>
               </a></td>
+            <td class="text-center">
+              <span><i class="fas fa-eye"></i> <%= chapter.statistical.views %></span>
+            </td>
             <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
           </tr>
           <% }) %>

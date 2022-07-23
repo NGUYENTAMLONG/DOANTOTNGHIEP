@@ -3,14 +3,15 @@ const moment = require("moment");
 const User = require("../models/User");
 const { redirect } = require("../service/redirect");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
-const counterVisitor = require("../service/counterVisiter");
+const counter = require("../service/counterVisiter");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
 
+let contentId = "";
 class detailController {
   async showDetailManga(req, res) {
     const slug = req.params.slug;
     try {
-      await counterVisitor(req, res);
+      await counter.counterVisitor(req, res);
       const manga = await Manga.findOne({ slug: slug }).populate("contentId");
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
@@ -22,7 +23,7 @@ class detailController {
         checkFollow = foundUser.follows.includes(manga._id);
         console.log(checkFollow);
       }
-
+      contentId = manga.contentId;
       res.render("detail", {
         slug,
         manga,
@@ -39,10 +40,11 @@ class detailController {
   async readDetailManga(req, res) {
     const { slug } = req.params;
     try {
-      await counterVisitor(req, res);
+      await counter.counterVisitor(req, res);
+      await counter.counterView(req, res, contentId);
       const results = await Manga.aggregate([
         {
-          $match: { slug: req.params.slug },
+          $match: { slug: slug },
         },
         {
           $addFields: {

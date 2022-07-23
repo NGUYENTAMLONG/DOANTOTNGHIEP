@@ -55,6 +55,7 @@
           <th scope="col" data-field="serve" data-sortable="true" data-formatter="serveFormatter">Đối tượng</th>
           <th scope="col" data-field="description" data-formatter="descFormatter">Mô tả</th>
           <th scope="col" data-field="status" data-sortable="true">Tình trạng</th>
+          <th scope="col" data-field="translation" data-sortable="true" data-formatter="translationFormatter">Người/Nhóm dịch</th>
           <th scope="col" data-field="hot" data-sortable="true" data-formatter="hotFormatter">Hot</th>
           <th scope="col" data-field="statistical" data-sortable="true" data-formatter="statisticalFormatter">Thống kê</th>
           <th scope="col" data-field="contentId" data-formatter="chapterFormatter">Chương</th>
@@ -130,6 +131,14 @@
       ${data}
     </div>
     `
+  }
+
+  function translationFormatter(data) {
+    return `
+ <div class="text-center">
+   ${data}
+ </div>
+ `
   }
 
   function hotFormatter(data) {

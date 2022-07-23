@@ -1,6 +1,6 @@
 const Slide = require("../models/Slide");
 const jwt = require("jsonwebtoken");
-const { VALUES, types } = require("../config/default");
+const { VALUES, types, PENDING } = require("../config/default");
 const moment = require("moment");
 const Manga = require("../models/Manga");
 const Chapter = require("../models/Chapter");
@@ -152,6 +152,7 @@ class MangaController {
       type,
       serve,
       status,
+      translation,
       hot,
       description,
       image,
@@ -160,7 +161,6 @@ class MangaController {
     if (
       !name ||
       !anotherName ||
-      !author ||
       type.length === 0 ||
       !serve ||
       !status ||
@@ -175,14 +175,16 @@ class MangaController {
         );
     }
     try {
-      const initializedChapter = await Chapter.create({});
+      const initializedChapter = await Chapter.create();
       const newManga = new Manga({
         name,
         anotherName,
-        author,
+        author: author.length !== 0 ? author : PENDING.INFOMATION,
         type,
         serve,
         status,
+        translation:
+          translation.length !== 0 ? translation : PENDING.INFOMATION,
         hot,
         description,
         image,
@@ -207,7 +209,7 @@ class MangaController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  //4.Get Update Manga Page
+  //4 Update Manga
   async updateManga(req, res) {
     const {
       name,
@@ -218,6 +220,7 @@ class MangaController {
       status,
       hot,
       description,
+      translation,
       image,
       oldImage,
       country,
@@ -227,7 +230,6 @@ class MangaController {
       !slug ||
       !name ||
       !anotherName ||
-      !author ||
       type.length === 0 ||
       !serve ||
       !status ||
@@ -245,15 +247,17 @@ class MangaController {
       const payload = {
         name,
         anotherName,
-        author,
+        author: author.length !== 0 ? author : PENDING.INFOMATION,
         type,
         serve,
         status,
+        translation:
+          translation.length !== 0 ? translation : PENDING.INFOMATION,
         hot,
         description,
         country,
       };
-
+      console.log(payload, image);
       if (image) {
         payload.image = image;
         fs.unlinkSync(
@@ -408,6 +412,11 @@ class MangaController {
         chapterNumber: parseFloat(chapterNumber),
         chapterName: chapterName,
         chapterContent: "",
+        statistical: {
+          views: 0,
+          comments: 0,
+          likes: 0,
+        },
         createdTime: moment().format(),
         updatedTime: moment().format(),
       };

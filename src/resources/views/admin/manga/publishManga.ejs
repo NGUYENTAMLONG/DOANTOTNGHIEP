@@ -56,6 +56,7 @@
               <h6>Tác giả</h6>
             </label>
             <input type="text" class="form-control" id="author" name="author" value="" required>
+            <small id="authorHelp" class="form-text text-muted">Để trống nếu chưa cập nhật</small>
           </div>
           <div class="input_type">
             <label for="type">
@@ -63,19 +64,19 @@
             </label>
             <div class="form-check row d-flex justify-content-between">
               <% types.forEach(function(type,index){ %>
-              <% if(index=== 10 || index === 20 || index === 30) { %>
+              <% if(index=== 15 || index === 30 || index === 45) { %>
             </div>
             <% } %>
-            <% if(index=== 0 || index === 10 || index === 20) { %>
-            <div class="column">
+            <% if(index=== 0 || index === 15|| index === 30 ) { %>
+            <div class="column" style="font-size: 14px">
               <div class="checkbox-type">
-                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" />
-                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type.name %>" />
+                <label class="form-check-label" for="type_<%= index %>"><%= type.name %> </label>
               </div>
               <% }else{ %>
               <div class="checkbox-type">
-                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>">
-                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type.name %>">
+                <label class="form-check-label" for="type_<%= index %>"><%= type.name %> </label>
               </div>
               <% } %>
               <%})%>
@@ -129,6 +130,13 @@
               </label>
             </div>
           </div>
+        </div>
+        <div class="input_translation">
+          <label for="translation">
+            <h6>Người/Nhóm dịch</h6>
+          </label>
+          <input type="text" class="form-control" id="translation" name="translation">
+          <small id="authorHelp" class="form-text text-muted">Để trống nếu chưa cập nhật</small>
         </div>
         <div class="input_hot d-flex">
           <label for="hot">
@@ -201,6 +209,7 @@
     const name = document.getElementById("name").value;
     const anotherName = document.getElementById("anotherName").value;
     const author = document.getElementById("author").value;
+    const translation = document.getElementById("translation").value;
     const typeArray = [];
     const serve = $("input[name='serve']:checked").val();
     const status = $("input[name='status']:checked").val();
@@ -212,7 +221,7 @@
       typeArray.push(type.value)
     });
 
-    if (!name || !anotherName || !author || typeArray.length === 0 || !serve || !status || !description || !country) {
+    if (!name || !anotherName || typeArray.length === 0 || !serve || !status || !description || !country) {
       swal({
         title: "Thông báo",
         text: "Bạn phải điền đầy đủ thông tin >.<",
@@ -224,7 +233,8 @@
     // console.log({
     //   name,
     //   anotherName,
-    //   author,
+    //   author: author.length,
+    //   translation: translation.length,
     //   type: typeArray,
     //   serve,
     //   status,
@@ -238,6 +248,7 @@
       type: typeArray,
       serve,
       status,
+      translation,
       hot,
       description,
       country

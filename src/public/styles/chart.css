@@ -1,0 +1,115 @@
+.row .chart {
+  padding: 20px;
+  text-align: center;
+  box-shadow: 3px 3px 6px 3px #888888; }
+  .row .chart #header-1,
+  .row .chart #header-2 {
+    background-color: #00bcd4;
+    position: relative;
+    left: -40px;
+    color: #fff;
+    font-weight: bold; }
+  .row .chart #header-1 {
+    width: 200px;
+    padding: 10px 0;
+    font-size: 20px; }
+  .row .chart #header-1::after {
+    content: "";
+    height: 100%;
+    width: 10px;
+    position: absolute;
+    right: -6px;
+    top: 0;
+    background-color: #196d78;
+    transform: skew(10deg); }
+  .row .chart #header-1::before,
+  .row .chart #header-2::after,
+  .row .chart #header-2::before {
+    content: "";
+    border: 10px solid;
+    border-color: #196d78 #196d78 transparent transparent;
+    position: absolute;
+    left: 0;
+    bottom: -20px; }
+  .row .chart #header-2 {
+    margin: 40px 0;
+    padding: 20px;
+    width: calc(100% + 80px); }
+  .row .chart #header-2::after {
+    left: auto;
+    right: 0;
+    border-color: #196d78 transparent transparent #196d78; }
+  .row .chart ul {
+    height: 400px;
+    width: 100%;
+    overflow-y: scroll; }
+  .row .chart ul .rank {
+    margin-left: -40px;
+    background-color: black;
+    color: white;
+    margin-bottom: 5px;
+    padding: 5px 0px; }
+    .row .chart ul .rank .rank__number {
+      width: 20px;
+      margin-top: -5px;
+      z-index: 100;
+      zoom: 2; }
+    .row .chart ul .rank .rank__img {
+      margin-left: 5px; }
+      .row .chart ul .rank .rank__img img {
+        width: 70px;
+        height: 100px;
+        object-fit: cover; }
+    .row .chart ul .rank .rank__info {
+      float: right;
+      width: 100%;
+      transition: 0.5s ease-in-out; }
+      .row .chart ul .rank .rank__info p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden; }
+  .row .chart ul .rank:hover .rank__info {
+    background-color: #00bcd4;
+    margin-left: 10px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px; }
+  .row .chart .rank-1 .rank__number {
+    position: relative;
+    background-color: #ffd700; }
+  .row .chart .rank-1 .rank__number::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: solid 10px black;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent; }
+  .row .chart .rank-2 .rank__number {
+    position: relative;
+    background-color: #c0c0c0; }
+  .row .chart .rank-2 .rank__number::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: solid 10px black;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent; }
+  .row .chart .rank-3 .rank__number {
+    position: relative;
+    background-color: #b87333; }
+  .row .chart .rank-3 .rank__number::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: solid 10px black;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent; }

@@ -73,11 +73,18 @@
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Đã hoàn thành" <% if(manga.status === "Hoàn thành"){%> checked <% } %> />
+              <input class="form-check-input" type="radio" name="status" id="accomplished" value="Hoàn thành" <% if(manga.status === "Hoàn thành"){%> checked <% } %> />
               <label class="form-check-label" for="accomplished">
                 Hoàn thành
               </label>
             </div>
+          </div>
+          <div class="input_translation">
+            <label for="translation">
+              <h6>Người/Nhóm dịch</h6>
+            </label>
+            <input type="text" class="form-control" id="translation" name="translation" value="<%= manga.translation %>">
+            <small id="authorHelp" class="form-text text-muted">Để trống nếu chưa cập nhật</small>
           </div>
           <div class="input_hot mb-1">
             <label for="hotcheck">
@@ -135,19 +142,19 @@
             <h5>Thể loại</h5>
             <div class="form-check row d-flex justify-content-between">
               <% types.forEach(function(type,index){ %>
-              <% if(index=== 10 || index === 20 || index === 30) { %>
+              <% if(index=== 15 || index === 30 || index === 45) { %>
             </div>
             <% } %>
-            <% if(index=== 0 || index === 10 || index === 20) { %>
+            <% if(index=== 0 || index === 15 || index === 30) { %>
             <div class="column m-4">
               <div class="checkbox-type">
-                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" <%= manga.type.includes(type) ? "checked" : "" %> />
-                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type.name %>" <%= manga.type.includes(type.name) ? "checked" : "" %> />
+                <label class="form-check-label" for="type_<%= index %>"><%= type.name %> </label>
               </div>
               <% }else{ %>
               <div class="checkbox-type">
-                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type %>" <%= manga.type.includes(type) ? "checked" : "" %> />
-                <label class="form-check-label" for="type_<%= index %>"><%= type %> </label>
+                <input type="checkbox" class="form-checbox-type" id="type_<%= index %>" value="<%= type.name %>" <%=  manga.type.includes(type.name)  ? "checked" : "" %> />
+                <label class="form-check-label" for="type_<%= index %>"><%= type.name %> </label>
               </div>
               <% } %>
               <%})%>
@@ -288,6 +295,7 @@
     const name = document.getElementById("name").value;
     const anotherName = document.getElementById("anotherName").value;
     const author = document.getElementById("author").value;
+    const translation = document.getElementById("translation").value;
     const typeArray = [];
     const serve = $("input[name='serve']:checked").val();
     const status = $("input[name='status']:checked").val();
@@ -298,7 +306,7 @@
     document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
       typeArray.push(type.value)
     });
-    if (name === "" || anotherName === "" || author === "" || typeArray.length === 0 || description === "") {
+    if (name === "" || anotherName === "" || typeArray.length === 0 || description === "") {
       swal({
         title: "Thông báo",
         text: "Bạn phải điền đầy đủ thông tin >.<",
@@ -314,11 +322,13 @@
       type: typeArray,
       serve,
       status,
+      translation,
       hot,
       description,
       oldImage,
       country
     }
+    console.log(mangaInfo)
     const imgFiles = document.getElementById("gallery-photo-cover");
 
     //set up avatar file 
@@ -346,7 +356,7 @@
 
   function submitPayload(slug, mangaInfo) {
     fetch(`/management/content/manga/updateManga/${slug}`, {
-        method: 'POST', // or 'PUT'
+        method: 'PATCH', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
         },

@@ -2,16 +2,20 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const slug = require("mongoose-slug-updater");
 const Chapter = require("./Chapter");
+
+const { PENDING } = require("../config/default");
+
 mongoose.plugin(slug);
 const MangaSchema = new Schema(
   {
     name: { type: String, required: true },
     anotherName: { type: String },
     image: { type: String }, // updating...(ex: require)
-    author: { type: String, required: true },
+    author: { type: String, required: true, default: PENDING.INFOMATION },
     type: { type: Array, required: true },
     serve: { type: String, required: true },
     description: { type: String, required: true },
+    translation: { type: String, required: true, default: PENDING.INFOMATION },
     status: { type: String, required: true },
     hot: { type: Boolean },
     statistical: {
@@ -20,6 +24,7 @@ const MangaSchema = new Schema(
         likes: 0,
         follows: 0,
         views: 0,
+        comments: 0,
         ranks: 0,
         rating: 0,
         counting: 0,
@@ -31,7 +36,7 @@ const MangaSchema = new Schema(
     }, // updating... (ex: require)
     fanmade: {
       type: Boolean,
-      // required: true,
+      required: true,
       default: false,
     },
     country: {

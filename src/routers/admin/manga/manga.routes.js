@@ -107,7 +107,7 @@ router.post(
 );
 //3.3 Update Manga
 // ex: /management/content/manga/updateManga/:slug - Method: POST
-router.post("/updateManga/:slug", updateManga);
+router.patch("/updateManga/:slug", updateManga);
 
 // 4. Soft Delete Manga
 // ex: /management/content/manga/deleteManga/:slug - Method: DELETE
