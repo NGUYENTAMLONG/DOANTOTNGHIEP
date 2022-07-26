@@ -25,7 +25,7 @@ class JustUpdatedController {
         .exec();
 
       res.render("showJustUpdated", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fab fa-hotjar"></i> Truyện mới cập nhật`,
         mangas: orderManga(result.mangas),

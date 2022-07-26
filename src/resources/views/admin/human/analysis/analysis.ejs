@@ -6,8 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ANALYSIS</title>
-  <!----======== CSS ======== -->
-  <link rel="stylesheet" href="/css/menu.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <!----===== Fontawesome Icon CSS ===== -->
@@ -19,40 +17,9 @@
 
 <body>
 
-  <%- include("../../../partials/menu") %>
-  <section class="home" style="padding: 0px 20px;">
-    <div class="text"> <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
-    </div>
-    <div class="mother-box">
-      <h1>
-        Phân tích
-      </h1>
-
-      <div class="row" id="row-1">
-        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
-          <a class="card bg-dark" href="#">
-            <div class="card-body">
-              <h5 class="card-title"><i class='bx bxs-user-pin text-primary'></i> Quản trị viên</h5>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="row" id="row-2" style="margin: 0px 20px;">
-      </div>
-      <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-8 p-2">
-          <canvas id="myChart"></canvas>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 p-2">
-          <canvas id="myDoughnutChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h1>Analysis</h1>
 
 </body>
-<%- include("../../../partials/scriptSidebar") %>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   const labels = [

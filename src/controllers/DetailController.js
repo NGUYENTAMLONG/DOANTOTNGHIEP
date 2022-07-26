@@ -18,8 +18,8 @@ class detailController {
       }
 
       let checkFollow = false;
-      if (req.AuthPayload !== undefined) {
-        const foundUser = await User.findById(req.AuthPayload._id);
+      if (req.user !== undefined) {
+        // const foundUser = await User.findById(req.user._id);
         checkFollow = foundUser.follows.includes(manga._id);
         console.log(checkFollow);
       }
@@ -27,7 +27,7 @@ class detailController {
       res.render("detail", {
         slug,
         manga,
-        user: req.AuthPayload,
+        user: req.user,
         moment,
         followFlag: checkFollow,
       });
@@ -77,7 +77,7 @@ class detailController {
         redirect(req, res, STATUS.NOT_FOUND);
       }
       res.render("read", {
-        user: req.AuthPayload,
+        user: req.user,
         reading: results[0],
         moment,
       });

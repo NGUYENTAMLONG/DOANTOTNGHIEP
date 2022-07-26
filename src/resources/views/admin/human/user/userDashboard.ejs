@@ -7,8 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>USER DASHBOARD</title>
   <link rel="icon" href="/image/tablogo.png">
-  <!----======== CSS ======== -->
-  <link rel="stylesheet" href="/css/menu.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <!--<title>Dashboard Sidebar Menu</title>-->
@@ -17,10 +15,10 @@
 </head>
 
 <body>
-  <%- include("../../../partials/menu") %>
-
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
   <section class="home">
-    <div class="text"> <a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></div>
     <div class="container">
       <h2> Danh sách tài khoản người dùng</h2>
       <table class="table table-dark table-hover table-striped table-responsive">
@@ -67,7 +65,6 @@
   </section>
 
 </body>
-<%- include("../../../partials/scriptSidebar") %>
 
 
 </html>

@@ -32,7 +32,7 @@ class historyController {
         .skip(startPage)
         .exec();
       res.render("showHistory", {
-        user: req.AuthPayload,
+        user: req.user,
         moment,
         categories: types,
         mangas: result.mangas,
@@ -72,7 +72,7 @@ class historyController {
         .exec();
       // return res.json(result.mangas);
       res.render("showHistory", {
-        user: req.AuthPayload,
+        user: req.user,
         moment,
         categories: types,
         mangas: result.mangas,

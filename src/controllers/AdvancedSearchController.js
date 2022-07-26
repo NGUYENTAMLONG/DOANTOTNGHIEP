@@ -12,7 +12,7 @@ class AdvancedSearchController {
   async show(req, res, next) {
     try {
       res.render("showAdvancedSearch", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         // lodash: lodash,
         categories: types,
@@ -36,7 +36,7 @@ class AdvancedSearchController {
       });
       //   return res.json(foundMangas);
       res.render("showResultAdvancedSearch", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         mangas: foundMangas,
       });

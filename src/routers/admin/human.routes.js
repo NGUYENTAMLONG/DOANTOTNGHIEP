@@ -21,8 +21,6 @@ router.use("/", async (req, res) => {
       res.render("admin/humanDashboard", {
         adminList,
         userList,
-        mangaList,
-        slideList,
         moment,
       });
     })

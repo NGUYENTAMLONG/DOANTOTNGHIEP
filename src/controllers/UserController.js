@@ -9,11 +9,10 @@ const { VALUES } = require("../config/default");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
 dotenv.config();
-class userManagementController {
-  async showUserDashboard(req, res) {
+class UserController {
+  async showUser(req, res) {
     try {
-      const userList = await User.find();
-      res.render("admin/human/user/userDashBoard", { userList, moment });
+      res.json("User");
     } catch (error) {
       console.log(error);
       res
@@ -23,4 +22,4 @@ class userManagementController {
   }
 }
 
-module.exports = new userManagementController();
+module.exports = new UserController();

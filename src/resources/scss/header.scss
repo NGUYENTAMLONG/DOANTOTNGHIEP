@@ -102,6 +102,17 @@ header {
         }
       }
     }
+    #registerModal {
+      .password-field {
+        position: relative;
+        i {
+          color: $color-4;
+          position: absolute;
+          top: 45px;
+          right: 20px;
+        }
+      }
+    }
   }
   .category {
     height: 50px;

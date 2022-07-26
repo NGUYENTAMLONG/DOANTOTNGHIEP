@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { PASSPORT } = require("../config/default");
+
 const UserSchema = new Schema(
   {
     username: {
@@ -9,12 +11,17 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
+      default: "",
+    },
+    passport: {
+      type: String,
       required: true,
+      default: PASSPORT.LOCAL,
     },
     email: { type: String, required: false, unique: true },
     dob: {
       type: Date, //dob: Date of Birth
-      required: true,
+      default: "",
     },
     avatar: {
       type: String,
@@ -22,9 +29,15 @@ const UserSchema = new Schema(
     },
     active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
-    follows: {
+    followedList: {
+      type: Array,
+    },
+    likedList: {
+      type: Array,
+    },
+    ratedList: {
       type: Array,
     },
   },

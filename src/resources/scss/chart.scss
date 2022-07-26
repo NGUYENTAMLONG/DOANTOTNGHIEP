@@ -109,6 +109,9 @@
     }
     .rank-1 {
       .rank__number {
+        b {
+          zoom: 2;
+        }
         position: relative;
         background-color: $color-gold;
       }
@@ -118,6 +121,9 @@
     }
     .rank-2 {
       .rank__number {
+        b {
+          zoom: 1.5;
+        }
         position: relative;
         background-color: $color-silver;
       }
@@ -127,6 +133,9 @@
     }
     .rank-3 {
       .rank__number {
+        b {
+          zoom: 1.2;
+        }
         position: relative;
         background-color: $color-copper;
       }

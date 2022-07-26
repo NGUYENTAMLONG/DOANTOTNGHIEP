@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const appRoot = require("app-root-path");
-const { showUserDashboard } = require("../../../controllers/UserController");
+const { showUserDashboard } = require("../../../controllers/AdminController");
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ const storageUser = multer.diskStorage({
 const uploadUser = multer({ storage: storageUser }); //for user
 
 // route:-> /management/human/user/...
-router.get("/manage_user", showUserDashboard);
+router.get("/", showUserDashboard);
 
 //route (API-JSON): -> /management/human/user/api/...
 module.exports = router;

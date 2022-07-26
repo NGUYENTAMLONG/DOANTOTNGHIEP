@@ -1,0 +1,36 @@
+#section-1 .card {
+  text-decoration: none;
+  position: relative; }
+  #section-1 .card .card-title {
+    color: white !important; }
+  #section-1 .card .card-body {
+    position: relative; }
+  #section-1 .card .card-body::after {
+    content: "";
+    position: absolute;
+    bottom: -40px;
+    right: -40px;
+    height: 150px;
+    width: 150px;
+    border: 20px solid rgba(255, 255, 255, 0.411);
+    border-radius: 50%; }
+
+#section-1 .card::after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  height: 100px;
+  width: 100px;
+  border: 20px solid rgba(255, 255, 255, 0.411);
+  border-radius: 50%; }
+
+#section-1 .card::before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  height: 50px;
+  width: 50px;
+  border: 15px solid rgba(255, 255, 255, 0.411);
+  border-radius: 50%; }

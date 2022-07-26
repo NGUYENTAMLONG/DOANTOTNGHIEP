@@ -63,7 +63,7 @@ async function handleResponse(req, res, serve) {
     title = `<i class="fas fa-flag-checkered"></i> Truyện tổng hợp`;
   }
   res.render("showPopular", {
-    user: req.AuthPayload,
+    user: req.user,
     moment: moment,
     title: title,
     mangas: orderManga(result.mangas),

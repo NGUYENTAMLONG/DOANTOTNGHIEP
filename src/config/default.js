@@ -7,6 +7,11 @@ module.exports.VALUES = {
 };
 
 module.exports.OPTION_COOKIE = { maxAge: 900000, httpOnly: true };
+module.exports.PASSPORT = {
+  LOCAL: "LOCAL",
+  GOOGLE: "GOOGLE",
+  FACEBOOK: "FACEBOOK",
+};
 module.exports.ROLES = {
   CONTENT_ADMIN: {
     CODE: "CA",

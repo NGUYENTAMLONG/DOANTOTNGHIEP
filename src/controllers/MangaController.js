@@ -175,8 +175,23 @@ class MangaController {
         );
     }
     try {
-      const initializedChapter = await Chapter.create();
+      const initializedChapter = await Chapter.create({});
       const newManga = new Manga({
+        name,
+        anotherName,
+        author: author.length !== 0 ? author : PENDING.INFOMATION,
+        type,
+        serve,
+        status,
+        translation:
+          translation.length !== 0 ? translation : PENDING.INFOMATION,
+        hot,
+        description,
+        image,
+        country,
+        contentId: initializedChapter._id,
+      });
+      console.log({
         name,
         anotherName,
         author: author.length !== 0 ? author : PENDING.INFOMATION,

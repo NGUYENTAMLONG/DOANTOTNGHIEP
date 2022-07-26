@@ -25,7 +25,7 @@ class MangaController {
         .skip(startPage)
         .exec();
       res.render("showCategory", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         mangas: orderManga(result.mangas),
         category: req.params.type,

@@ -96,7 +96,7 @@
               <%= manga.description %>
             </p>
             <div class="text-center">
-              <button class="show-more btn btn-primary"> Show More <i class="fas fa-angle-down"></i></button>
+              <button class="show-more btn btn-primary" onclick="showMore()"> Show More <i class="fas fa-angle-down"></i></button>
             </div>
           </div>
         </div>
@@ -212,6 +212,9 @@
   <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
       <%= chapter.chapterName%>
     </a></td>
+      <td class="text-center">
+        <span><i class="fas fa-eye"></i> <%= chapter.statistical.views %></span>
+      </td>
   <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
 </tr>
 <% }) %>`;
@@ -227,6 +230,9 @@
   <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber %>">
       <%= chapter.chapterName%>
     </a></td>
+    <td class="text-center">
+      <span><i class="fas fa-eye"></i> <%= chapter.statistical.views %></span>
+    </td>
   <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
 </tr>
 <% }) %>`;

@@ -8,17 +8,17 @@ const { response } = require("express");
 class FollowController {
   async showFollowManga(req, res) {
     try {
-      if (req.AuthPayload !== undefined) {
-        const foundUser = await User.findById(req.AuthPayload._id);
+      if (req.user !== undefined) {
+        // const foundUser = await User.findById(req.user._id);
         const listFollowManga = foundUser.follows;
         const list = await Manga.find({
           _id: listFollowManga,
         });
         const listFollowMangaJustUpdated = filterFollow(list);
         return res.render("showFollow", {
+          user: req.user,
           mangas: listFollowMangaJustUpdated,
           counter: listFollowMangaJustUpdated.length,
-          user: req.AuthPayload,
         });
       }
       return res.json("NOT FOUND");
@@ -39,15 +39,7 @@ class FollowController {
         );
     }
     try {
-      if (req.AuthPayload !== undefined) {
-        const foundUser = await User.findByIdAndUpdate(req.AuthPayload._id, {
-          $addToSet: { follows: { $each: [mangaId] } },
-        });
-        return res.status(STATUS.SUCCESS).json(
-          new SuccessResponse(MESSAGE.UPDATE_SUCCESS, {
-            counter: foundUser.follows.length + 1,
-          })
-        );
+      if (req.user !== undefined) {
       }
       return res.json("NOT ACCESS");
     } catch (error) {
@@ -67,15 +59,7 @@ class FollowController {
         );
     }
     try {
-      if (req.AuthPayload !== undefined) {
-        const foundUser = await User.findByIdAndUpdate(req.AuthPayload._id, {
-          $pull: { follows: mangaId },
-        });
-        return res.status(STATUS.SUCCESS).json(
-          new SuccessResponse(MESSAGE.DELETE_SUCCESS, {
-            counter: foundUser.follows.length - 1,
-          })
-        );
+      if (req.user !== undefined) {
       }
       return res.json("NOT ACCESS");
     } catch (error) {

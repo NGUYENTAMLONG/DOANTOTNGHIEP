@@ -81,6 +81,13 @@ header .navbar {
     transform: scale(1.5) rotate(13deg);
     color: #c4402f;
     margin-left: 10px; }
+  header .navbar #registerModal .password-field {
+    position: relative; }
+    header .navbar #registerModal .password-field i {
+      color: #343a40;
+      position: absolute;
+      top: 45px;
+      right: 20px; }
 
 header .category {
   height: 50px;

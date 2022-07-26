@@ -23,14 +23,9 @@ class Validate {
   //     return typeof address === "string";
   //   }
 
-  //   ValidateAge(age) {
-  //     return typeof age === "number";
-  //   }
-
   ValidateBlank(text) {
     // method check whitespace from both ends of a string and returns true/false
     const textLengh = text.length;
-
     if (text.lastIndexOf(" ") === textLengh - 1 || text.indexOf(" ") === 0) {
       return false;
     }

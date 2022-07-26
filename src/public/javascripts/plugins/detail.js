@@ -1,19 +1,19 @@
 //Show more & show less Description
-const btnShowMore = document.querySelector(".show-more");
 const textDesc = document.querySelector(".manga-info__desc p");
+const showMoreBtn = document.querySelector(".show-more");
 
-let flag = false;
-btnShowMore.onclick = function () {
-  if (flag === false) {
-    btnShowMore.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
+let bool = false;
+function showMore() {
+  if (bool === false) {
+    showMoreBtn.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
     textDesc.classList.remove("truncate");
-    flag = true;
+    bool = true;
   } else {
-    btnShowMore.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
+    showMoreBtn.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
     textDesc.classList.add("truncate");
-    flag = false;
+    bool = false;
   }
-};
+}
 
 //Searching Chapter by Filter
 $(document).ready(function () {

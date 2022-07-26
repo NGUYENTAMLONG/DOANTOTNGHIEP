@@ -77,6 +77,8 @@
   .row .chart .rank-1 .rank__number {
     position: relative;
     background-color: #ffd700; }
+    .row .chart .rank-1 .rank__number b {
+      zoom: 2; }
   .row .chart .rank-1 .rank__number::after {
     content: "";
     position: absolute;
@@ -90,6 +92,8 @@
   .row .chart .rank-2 .rank__number {
     position: relative;
     background-color: #c0c0c0; }
+    .row .chart .rank-2 .rank__number b {
+      zoom: 1.5; }
   .row .chart .rank-2 .rank__number::after {
     content: "";
     position: absolute;
@@ -103,6 +107,8 @@
   .row .chart .rank-3 .rank__number {
     position: relative;
     background-color: #b87333; }
+    .row .chart .rank-3 .rank__number b {
+      zoom: 1.2; }
   .row .chart .rank-3 .rank__number::after {
     content: "";
     position: absolute;

@@ -16,7 +16,7 @@ class adminManagementController {
   async showAdminDashboard(req, res) {
     try {
       const adminList = await Admin.find();
-      res.render("admin/human/admin/admindashboard", { adminList, moment });
+      res.render("admin/human/admin/adminDashboard", { adminList, moment });
     } catch (error) {
       console.log(error);
       res
@@ -24,34 +24,23 @@ class adminManagementController {
         .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
     }
   }
-
-  async showStatistical(req, res) {
-    Promise.all([Admin.find(), User.find(), Manga.find(), Slide.find()])
-      .then(([adminList, userList, mangaList, slideList]) => {
-        res.render("admin/human/analysis/statistical", {
-          adminList,
-          userList,
-          mangaList,
-          slideList,
-          moment,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        res
-          .status(STATUS.SERVER_ERROR)
-          .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
-      });
+  async showUserDashboard(req, res) {
+    try {
+      const userList = await User.find();
+      res.render("admin/human/user/userDashboard", { userList, moment });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
+    }
   }
-
   async showAnalysis(req, res) {
-    Promise.all([Admin.find(), User.find(), Manga.find(), Slide.find()])
-      .then(([adminList, userList, mangaList, slideList]) => {
+    Promise.all([Admin.find(), User.find()])
+      .then(([adminList, userList]) => {
         res.render("admin/human/analysis/analysis", {
           adminList,
           userList,
-          mangaList,
-          slideList,
           moment,
         });
       })
@@ -63,21 +52,7 @@ class adminManagementController {
       });
   }
 
-  async showNotification(req, res) {
-    Promise.all([Admin.find()])
-      .then(([adminList, userList, mangaList, slideList]) => {
-        res.render("admin/human/analysis/notification", {
-          adminList,
-          moment,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        res
-          .status(STATUS.SERVER_ERROR)
-          .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
-      });
-  }
+  async showNotification(req, res) {}
 }
 
 module.exports = new adminManagementController();

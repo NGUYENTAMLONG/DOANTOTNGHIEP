@@ -27,10 +27,10 @@
   <div class="container d-flex flex-wrap">
     <% categories.forEach(function(type,index){ %>
     <div class="btn-group-toggle m-2" data-toggle="buttons">
-      <input type="radio" name="<%= type %>" value="2" checked hidden>
-      <input type="radio" name="<%= type %>" value="1" hidden>
-      <input type="radio" name="<%= type %>" value="0" hidden>
-      <button type="button" id="btn-<%= index %>" onclick="setCheck('<%= index %>','<%= type %>')" class="btn focus btn-secondary"><%= type %></button>
+      <input type="radio" name="<%= type.name %>" value="2" checked hidden>
+      <input type="radio" name="<%= type.name %>" value="1" hidden>
+      <input type="radio" name="<%= type.name %>" value="0" hidden>
+      <button type="button" id="btn-<%= index %>" onclick="setCheck('<%= index %>','<%= type.name %>')" class="btn focus btn-secondary"><%= type.name %></button>
     </div>
     Result:
     <div id='result-<%= index %>' class="mr-3"></div>
@@ -111,7 +111,4 @@
         console.error('Error:', error);
       });
   }
-
-
-  
 </script>

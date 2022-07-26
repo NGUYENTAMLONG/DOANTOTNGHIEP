@@ -16,7 +16,6 @@ let otpCache = "";
 
 class AccountController {
   async Login(req, res) {
-    // return res.json({ u: req.body.username, p: req.body.password });
     const { username, password } = req.body;
     if (!username || !password) {
       return res
@@ -63,10 +62,12 @@ class AccountController {
     }
   }
 
-  async AuthenAccount(req, res) {
+  async VerifyEmail(req, res) {
     // return res.json({ u: req.body.username, p: req.body.password });
-    const { username, password, email, otp } = req.body;
-    if (!username || !password || !email) {
+    const { username, password, email, dob, otp } = req.body;
+    // console.log({ username, password, email, dob, otp });
+
+    if (!username || !password || !email || !dob) {
       return res
         .status(STATUS.BAD_REQUEST)
         .json(
@@ -129,6 +130,7 @@ class AccountController {
           );
       }
       otpCache = GenerateOTP();
+      console.log("Verify step:", otpCache);
       await SendRegisterMail(email, otpCache);
 
       res
@@ -140,9 +142,11 @@ class AccountController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  async Register(req, res) {
-    const { username, password, email, otp } = req.body;
 
+  async Register(req, res) {
+    const { username, password, email, dob, otp } = req.body;
+    // console.log({ username, password, email, dob, otp });
+    // console.log("REgister: ", otpCache);
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -150,6 +154,7 @@ class AccountController {
         username,
         password: hashedPassword,
         email,
+        dob,
         otp,
       });
       if (otp === otpCache) {
@@ -188,6 +193,22 @@ class AccountController {
     } catch (error) {
       console.log(error);
       return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async Resend(req, res) {
+    const { email } = req.body;
+    try {
+      otpCache = GenerateOTP();
+      // console.log("Resend step: ", otpCache);
+      await SendRegisterMail(email, otpCache);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SEND_MAIL_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }

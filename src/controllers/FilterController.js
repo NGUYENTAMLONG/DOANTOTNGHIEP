@@ -20,7 +20,7 @@ class FilterController {
       });
       const randomMangas = lodash.sampleSize(mangas, RANDOM_SIZE);
       res.render("showRandomManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fas fa-random"></i> Truyện ngẫu nhiên`,
         mangas: randomMangas,
@@ -50,7 +50,7 @@ class FilterController {
         .exec();
 
       res.render("showNewManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fas fa-lightbulb"></i> Truyện mới xuất bản`,
         mangas: result.mangas,
@@ -89,7 +89,7 @@ class FilterController {
         .exec();
 
       res.render("showCompleteManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fas fa-check-circle"></i> Truyện đã hoàn thành`,
         mangas: result.mangas,
@@ -128,7 +128,7 @@ class FilterController {
         .exec();
 
       res.render("showUnfinishedManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bxs-leaf'></i> Truyện đang tiến hành`,
         mangas: result.mangas,
@@ -206,7 +206,7 @@ class FilterController {
       const result = pagination(req, mangas.length);
       result.mangas = lodash.drop(mangas, startPage).slice(0, limit);
       res.render("showProlongationManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fas fa-mountain"></i> Truyện trường kỳ`,
         mangas: result.mangas,
@@ -247,7 +247,7 @@ class FilterController {
         .exec();
 
       res.render("showFlopManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bx-trending-down'></i> Truyện ít đọc`,
         mangas: result.mangas,
@@ -276,7 +276,7 @@ class FilterController {
       ]);
 
       res.render("showAuthorList", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bx-palette'></i> Lọc truyện theo tác giả`,
         authorList,
@@ -309,7 +309,7 @@ class FilterController {
         .exec();
 
       res.render("showMangasOfAuthor", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm của ${slug}`,
         mangas: result.mangas,
@@ -369,7 +369,7 @@ class FilterController {
         .exec();
 
       res.render("showFavoriteManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bx-happy-heart-eyes'></i> Truyện được yêu thích nhiều nhất`,
         mangas: result.mangas,
@@ -410,7 +410,7 @@ class FilterController {
         .exec();
 
       res.render("showFavoriteManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class='bx bxs-plane-take-off'></i> Truyện có lượt views cao nhất`,
         mangas: result.mangas,

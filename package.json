@@ -17,10 +17,12 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
+    "express-session": "^1.17.3",
     "froala-editor": "^4.0.12",
     "imgbb-uploader": "^1.3.5",
     "jsonwebtoken": "^8.5.1",
@@ -36,11 +38,10 @@
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.15",
     "paginationjs": "^2.1.5",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "randomstring": "^1.2.2",
     "uniqid": "^5.4.0",
     "wysiwyg-editor-node-sdk": "^4.0.12"
-  },
-  "devDependencies": {
-    "express-openid-connect": "^2.7.2"
   }
 }

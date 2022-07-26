@@ -28,7 +28,7 @@ class CountryController {
         .exec();
       // return res.json(result);
       res.render("showCountryManga", {
-        user: req.AuthPayload,
+        user: req.user,
         moment: moment,
         title: `<i class="fas fa-globe-africa"></i> ${req.params.slug}`,
         mangas: orderManga(result.mangas),

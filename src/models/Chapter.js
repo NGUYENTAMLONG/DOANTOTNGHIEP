@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const ChapterSchema = new Schema(
   {
-    manga: { type: String, required: true },
     chapters: {
       type: Object,
       default: [],

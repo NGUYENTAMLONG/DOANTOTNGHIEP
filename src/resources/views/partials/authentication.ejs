@@ -1,0 +1,111 @@
+   <!-- ******** REGISTER *************** -->
+
+   <button class="btn btn-warning mr-2 my-sm-0 btnShowRegister" type="submit" data-target="#registerModal" data-toggle="modal">Đăng ký</button>
+
+   <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h4 class="modal-title" id="registerModalLabel">Đăng ký</h4>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body bg-dark text-white">
+           <div class="form-group">
+             <label for="username">Username</label>
+             <input type="text" class="form-control" id="usernameRegister" placeholder="Enter Username">
+             <small id="usernameHelp" class="form-text text-muted">* Không bao gồm khoảng trắng</small>
+           </div>
+           <div class="form-group password-field">
+             <label for="password">Password</label>
+             <input type="password" class="form-control" id="passwordRegister" placeholder="Enter Password">
+             <i class="fas fa-eye" onclick="toggleShowHide(this)"></i>
+             <small id="passwordHelp" class="form-text text-muted">* Mật khẩu có chứa ít nhất từ 6 đến tối đa 20 ký tự, một chữ cái viết hoa, một chữ cái viết thường và một ký tự đặc biệt (#, $, %,..)</small>
+           </div>
+           <div class="form-group">
+             <label for="email">Email</label>
+             <input type="email" class="form-control" id="emailRegister" placeholder="Enter Email">
+             <small id="emailHelp" class="form-text text-muted">* Không bao gồm khoảng trắng</small>
+           </div>
+           <div class="form-group">
+             <label for="dob">Date of Birth</label>
+             <input type="date" class="form-control" id="dobRegister" placeholder="Enter Your Date of Birth">
+             <small id="dobHelp" class="form-text text-muted">* Định dạng Tháng/Ngày/Năm</small>
+           </div>
+           <div class="form-group otp_field" hidden>
+             <label for="otp">OTP</label>
+             <div class="d-flex">
+               <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+               <button class="btn btn-warning ml-2" onclick="resendOTP()">Gửi lại mã</button>
+             </div>
+             <small id="otpHelp" class="form-text text-muted">* Gửi lại mã nếu bạn không nhận được mã OTP</small>
+           </div>
+           <div class="d-flex solution">
+             <a href="#" data-toggle="modal" data-target="#loginModal" data-dismiss="modal" aria-label="Close">Đăng nhập</a>
+           </div>
+           <div class="text-center">
+             <img src="/image/logo.png" width="20%" alt="">
+           </div>
+         </div>
+         <hr>
+         <div class="modal-footer d-flex justify-content-between">
+           <div class="oauth2">
+             <i class="fab fa-facebook"></i>
+             <i class="fab fa-google-plus"></i>
+           </div>
+           <div class="handle">
+             <button type="button" class="btn btn-primary submitBtn" onclick="verification ()">Gửi mã xác thực</button>
+             <button type="button" class="btn btn-primary registerBtn" onclick="register()" disabled>Đăng ký</button>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.reload()">Hủy</button>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <!-- ******** LOGIN *************** -->
+   <button class="btn btn-primary my-2 my-sm-0 btnShowLogin" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
+   <!-- Modal -->
+   <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body bg-dark text-white">
+           <div class="form-group">
+             <label for="username">Username</label>
+             <input type="text" class="form-control" id="usernameLogin" placeholder="Enter Username">
+           </div>
+           <div class="form-group">
+             <label for="password">Password</label>
+             <input type="password" class="form-control" id="passwordLogin" placeholder="Enter Password">
+           </div>
+           <div class="d-flex solution">
+             <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
+             <a href="#">Quên mật khẩu ?</a>
+           </div>
+           <div class="text-center">
+             <img src="/image/logo.png" width="20%" alt="">
+           </div>
+         </div>
+         <hr>
+         <div class="modal-footer d-flex justify-content-between">
+           <div class="oauth2">
+             <i class="fab fa-facebook"></i>
+             <a href="/auth/google">
+               <i class="fab fa-google-plus"></i>
+             </a>
+           </div>
+           <div class="handle">
+             <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>

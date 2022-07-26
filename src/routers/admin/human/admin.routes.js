@@ -5,8 +5,7 @@ const appRoot = require("app-root-path");
 const {
   showAdminDashboard,
   showAnalysis,
-  showStatistical,
-  showNotification,
+  showUserDashboard,
 } = require("../../../controllers/AdminController");
 
 const router = express.Router();
@@ -25,10 +24,7 @@ const uploadAdmin = multer({ storage: storageAdmin }); //for admin
 
 // route:-> /management/human/admin/...
 
-router.get("/manage_admin", showAdminDashboard);
-router.get("/analysis", showAnalysis);
-router.get("/statistical", showStatistical);
-router.get("/notification", showNotification);
+router.get("/", showAdminDashboard);
 
 //route (API-JSON): -> /management/human/admin/api/...
 

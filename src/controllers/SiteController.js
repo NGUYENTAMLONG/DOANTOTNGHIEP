@@ -50,7 +50,7 @@ class siteController {
         ]) => {
           res.render("home", {
             moment: moment,
-            user: req.AuthPayload,
+            user: req.user,
             slides: slides,
             mangaToday: chaptersOfDay, // Lấy ra các manga -> lọc các  manga ra chương mới trong ngày
             recentlyReleasedManga: recentlyChapters, // Lấy ra các manga -> lọc các manga ra chương mới gần đây
@@ -86,7 +86,7 @@ class siteController {
       res.render("search", {
         status: true,
         moment: moment,
-        user: req.AuthPayload,
+        user: req.user,
         mangas: foundManga,
       });
     } catch (error) {
