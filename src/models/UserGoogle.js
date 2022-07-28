@@ -1,31 +1,31 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { PASSPORT } = require("../config/default");
+const findOrCreate = require("mongoose-findorcreate");
 
-const UserSchema = new Schema(
+const UserGoogleSchema = new Schema(
   {
     username: {
       type: String,
       required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      default: "",
     },
     passport: {
       type: String,
       required: true,
-      default: PASSPORT.LOCAL,
+      default: PASSPORT.GOOGLE,
+    },
+    googleId: {
+      type: String,
+      default: null,
     },
     email: { type: String, required: false, unique: true },
     dob: {
       type: Date, //dob: Date of Birth
-      default: "",
+      default: null,
     },
     avatar: {
       type: String,
-      default: "user_avatar_default.jpg",
+      required: true,
     },
     active: {
       type: Boolean,
@@ -33,21 +33,26 @@ const UserSchema = new Schema(
     },
     followedList: {
       type: Array,
+      default: [],
     },
     likedList: {
       type: Array,
+      default: [],
     },
     ratedList: {
       type: Array,
+      default: [],
     },
   },
-  { timestamps: true, collection: "Users" }
+  { timestamps: true, collection: "UserGoogles" }
 );
 
 // khai bao su dung thu vien da cai dat (mongoose-delete)-> de thuc hien trien khai chuc nang xoa mem soft delete
 const mongooseDelete = require("mongoose-delete");
-UserSchema.plugin(mongooseDelete, {
+UserGoogleSchema.plugin(mongooseDelete, {
   overrideMethods: "all",
   deletedAt: true,
 });
-module.exports = mongoose.model("user", UserSchema);
+UserGoogleSchema.plugin(findOrCreate);
+
+module.exports = mongoose.model("usergoogle", UserGoogleSchema);

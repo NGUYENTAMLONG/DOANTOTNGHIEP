@@ -1,5 +1,5 @@
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
-const User = require("../models/User");
+const User = require("../models/UserLocal");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY, OPTION_COOKIE } = require("../config/default");
@@ -16,50 +16,9 @@ let otpCache = "";
 
 class AccountController {
   async Login(req, res) {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res
-        .status(STATUS.BAD_REQUEST)
-        .json(
-          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
-        );
-    }
-    try {
-      const foundUser = await User.findOne({ username: username });
-      if (!foundUser) {
-        return res
-          .status(STATUS.NOT_FOUND)
-          .json(
-            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.DOES_NOT_EXIST)
-          );
-      }
-      const matched = await bcrypt.compare(password, foundUser.password);
-      if (!matched) {
-        return res
-          .status(STATUS.UNAUTHORIZED)
-          .json(
-            new ErrorResponse(
-              ERRORCODE.ERROR_UNAUTHORIZED,
-              MESSAGE.PASSWORD_FAIL
-            )
-          );
-      }
-      const token = jwt.sign(
-        {
-          userId: foundUser._id,
-          username: foundUser.username,
-        },
-        SECRET_KEY
-      );
-      res.cookie("token", token, OPTION_COOKIE);
-      res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.LOGIN_SUCCESS, null));
-    } catch (error) {
-      res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-    }
+    res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.LOGIN_SUCCESS, null));
   }
 
   async VerifyEmail(req, res) {
@@ -176,27 +135,7 @@ class AccountController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  async Logout(req, res) {
-    const token = req.cookies.token;
-    if (!token) {
-      return res
-        .status(STATUS.UNAUTHORIZED)
-        .json(
-          new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, MESSAGE.UNAUTHORIZED)
-        );
-    }
-    try {
-      res.clearCookie("token");
-      res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.SUCCESS, null));
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-    }
-  }
+
   async Resend(req, res) {
     const { email } = req.body;
     try {
@@ -212,6 +151,14 @@ class AccountController {
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
+  }
+
+  async Failure(req, res) {
+    res
+      .status(STATUS.UNAUTHORIZED)
+      .json(
+        new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, "LOGIN FAILURE !!!")
+      );
   }
 }
 module.exports = new AccountController();

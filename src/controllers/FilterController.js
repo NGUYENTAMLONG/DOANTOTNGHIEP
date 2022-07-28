@@ -8,6 +8,7 @@ const {
   types,
   MANGA_STATUS,
   PROLONGATION,
+  PENDING,
 } = require("../config/default");
 const pagination = require("../service/pagination");
 const filterMangas = require("../service/filterMangas");
@@ -307,11 +308,14 @@ class FilterController {
         .limit(limit)
         .skip(startPage)
         .exec();
-
+      const title =
+        slug === PENDING.INFOMATION
+          ? "<i class='bx bx-layer'></i> Chưa cập nhật tác giả"
+          : `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm của ${slug}`;
       res.render("showMangasOfAuthor", {
         user: req.user,
         moment: moment,
-        title: `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm của ${slug}`,
+        title,
         mangas: result.mangas,
         categories: types,
         navigator: {

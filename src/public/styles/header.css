@@ -64,6 +64,10 @@ header .navbar {
     header .navbar #loginModal .solution a,
     header .navbar #registerModal .solution a {
       text-decoration: none; }
+  header .navbar #loginModal .modal-footer .oauth2 a,
+  header .navbar #registerModal .modal-footer .oauth2 a {
+    color: #343a40;
+    text-decoration: none; }
   header .navbar #loginModal .modal-footer .oauth2 .fa-facebook,
   header .navbar #loginModal .modal-footer .oauth2 .fa-google-plus,
   header .navbar #registerModal .modal-footer .oauth2 .fa-facebook,

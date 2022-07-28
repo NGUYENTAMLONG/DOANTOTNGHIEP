@@ -1,11 +1,15 @@
 const dotenv = require("dotenv");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-
+const FacebookStrategy = require("passport-facebook").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 dotenv.config();
 
 const { PASSPORT } = require("../config/default");
-const User = require("../models/User");
+const UserLocal = require("../models/UserLocal");
+const UserGoogle = require("../models/UserGoogle");
+const UserFacebook = require("../models/UserFacebook");
 
 passport.use(
   new GoogleStrategy(
@@ -16,30 +20,73 @@ passport.use(
     },
     (accessToken, refreshToken, profile, cb) => {
       // Check if google profile exist.
-
       console.log({ accessToken, refreshToken, profile });
-      return cb(null, profile);
-      //   if (profile.id) {
-      //     User.findOne({
-      //       username: `${profile.displayName} - ${profile.id}`,
-      //     }).then((existingUser) => {
-      //       if (existingUser) {
-      //         done(null, existingUser);
-      //       } else {
-      //         new User({
-      //           username: `${profile.displayName} - ${profile.id}`,
-      //           passport: PASSPORT.GOOGLE,
-      //           email: profile.emails[0].value,
-      //           name: profile.name.familyName + " " + profile.name.givenName,
-      //           avatar: profile.photos[0].value,
-      //         })
-      //           .save()
-      //           .then((user) => done(null, user));
-      //       }
-      //     });
-      //   }
+      UserGoogle.findOrCreate(
+        {
+          googleId: profile.id,
+          username: profile.displayName,
+          email: profile.emails[0].value,
+          avatar: profile.photos[0].value,
+        },
+        function (err, user) {
+          if (err) {
+            console.log("ERROR OAUTH:", err);
+            return;
+          }
+          return cb(null, user);
+        }
+      );
     }
   )
+);
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: "/auth/facebook/callback",
+      profileFields: ["id", "displayName", "photos", "email"],
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      console.log({ accessToken, refreshToken, profile });
+      try {
+        const foundAccount = await UserFacebook.findOne({
+          facebookId: profile.id,
+        });
+        if (foundAccount) {
+          return cb(null, foundAccount);
+        } else {
+          const createdUser = await UserFacebook.create({
+            facebookId: profile.id,
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            avatar: profile.photos[0].value,
+          });
+          return cb(null, createdUser);
+        }
+      } catch (error) {
+        return cb(error);
+      }
+    }
+  )
+);
+passport.use(
+  new LocalStrategy(function (username, password, done) {
+    UserLocal.findOne({ username: username }, async function (err, user) {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false);
+      }
+      const matched = await bcrypt.compare(password, user.password);
+      if (!matched) {
+        return done(null, false);
+      }
+      console.log(user);
+      return done(null, user);
+    });
+  })
 );
 
 passport.serializeUser((user, done) => {

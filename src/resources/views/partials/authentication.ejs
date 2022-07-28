@@ -68,7 +68,7 @@
    <button class="btn btn-primary my-2 my-sm-0 btnShowLogin" type="submit" data-toggle="modal" data-target="#loginModal">Đăng nhập</button>
    <!-- Modal -->
    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-     <div class="modal-dialog" role="document">
+     <form class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
            <h4 class="modal-title" id="loginModalLabel">Đăng nhập</h4>
@@ -96,7 +96,9 @@
          <hr>
          <div class="modal-footer d-flex justify-content-between">
            <div class="oauth2">
-             <i class="fab fa-facebook"></i>
+             <a href="/auth/facebook">
+               <i class=" fab fa-facebook"></i>
+             </a>
              <a href="/auth/google">
                <i class="fab fa-google-plus"></i>
              </a>
@@ -107,5 +109,5 @@
            </div>
          </div>
        </div>
-     </div>
+     </form>
    </div>

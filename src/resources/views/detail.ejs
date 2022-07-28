@@ -18,15 +18,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 </head>
 
-<body onload="getRelatedMangas('<%= manga._id %>','<%= manga.type %>')">
+<body onload="handleAPI('<%= manga._id %>','<%= manga.type %>')">
   <%- include('partials/header',{user:user}) %>
-
   <section class="section container" id="section-1">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
         <li class="breadcrumb-item active" aria-current="page"><%= slug %></li>
       </ol>
+
     </nav>
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-3">
@@ -37,7 +37,8 @@
       <div class="col-sm-8 col-md-9 col-lg-9">
         <div class="manga-info">
           <h3 class="manga-info__name"><%= manga.name%></h3>
-          <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
+          <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %>
+          </p>
           <p class="manga-info__author">Tác giả: <a href="/filter/author/<%= manga.author %>?page=1&limit=2">
               <%= manga.author %>
             </a> - Quốc gia: <a href="/country/<%=manga.country%>?page=1&limit=2">
@@ -45,6 +46,7 @@
             </a>
           </p>
           <p class="manga-info__status">Tình trạng: <a href="/just-updated?page=1&limit=2&status=<%= manga.status === 'Hoàn thành' ? true : false %>"><%= manga.status %></a></p>
+          <p class="manga-info__translation"> Nhóm dịch: <a href="#"><%= manga.translation %></a></p>
           <p class="manga-info__statistical">Thống kê:
             <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>
@@ -69,7 +71,7 @@
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
-          <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-outline-danger mb-1 manga-info__type"><%= type%></a>
+          <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-sm btn-outline-danger mb-1 manga-info__type"><%= type%></a>
           <% }) %>
           <div class="d-flex mt-3">
             <% if (manga.contentId.chapters.length >0){ %>
@@ -79,11 +81,11 @@
             <%} %>
             <label class="follow ml-3 mr-3 form-check-label" for="checkFollow">
               <span>
-                <% if (followFlag) { %><i class="fas fa-heart-broken"></i> Bỏ theo dõi <% }else{ %> <i class="fas fa-heartbeat"></i> Theo dõi <%}%> 
+                <i class="fas fa-heart"></i> Theo dõi
               </span>
-              <input type="checkbox" class="form-check-input" id="checkFollow" <%= followFlag ? "checked" : ""%> onchange="handleFollow('<%= manga._id%>')" hidden />
+              <input type="checkbox" class="form-check-input" id="checkFollow" onchange="handleFollow('<%= manga._id%>')" hidden />
             </label>
-            <span class="like mr-3">
+            <span class="like mr-3" onclick="handleLike('<%= manga._id %>')">
               <i class="fas fa-thumbs-up"></i> Thích
             </span>
             <span class="rate">
@@ -242,6 +244,26 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
+  function handleLike(mangaId) {
+    alert(mangaId)
+  }
+
+  function handleAPI(mangaId, types) {
+    fetch('/user/info')
+      .then((response) => response.json())
+      .then((result) => {
+        const user = result.data;
+        if (user.followedList.includes(mangaId)) {
+          document.querySelector(".follow span").innerHTML = `<i class="fas fa-heartbeat"></i> Đang theo dõi`;
+          document.getElementById("checkFollow").setAttribute("checked", "")
+        } else {
+          document.querySelector(".follow span").innerHTML = `<i class="fas fa-heart"></i> Theo dõi`;
+          document.getElementById("checkFollow").removeAttribute("checked")
+        }
+        getRelatedMangas(mangaId, types);
+      }).catch(error => console.log(error))
+  }
+
   function getRelatedMangas(mangaId, types) {
     const data = {
       types: types.split(",")
@@ -328,5 +350,6 @@
     (d.head || d.body).appendChild(s);
   })();
 </script>
+
 
 </html>

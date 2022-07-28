@@ -9,23 +9,35 @@ const route = require("./routers/index.routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-require("./middleware/passport");
+const { VALUES } = require("./config/default");
 
 // Khởi tạo server *******************************************
 const app = express();
 
-const cookieSession = require("cookie-session");
+//********************* Khởi tạo cổng server
+const PORT = process.env.PORT || 3416;
+app.listen(PORT, () => {
+  console.log(`🐲🐲🐲 Server is running on PORT: ${PORT} !!! 🍀🍀🍀`);
+});
+// Authentication ********************************************
+require("./middleware/passport");
+
 const session = require("express-session");
 
-// app.use(
-//   cookieSession({
-//     maxAge: 30 * 24 * 60 * 60 * 1000,
-//     keys: ["ABC"],
-//   })
-// );
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(
+  session({
+    secret: VALUES.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
 app.use(passport.initialize());
 app.use(passport.session());
+//OAUTH GOOGLE
 app.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -35,18 +47,28 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "/",
-    failureRedirect: "/auth/failure",
+    successRedirect: "back",
+    failureRedirect: "/authen/failure",
   })
 );
-app.get("/auth/failure", (req, res) => {
-  res.json("UNAUTHORIZED");
-});
+//OAUTH FACEBOOK
+app.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    scope: ["email"],
+  })
+);
+app.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: "back",
+    failureRedirect: "/authen/failure",
+  })
+);
 
-//********************* Khởi tạo cổng server
-const PORT = process.env.PORT || 3416;
-app.listen(PORT, () => {
-  console.log(`🐲🐲🐲 Server is running on PORT: ${PORT} !!! 🍀🍀🍀`);
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.status(200).redirect("/");
 });
 
 app.use(cors()); // Cho phép chia sẻ api với localhost khác

@@ -1,6 +1,6 @@
 const Manga = require("../models/Manga");
 const moment = require("moment");
-const User = require("../models/User");
+const User = require("../models/UserLocal");
 const { redirect } = require("../service/redirect");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const counter = require("../service/counterVisiter");
@@ -16,13 +16,12 @@ class detailController {
       if (!manga) {
         redirect(req, res, STATUS.NOT_FOUND);
       }
-
       let checkFollow = false;
-      if (req.user !== undefined) {
-        // const foundUser = await User.findById(req.user._id);
-        checkFollow = foundUser.follows.includes(manga._id);
-        console.log(checkFollow);
-      }
+      // if (req.user !== undefined) {
+      //   // const foundUser = await User.findById(req.user._id);
+      //   checkFollow = foundUser.follows.includes(manga._id);
+      //   console.log(checkFollow);
+      // }
       contentId = manga.contentId;
       res.render("detail", {
         slug,

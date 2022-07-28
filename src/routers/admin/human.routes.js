@@ -7,7 +7,7 @@ const router = express.Router();
 
 const adminManagementRouter = require("./human/admin.routes");
 const userManagementRouter = require("./human/user.routes");
-const User = require("../../models/User");
+const User = require("../../models/UserLocal");
 const Manga = require("../../models/Manga");
 const Slide = require("../../models/Slide");
 

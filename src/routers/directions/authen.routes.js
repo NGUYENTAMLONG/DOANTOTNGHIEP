@@ -1,14 +1,16 @@
 const express = require("express");
 const {
   Login,
-  Logout,
   Register,
   Resend,
   VerifyEmail,
+  Failure,
 } = require("../../controllers/AccountController");
 const router = express.Router();
+require("../../middleware/passport");
+
+const passport = require("passport");
 // const dotenv = require("dotenv");
-// const passport = require("passport");
 // const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // dotenv.config();
 
@@ -32,14 +34,21 @@ const router = express.Router();
 // );
 // router.get("/google/callback", passport.authenticate("google"));
 
-router.post("/login", Login);
-
-router.delete("/logout", Logout);
+// router.post("/login", Login);
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/authen/failure",
+  }),
+  Login
+);
 
 router.post("/verify-email", VerifyEmail);
 
 router.post("/resend-otp", Resend);
 
 router.post("/register", Register);
+
+router.get("/failure", Failure);
 
 module.exports = router;

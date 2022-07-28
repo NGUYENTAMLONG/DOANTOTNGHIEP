@@ -1,27 +1,63 @@
 const Manga = require("../models/Manga");
 const moment = require("moment");
-const User = require("../models/User");
+const UserLocal = require("../models/UserLocal");
 const filterFollow = require("../helper/filterFollow");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
 const { response } = require("express");
+const { PASSPORT, types } = require("../config/default");
+const UserGoogle = require("../models/UserGoogle");
+const UserFacebook = require("../models/UserFacebook");
+const filterMangas = require("../service/filterMangas");
+const pagination = require("../service/pagination");
 class FollowController {
   async showFollowManga(req, res) {
     try {
-      if (req.user !== undefined) {
-        // const foundUser = await User.findById(req.user._id);
-        const listFollowManga = foundUser.follows;
-        const list = await Manga.find({
-          _id: listFollowManga,
-        });
-        const listFollowMangaJustUpdated = filterFollow(list);
-        return res.render("showFollow", {
-          user: req.user,
-          mangas: listFollowMangaJustUpdated,
-          counter: listFollowMangaJustUpdated.length,
-        });
+      let userInfo;
+      if (req.user) {
+        if (req.user.provider === PASSPORT.LOCAL) {
+          userInfo = await UserLocal.findById(req.user.id);
+        }
+        if (req.user.provider === PASSPORT.GOOGLE) {
+          userInfo = await UserGoogle.findById(req.user.id);
+        }
+        if (req.user.provider === PASSPORT.FACEBOOK) {
+          userInfo = await UserFacebook.findById(req.user.id);
+        }
       }
-      return res.json("NOT FOUND");
+      const followedMangas = userInfo.followedList;
+      const match = filterMangas(req);
+      match._id = { $in: followedMangas };
+      const totalMangas = await Manga.countDocuments(match);
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .populate({
+          path: "contentId",
+          options: {
+            chapters: { $slice: -1 },
+          },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+      // return res.json(result.mangas);
+      res.render("showFollow", {
+        user: req.user,
+        moment,
+        categories: types,
+        mangas: result.mangas,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
     } catch (error) {
       console.log(error);
       res
@@ -39,9 +75,36 @@ class FollowController {
         );
     }
     try {
-      if (req.user !== undefined) {
+      if (req.user === undefined) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
       }
-      return res.json("NOT ACCESS");
+      if (req.user) {
+        if (req.user.provider === PASSPORT.LOCAL) {
+          await UserLocal.findByIdAndUpdate(req.user.id, {
+            $push: { followedList: mangaId },
+          });
+        }
+        if (req.user.provider === PASSPORT.GOOGLE) {
+          await UserGoogle.findByIdAndUpdate(req.user.id, {
+            $push: { followedList: mangaId },
+          });
+        }
+        if (req.user.provider === PASSPORT.FACEBOOK) {
+          await UserFacebook.findByIdAndUpdate(req.user.id, {
+            $push: { followedList: mangaId },
+          });
+        }
+      }
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.FOLLOWED, req.user.id));
     } catch (error) {
       console.log(error);
       res
@@ -59,9 +122,45 @@ class FollowController {
         );
     }
     try {
-      if (req.user !== undefined) {
+      if (req.user === undefined) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
       }
-      return res.json("NOT ACCESS");
+      if (req.user) {
+        if (req.user.provider === PASSPORT.LOCAL) {
+          await UserLocal.updateOne(
+            { _id: req.user.id },
+            {
+              $pull: { followedList: mangaId },
+            }
+          );
+        }
+        if (req.user.provider === PASSPORT.GOOGLE) {
+          await UserGoogle.updateOne(
+            { _id: req.user.id },
+            {
+              $pull: { followedList: mangaId },
+            }
+          );
+        }
+        if (req.user.provider === PASSPORT.FACEBOOK) {
+          await UserFacebook.updateOne(
+            { _id: req.user.id },
+            {
+              $pull: { followedList: mangaId },
+            }
+          );
+        }
+      }
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UNFOLLOWED, req.user.id));
     } catch (error) {
       console.log(error);
       res

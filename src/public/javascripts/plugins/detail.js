@@ -33,51 +33,49 @@ $(function () {
 //Follow
 function handleFollow(mangaId) {
   const checkedFollow = document.getElementById("checkFollow").checked;
-  const followBtn = document.querySelector(".follow");
+  const followBtn = document.querySelector(".follow span");
   if (checkedFollow) {
-    followBtn.querySelector(
-      "span"
-    ).innerHTML = `<i class="fas fa-heart-broken"></i> Bỏ theo dõi`;
+    followBtn.innerHTML = `<i class="fas fa-heartbeat"></i> Đang theo dõi`;
     addFollow(mangaId);
   } else {
-    followBtn.querySelector(
-      "span"
-    ).innerHTML = ` <i class="fas fa-heartbeat"></i> Theo dõi`;
+    followBtn.innerHTML = ` <i class="fas fa-heart"></i> Theo dõi`;
     unFollow(mangaId);
   }
 }
 
 function addFollow(mangaId) {
-  const payload = {
+  const data = {
     mangaId: mangaId,
   };
-  const headers = {
-    "content-Type": "application/json",
-  };
+
   fetch("/follow", {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers,
+    method: "POST", // or 'PUT'
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   })
     .then((response) => response.json())
     .then((result) => {
       if (result.isSuccess === true) {
         swal({
-          title: "Đang theo dõi",
-          text: "Nhớ dõi theo hàng tuần nha !",
+          title: "Đã theo dõi",
+          text: "Hãy theo dõi bộ này hàng tuần nhé <3",
           icon: "success",
           button: "OK!",
         });
       } else {
         swal({
-          title: "Có lỗi rồi !",
-          text: result.message,
+          title: result.message,
+          text: "Bạn chưa thể thực hiện thao tác này :<",
           icon: "error",
           button: "OK!",
         });
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 }
 
 function unFollow(mangaId) {

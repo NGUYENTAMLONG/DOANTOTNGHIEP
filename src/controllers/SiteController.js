@@ -94,16 +94,6 @@ class siteController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
-  async getAvatar(req, res) {
-    const avatar = req.params.avatar;
-    try {
-      res.sendFile(
-        path.join("C:/CODE/DO AN TOT NGHIEP/", "images/users/" + avatar)
-      );
-    } catch (error) {
-      res.status(400).json({ error: error });
-    }
-  }
   async liveSearch(req, res) {
     const payload = req.body.payload.trim();
     try {

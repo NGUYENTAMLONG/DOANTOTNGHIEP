@@ -30,6 +30,7 @@
     "moment": "^2.29.1",
     "mongoose": "^6.2.0",
     "mongoose-delete": "^0.5.4",
+    "mongoose-findorcreate": "^3.0.0",
     "mongoose-slug-updater": "^3.3.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
@@ -39,7 +40,9 @@
     "nodemon": "^2.0.15",
     "paginationjs": "^2.1.5",
     "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
     "randomstring": "^1.2.2",
     "uniqid": "^5.4.0",
     "wysiwyg-editor-node-sdk": "^4.0.12"

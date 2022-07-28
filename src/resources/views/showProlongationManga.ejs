@@ -24,7 +24,7 @@
         <select class="form-select form-select-sm form-control mb-1 ml-1" aria-label="Default select example" style="width: 200px" onchange="changeTypeQuery(this)">
           <option selected disabled>Lọc theo thể loại</option>
           <% categories.forEach((category,index)=>{ %>
-          <option value="<%= category %>" <%= (navigator.filter.type === category) && "selected" %>><%= category %></option>
+          <option value="<%= category.name %>" <%= (navigator.filter.type === category.name) && "selected" %>><%= category.name %></option>
           <%})%>
         </select>
       </div>

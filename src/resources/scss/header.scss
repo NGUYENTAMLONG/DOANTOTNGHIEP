@@ -83,6 +83,10 @@ header {
       }
       .modal-footer {
         .oauth2 {
+          a {
+            color: $color-4;
+            text-decoration: none;
+          }
           .fa-facebook,
           .fa-google-plus {
             cursor: pointer;

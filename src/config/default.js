@@ -4,6 +4,7 @@ module.exports.VALUES = {
   LIKES: 0,
   COMPLETE_STATUS: "Hoàn thành",
   TOKEN_SECRET: "manga",
+  SESSION_SECRET: "manga",
 };
 
 module.exports.OPTION_COOKIE = { maxAge: 900000, httpOnly: true };
