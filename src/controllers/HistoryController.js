@@ -34,6 +34,8 @@ class historyController {
       res.render("showHistory", {
         user: req.user,
         moment,
+        title: `<i class='bx bx-history'></i> Lịch sử đọc truyện`,
+        flag: false,
         categories: types,
         mangas: result.mangas,
         navigator: {
@@ -74,6 +76,8 @@ class historyController {
       res.render("showHistory", {
         user: req.user,
         moment,
+        title: `<i class='bx bx-history'></i> Lịch sử đọc truyện`,
+        flag: false,
         categories: types,
         mangas: result.mangas,
         navigator: {

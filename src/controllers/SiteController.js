@@ -1,4 +1,3 @@
-const lodash = require("lodash");
 const moment = require("moment");
 const getChaptersOfDay = require("../helper/getChaptersOfDay");
 const Manga = require("../models/Manga");

@@ -284,6 +284,10 @@ module.exports.MANGA_STATUS = {
 module.exports.PENDING = {
   INFOMATION: "Đang cập nhật",
 };
+module.exports.GENDER = {
+  MALE: "Nam",
+  FEMALE: "Nữ",
+};
 module.exports.PROLONGATION = 2;
 module.exports.RANDOM_SIZE = 12;
 module.exports.SECRET_KEY = "tamlongdev";

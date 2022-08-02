@@ -15,7 +15,10 @@
 <body>
   <%- include('partials/header') %>
   <div class="container mt-4">
-    <h3><i class="fas fa-bookmark"></i> Thể loại: <%= category %> </h3>
+    <h3><i class="fas fa-bookmark"></i> Thể loại: <%= category.name %> </h3>
+    <p class="bg-info text-light p-2 rounded">
+      <i class="fas fa-question-circle"></i> <%= category.description %>
+    </p>
   </div>
   <div class="container rounded p-3">
     <div class="filterZone">
@@ -115,4 +118,6 @@
     }
     return
   }
+</script>
+<script>
 </script>

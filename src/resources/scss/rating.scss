@@ -1,0 +1,36 @@
+#ratingModal {
+  .center {
+    width: 100vw;
+    height: 20vh;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  label {
+    float: right;
+    font-size: 0;
+    color: #4b4949;
+    margin: 1vw;
+  }
+
+  label::before {
+    content: "\f005";
+    font-family: "Font Awesome 5 free";
+    font-size: 5vh;
+  }
+
+  label:hover,
+  label:hover ~ label {
+    color: #fca311;
+    transition: 0.8s;
+    font-weight: 900;
+  }
+
+  .active {
+    color: #fca311;
+    font-weight: 900;
+  }
+}

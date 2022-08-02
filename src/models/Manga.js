@@ -26,7 +26,9 @@ const MangaSchema = new Schema(
         views: 0,
         comments: 0,
         ranks: 0,
-        rating: 0,
+        rating: {
+          type: Number,
+        },
         counting: 0,
       },
     }, // updating...(ex: require)

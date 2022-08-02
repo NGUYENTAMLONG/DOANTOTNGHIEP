@@ -1,11 +1,24 @@
+const UserFacebook = require("../models/UserFacebook");
+const UserGoogle = require("../models/UserGoogle");
+const UserLocal = require("../models/UserLocal");
+
 async function Authentication(req, res, next) {
   if (req.user) {
+    let user;
+    if (req.user.passport === "LOCAL") {
+      user = await UserLocal.findById(req.user._id);
+    } else if (req.user.passport === "GOOGLE") {
+      user = await UserGoogle.findById(req.user._id);
+    } else if (req.user.passport === "FACEBOOK") {
+      user = await UserFacebook.findById(req.user._id);
+    }
+    console.log("USER:", user);
     req.user = {
-      id: req.user._id,
-      avatar: req.user.avatar,
-      username: req.user.username,
-      email: req.user.email,
-      provider: req.user.passport,
+      id: user._id,
+      avatar: user.avatar,
+      username: user.username,
+      email: user.email,
+      provider: user.passport,
     };
     next();
     return;

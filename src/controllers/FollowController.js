@@ -1,10 +1,8 @@
 const Manga = require("../models/Manga");
 const moment = require("moment");
 const UserLocal = require("../models/UserLocal");
-const filterFollow = require("../helper/filterFollow");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
-const { response } = require("express");
 const { PASSPORT, types } = require("../config/default");
 const UserGoogle = require("../models/UserGoogle");
 const UserFacebook = require("../models/UserFacebook");
@@ -75,16 +73,6 @@ class FollowController {
         );
     }
     try {
-      if (req.user === undefined) {
-        return res
-          .status(STATUS.UNAUTHORIZED)
-          .json(
-            new ErrorResponse(
-              ERRORCODE.ERROR_UNAUTHORIZED,
-              MESSAGE.UNAUTHORIZED
-            )
-          );
-      }
       if (req.user) {
         if (req.user.provider === PASSPORT.LOCAL) {
           await UserLocal.findByIdAndUpdate(req.user.id, {
@@ -102,6 +90,10 @@ class FollowController {
           });
         }
       }
+      await Manga.updateOne(
+        { _id: mangaId },
+        { $inc: { "statistical.follows": 1 } }
+      );
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.FOLLOWED, req.user.id));
@@ -122,16 +114,6 @@ class FollowController {
         );
     }
     try {
-      if (req.user === undefined) {
-        return res
-          .status(STATUS.UNAUTHORIZED)
-          .json(
-            new ErrorResponse(
-              ERRORCODE.ERROR_UNAUTHORIZED,
-              MESSAGE.UNAUTHORIZED
-            )
-          );
-      }
       if (req.user) {
         if (req.user.provider === PASSPORT.LOCAL) {
           await UserLocal.updateOne(
@@ -158,6 +140,10 @@ class FollowController {
           );
         }
       }
+      await Manga.updateOne(
+        { _id: mangaId },
+        { $inc: { "statistical.follows": -1 } }
+      );
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UNFOLLOWED, req.user.id));

@@ -14,13 +14,17 @@ const UserFacebookSchema = new Schema(
       required: true,
       default: PASSPORT.FACEBOOK,
     },
-    googleId: {
+    facebookId: {
       type: String,
       default: null,
     },
     email: { type: String, required: false, unique: true },
     dob: {
       type: Date, //dob: Date of Birth
+      default: null,
+    },
+    gender: {
+      type: String,
       default: null,
     },
     avatar: {
@@ -43,6 +47,7 @@ const UserFacebookSchema = new Schema(
       type: Array,
       default: [],
     },
+    history: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   { timestamps: true, collection: "UserFacebooks" }
 );

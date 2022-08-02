@@ -1,33 +1,77 @@
-const getTime = require("./getTime");
-const Manga = require("../models/Manga");
-const { orderManga } = require("./order");
+const Chapter = require("../models/Chapter");
 module.exports = async function getChaptersOfDay() {
-  const d = new Date(getTime());
-  const getDate = d.getDate();
-  const getMonth = d.getMonth();
-  const getYear = d.getFullYear();
   try {
-    const mangas = await Manga.find({}).populate("contentId");
-    const lastChapters = orderManga(mangas)
-      .map((manga, index) => {
-        if (manga.contentId.chapters.length !== 0) {
-          return {
-            name: manga.name,
-            slug: manga.slug,
-            chapters: manga.contentId.chapters.filter((chapter, index) => {
-              return (
-                getDate === new Date(chapter.createdTime).getDate() &&
-                getMonth === new Date(chapter.createdTime).getMonth() &&
-                getYear === new Date(chapter.createdTime).getFullYear()
-              );
-            }),
-          };
-        }
-      })
-      .filter((item) => item != undefined);
+    const date = new Date();
+    const yesterday = new Date(date.setDate(date.getDate() - 1));
+    const tomorrow = new Date(date.setDate(date.getDate() + 1));
 
-    return lastChapters;
+    const result = await Chapter.aggregate([
+      {
+        $unwind: "$chapters",
+      },
+      {
+        $addFields: {
+          isDate: "$chapters.createdTime",
+        },
+      },
+      {
+        $addFields: {
+          isDate: {
+            $toDate: "$isDate",
+          },
+        },
+      },
+      {
+        $match: {
+          isDate: { $gt: yesterday, $lt: tomorrow },
+        },
+      },
+      {
+        $sort: {
+          isDate: -1,
+        },
+      },
+      {
+        $addFields: {
+          _id: { $toString: "$_id" },
+        },
+      },
+      {
+        $lookup: {
+          from: "Mangas",
+          localField: "_id",
+          foreignField: "contentId",
+          as: "Mangas",
+        },
+      },
+      { $unwind: "$Mangas" },
+      {
+        $unset: [
+          "Mangas.anotherName",
+          "Mangas.serve",
+          "Mangas.status",
+          "Mangas.country",
+          "Mangas.contentId",
+          "Mangas.image",
+          "Mangas.type",
+          "Mangas.statistical",
+          "Mangas.description",
+          "Mangas.author",
+          "Mangas.fanmade",
+          "Mangas.deleted",
+          "Mangas.createdAt",
+          "Mangas.updatedAt",
+          "Mangas.deletedAt",
+          "Mangas.translation",
+        ],
+      },
+    ]);
+
+    return result;
   } catch (error) {
     console.log(error);
+    res
+      .status(STATUS.SERVER_ERROR)
+      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
   }
 };

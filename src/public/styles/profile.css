@@ -1,0 +1,71 @@
+#section-1 {
+  padding: 50px 0px; }
+  #section-1 .avatar-side-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 3px 3px 6px 3px #888888;
+    padding: 20px 10px; }
+    #section-1 .avatar-side-bar .avatar {
+      position: relative;
+      height: 120px;
+      width: 120px; }
+      #section-1 .avatar-side-bar .avatar #avatar {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #c0c0c0; }
+      #section-1 .avatar-side-bar .avatar i {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        cursor: pointer; }
+        #section-1 .avatar-side-bar .avatar i:hover {
+          color: #007bff; }
+  #section-1 .menu-side-bar {
+    box-shadow: 3px 3px 6px 3px #888888; }
+    #section-1 .menu-side-bar ul {
+      list-style: none; }
+      #section-1 .menu-side-bar ul a {
+        text-decoration: none; }
+        #section-1 .menu-side-bar ul a li {
+          padding: 15px 0px; }
+  #section-1 .info {
+    box-shadow: 3px 3px 6px 3px #888888;
+    padding: 20px 10px; }
+    #section-1 .info .field .badge {
+      margin-left: 10px; }
+    #section-1 .info .field p {
+      width: 100%;
+      border: none;
+      background-image: linear-gradient(to top, #888888, white);
+      border-bottom: 2px solid #007bff;
+      outline: none;
+      padding: 5px 10px; }
+    #section-1 .info .field i {
+      cursor: pointer; }
+  #section-1 #updatePassword .password-field {
+    position: relative; }
+    #section-1 #updatePassword .password-field input {
+      padding-right: 50px; }
+    #section-1 #updatePassword .password-field i {
+      color: #343a40;
+      position: absolute;
+      top: 45px;
+      right: 20px;
+      cursor: pointer; }
+
+.avatar-side-bar img {
+  display: block;
+  max-width: 100%; }
+
+.avatar-side-bar .preview {
+  overflow: hidden;
+  width: 160px;
+  height: 160px;
+  margin: 10px;
+  border: 2px solid #007bff; }
+
+.avatar-side-bar .modal-lg {
+  max-width: 700px !important; }

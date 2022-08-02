@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/css/paging.css">
   <link rel="stylesheet" href="/css/skeleton.css">
   <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/rating.css">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
@@ -26,7 +27,6 @@
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
         <li class="breadcrumb-item active" aria-current="page"><%= slug %></li>
       </ol>
-
     </nav>
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-3">
@@ -85,12 +85,18 @@
               </span>
               <input type="checkbox" class="form-check-input" id="checkFollow" onchange="handleFollow('<%= manga._id%>')" hidden />
             </label>
-            <span class="like mr-3" onclick="handleLike('<%= manga._id %>')">
-              <i class="fas fa-thumbs-up"></i> Thích
-            </span>
-            <span class="rate">
+            <label class="like mr-3 form-check-label" for="checkLike">
+              <span>
+                <i class="fas fa-thumbs-up"></i> Thích
+              </span>
+              <input type="checkbox" class="form-check-input" id="checkLike" onchange="handleLike('<%= manga._id%>')" hidden />
+            </label>
+            <span class="rate" data-toggle="modal" data-target="#ratingModal">
+              <!-- Button trigger modal -->
               <i class="fas fa-star"></i> Đánh giá
             </span>
+            <!-- Modal -->
+            <%- include('partials/rating') %>
           </div>
           <div class="manga-info__desc">
             Nội dung:
@@ -153,7 +159,7 @@
             <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
                 <%= chapter.chapterName%>
               </a></td>
-            <td class="text-center">
+            <td class=" text-center">
               <span><i class="fas fa-eye"></i> <%= chapter.statistical.views %></span>
             </td>
             <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
@@ -196,6 +202,7 @@
 <script src="/js/plugins/detail.js"></script>
 <script src="/js/moment.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/rating.js"></script>
 
 <script>
   // Sorting Top Bottom list
@@ -244,21 +251,25 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
-  function handleLike(mangaId) {
-    alert(mangaId)
-  }
-
   function handleAPI(mangaId, types) {
     fetch('/user/info')
       .then((response) => response.json())
       .then((result) => {
         const user = result.data;
-        if (user.followedList.includes(mangaId)) {
+        console.log(user)
+        if (user && user.followedList.includes(mangaId)) {
           document.querySelector(".follow span").innerHTML = `<i class="fas fa-heartbeat"></i> Đang theo dõi`;
           document.getElementById("checkFollow").setAttribute("checked", "")
         } else {
           document.querySelector(".follow span").innerHTML = `<i class="fas fa-heart"></i> Theo dõi`;
           document.getElementById("checkFollow").removeAttribute("checked")
+        }
+        if (user && user.likedList.includes(mangaId)) {
+          document.querySelector(".like span").innerHTML = `<i class="fas fa-thumbs-up"></i> Đã thích`;
+          document.getElementById("checkLike").setAttribute("checked", "")
+        } else {
+          document.querySelector(".like span").innerHTML = `<i class="far fa-thumbs-up"></i> Thích`;
+          document.getElementById("checkLike").removeAttribute("checked")
         }
         getRelatedMangas(mangaId, types);
       }).catch(error => console.log(error))

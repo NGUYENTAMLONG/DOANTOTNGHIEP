@@ -1,0 +1,31 @@
+  <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ratingModalLabel">😍 Đánh giá bộ manga này tại đây 👇</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <div class="row justify-content-center align-items-center">
+              <div class="center col-12 col-md-9">
+                <div id="rate" class="stars">
+                  <label id="star5" onclick="rate(5)"></label>
+                  <label id="star4" onclick="rate(4)"></label>
+                  <label id="star3" onclick="rate(3)"></label>
+                  <label id="star2" onclick="rate(2)"></label>
+                  <label id="star1" onclick="rate(1)"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-warning" onclick="rating('<%= manga._id %>')">Đánh giá</button>
+        </div>
+      </div>
+    </div>
+  </div>

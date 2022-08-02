@@ -5,6 +5,7 @@ const { redirect } = require("../service/redirect");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const counter = require("../service/counterVisiter");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
+const { setHistory } = require("../service/historyUser");
 
 let contentId = "";
 class detailController {
@@ -17,6 +18,7 @@ class detailController {
         redirect(req, res, STATUS.NOT_FOUND);
       }
       let checkFollow = false;
+      setHistory(req, res, manga._id);
       // if (req.user !== undefined) {
       //   // const foundUser = await User.findById(req.user._id);
       //   checkFollow = foundUser.follows.includes(manga._id);

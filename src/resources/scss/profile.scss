@@ -1,0 +1,99 @@
+@import "variables.scss";
+
+#section-1 {
+  padding: 50px 0px;
+  .avatar-side-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 3px 3px 6px 3px #888888;
+    padding: 20px 10px;
+    .avatar {
+      position: relative;
+      height: 120px;
+      width: 120px;
+      #avatar {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid $color-silver;
+      }
+      i {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        cursor: pointer;
+        &:hover {
+          color: $color-3;
+        }
+      }
+    }
+  }
+  .menu-side-bar {
+    box-shadow: 3px 3px 6px 3px #888888;
+
+    ul {
+      list-style: none;
+      a {
+        text-decoration: none;
+        li {
+          padding: 15px 0px;
+        }
+      }
+    }
+  }
+  .info {
+    box-shadow: 3px 3px 6px 3px #888888;
+    padding: 20px 10px;
+    .field {
+      .badge {
+        margin-left: 10px;
+      }
+      p {
+        width: 100%;
+        border: none;
+        background-image: linear-gradient(to top, #888888, white);
+        border-bottom: 2px solid $color-3;
+        outline: none;
+        padding: 5px 10px;
+      }
+      i {
+        cursor: pointer;
+      }
+    }
+  }
+  #updatePassword {
+    .password-field {
+      position: relative;
+      input {
+        padding-right: 50px;
+      }
+      i {
+        color: $color-4;
+        position: absolute;
+        top: 45px;
+        right: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.avatar-side-bar {
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .preview {
+    overflow: hidden;
+    width: 160px;
+    height: 160px;
+    margin: 10px;
+    border: 2px solid $color-3;
+  }
+
+  .modal-lg {
+    max-width: 700px !important;
+  }
+}

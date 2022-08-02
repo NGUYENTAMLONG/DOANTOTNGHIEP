@@ -65,12 +65,7 @@ function addFollow(mangaId) {
           button: "OK!",
         });
       } else {
-        swal({
-          title: result.message,
-          text: "Bạn chưa thể thực hiện thao tác này :<",
-          icon: "error",
-          button: "OK!",
-        });
+        document.getElementById("checkFollow").click();
       }
     })
     .catch((error) => {
@@ -101,8 +96,71 @@ function unFollow(mangaId) {
         });
       } else {
         swal({
-          title: "Có lỗi rồi !",
-          text: result.message,
+          title: "Thông báo !",
+          text: "Bạn phải đăng nhập trước :>",
+          icon: "error",
+          button: "OK!",
+        });
+      }
+    })
+    .catch((error) => console.log(error));
+}
+//Like
+function handleLike(mangaId) {
+  const checkedLike = document.getElementById("checkLike").checked;
+  const likeBtn = document.querySelector(".like span");
+  if (checkedLike) {
+    likeBtn.innerHTML = `<i class="fas fa-thumbs-up"></i> Đã thích`;
+    like(mangaId);
+  } else {
+    likeBtn.innerHTML = `<i class="far fa-thumbs-up"></i> Thích`;
+    unlike(mangaId);
+  }
+}
+
+function like(mangaId) {
+  const data = {
+    mangaId: mangaId,
+  };
+
+  fetch("/user/like", {
+    method: "POST", // or 'PUT'
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      if (!result.isSuccess) {
+        document.getElementById("checkLike").click();
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function unlike(mangaId) {
+  const payload = {
+    mangaId: mangaId,
+  };
+  const headers = {
+    "content-Type": "application/json",
+  };
+  fetch("/user/unlike", {
+    method: "DELETE",
+    body: JSON.stringify(payload),
+    headers,
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.isSuccess === true) {
+        return;
+      } else {
+        swal({
+          title: "Thông báo !",
+          text: "Bạn phải đăng nhập trước :>",
           icon: "error",
           button: "OK!",
         });

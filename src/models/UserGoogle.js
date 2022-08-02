@@ -23,6 +23,10 @@ const UserGoogleSchema = new Schema(
       type: Date, //dob: Date of Birth
       default: null,
     },
+    gender: {
+      type: String,
+      default: null,
+    },
     avatar: {
       type: String,
       required: true,
@@ -43,6 +47,7 @@ const UserGoogleSchema = new Schema(
       type: Array,
       default: [],
     },
+    history: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   { timestamps: true, collection: "UserGoogles" }
 );

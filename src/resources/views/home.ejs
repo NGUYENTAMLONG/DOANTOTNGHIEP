@@ -26,43 +26,38 @@
     </h3>
     <div class="timeline" style="overflow-y: scroll;height: 200px;">
       <% mangaToday.forEach(function(manga,index){  %>
-      <% if (manga.chapters.length !== 0){ %>
       <div class="d-flex border-bottom">
-        <p><i class="fas fa-dot-circle"></i> <b><%= manga.name %> : </b>
+        <p><i class="fas fa-dot-circle"></i> <b><%= manga.Mangas.name %> : </b>
         </p>
         <div class="d-flex flex-column">
-          <% manga.chapters.reverse().forEach((chapter,index)=>{%>
           <div class="flex ml-2">
-            [ <%=  moment(chapter.createdTime).locale("vi").fromNow() %> ]
-            <a href="/detail/<%= manga.slug %>">
-              Chương <%= chapter.chapterNumber %> -
-              <%= chapter.chapterName %>
+            [ <%=  moment(manga.chapters.createdTime).locale("vi").fromNow() %> ]
+            <a href="/detail/<%= manga.Mangas.slug %>">
+              Chương <%= manga.chapters.chapterNumber %> -
+              <%= manga.chapters.chapterName %>
             </a>
           </div>
-          <%}) %>
         </div>
       </div>
-      <%} %>
       <% }) %>
     </div>
     <hr>
     <h3><i class="fas fa-hourglass-half"></i> Lịch Cập Nhật Gần Đây</h3>
     <div class="timeline" style="overflow-y: scroll;height: 300px;">
       <% recentlyReleasedManga.forEach(function(manga,index){  %>
-      <% if(manga.lastChapter) { %>
       <p class="border-bottom">
-        <b><i class="fas fa-dot-circle"></i> <%= manga.name %> :</b>
+        <b><i class="fas fa-dot-circle"></i> <%= manga.Mangas.name %> :</b>
         <span class="badge badge-primary text-capitalize">
-          <%= moment(manga.lastChapter.createdTime).locale("vi").fromNow() %>
+          <%= moment(manga.chapters.createdTime).locale("vi").fromNow() %>
         </span>
-        <a href="/detail/<%= manga.slug %>">
-          <% manga.name %> Chương <%=  manga.lastChapter.chapterNumber%> : <%=  manga.lastChapter.chapterName%>
+        <a href="/detail/<%= manga.Mangas.slug %>">
+          <% manga.Mangas.name %> Chương <%=  manga.chapters.chapterNumber%> : <%=  manga.chapters.chapterName%>
         </a>
-        <span class="badge badge-danger"><%= manga.hot === true ? "Hot" : "" %></span>
+        <span class="badge badge-danger"><%= manga.Mangas.hot === true ? "Hot" : "" %></span>
       </p>
-      <% }%>
       <% }) %>
     </div>
+    <!-- ********************* -->
   </section>
   <section class="section container" id="section-3">
     <a href="/just-updated?page=1&limit=2">
@@ -132,71 +127,127 @@
   // })
 </script>
 <script>
-  fetch('/chart/weekly')
-    .then((response) => response.json())
-    .then((result) => {
-      console.log(result)
-      const htmls = result.data.map((manga, index) => `
-       <li class="rank d-flex rank-${index + 1}">
-         <div class="rank__number p-1">
-           <b>${index + 1}</b>
-         </div>
-         <div class="rank__img">
-           <img src="${manga.Mangas[0].image}" alt="">
-         </div>
-         <div class="rank__info d-flex aligh-items-center flex-column">
-           <b>${manga.Mangas[0].name}</b>
-           <p>Chapter ${manga.chapters.chapterNumber}</p>
-           <p>${manga.chapters.chapterName}</p>
-           <div>
-            <i class="fas fa-eye"></i> ${manga.chapters.statistical.views}
-            </div>
-         </div>
-       </li>
-      
-      `).join("")
-      document.getElementById("chart-col-2").innerHTML = `
-       <div class="chart" id="chat-1">
-         <p id="header-1">️🏅 Top tuần ️🎉</p>
-         <h3 id="header-2">Top 10 Manga nổi bật</h3>
-         <ul>
-          ${htmls}
-         </ul>
-       </div>`
-    }).catch(error => console.log(error))
-
-
   fetch('/chart/daily')
     .then((response) => response.json())
     .then((result) => {
       console.log(result)
       const htmls = result.data.map((manga, index) => `
-     <li class="rank d-flex rank-${index + 1}">
-       <div class="rank__number p-1">
-         <b>${index + 1}</b>
-       </div>
-       <div class="rank__img">
-         <img src="${manga.Mangas[0].image}" alt="">
-       </div>
-       <div class="rank__info d-flex aligh-items-center flex-column">
-         <b>${manga.Mangas[0].name}</b>
-         <p>Chapter ${manga.chapters.chapterNumber}</p>
-         <p>${manga.chapters.chapterName}</p>
-         <div>
-           <i class="fas fa-eye"></i> ${manga.chapters.statistical.views}
-         </div>
-       </div>
-     </li>
+      <li class="rank d-flex rank-${index + 1}">
+        <div class="rank__number p-1">
+          <b>${index + 1}</b>
+        </div>
+        <div class="rank__img">
+          <a href="/detail/${manga.Mangas[0].slug}">
+            <img src="${manga.Mangas[0].image}" alt="">
+          </a>
+        </div>
+        <div class="rank__info d-flex aligh-items-center flex-column">
+          <a href="/detail/${manga.Mangas[0].slug}">
+            <b>${manga.Mangas[0].name}</b>
+            <p>Chapter ${manga.chapters.chapterNumber}</p>
+          </a>
+          <a href="/detail/${manga.Mangas[0].slug}/read/chapter-${manga.chapters.chapterNumber}">
+            <p>${manga.chapters.chapterName}</p>
+          </a>
+          <div>
+            <i class="fas fa-eye"></i> ${manga.chapters.statistical.views}
+          </div>
+        </div>
+      </li>
 
      `).join("")
       document.getElementById("chart-col-1").innerHTML = `
-     <div class="chart" id="chat-1">
-       <p id="header-1">️🏅 Top ngày ️🎉</p>
-       <h3 id="header-2">Top 10 Manga nổi bật</h3>
+     <div class="chart">
+      <div id="chart-1"/>
+       <p class="header-1">️🏅 Top ngày ️🎉</p>
+       <h3 class="header-2">Top 10 Manga nổi bật</h3>
        <ul>
          ${htmls}
        </ul>
+        </div>
      </div>`
+    }).catch(error => console.log(error))
+
+  fetch('/chart/weekly')
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result)
+      const htmls = result.data.map((manga, index) => `
+   <li class="rank d-flex rank-${index + 1}">
+     <div class="rank__number p-1">
+       <b>${index + 1}</b>
+     </div>
+     <div class="rank__img">
+       <a href="/detail/${manga.Mangas[0].slug}">
+         <img src="${manga.Mangas[0].image}" alt="">
+       </a>
+     </div>
+     <div class="rank__info d-flex aligh-items-center flex-column">
+       <a href="/detail/${manga.Mangas[0].slug}">
+         <b>${manga.Mangas[0].name}</b>
+         <p>Chapter ${manga.chapters.chapterNumber}</p>
+       </a>
+       <a href="/detail/${manga.Mangas[0].slug}/read/chapter-${manga.chapters.chapterNumber}">
+         <p>${manga.chapters.chapterName}</p>
+       </a>
+       <div>
+         <i class="fas fa-eye"></i> ${manga.chapters.statistical.views}
+       </div>
+     </div>
+   </li>
+
+  `).join("")
+      document.getElementById("chart-col-2").innerHTML = `
+  <div class="chart">
+    <div id="chart-2" />
+    <p class="header-1">️🏅 Top tuần ️🎉</p>
+    <h3 class="header-2">Top 10 Manga nổi bật</h3>
+    <ul>
+      ${htmls}
+    </ul>
+  </div>
+  </div>`
+    }).catch(error => console.log(error))
+
+  fetch('/chart/monthly')
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result)
+      const htmls = result.data.map((manga, index) => `
+    <li class="rank d-flex rank-${index + 1}">
+      <div class="rank__number p-1">
+        <b>${index + 1}</b>
+      </div>
+      <div class="rank__img">
+        <a href="/detail/${manga.Mangas[0].slug}">
+          <img src="${manga.Mangas[0].image}" alt="">
+        </a>
+      </div>
+      <div class="rank__info d-flex aligh-items-center flex-column">
+        <a href="/detail/${manga.Mangas[0].slug}">
+        <b>${manga.Mangas[0].name}</b>
+        <p>Chapter ${manga.chapters.chapterNumber}</p>
+        </a>
+        <a href="/detail/${manga.Mangas[0].slug}/read/chapter-${manga.chapters.chapterNumber}">
+        <p>${manga.chapters.chapterName}</p>
+        </a>
+        <div>
+          <i class="fas fa-eye"></i> ${manga.chapters.statistical.views}
+        </div>
+      </div>
+    </li>
+
+    `).join("")
+      document.getElementById("chart-col-3").innerHTML = `
+    <div class="chart">
+      <div id="chart-3"/>
+      <p class="header-1">️🏅 Top tháng ️🎉</p>
+      <h3 class="header-2">Top 10 Manga nổi bật</h3>
+      <ul>
+        ${htmls}
+      </ul>
+    </div>
+    </div>`
     }).catch(error => console.log(error))
 </script>
 

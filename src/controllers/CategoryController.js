@@ -24,11 +24,13 @@ class MangaController {
         .limit(limit)
         .skip(startPage)
         .exec();
+
+      const category = types.filter((item) => item.name === req.params.type)[0];
       res.render("showCategory", {
         user: req.user,
         moment: moment,
         mangas: orderManga(result.mangas),
-        category: req.params.type,
+        category: category,
         navigator: {
           previous: result.previous,
           next: result.next,

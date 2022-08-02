@@ -1,7 +1,7 @@
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
 const User = require("../models/UserLocal");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const moment = require("moment");
 const { SECRET_KEY, OPTION_COOKIE } = require("../config/default");
 const { SuccessResponse, ErrorResponse } = require("../helper/response");
 const {
@@ -11,6 +11,7 @@ const {
 } = require("../helper/validate.helper");
 const { SendRegisterMail } = require("../service/sendMail");
 const { GenerateOTP } = require("../helper/generate");
+const History = require("../models/History");
 
 let otpCache = "";
 
@@ -109,12 +110,13 @@ class AccountController {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
+      const createdHistory = await History.create({});
       const newUser = new User({
         username,
         password: hashedPassword,
         email,
+        history: createdHistory._id,
         dob,
-        otp,
       });
       if (otp === otpCache) {
         const createdUser = await newUser.save();

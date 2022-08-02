@@ -24,6 +24,10 @@ const UserLocalSchema = new Schema(
       type: Date, //dob: Date of Birth
       required: true,
     },
+    gender: {
+      type: String,
+      default: null,
+    },
     avatar: {
       type: String,
       default: "/public/avatars/user_avatar_default.jpg",
@@ -44,6 +48,7 @@ const UserLocalSchema = new Schema(
       type: Array,
       default: [],
     },
+    history: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   { timestamps: true, collection: "UserLocals" }
 );

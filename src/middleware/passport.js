@@ -10,6 +10,7 @@ const { PASSPORT } = require("../config/default");
 const UserLocal = require("../models/UserLocal");
 const UserGoogle = require("../models/UserGoogle");
 const UserFacebook = require("../models/UserFacebook");
+const History = require("../models/History");
 
 passport.use(
   new GoogleStrategy(
@@ -18,24 +19,30 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
     },
-    (accessToken, refreshToken, profile, cb) => {
+    async function (accessToken, refreshToken, profile, cb) {
       // Check if google profile exist.
       console.log({ accessToken, refreshToken, profile });
-      UserGoogle.findOrCreate(
-        {
+      try {
+        const foundAccount = await UserGoogle.findOne({
           googleId: profile.id,
-          username: profile.displayName,
-          email: profile.emails[0].value,
-          avatar: profile.photos[0].value,
-        },
-        function (err, user) {
-          if (err) {
-            console.log("ERROR OAUTH:", err);
-            return;
-          }
-          return cb(null, user);
+        });
+        if (foundAccount) {
+          return cb(null, foundAccount);
+        } else {
+          const createdHistory = await History.create({});
+          console.log(createdHistory);
+          const createdUser = await UserGoogle.create({
+            googleId: profile.id,
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            avatar: profile.photos[0].value,
+            history: createdHistory._id,
+          });
+          return cb(null, createdUser);
         }
-      );
+      } catch (error) {
+        return cb(error);
+      }
     }
   )
 );
@@ -56,11 +63,13 @@ passport.use(
         if (foundAccount) {
           return cb(null, foundAccount);
         } else {
+          const createdHistory = await History.create({});
           const createdUser = await UserFacebook.create({
             facebookId: profile.id,
             username: profile.displayName,
             email: profile.emails[0].value,
             avatar: profile.photos[0].value,
+            history: createdHistory._id,
           });
           return cb(null, createdUser);
         }
@@ -83,7 +92,6 @@ passport.use(
       if (!matched) {
         return done(null, false);
       }
-      console.log(user);
       return done(null, user);
     });
   })

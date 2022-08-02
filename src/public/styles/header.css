@@ -87,6 +87,8 @@ header .navbar {
     margin-left: 10px; }
   header .navbar #registerModal .password-field {
     position: relative; }
+    header .navbar #registerModal .password-field input {
+      padding-right: 50px; }
     header .navbar #registerModal .password-field i {
       color: #343a40;
       position: absolute;

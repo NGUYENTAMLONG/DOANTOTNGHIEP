@@ -15,10 +15,12 @@
 <body>
   <%- include('partials/header') %>
   <h2 class="container mt-3 bg-dark rounded text-light">
-    <i class='bx bx-history'></i> Lịch sử đọc truyện
+    <%- title %>
+    <% if(!flag){%>
     <div class="clear-history" style="position: fixed; right:10px;bottom: 10px;">
       <button onclick="clearVisitHistory()" class="btn btn-danger m-2"><i class="fas fa-eraser"></i></button>
     </div>
+    <%} %>
   </h2>
   <div class="container rounded p-2">
     <div class="filterZone">

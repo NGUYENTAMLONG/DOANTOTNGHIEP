@@ -109,6 +109,9 @@ header {
     #registerModal {
       .password-field {
         position: relative;
+        input {
+          padding-right: 50px;
+        }
         i {
           color: $color-4;
           position: absolute;
