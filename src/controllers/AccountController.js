@@ -1,5 +1,5 @@
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
-const User = require("../models/UserLocal");
+const UserLocal = require("../models/UserLocal");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
 const { SECRET_KEY, OPTION_COOKIE } = require("../config/default");
@@ -9,7 +9,7 @@ const {
   ValidateEmail,
   ValidateBlank,
 } = require("../helper/validate.helper");
-const { SendRegisterMail } = require("../service/sendMail");
+const { sendRegisterMail } = require("../service/sendMail");
 const { GenerateOTP } = require("../helper/generate");
 const History = require("../models/History");
 
@@ -57,6 +57,7 @@ class AccountController {
             )
           );
       }
+      //Validate Blank (Username)
       if (!ValidateBlank(username)) {
         return res
           .status(STATUS.BAD_REQUEST)
@@ -67,7 +68,7 @@ class AccountController {
             )
           );
       }
-      const checkEmail = await User.findOne({ email: email });
+      const checkEmail = await UserLocal.findOne({ email: email });
       if (checkEmail) {
         return res
           .status(STATUS.BAD_REQUEST)
@@ -78,7 +79,7 @@ class AccountController {
             )
           );
       }
-      const checkUsername = await User.findOne({ username: username });
+      const checkUsername = await UserLocal.findOne({ username: username });
       if (checkUsername) {
         return res
           .status(STATUS.BAD_REQUEST)
@@ -91,12 +92,13 @@ class AccountController {
       }
       otpCache = GenerateOTP();
       console.log("Verify step:", otpCache);
-      await SendRegisterMail(email, otpCache);
+      await sendRegisterMail(email, otpCache);
 
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.SEND_MAIL_SUCCESS, null));
     } catch (error) {
+      console.log(error);
       res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
@@ -111,7 +113,7 @@ class AccountController {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const createdHistory = await History.create({});
-      const newUser = new User({
+      const newUser = new UserLocal({
         username,
         password: hashedPassword,
         email,
@@ -143,7 +145,7 @@ class AccountController {
     try {
       otpCache = GenerateOTP();
       // console.log("Resend step: ", otpCache);
-      await SendRegisterMail(email, otpCache);
+      await sendRegisterMail(email, otpCache);
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.SEND_MAIL_SUCCESS, null));

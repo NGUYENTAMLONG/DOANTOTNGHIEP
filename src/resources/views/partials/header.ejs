@@ -62,7 +62,7 @@
                 </div>
                 <p id="userName"><%= user.username %></p>
               </div>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-menu" id="settings" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="/follow">Danh sách theo dõi</a>
                 <a class="dropdown-item" href="/user/history?page=1&limit=2">Lịch sử đọc truyện</a>
                 <a class="dropdown-item" href="/user/profile">Cài đặt thông tin</a>
@@ -238,9 +238,9 @@
               </a>
               <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-250px ; width: 91vw;">
                 <ul>
-                  <li><a href="#">Top Ngày</a></li>
-                  <li><a href="#">Top Tuần</a></li>
-                  <li> <a href="#">Top Tháng</a></li>
+                  <li><a href="/top/today">Top Ngày</a></li>
+                  <li><a href="/top/week"">Top Tuần</a></li>
+                  <li> <a href=" /top/month">Top Tháng</a></li>
                   <li> <a href="/filter/favourite?page=1&limit=2">Yêu thích nhất</a></li>
                   <li> <a href="/filter/highest-views?page=1&limit=2">Lượt views cao nhất</a></li>
                   <li> <a href="/just-updated?page=1&limit=2">Mới cập nhật</a></li>

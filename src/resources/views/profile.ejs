@@ -80,7 +80,7 @@
                 Xóa tài khoản
               </li>
             </a>
-            <a href="#">
+            <a href="/logout">
               <li>Đăng xuất</li>
             </a>
           </ul>
@@ -113,7 +113,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                        <button type="button" class="btn btn-primary">Lưu</button>
+                        <button type="button" class="btn btn-primary" onclick="updateUsername('username')">Lưu</button>
                       </div>
                     </div>
                   </div>
@@ -147,7 +147,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                        <button type="button" class="btn btn-primary">Lưu</button>
+                        <button type="button" class="btn btn-primary" onclick="updateDob('dob')">Lưu</button>
                       </div>
                     </div>
                   </div>
@@ -204,7 +204,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-primary" onclick="updateUsername('username')">Lưu</button>
                   </div>
                 </div>
               </div>
@@ -218,7 +218,7 @@
             <label>Ngày sinh</label>
             <div class="field__input d-flex align-items-center">
               <p>
-                <%= (user.dob) ? user.dob : "Chưa cập nhật" %>
+                <%= (user.dob) ? moment(user.dob).format("L") : "Chưa cập nhật" %>
               </p>
               <i class='bx bxs-edit-alt fa-2x' data-toggle="modal" data-target="#updateDob"></i>
             </div>
@@ -238,7 +238,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-primary" onclick="updateDob('dob')">Lưu</button>
                   </div>
                 </div>
               </div>
@@ -258,8 +258,8 @@
           </div>
           <div class="field age">
             <label>Tuổi</label> <br>
-            <span class="badge badge-success"><% if(user.age){%>
-              <%= user.age %>
+            <span class="badge badge-success"><% if(user.dob){%>
+              <%= moment().diff(user.dob,"years")%>
               <%}else{%>
               Chưa cập nhật
               <%} %></span>
@@ -301,6 +301,7 @@
           done(reader.result);
         };
         reader.readAsDataURL(files[0]);
+
       }
     });
 
@@ -325,17 +326,25 @@
         url = URL.createObjectURL(blob);
         var reader = new FileReader();
         reader.readAsDataURL(blob);
+        console.log(reader)
         reader.onloadend = function() {
           var base64data = reader.result;
           $.ajax({
-            url: 'upload.php',
-            method: 'POST',
+            url: '/user/update-avatar',
+            method: 'PATCH',
             data: {
-              image: base64data
+              avatar: base64data
             },
             success: function(data) {
               $modal.modal('hide');
-              $('#uploaded_image').attr('src', data);
+              swal({
+                title: "Thành công",
+                text: "Avatar của bạn đã được cập nhật!",
+                icon: "success",
+                button: "OK!",
+              }).then(() => {
+                location.reload();
+              });
             }
           });
         };

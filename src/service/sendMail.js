@@ -1,15 +1,16 @@
 const nodemailer = require("nodemailer");
-
+const path = require("path");
+const appRoot = require("app-root-path");
 const { ADMIN_EMAIL } = require("../config/default");
 const { MESSAGE } = require("../config/httpResponse");
 
-async function SendRegisterMail(toEmail, otp) {
+async function sendRegisterMail(toEmail, otp) {
   const EMAIL = ADMIN_EMAIL.EMAIL;
   const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
   const SERVICE = ADMIN_EMAIL.SERVICE;
-  console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
+  // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
   let transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: SERVICE,
     auth: {
       user: EMAIL,
       pass: EMAILPASSWORD,
@@ -35,48 +36,90 @@ async function SendRegisterMail(toEmail, otp) {
   );
 }
 
-// async function SendMailToRecoverPassword(toEmail) {
-//   const EMAIL = process.env.EMAIL;
-//   const EMAILPASSWORD = process.env.EMAILPASSWORD;
-//   const SERVICE = process.env.SERVICE;
-//   let transporter = nodemailer.createTransport({
-//     service: SERVICE,
-//     auth: {
-//       user: EMAIL,
-//       pass: EMAILPASSWORD,
-//     },
-//   });
+async function sendMailToFix(fromEmail, content) {
+  const EMAIL = ADMIN_EMAIL.EMAIL;
+  const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
+  const SERVICE = ADMIN_EMAIL.SERVICE;
+  // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
+  let transporter = nodemailer.createTransport({
+    service: SERVICE,
+    auth: {
+      user: EMAIL,
+      pass: EMAILPASSWORD,
+    },
+  });
+  await transporter.sendMail(
+    {
+      from: {
+        address: fromEmail,
+        name: fromEmail,
+      }, // sender address
+      to: EMAIL, // list of receivers
+      subject: "🚫🚫🚫 Error Notification 🚫🚫🚫", // Subject line
+      text: "Bug reports from users: ", // plain text body
+      html: `
+      <span>🐞🐞🐞🐞🐞🐞</span>
+      <b>${content}</b>
+      <span>🐞🐞🐞🐞🐞🐞</span>
+      
+   `, // html body
+    },
+    (err) => {
+      if (err) {
+        return console.log({ ERROR: err });
+      }
+      return console.log({ message: MESSAGE.SEND_MAIL_SUCCESS });
+    }
+  );
+}
+async function sendMailToRetrievalPassword(toEmail) {
+  const EMAIL = ADMIN_EMAIL.EMAIL;
+  const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
+  const SERVICE = ADMIN_EMAIL.SERVICE;
+  // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
+  let transporter = nodemailer.createTransport({
+    service: SERVICE,
+    auth: {
+      user: EMAIL,
+      pass: EMAILPASSWORD,
+    },
+  });
+  // const payload = { email: toEmail };
 
-//   const payload = { email: toEmail };
-//   const expire = {
-//     expiresIn: VALUES.EXPIRE_VERIFY_H,
-//   };
-//   const token = jwt.sign(payload, process.env.SECRET_KEY, expire);
-
-//   await transporter.sendMail(
-//     {
-//       from: '"Admin 👻"', // sender address
-//       to: toEmail, // list of receivers
-//       subject: "Notification ✔ ", // Subject line
-//       text: "Did you forget your password ? Please, Fill out the form below to retrieve your password: ", // plain text body
-//       html: `
-//       <h2>Did you forget your password 🤔 ? Please, Fill out the form below to retrieve your password : ✍️✍️✍️ </h2>
-//        <form action="http://localhost:3333/password/forgot/recover/${token}" method="post" style="font-family: tahoma;">
-//                  <label for="password"><b> Password: </b></label>
-//                  <input type="text" name="password" id="password">
-//                  <input type="submit" value="Submit">
-//        </form>
-//    `, // html body
-//     },
-//     (err) => {
-//       if (err) {
-//         return console.log({ ERROR: err });
-//       }
-//       return console.log({ message: MESSAGE.SEND_MAIL_SUCCESS });
-//     }
-//   );
-// }
+  await transporter.sendMail(
+    {
+      from: '"Admin 👻"', // sender address
+      to: toEmail, // list of receivers
+      subject: "Notification ✔ ", // Subject line
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(appRoot.path, `/src/public/images/logo.png`),
+          cid: "unique@kreata.ee",
+        },
+      ],
+      text: "Did you forget your password ? Please, Fill out the form below to retrieve your password: ", // plain text body
+      html: `
+      <div style="text-align: center;">
+        <img src="cid:unique@kreata.ee" width="100px" style="text-align:center" alt="">
+        <h2>Bạn đã quên mật khẩu 🤔 ? Vui lòng nhập lại mật khẩu mới : ✍️✍️✍️ </h2>
+        <form action="http://localhost:3416/user/recover/password" method="POST">
+        <input type="email" name="email" value="${toEmail}" hidden/>
+           <button type="submit" style="padding:5px;">Click vào đây để đặt lại mật khẩu</button>
+        </form>
+       </div>
+   `, // html body
+    },
+    (err) => {
+      if (err) {
+        return console.log({ ERROR: err });
+      }
+      return console.log({ message: MESSAGE.SEND_MAIL_SUCCESS });
+    }
+  );
+}
 module.exports = {
-  SendRegisterMail,
-  //   SendMailToRecoverPassword,
+  sendRegisterMail,
+  sendMailToFix,
+  sendMailToRetrievalPassword,
 };

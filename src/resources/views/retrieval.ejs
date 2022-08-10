@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>RETRIEVAL</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <section class="section container" id="section-1">
+    <h2 class="text-center bg-dark rounded mt-3 text-light"><i class="fas fa-unlock"></i> Lấy lại mật khẩu <i class="fas fa-key"></i></h2>
+    <form>
+      <div class="form-group">
+        <label for="email">
+          <b>
+            Nhập Email đã đăng ký
+          </b>
+        </label>
+        <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-info">* Thư lấy lại mật khẩu sẽ được xác thực và gửi tới email của bạn</small>
+      </div>
+      <button type="submit" class="btn btn-primary float-right" onclick="submitRetrieval(event)"><i class="fas fa-broom"></i> Gửi</button>
+    </form>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>
+<script>
+  function submitRetrieval(event) {
+    event.preventDefault();
+    const email = document.getElementById("email").value;
+    const payload = {
+      email: email
+    }
+    fetch('/user/retrieval', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Thông báo",
+            text: "Hãy đăng nhập gmail của bạn để lấy lại mật khẩu !!!",
+            icon: "success",
+            button: "OK!",
+          });
+          return;
+        } else if (result.errorCode === "NOT_FOUND") {
+          swal({
+            title: "Thông báo",
+            text: "Tài khoản đã đăng ký không tồn tại !",
+            icon: "error",
+            button: "OK!",
+          });
+          return
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi rồi :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+
+</html>

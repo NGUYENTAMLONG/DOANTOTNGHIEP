@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <style>
+    .background {
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      background-image: url("/image/i1.jpg");
+      background-size: cover;
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      margin-top: 100px;
+      width: 350px;
+      background-color: rgba(0, 0, 0, 0.527);
+      padding: 10px;
+
+    }
+
+    .forget {
+      font-size: 13px;
+    }
+
+    .password-field {
+      position: relative;
+    }
+
+    .password-field i {
+      color: black;
+      position: absolute;
+      top: 45px;
+      right: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background"></div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
+  </nav>
+  <div class="container text-light">
+    <form action="/user/recover/password" method="POST">
+      <h2 class="text-center">Nhập mật khẩu mới</h2>
+      <div class="form-group password-field">
+        <label for="newPassword">Mật khẩu</label>
+        <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Enter new password" />
+        <i class="fas fa-eye" data-id="newPassword" onclick="toggleShowHide(this)"></i>
+        <small id="passwordHelp" class="form-text text-light">* Mật khẩu có chứa ít nhất từ 6 đến tối đa 20 ký tự, một chữ cái viết hoa, một chữ cái viết thường và một ký tự đặc biệt (#, $, %,..)</small>
+      </div>
+      <div class="form-group password-field">
+        <label for="repeatPassword">Xác nhận lại</label>
+        <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" placeholder="Repeat new password" />
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" onclick="submitNewPassword(event)">Cập nhật mật khẩu mới</button>
+      </div>
+    </form>
+  </div>
+</body>
+<%- include("partials/script") %>
+<script>
+  //Toggle show/hide password
+  let signal = true;
+
+  function toggleShowHide(it) {
+    const dataId = it.getAttribute("data-id");
+    if (signal) {
+      it.classList.add("fa-eye-slash");
+      it.classList.remove("fa-eye");
+      document.getElementById(dataId).setAttribute("type", "text");
+      signal = false;
+    } else {
+      it.classList.remove("fa-eye-slash");
+      it.classList.add("fa-eye");
+      document.getElementById(dataId).setAttribute("type", "password");
+      signal = true;
+    }
+  }
+  //Submit Recover Password Form
+  function submitNewPassword() {
+    event.preventDefault();
+    const newPassword = document.getElementById("newPassword").value;
+    const repeatPassword = document.getElementById("repeatPassword").value;
+    if (newPassword !== repeatPassword) {
+      swal({
+        title: "Thông báo",
+        text: "Nhập lại mật khẩu không khớp !!!",
+        icon: "error",
+        button: "OK!",
+      });
+      return;
+    } else {
+      const payload = {
+        newPassword
+      }
+      fetch('/user/recover/password', {
+          method: 'PATCH', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+        .then(response =>
+          response.json()
+        )
+        .then(result => {
+          console.log(result)
+          if (result.isSuccess === true) {
+            swal({
+              title: "Thông báo",
+              text: "Mật khẩu của bạn đã được lấy lại !!!",
+              icon: "success",
+              button: "OK!",
+            });
+            window.location.replace("/");
+          } else if (result.errorCode === "BAD_REQUEST") {
+            swal({
+              title: "Thông báo",
+              text: "Mật khẩu của bạn nhập không đúng định dạng !",
+              icon: "error",
+              button: "OK!",
+            });
+            return
+          } else {
+            swal({
+              title: "Thông báo",
+              text: "Có lỗi rồi :(",
+              icon: "error",
+              button: "OK!",
+            });
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+    }
+  }
+</script>
+
+</html>

@@ -2,6 +2,8 @@ const dotenv = require("dotenv");
 const moment = require("moment");
 const fs = require("fs");
 const path = require("path");
+const appRoot = require("app-root-path");
+const bcrypt = require("bcrypt");
 const { VALUES, types } = require("../config/default");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
@@ -13,7 +15,17 @@ const Manga = require("../models/Manga");
 const History = require("../models/History");
 const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
+const {
+  ValidateBlank,
+  ValidatePassword,
+} = require("../helper/validate.helper");
+const {
+  sendMailToFix,
+  sendMailToRetrievalPassword,
+} = require("../service/sendMail");
 dotenv.config();
+
+let Useremail;
 class UserController {
   async getUserInfo(req, res) {
     try {
@@ -109,13 +121,39 @@ class UserController {
   }
   async updateUsername(req, res) {
     const { username } = req.body;
+    // return res.json(new SuccessResponse(MESSAGE.SUCCESS, username));
+    //Validate Blank
+    if (!ValidateBlank(username)) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(
+            ERRORCODE.ERROR_BAD_REQUEST,
+            MESSAGE.ERROR_WHITE_SPACE
+          )
+        );
+    }
     try {
       let foundUser;
       if (req.user.provider === "LOCAL") {
         foundUser = await UserLocal.findById(req.user.id);
+        const checkUsername = await UserLocal.findOne({ username: username });
+        if (checkUsername) {
+          return res
+            .status(STATUS.BAD_REQUEST)
+            .json(
+              new ErrorResponse(
+                ERRORCODE.ERROR_ALREADY_EXISTS,
+                MESSAGE.USERNAME_ALREADY
+              )
+            );
+        }
         await UserLocal.findByIdAndUpdate(foundUser._id, {
           username: username,
         });
+        return res
+          .status(STATUS.SUCCESS)
+          .json(new SuccessResponse(MESSAGE.SUCCESS, null));
       } else if (req.user.provider === "GOOGLE") {
         foundUser = await UserGoogle.findById(req.user.id);
         await UserGoogle.findByIdAndUpdate(foundUser._id, {
@@ -127,6 +165,7 @@ class UserController {
           username: username,
         });
       }
+
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
@@ -135,6 +174,228 @@ class UserController {
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.SUCCESS, UserInfo));
+    }
+  }
+  async updateDob(req, res) {
+    const { dob } = req.body;
+    //Validate Blank
+    // return res.json(new SuccessResponse(MESSAGE.SUCCESS, dob));
+    try {
+      let foundUser;
+      if (req.user.provider === "LOCAL") {
+        foundUser = await UserLocal.findById(req.user.id);
+        await UserLocal.findByIdAndUpdate(foundUser._id, {
+          dob: dob,
+        });
+        return res
+          .status(STATUS.SUCCESS)
+          .json(new SuccessResponse(MESSAGE.SUCCESS, null));
+      } else if (req.user.provider === "GOOGLE") {
+        foundUser = await UserGoogle.findById(req.user.id);
+        await UserGoogle.findByIdAndUpdate(foundUser._id, {
+          dob: dob,
+        });
+      } else if (req.user.provider === "FACEBOOK") {
+        foundUser = await UserFacebook.findById(req.user.id);
+        await UserFacebook.findByIdAndUpdate(foundUser._id, {
+          dob: dob,
+        });
+      }
+
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async updateAvatar(req, res) {
+    try {
+      let foundUser;
+      if (req.user.provider === "LOCAL") {
+        foundUser = await UserLocal.findById(req.user.id);
+        await UserLocal.findByIdAndUpdate(foundUser._id, {
+          avatar: req.avatar,
+        });
+        const pathAvatar = path.join(appRoot.path, `/src${foundUser.avatar}`);
+        fs.unlinkSync(pathAvatar);
+      } else if (req.user.provider === "GOOGLE") {
+        foundUser = await UserGoogle.findById(req.user.id);
+        await UserGoogle.findByIdAndUpdate(foundUser._id, {
+          avatar: req.avatar,
+        });
+        const pathAvatar = path.join(appRoot.path, `/src${foundUser.avatar}`);
+        fs.unlinkSync(pathAvatar);
+      } else if (req.user.provider === "FACEBOOK") {
+        foundUser = await UserFacebook.findById(req.user.id);
+        await UserFacebook.findByIdAndUpdate(foundUser._id, {
+          avatar: req.avatar,
+        });
+        const pathAvatar = path.join(appRoot.path, `/src${foundUser.avatar}`);
+        fs.unlinkSync(pathAvatar);
+      }
+
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async updatePassword(req, res) {
+    const { newPassword } = req.body;
+    if (!newPassword) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      //Test Password
+      if (!ValidatePassword(newPassword)) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_BAD_REQUEST,
+              MESSAGE.PASSWORD_INVALID
+            )
+          );
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      await UserLocal.findOneAndUpdate(
+        { email: Useremail },
+        { password: hashedPassword }
+      );
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async alertError(req, res) {
+    const { fromEmail, content } = req.body;
+    if (!fromEmail || !content) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await sendMailToFix(fromEmail, content);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SEND_MAIL_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getRetrievalPage(req, res) {
+    try {
+      res.render("retrieval", {
+        user: req.user,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async submitMailToRetrievalPassword(req, res) {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const foundUser = await UserLocal.findOne({ email: email });
+      if (!foundUser) {
+        return res
+          .status(STATUS.SUCCESS)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.NOT_FOUND)
+          );
+      }
+      Useremail = email;
+      await sendMailToRetrievalPassword(email);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SEND_MAIL_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getFormRecoverPassword(req, res) {
+    if (!req.body.email) {
+      redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+    return res.status(STATUS.SUCCESS).render("recover");
+  }
+
+  async submitRecoverPassword(req, res) {
+    const { newPassword } = req.body;
+    if (!newPassword) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      //Test Password
+      if (!ValidatePassword(newPassword)) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_BAD_REQUEST,
+              MESSAGE.PASSWORD_INVALID
+            )
+          );
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      if (!Useremail) {
+        console.log("Useremail", Useremail);
+        res
+          .status(STATUS.SUCCESS)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
+          );
+      }
+      await UserLocal.findOneAndUpdate(
+        { email: Useremail },
+        { password: hashedPassword }
+      );
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
 }

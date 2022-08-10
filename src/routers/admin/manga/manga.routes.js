@@ -33,6 +33,8 @@ const {
   updateChapter,
   fixTitle,
   submitUpdateChapter,
+  deleteChecked,
+  restoreChecked,
 } = require("../../../controllers/MangaController");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -188,5 +190,8 @@ router.post("/updateChapter/fixTitle", fixTitle);
 //11. Submit Update chapter content
 //ex:/management/content/manga/post/:slug/submit/update/:chapterNumber- Method: POST
 router.post("/submit/update/:chapterNumber", submitUpdateChapter);
+
+router.delete("/deleteChecked", deleteChecked);
+router.patch("/restoreChecked", restoreChecked);
 
 module.exports = router;

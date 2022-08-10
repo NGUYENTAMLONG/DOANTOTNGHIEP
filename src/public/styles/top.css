@@ -1,0 +1,105 @@
+body {
+  background-image: url("/image/i1.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  overflow-x: hidden; }
+
+#section-1 {
+  height: 100vh; }
+  #section-1 .leaderboard {
+    width: 100%; }
+    #section-1 .leaderboard .title {
+      background-color: white;
+      transform: skewX(-30deg);
+      -webkit-transform: skewX(-30deg);
+      -moz-transform: skewX(-30deg);
+      -ms-transform: skewX(-30deg);
+      -o-transform: skewX(-30deg);
+      text-align: center;
+      display: flex;
+      align-items: center; }
+      #section-1 .leaderboard .title p {
+        font-size: 30px;
+        margin: 0px 20px; }
+      #section-1 .leaderboard .title i {
+        font-size: 25px;
+        margin: 0px 20px; }
+      #section-1 .leaderboard .title span {
+        height: 100px;
+        width: 20px;
+        margin: 0px 3px;
+        background-color: black;
+        transform: skewX(-30deg);
+        -webkit-transform: skewX(-30deg);
+        -moz-transform: skewX(-30deg);
+        -ms-transform: skewX(-30deg);
+        -o-transform: skewX(-30deg); }
+    #section-1 .leaderboard ul {
+      margin-left: -10px;
+      margin-bottom: 20px; }
+      #section-1 .leaderboard ul li {
+        list-style: none;
+        height: 100px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.822);
+        color: white;
+        display: flex;
+        position: relative;
+        overflow: hidden; }
+        #section-1 .leaderboard ul li .rank__number {
+          height: 100%;
+          width: 8%;
+          font-size: 50px;
+          background-color: orange;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative; }
+          #section-1 .leaderboard ul li .rank__number::after {
+            content: "";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: solid 20px orange;
+            border-bottom: solid 15px transparent;
+            border-top: solid 15px transparent; }
+        #section-1 .leaderboard ul li .rank__manga {
+          height: 100%;
+          width: 35%;
+          margin-left: 20px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center; }
+          #section-1 .leaderboard ul li .rank__manga .rank__manga-name {
+            font-size: 40px;
+            text-transform: uppercase; }
+          #section-1 .leaderboard ul li .rank__manga .rank__manga-author {
+            font-size: 15px;
+            text-transform: uppercase; }
+        #section-1 .leaderboard ul li .rank__statistical {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          flex-direction: column;
+          width: 50%; }
+          #section-1 .leaderboard ul li .rank__statistical .rank__statistical-views {
+            font-size: 40px;
+            float: right; }
+        #section-1 .leaderboard ul li::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          right: -10px;
+          width: 20%;
+          height: 12%;
+          background-color: orange;
+          transform: skewX(-30deg);
+          -webkit-transform: skewX(-30deg);
+          -moz-transform: skewX(-30deg);
+          -ms-transform: skewX(-30deg);
+          -o-transform: skewX(-30deg); }

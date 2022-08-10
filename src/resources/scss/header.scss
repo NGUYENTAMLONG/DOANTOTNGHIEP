@@ -190,3 +190,12 @@ header {
     color: white !important;
   }
 }
+#settings {
+  left: -60px !important;
+}
+#userName {
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

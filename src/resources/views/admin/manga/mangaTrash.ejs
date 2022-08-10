@@ -42,8 +42,12 @@
       </div>
     </div>
   </div>
+  <div id="toolbar">
+    <button id="restoreChecked" class="btn btn-primary btn-sm">Khôi
+      phục <i class="fas fa-trash-restore"></i></button>
+  </div>
   <div class="container">
-    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getDeletedList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true">
+    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getDeletedList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
@@ -252,6 +256,45 @@
       </div>
     `
   }
+</script>
+<script>
+  //Restore checked 
+  var $table = $('#table')
+  var $button = $('#restoreChecked')
+
+  $(function() {
+    $button.click(function() {
+      const idList = [];
+      document.querySelectorAll("[name='btSelectItem']:checked").forEach((item, index) => {
+        idList.push(item.parentElement.parentElement.parentElement.id)
+      })
+      fetch(`/management/content/manga/restoreChecked`, {
+          method: "PATCH", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(idList)
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          if (data.isSuccess) {
+            swal({
+              title: "Thành công",
+              text: "Đã khôi phục thành công !",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => {
+              location.reload();
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    });
+  });
 </script>
 
 </html>

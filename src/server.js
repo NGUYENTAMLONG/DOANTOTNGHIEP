@@ -76,7 +76,7 @@ app.use(cors()); // Cho phép chia sẻ api với localhost khác
 //app.use(morgan("combined")); //thu vien morgan dung de log ra http request tu client -> server
 //********************* HTTP logger
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json());
 //************************ Config Froala
 const appRootPath = require("app-root-path");

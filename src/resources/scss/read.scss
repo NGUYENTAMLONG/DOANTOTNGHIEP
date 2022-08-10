@@ -2,8 +2,27 @@
 
 body {
   background-color: #343a40;
+  &,
+  .darkmode {
+    transition: 0.5s ease-in-out;
+  }
+  #to-top {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 100;
+    color: $color-3;
+  }
 }
-
+.toggle__light-text {
+  color: $color-4;
+  transition: 0.5s ease-in-out;
+}
+.toggle__light-background {
+  background-color: white;
+  transition: 0.5s ease-in-out;
+}
 #section-2 p {
   text-align: center;
   display: flex;
@@ -20,126 +39,9 @@ body {
     color: $color-4;
   }
   margin-bottom: 20px;
-  .form-group {
-    input {
-      width: 45%;
-    }
-  }
-  .myComment {
-    position: relative;
-    .fa-grin {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      cursor: pointer;
-    }
-    .emojionearea-button {
-      transform: scale(1.5);
-    }
-
-    .comment__user {
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      margin-left: 3px;
-      .comment__username {
-      }
-      .comment__avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
-    }
-  }
   padding: 20px;
   background-color: white;
   border-radius: 20px;
-  .comment-zone {
-    .comment {
-      margin: 20px 0px;
-      display: flex;
-      flex-direction: column;
-      .comment__avatar {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
-      }
-      .comment__detail {
-        width: 93%;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: $color-4;
-        .comment__whose {
-          span {
-            padding: 3px;
-            border: $color-3 solid 1px;
-            color: $color-3;
-            border-radius: 4px;
-            font-size: 13px;
-          }
-        }
-        .comment__content {
-          text-indent: 25px;
-          padding-right: 50px;
-          width: 100%;
-          word-wrap: break-word;
-        }
-        .like-comment,
-        .response-comment,
-        .delete-comment,
-        .submit-edit-comment,
-        .cancel-edit-comment {
-          margin: 0px 5px;
-          cursor: pointer;
-          color: $color-3;
-        }
-      }
-
-      .reply-zone {
-        margin: 20px 40px;
-        a {
-          text-decoration: none !important;
-        }
-        .reply__avatar {
-          border-radius: 50%;
-          width: 50px;
-          height: 50px;
-          margin-right: 10px;
-        }
-        .reply__detail {
-          width: 100%;
-          border-radius: 10px;
-          padding: 15px;
-          background-color: $color-4;
-          .reply__whose {
-            span {
-              padding: 3px;
-              border: $color-3 solid 1px;
-              color: $color-3;
-              border-radius: 4px;
-              font-size: 13px;
-            }
-          }
-          .reply__content {
-            width: 100%;
-            word-wrap: break-word;
-          }
-          .like-reply,
-          .response-reply {
-            cursor: pointer;
-            color: $color-3;
-          }
-        }
-      }
-    }
-    .comment-span {
-      b,
-      small,
-      .comment__content {
-        color: white;
-      }
-    }
-  }
 }
 #section-4 {
   width: 100%;
@@ -164,7 +66,8 @@ body {
           text-decoration: none;
           color: white;
         }
-        span {
+        span,
+        label {
           cursor: pointer;
         }
       }

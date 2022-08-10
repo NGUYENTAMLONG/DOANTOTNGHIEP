@@ -12,6 +12,7 @@ const advancedSearchRouter = require("./directions/advancedSearch.routes");
 const historyRouter = require("./directions/history.routes");
 const chartRouter = require("./directions/chart.routes");
 const userRouter = require("./directions/user.routes");
+const topRouter = require("./directions/top.routes");
 const Authentication = require("../middleware/authentication");
 
 function configRoute(app) {
@@ -28,6 +29,7 @@ function configRoute(app) {
   app.use("/advanced-search", Authentication, advancedSearchRouter); //For Admin
   app.use("/history", Authentication, historyRouter);
   app.use("/chart", Authentication, chartRouter);
+  app.use("/top", Authentication, topRouter);
   app.use("/user", Authentication, userRouter);
   app.use("/", Authentication, siteRouter);
 }

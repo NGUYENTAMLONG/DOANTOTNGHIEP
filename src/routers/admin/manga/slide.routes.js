@@ -17,6 +17,8 @@ const {
   updateSlide,
   getSlideList,
   getDeletedList,
+  deleteChecked,
+  restoreChecked,
 } = require("../../../controllers/SlideController");
 const router = express.Router();
 
@@ -56,5 +58,6 @@ router.delete("/api/destroy/:id", destroySlide);
 router.patch("/api/restore/:id", restoreSlide);
 router.put("/api/switch/:id", switchSlide);
 router.post("/api/update/:id", updateSlide);
-
+router.delete("/api/deleteChecked", deleteChecked);
+router.patch("/api/restoreChecked", restoreChecked);
 module.exports = router;

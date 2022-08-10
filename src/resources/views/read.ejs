@@ -10,6 +10,7 @@
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/read.css">
+  <link rel="stylesheet" href="/css/jquery.toolbar.css">
 </head>
 
 <body>
@@ -27,13 +28,13 @@
     <div class="text-light d-flex justify-content-between">
       <div class="btns-nav">
       </div>
-      <span class="float-right">
+      <span class="darkmode float-right">
         Đăng lúc: <span class="badge badge-primary"><%= moment(reading.Chapters.chapters.createdTime).format("L") %> - <%= moment(reading.Chapters.chapters.createdTime).format("LT") %></span>
       </span>
     </div>
     <div class="text-light text-center">
       <span class="badge badge-secondary">Chương <%= reading.Chapters.chapters.chapterNumber%> - Tựa đề:</span>
-      <h2>
+      <h2 class="darkmode">
         <%= reading.Chapters.chapters.chapterName%>
       </h2>
     </div>
@@ -49,42 +50,53 @@
     <div class="comments-area container bg-light">
       <div id="disqus_thread">
       </div>
+
+      <!-- Binh luan commentbox -->
+      <div class="commentbox"></div>
+      <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
+      <script>
+        commentBox('5763945776283648-proj');
+      </script>
+      <!-- ******************************** -->
     </div>
     <!-- ******************************** -->
 
   </section>
   <section class="section " id="section-4">
-    <div class="chapter-nav text-light">
-      <ul>
-        <li>
-          <a href="/">
-            <i class="fas fa-home mr-2"></i> Trang chủ
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-exclamation-circle mr-2"></i> Báo lỗi
-          </a>
-        </li>
-        <li class="nav">
-        </li>
-        <li>
-          <span>
-            <i class="fas fa-lightbulb"></i> Bật đèn
-          </span>
-        </li>
-        <li>
-          <span>
-            <i class="fas fa-heart"></i> Theo dõi
-          </span>
-        </li>
-      </ul>
-    </div>
+    <%- include('partials/navbar') %>
   </section>
-
+  <!-- Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Báo lỗi</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="#">
+            <label for="from-email">Gửi từ email: </label>
+            <input type="email" class="form-control" id="from-email" name="from-email" required>
+            <label for="error-content">Nội dung báo lỗi: </label>
+            <input type="text" class="form-control" id="error-content" name="error-content" required>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary" onclick="submitError()">Gửi Admin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="to-top">
+    <i class="fas fa-angle-up fa-3x" onclick="toTop()"></i>
+  </div>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
+<script src="/js/libraries/jquery.toolbar.js"></script>
 <script>
   function renderNavigationBar(slug) {
     const chapterNumber = Number(window.location.href.split("chapter-")[1]);
@@ -109,7 +121,7 @@
             .querySelector(".chapter-nav")
             .querySelector(".nav").innerHTML = `${indexChapter !== 0 ? `<a href='/detail/${slug}/read/chapter-${
                   chapters[indexChapter - 1].chapterNumber}'><i class='fas fa-2x  fa-caret-left mr-4'></i></a>`: ""
-                }<select class="form-control" onchange="redirectChapter(this)">
+                }<select class="form-control form-select-sm" onchange="redirectChapter(this)">
                   ${htmls.join("")}
                         </select>
                       ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
@@ -129,14 +141,57 @@
   }
   renderNavigationBar('<%= reading.slug %>');
 </script>
+<script src="/js/plugins/read.js"></script>
 <script>
-  (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document,
-      s = d.createElement('script');
-    s.src = 'https://my-site-zlkjtgow8a.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
+  $('#button').toolbar({
+    content: '#toolbar-options',
+  });
+
+  function submitError() {
+    const content = document.getElementById("error-content").value;
+    const fromEmail = document.getElementById("from-email").value;
+    if (!content || !fromEmail) {
+      swal({
+        title: "Cảnh báo !",
+        text: "Bạn phải điền đầy đủ thông tin !",
+        icon: "warning",
+        button: "OK!",
+      });
+    } else {
+      const payload = {
+        fromEmail,
+        content
+      };
+      const headers = {
+        "content-Type": "application/json",
+      };
+      fetch("/user/alert-error", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers,
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.isSuccess === true) {
+            swal({
+              title: "Báo lỗi thành công !",
+              text: "Cảm ơn bạn đã báo cáo với chúng tôi !!!",
+              icon: "success",
+              button: "OK!",
+            });
+            return;
+          } else {
+            swal({
+              title: "Có lỗi rồi",
+              text: "Lỗi do bạn nhập thiếu thông tin hoặc lỗi bên phía server",
+              icon: "error",
+              button: "OK!",
+            });
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+  }
 </script>
 
 </html>
