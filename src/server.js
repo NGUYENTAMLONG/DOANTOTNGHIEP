@@ -49,6 +49,7 @@ app.get(
   passport.authenticate("google", {
     successRedirect: "back",
     failureRedirect: "/authen/failure",
+    failureFlash: "Invalid Google credentials.",
   })
 );
 //OAUTH FACEBOOK

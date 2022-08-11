@@ -37,6 +37,7 @@ class UserController {
       } else if (req.user.provider === "FACEBOOK") {
         UserInfo = await UserFacebook.findById(req.user.id);
       }
+
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.SUCCESS, UserInfo));
@@ -44,7 +45,7 @@ class UserController {
       console.log("ERROR (USERCONTROLLER): ", error);
       res
         .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async showProfile(req, res) {
@@ -172,8 +173,8 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.SUCCESS, UserInfo));
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async updateDob(req, res) {

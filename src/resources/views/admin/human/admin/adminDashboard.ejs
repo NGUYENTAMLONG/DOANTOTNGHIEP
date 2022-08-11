@@ -37,7 +37,7 @@
         </p>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-1">
-        <a href="#" class="btn btn-sm btn-warning">Quản lí người dùng <i class="fas fa-users"></i></a>
+        <a href="/management/human/user" class="btn btn-sm btn-warning">Quản lí người dùng <i class="fas fa-users"></i></a>
         <a href="/management/human/admin/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center mb-1">
@@ -85,6 +85,20 @@
 
 
 <script>
+  //Turn on turn off modal
+  function zoomImg(it) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("preview-modal");
+
+    modal.style.display = "block";
+    modalImg.src = it.src;
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+
   function responseHandler(res) {
     res.rows.forEach(function(row, i) {
       row.index = `<div class="text-center">${i + 1}</div>`

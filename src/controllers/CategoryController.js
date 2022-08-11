@@ -24,7 +24,6 @@ class MangaController {
         .limit(limit)
         .skip(startPage)
         .exec();
-
       const category = types.filter((item) => item.name === req.params.type)[0];
       res.render("showCategory", {
         user: req.user,

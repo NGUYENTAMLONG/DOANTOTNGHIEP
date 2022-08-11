@@ -11,6 +11,7 @@ const UserLocal = require("../models/UserLocal");
 const UserGoogle = require("../models/UserGoogle");
 const UserFacebook = require("../models/UserFacebook");
 const History = require("../models/History");
+const res = require("express/lib/response");
 
 passport.use(
   new GoogleStrategy(
@@ -41,7 +42,7 @@ passport.use(
           return cb(null, createdUser);
         }
       } catch (error) {
-        return cb(error);
+        return cb(error, null);
       }
     }
   )
