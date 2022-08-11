@@ -22,4 +22,11 @@ const AdminSchema = new Schema(
   { timestamps: true, collection: "Admins" }
 );
 
+// khai bao su dung thu vien da cai dat (mongoose-delete)-> de thuc hien trien khai chuc nang xoa mem soft delete
+const mongooseDelete = require("mongoose-delete");
+AdminSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+  deletedAt: true,
+});
+
 module.exports = mongoose.model("admin", AdminSchema);

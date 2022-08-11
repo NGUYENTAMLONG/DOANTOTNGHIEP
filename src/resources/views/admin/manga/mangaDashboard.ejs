@@ -80,7 +80,6 @@
       </thead>
     </table>
   </div>
-
 </body>
 <%- include("../../partials/script") %>
 <script src="/js/moment.min.js"></script>
@@ -101,7 +100,7 @@
 <script>
   function responseHandler(res) {
     res.rows.forEach(function(row, i) {
-      row.index = `<div class="text-center">${i + 1}</div>`
+      row.index = `<div class="text-center" style="width:50px">${i + 1}</div>`
     })
     return res
   }

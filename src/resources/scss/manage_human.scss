@@ -1,192 +1,172 @@
 @import "variables.scss";
 
-header {
-  position: fixed;
+/* Light Mode Button Styles
+    --------------------------- */
+.light-mode-button {
+  background: 0;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+
+.light-mode-button:focus {
+  outline: none;
+  /* Not ideal for accessibility */
+}
+
+.light-mode-button span:nth-child(1) {
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 100;
-}
-table tr td {
-  .badge-pill {
-    font-size: 13px;
-  }
-}
-.avatar {
-  transition: 0.3s ease-in-out;
-  width: 40px;
-  &:hover {
-    transform: scale(4);
-  }
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  background-color: #d6d7db;
+  box-shadow: inset 1px 1px 3px 0 black;
+  transition: 0.3s;
 }
 
-.uploadAvatar {
-  overflow: hidden !important;
+.light-mode-button span:nth-child(2) {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 1px 1px 2px 0 black;
+  transition: 0.3s;
 }
-.preview-zone {
-  text-align: center;
-  #preview {
+
+table {
+  font-size: 13px;
+  thead {
+  }
+  tbody {
+  }
+  .manga-row {
+    overflow: scroll;
+  }
+  .manga-image {
+    width: 100px;
+  }
+  .desc__less {
+    width: 250px;
     height: 200px;
-    width: 200px;
-    object-fit: contain;
-    border: 2px dashed gray;
-    padding: 5px;
-    margin: -10px 0px 10px 0px;
+    overflow-y: scroll;
   }
 }
-
-// Modal
-$grey: #f5f5f5;
-$dark-grey: #323b40;
-
-$light-blue: #e0f5ff;
-$blue: #b9e5fe;
-$dark-blue: #00a5fa;
-
-$green: #b7e0dc;
-$dark-green: #019888;
-
-$lime: #c7e8c8;
-$dark-lime: #42b045;
-
-$yellow: #ffeeba;
-$dark-yellow: #ff9901;
-
-$pink: #fabad0;
-$dark-pink: #ef075f;
-
-$red: #fec9c6;
-$dark-red: #fd3d08;
-
-@mixin color-div($color1, $color2) {
-  background-color: $color1;
-  color: $color2;
-}
-
-.container {
-  padding: 2rem 0rem;
-}
-
-h4 {
-  margin: 2rem 0rem;
-}
-
-.panel {
-  border-radius: 4px;
-  padding: 1rem;
-  margin-top: 0.2rem;
-
-  @include color-div($grey, $dark-grey);
-
-  &.panel-blue {
-    @include color-div($light-blue, $dark-blue);
+.modal-dialog {
+  .modal-content {
+    max-width: 1000px !important;
+    img {
+      object-fit: contain;
+      width: 80% !important;
+      margin: 5px 0px;
+    }
   }
-
-  &.panel-big-height {
-    min-height: 150px;
-  }
-}
-
-.item {
-  border-radius: 4px;
-  padding: 0.5rem;
-  margin: 0.2rem;
-
-  &.item-blue {
-    @include color-div($blue, $dark-blue);
-  }
-
-  &.item-green {
-    @include color-div($green, $dark-green);
-  }
-
-  &.item-lime {
-    @include color-div($lime, $dark-lime);
-  }
-
-  &.item-yellow {
-    @include color-div($yellow, $dark-yellow);
-  }
-
-  &.item-pink {
-    @include color-div($pink, $dark-pink);
-  }
-
-  &.item-red {
-    @include color-div($red, $dark-red);
-  }
-
-  &.item-big-width {
-    min-width: 380px;
-  }
-}
-
-.home {
-  .mother-box {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: white;
-    #row-1 {
-      div {
-        .card {
-          position: relative;
-          color: white;
-          background-color: $color-3;
-          text-decoration: none;
-          margin: 0px 5px;
-          overflow: hidden;
-          .card-body {
-            .card-title {
-              i {
-                padding: 10px;
-                background-color: white;
-                border-radius: 50%;
-              }
-            }
+  .modal-body {
+    table {
+      height: 320px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      thead {
+        tr {
+          th:nth-of-type(1) {
+            width: 50px;
           }
         }
-        .card::after {
-          content: "";
-          position: absolute;
-          bottom: -30px;
-          right: -30px;
-          height: 100px;
-          width: 100px;
-          border: 20px solid rgba(255, 255, 255, 0.411);
-          border-radius: 50%;
+      }
+      tbody {
+        display: block;
+        // height: 300px !important;
+        // width: 120%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+          width: 12px;
+          background-color: #f5f5f5;
+          overflow: hidden;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
         }
-        .card::before {
-          content: "";
-          position: absolute;
-          bottom: -20px;
-          right: -20px;
-          height: 50px;
-          width: 50px;
-          border: 15px solid rgba(255, 255, 255, 0.411);
-          border-radius: 50%;
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 20px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: #555;
+        }
+        tr {
+          th:nth-of-type(1) {
+            width: 50px;
+          }
+        }
+        .col-chapterNumber {
+          width: 100px !important;
+        }
+        .col-chapterName {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
-    }
-    #row-2 {
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.288);
-      border-radius: 5px;
-      div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-weight: bold;
-        .box {
-          width: 50px;
-          height: 50px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-        }
+      tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
       }
     }
   }
+}
+/* The Modal 2 (background) */
+.modal_2 {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 200;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal_2-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.closeBtn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }

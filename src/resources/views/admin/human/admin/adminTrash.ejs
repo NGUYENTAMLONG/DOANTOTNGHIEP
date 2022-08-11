@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USER DASHBOARD</title>
+  <title>ADMIN TRASH</title>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/manage_human.css">
   <link rel="stylesheet" href="/css/fullscreenImg.css">
@@ -29,21 +29,17 @@
   <div class="container mt-2">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-sm-12 col-md-4 col-lg-4">
-        <h3>Danh sách người dùng</h3>
         <p class="align-items-center">
           <b>Số lượng: </b> <span class="badge badge-primary mr-3"> fix </span> <br>
-          <b>Tài khoản local</b> <span class="badge badge-warning"> fix </span><br>
-          <b>Tài khoản facebook</b> <span class="badge badge-primary"> fix </span>
-          <b>Tài khoản google</b> <span class="badge badge-danger"> fix </span>
+          <b>Quản trị viên người dùng</b> <span class="badge badge-warning"> fix </span><br>
+          <b>Quản trị viên nội dung</b> <span class="badge badge-success"> fix </span>
         </p>
       </div>
-      <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-1">
-        <a href="#" class="btn btn-sm btn-warning">Quản lí người dùng <i class="fas fa-users"></i></a>
-        <a href="/management/human/admin/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-1 justify-content-center">
+        <h3>ADMIN TRASH</h3>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center mb-1">
-        <a href="#" class="btn btn-sm btn-info">Thống kê <i class='bx bxs-pie-chart-alt-2'></i></a>
-        <a href="#" class="btn btn-sm btn-success">Thêm quản trị <i class="fas fa-user-plus"></i></a>
+        <a href="/management/human/admin" class="btn btn-sm btn-warning">Quản lí admin</a>
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
           <span></span>
           <span></span>
@@ -51,9 +47,9 @@
       </div>
     </div>
     <div id="toolbar">
-      <button id="deleteChecked" class="btn btn-danger btn-sm">Xóa hết <i class="fas fa-trash"></i></button>
+      <button id="restoreChecked" class="btn btn-success btn-sm">Khôi phục <i class="fas fa-trash-restore"></i></button>
     </div>
-    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/human/user/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
+    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/human/admin/api/getDeletedAdmins" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
@@ -61,7 +57,7 @@
           <th scope="col" data-field="avatar" data-formatter="avatarFormatter">Avatar</th>
           <th scope="col" data-field="username" data-sortable="true" data-formatter="usernameFormatter">Username</th>
           <th scope="col" data-field="email" data-sortable="true">Email</th>
-
+          <th scope="col" data-field="role" data-sortable="true" data-formatter="roleFormatter">Vai trò</th>
           <th scope="col" data-field="createdAt" data-sortable="true" data-formatter="createdAtFormatter">Tạo</th>
           <th scope="col" data-field="updatedAt" data-sortable="true" data-formatter="updatedAtFormatter">Cập nhật</th>
           <th data-field="state" data-checkbox="true"></th>
@@ -112,6 +108,13 @@
     </div>`;
   }
 
+  function roleFormatter(data) {
+    return data === "CA" ? `
+      <span class="badge badge-success">Quản trị viên nội dung</span>
+      ` : `
+      <span class="badge badge-warning">Quản trị viên nhân lực</span>
+      `;
+  }
 
   function createdAtFormatter(data) {
     return `<div class="text-center">${ moment(data).format("L") }<br> ${ moment(data).format("LT") }</div>`
@@ -123,51 +126,38 @@
 
   function handleFormatter(data, row, index) {
     return `<div class="text-center">
-      <a href="#" class="btn btn-primary btn-sm">Sửa</a>
-      <button class="btn btn-danger btn-sm mt-2" onclick="deleteAdmin('${row._id}')">Xóa</button>
+        <button class="btn btn-success btn-sm mb-1" onclick="restoreAdmin('${row._id}')">Khôi phục</button>
+        <button class="btn btn-danger btn-sm" onclick="">Xóa</button>
       </div>
     `
   }
 </script>
 <script>
-  function deleteAdmin(idAdmin) {
-    swal({
-      title: "Bạn có chắc chắn muốn xóa không ?",
-      text: "Nếu xóa bạn vẫn có thể khôi phục tài khoản !",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        fetch(`/management/human/admin/softDelete/${idAdmin}`, {
-            method: "DELETE", // or 'PUT'
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.isSuccess) {
-              swal({
-                title: "Thành công",
-                text: "Đã xóa thành công !",
-                icon: "success",
-                button: "Ok!",
-              }).then(() => {
-                location.reload();
-              });
-            }
-          })
-          .catch((error) => {
-            console.log("Error:", error);
+  function restoreAdmin(idAdmin) {
+    //Restore Admin
+    fetch(`/management/human/admin/restore/${idAdmin}`, {
+        method: "PATCH", // or 'PUT'
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã khôi phục thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload();
           });
-      } else {
-        return;
-      }
-    });
-
+        }
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   }
-
-  //Delete checked
+  //Restore checked
   var $table = $('#table')
-  var $button = $('#deleteChecked')
+  var $button = $('#restoreChecked')
 
   $(function() {
     $button.click(function() {
@@ -175,54 +165,32 @@
       document.querySelectorAll("[name='btSelectItem']:checked").forEach((item, index) => {
         idList.push(item.parentElement.parentElement.parentElement.id)
       })
-      // console.log(idList)
-      const payload = {
-        idList
-      }
-      swal({
-        title: "Bạn có chắc chắn muốn xóa không",
-        text: "Nếu xóa bạn vẫn có thể khôi phục truyện !",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          fetch(`/management/human/admin/softDeleteChecked`, {
-              method: "DELETE", // or 'PUT'
-              headers: {
-                "Content-Type": "application/json",
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: JSON.stringify(payload)
-            })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.isSuccess) {
-                swal({
-                  title: "Thành công",
-                  text: "Đã xóa thành công !",
-                  icon: "success",
-                  button: "Ok!",
-                }).then(() => {
-                  location.reload();
-                });
-              } else {
-                swal({
-                  title: "Có lỗi rồi",
-                  text: "Gặp lỗi hệ thống hoặc danh sách cần xóa trống !",
-                  icon: "error",
-                  button: "Ok!",
-                })
-              }
-            })
-            .catch((error) => {
-              console.log("Error:", error);
+      fetch(`/management/human/admin/restoreChecked`, {
+          method: "PATCH", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(idList)
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          if (data.isSuccess) {
+            swal({
+              title: "Thành công",
+              text: "Đã khôi phục thành công !",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => {
+              location.reload();
             });
-        } else {
-          return;
-        }
-      });
-    })
+          }
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    });
   });
 </script>
 

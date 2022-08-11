@@ -311,7 +311,7 @@ class MangaController {
       await Manga.delete({ slug: slug });
 
       res
-        .status(STATUS.CREATED)
+        .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
     } catch (error) {
       console.log(error);

@@ -270,13 +270,7 @@ module.exports.COUNTRY = {
   US: "Mỹ",
   KR: "Hàn Quốc",
 };
-module.exports.VIEW_TYPE = {
-  MANGA: "MANGA",
-  PAGE: "PAGE",
-  BLOG: "BLOG",
-  NOVEL: "NOVEL",
-  FANMADE: "FANMADE",
-};
+
 module.exports.MANGA_STATUS = {
   FINISHED: "Hoàn thành",
   UNFINISHED: "Đang tiến hành",
