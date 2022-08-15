@@ -65,6 +65,9 @@ class siteController {
   blogs(req, res, next) {
     res.render("blogs");
   }
+  about(req, res) {
+    res.render("about");
+  }
   async search(req, res, next) {
     // const regex = new RegExp(escapeRegex(req.query.q), "gi");
     // next();
