@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { PASSPORT } = require("../config/default");
+const { PASSPORT, ROLES } = require("../config/default");
 const findOrCreate = require("mongoose-findorcreate");
 
 const UserLocalSchema = new Schema(
@@ -47,6 +47,10 @@ const UserLocalSchema = new Schema(
     ratedList: {
       type: Array,
       default: [],
+    },
+    role: {
+      type: String,
+      default: ROLES.MEMBER.CODE,
     },
     history: { type: mongoose.Schema.Types.ObjectId, required: true },
   },

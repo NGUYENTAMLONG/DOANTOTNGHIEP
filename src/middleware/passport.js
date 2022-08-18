@@ -6,12 +6,11 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 dotenv.config();
 
-const { PASSPORT } = require("../config/default");
 const UserLocal = require("../models/UserLocal");
 const UserGoogle = require("../models/UserGoogle");
 const UserFacebook = require("../models/UserFacebook");
 const History = require("../models/History");
-const res = require("express/lib/response");
+const Admin = require("../models/Admin");
 
 passport.use(
   new GoogleStrategy(
@@ -81,6 +80,7 @@ passport.use(
   )
 );
 passport.use(
+  "user-local",
   new LocalStrategy(function (username, password, done) {
     UserLocal.findOne({ username: username }, async function (err, user) {
       if (err) {
@@ -94,6 +94,26 @@ passport.use(
         return done(null, false);
       }
       return done(null, user);
+    });
+  })
+);
+
+passport.use(
+  "admin-local",
+  new LocalStrategy(function (username, password, done) {
+    Admin.findOne({ username: username }, async function (err, admin) {
+      if (err) {
+        return done(err);
+      }
+      if (!admin) {
+        return done(null, false);
+      }
+      const matched = await bcrypt.compare(password, admin.password);
+      if (!matched) {
+        return done(null, false);
+      }
+      console.log("admin-local", admin);
+      return done(null, admin);
     });
   })
 );

@@ -1,11 +1,28 @@
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
+const Admin = require("../models/Admin");
 const UserFacebook = require("../models/UserFacebook");
 const UserGoogle = require("../models/UserGoogle");
 const UserLocal = require("../models/UserLocal");
 
 async function Authentication(req, res, next) {
-  if (req.user) {
+  // console.log("---->", req.user);
+  // console.log("-->", req.originalUrl);
+  if (req.originalUrl.includes("/management/")) {
+    if (req.user && (req.user.role === "HA" || req.user.role === "CA")) {
+      const foundUser = await Admin.findById(req.user._id);
+      req.admin = {
+        id: foundUser._id,
+        avatar: foundUser.avatar,
+        username: foundUser.username,
+        email: foundUser.email,
+      };
+      next();
+      return;
+    } else {
+      return res.json("NOT ALLOW");
+    }
+  } else if (req.user) {
     let user;
     if (req.user.passport === "LOCAL") {
       user = await UserLocal.findById(req.user._id);
@@ -15,6 +32,7 @@ async function Authentication(req, res, next) {
       user = await UserFacebook.findById(req.user._id);
     }
     console.log("USER:", user);
+
     req.user = {
       id: user._id,
       avatar: user.avatar,

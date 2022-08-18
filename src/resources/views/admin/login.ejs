@@ -41,15 +41,18 @@
 
 <body>
   <div class="background"></div>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" style="text-align: center;width: 100%;" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a>
-  </nav>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center">
+      <a class="navbar-brand" href="#"><a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></a>
+    </nav>
+  </header>
+
   <div class="container text-light">
-    <form action="/manage" method="POST">
+    <form action="/management/login" method="POST">
       <h1 class="text-center">Đăng nhập</h1>
       <div class="form-group">
-        <label for="account">Tài khoản</label>
-        <input type="text" class="form-control" name="account" id="account" placeholder="Enter account/ Nhập tài khoản admin" />
+        <label for="username">Tài khoản</label>
+        <input type=" text" class="form-control" name="username" id=" username" placeholder="Enter username / Nhập tài khoản admin" />
       </div>
       <div class="form-group">
         <label for="password">Mật khẩu</label>
@@ -66,42 +69,42 @@
 </body>
 <%- include("../partials/script") %>
 <script>
-  window.onsubmit = function(e) {
-    e.preventDefault();
-    handleSubmit();
-  }
-
-  // function setCookie(cname, cvalue, exdays) {
-  //   const d = new Date();
-  //   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  //   let expires = "expires=" + d.toUTCString();
-  //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // window.onsubmit = function(e) {
+  //   e.preventDefault();
+  //   handleSubmit();
   // }
 
-  function handleSubmit() {
-    const account = document.querySelector("#account").value;
-    const password = document.querySelector("#password").value;
-    fetch("/manage", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          account,
-          password
-        }),
-      })
-      .then((res) => res.json())
-      .then(data => {
-        console.log("role", data)
-        if (data === "hrm_admin") {
-          window.location.href = "/manage/admin_hrm";
-        } else {
-          window.location.href = "/manage/admin_manga";
-        }
-      })
-      .catch(error => console.log(error))
-  }
+  // // function setCookie(cname, cvalue, exdays) {
+  // //   const d = new Date();
+  // //   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  // //   let expires = "expires=" + d.toUTCString();
+  // //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // // }
+
+  // function handleSubmit() {
+  //   const account = document.querySelector("#account").value;
+  //   const password = document.querySelector("#password").value;
+  //   fetch("/manage", {
+  //       method: "POST",
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         account,
+  //         password
+  //       }),
+  //     })
+  //     .then((res) => res.json())
+  //     .then(data => {
+  //       console.log("role", data)
+  //       if (data === "hrm_admin") {
+  //         window.location.href = "/manage/admin_hrm";
+  //       } else {
+  //         window.location.href = "/manage/admin_manga";
+  //       }
+  //     })
+  //     .catch(error => console.log(error))
+  // }
 </script>
 
 </html>
