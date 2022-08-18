@@ -199,3 +199,75 @@ header {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.my__navbar {
+  overflow: hidden;
+  background: $color-2;
+}
+.my__navbar a {
+  float: left;
+  font-size: 15px;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+}
+.d {
+  float: left;
+  overflow: hidden;
+  .d-btn {
+    font-size: 15px;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 10px;
+    background: inherit;
+  }
+}
+form {
+  float: left;
+  font-size: 15px;
+}
+.my__navbar a:hover,
+.d:hover .d-btn {
+  background: $color-4;
+}
+.d-content {
+  display: none;
+  position: absolute;
+  background: $color-4;
+  width: 100%;
+  left: 0;
+  z-index: 1000;
+  padding: 10px;
+}
+.d:hover .d-content {
+  display: block;
+}
+.column {
+  width: 12.5%;
+  padding: 10px;
+  background: $color-4;
+  z-index: 1000;
+  text-align: center;
+  li {
+    list-style: none;
+    a {
+      display: block;
+      text-align: center;
+      float: none;
+      color: #eee;
+      text-align: left;
+    }
+  }
+}
+.column a:hover {
+  color: #fff;
+  background: #373737;
+}
+@media (max-width: 650px) {
+  .column {
+    width: 100%;
+    height: auto;
+  }
+}
