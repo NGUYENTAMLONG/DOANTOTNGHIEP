@@ -1,50 +1,31 @@
-const Admin = require("../models/Admin");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const { VALUES } = require("../config/default");
-dotenv.config();
+const { ROLES } = require("../config/default");
+const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
+const { ErrorResponse } = require("../helper/response");
+const { redirect } = require("../service/redirect");
 
-class Authorization {
-  async authorH(req, res, next) {
-    const token = req.cookies.token;
-    // res.json(token);
-    try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      const admin = await Admin.findById(tokenVerify._id);
-      const adminList = await Admin.find();
-
-      if (tokenVerify.role === "hrm_admin") {
-        next();
-      } else {
-        res.status(403).json({
-          message: "you don’t have permission to access",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error, message: "No Authentication" });
+module.exports.AuthorizationHA = async (req, res, next) => {
+  const admin = req.user;
+  try {
+    if (admin.role === ROLES.HR_ADMIN.CODE) {
+      next();
+    } else {
+      redirect(req, res, STATUS.UNAUTHORIZED);
     }
+  } catch (error) {
+    console.log(error);
+    res.status(STATUS.UNAUTHORIZED).redirect("/management");
   }
-  async authorM(req, res, next) {
-    const token = req.cookies.token;
-    try {
-      // const tokenVerify = jwt.verify(token, process.env.TOKEN_SECRET);
-      const tokenVerify = jwt.verify(token, VALUES.TOKEN_SECRET);
-
-      if (tokenVerify.role === "manga_admin") {
-        next();
-      } else {
-        res.status(403).json({
-          message: "you don’t have permission to access",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error, message: "No Authentication" });
+};
+module.exports.AuthorizationCA = async (req, res, next) => {
+  const admin = req.user;
+  try {
+    if (admin.role === ROLES.CONTENT_ADMIN.CODE) {
+      next();
+    } else {
+      redirect(req, res, STATUS.UNAUTHORIZED);
     }
+  } catch (error) {
+    console.log(error);
+    res.status(STATUS.UNAUTHORIZED).redirect("/management");
   }
-}
-
-module.exports = new Authorization();
+};

@@ -1,0 +1,47 @@
+@import "variables.scss";
+
+header {
+  .navbar {
+    .auth {
+      width: 100%;
+      position: relative;
+      .auth__avatar {
+        float: right !important;
+      }
+      //   .auth__control {
+      //     display: block !important;
+      //   }
+      #btnControl:checked ~ .auth__control {
+        display: block !important;
+      }
+      .auth__control {
+        display: none;
+        z-index: 100;
+        list-style: none;
+        position: absolute;
+        right: 0;
+        top: 40px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 5px 10px;
+        li {
+          padding: 5px;
+          cursor: pointer;
+          transition: 0.5s ease-in-out;
+          a {
+            color: $color-4;
+            transition: 0.5s ease-in-out;
+            text-decoration: none;
+          }
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.753);
+            color: white;
+            a {
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
+}

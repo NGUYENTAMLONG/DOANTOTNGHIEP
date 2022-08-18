@@ -23,6 +23,7 @@ class MangaController {
     try {
       const allMangas = await Manga.find({});
       res.render("admin/manga/mangaDashboard", {
+        admin: req.user,
         allMangas,
       });
     } catch (error) {
@@ -37,6 +38,7 @@ class MangaController {
   async getPublishPage(req, res) {
     try {
       res.render("admin/manga/publishManga", {
+        admin: req.user,
         moment: moment,
         types: types,
       });
@@ -60,6 +62,7 @@ class MangaController {
         redirect(req, res, STATUS.NOT_FOUND);
       }
       res.render("admin/manga/updateManga", {
+        admin: req.user,
         moment: moment,
         manga: foundManga,
         types: types,
@@ -76,6 +79,7 @@ class MangaController {
     try {
       const foundMangas = await Manga.findDeleted({}).populate("contentId");
       res.render("admin/manga/mangaTrash", {
+        admin: req.user,
         mangas: foundMangas,
       });
     } catch (error) {
@@ -90,9 +94,11 @@ class MangaController {
     const slug = req.params.slug;
     try {
       const manga = await Manga.findOne({ slug: slug }).populate("contentId");
-      res
-        .status(STATUS.SUCCESS)
-        .render("admin/manga/post", { manga: manga, moment: moment });
+      res.status(STATUS.SUCCESS).render("admin/manga/post", {
+        admin: req.user,
+        manga: manga,
+        moment: moment,
+      });
     } catch (error) {
       console.log(error);
       res
@@ -598,6 +604,7 @@ class MangaController {
         }
       );
       res.render("admin/manga/updateChapter", {
+        admin: req.user,
         moment: moment,
         manga: foundManga,
         chapter: foundChapter.chapters[0],

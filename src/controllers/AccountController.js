@@ -164,5 +164,8 @@ class AccountController {
         new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, "LOGIN FAILURE !!!")
       );
   }
+  async AdminFailure(req, res) {
+    return res.status(STATUS.BAD_REQUEST).render("./admin/failure");
+  }
 }
 module.exports = new AccountController();

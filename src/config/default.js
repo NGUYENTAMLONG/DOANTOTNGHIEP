@@ -19,7 +19,7 @@ module.exports.ROLES = {
     DESC: "The site's content administrator (manga, blog, comment,...)/ quản trị viên nội dung của trang web (truyện tranh, bài viết blog, bình luận,...)",
   },
   HR_ADMIN: {
-    CODE: "HRA",
+    CODE: "HA",
     DESC: "the site's user administrator(user account, admin account,...)/ quản trị viên người dùng của trang web (tài khoản người dùng,tài khoản quản trị viên...)",
   },
   MEMBER: {

@@ -1,0 +1,25 @@
+  <!----===== CSS ===== -->
+  <link rel="stylesheet" href="/css/admin.css">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#"><a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></a>
+      <div class="auth">
+        <div class="auth__avatar">
+          <label for="btnControl">
+            <span class="badge badge-primary"><%= admin.username %> <span class="badge badge-warning"><%= admin.role %> </span></span> <img src="/public/avatars/<%= admin.avatar %>" width="30px" class="rounded" alt="">
+          </label>
+          <input type="checkbox" id="btnControl" hidden />
+          <ul class="auth__control">
+            <li>Thông tin</li>
+            <li>
+              <a href="/management/logout">
+                Đăng xuất
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+  </header>

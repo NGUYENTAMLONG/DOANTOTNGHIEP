@@ -46,10 +46,11 @@
       <a class="navbar-brand" href="#"><a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></a>
     </nav>
   </header>
-
   <div class="container text-light">
     <form action="/management/login" method="POST">
       <h1 class="text-center">Đăng nhập</h1>
+      <small id="alert" class="form-text text-danger">* Đăng nhập không thành công !</small>
+
       <div class="form-group">
         <label for="username">Tài khoản</label>
         <input type=" text" class="form-control" name="username" id=" username" placeholder="Enter username / Nhập tài khoản admin" />

@@ -19,6 +19,7 @@ router.use("/", async (req, res) => {
     const slides = await Slide.find();
     const chapters = await Chapter.find();
     res.render("./admin/contentDashboard", {
+      admin: req.user,
       mangas: mangas,
       slides: slides,
     });

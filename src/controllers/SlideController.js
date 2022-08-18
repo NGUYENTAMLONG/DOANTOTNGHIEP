@@ -15,7 +15,7 @@ class SlideController {
         path: "manga",
         populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
       });
-      res.render("admin/slide/slideDashboard", { slides });
+      res.render("admin/slide/slideDashboard", { admin: req.user, slides });
     } catch (error) {
       console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);
@@ -29,6 +29,7 @@ class SlideController {
         populate: { path: "contentId", select: { chapters: { $slice: -1 } } },
       });
       res.render("admin/slide/slideTrash", {
+        admin: req.user,
         slides: foundSlides,
       });
     } catch (error) {
@@ -41,6 +42,7 @@ class SlideController {
     try {
       const allMangas = await Manga.find().select("name");
       res.render("admin/slide/createSlide", {
+        admin: req.user,
         mangas: allMangas,
       });
     } catch (error) {
@@ -54,6 +56,7 @@ class SlideController {
     try {
       const foundSlide = await Slide.findById(slideId).populate("manga");
       res.render("admin/slide/updateSlide", {
+        admin: req.user,
         slide: foundSlide,
       });
     } catch (error) {

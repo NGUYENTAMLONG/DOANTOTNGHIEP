@@ -17,7 +17,11 @@ class adminManagementController {
   async showAdminDashboard(req, res) {
     try {
       const adminList = await Admin.find();
-      res.render("admin/human/admin/adminDashboard", { adminList, moment });
+      res.render("admin/human/admin/adminDashboard", {
+        admin: req.user,
+        adminList,
+        moment,
+      });
     } catch (error) {
       console.log(error);
       res
@@ -28,7 +32,11 @@ class adminManagementController {
   async showAdminTrash(req, res) {
     try {
       const adminList = await Admin.findDeleted({});
-      res.render("admin/human/admin/adminTrash", { adminList, moment });
+      res.render("admin/human/admin/adminTrash", {
+        admin: req.user,
+        adminList,
+        moment,
+      });
     } catch (error) {
       console.log(error);
       res
@@ -128,6 +136,7 @@ class adminManagementController {
     Promise.all([Admin.find()])
       .then(([adminList]) => {
         res.render("admin/human/analysis/analysis", {
+          admin: req.user,
           adminList,
           moment,
         });
@@ -216,6 +225,7 @@ class adminManagementController {
           ...UserGoogleList,
         ];
         res.render("admin/human/user/userDashboard", {
+          admin: req.user,
           userList,
           userFacebookList: UserFacebookList,
           userGoogleList: UserGoogleList,
@@ -245,6 +255,7 @@ class adminManagementController {
           ...UserGoogleList,
         ];
         res.render("admin/human/user/userTrash", {
+          admin: req.user,
           userList,
           userFacebookList: UserFacebookList,
           userGoogleList: UserGoogleList,
@@ -261,6 +272,7 @@ class adminManagementController {
           );
       });
   }
+
   async getUserList(req, res) {
     Promise.all([
       UserLocal.find({}),

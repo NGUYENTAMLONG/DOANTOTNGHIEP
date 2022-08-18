@@ -1,0 +1,30 @@
+header .navbar .auth {
+  width: 100%;
+  position: relative; }
+  header .navbar .auth .auth__avatar {
+    float: right !important; }
+  header .navbar .auth #btnControl:checked ~ .auth__control {
+    display: block !important; }
+  header .navbar .auth .auth__control {
+    display: none;
+    z-index: 100;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px 10px; }
+    header .navbar .auth .auth__control li {
+      padding: 5px;
+      cursor: pointer;
+      transition: 0.5s ease-in-out; }
+      header .navbar .auth .auth__control li a {
+        color: #343a40;
+        transition: 0.5s ease-in-out;
+        text-decoration: none; }
+      header .navbar .auth .auth__control li:hover {
+        background-color: rgba(0, 0, 0, 0.753);
+        color: white; }
+        header .navbar .auth .auth__control li:hover a {
+          color: white; }

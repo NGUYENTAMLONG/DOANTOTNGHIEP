@@ -7,20 +7,28 @@ const router = express.Router();
 
 const adminManagementRouter = require("./human/admin.routes");
 const userManagementRouter = require("./human/user.routes");
-const User = require("../../models/UserLocal");
-const Manga = require("../../models/Manga");
-const Slide = require("../../models/Slide");
+const UserLocal = require("../../models/UserLocal");
+const UserFacebook = require("../../models/UserFacebook");
+const UserGoogle = require("../../models/UserGoogle");
 
 //path: /management/human/...
 router.use("/admin", adminManagementRouter);
 router.use("/user", userManagementRouter);
 
 router.use("/", async (req, res) => {
-  Promise.all([Admin.find(), User.find(), Manga.find(), Slide.find()])
-    .then(([adminList, userList, mangaList, slideList]) => {
+  Promise.all([
+    Admin.find(),
+    UserLocal.find(),
+    UserFacebook.find(),
+    UserGoogle.find(),
+  ])
+    .then(([adminList, userLocalList, userFacebookList, userGoogleList]) => {
       res.render("admin/humanDashboard", {
+        admin: req.user,
         adminList,
-        userList,
+        userLocalList,
+        userFacebookList,
+        userGoogleList,
         moment,
       });
     })
