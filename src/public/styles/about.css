@@ -1,0 +1,75 @@
+body {
+  background-color: red;
+  width: 100%;
+  height: 500px;
+  background-image: url("https://i.etsystatic.com/27232002/r/il/23445c/3593109555/il_fullxfull.3593109555_2ezr.jpg");
+  background-size: 100%;
+  background-repeat: repeat;
+  object-fit: cover;
+  background-attachment: fixed; }
+  body #section-1 {
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.74); }
+  body #section-2 {
+    background-color: rgba(255, 255, 255, 0.74); }
+    body #section-2 .cover {
+      width: 100%;
+      height: 400px;
+      margin-bottom: 10px; }
+      body #section-2 .cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; }
+  body #section-3 {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.815);
+    position: relative;
+    min-height: 500px; }
+    body #section-3 .section__box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 500px; }
+      body #section-3 .section__box p {
+        text-indent: 30px; }
+      body #section-3 .section__box .wrapper {
+        height: 500px; }
+      body #section-3 .section__box svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto; }
+  body #section-4 {
+    width: 100%;
+    position: relative;
+    min-height: 500px; }
+    body #section-4 .container {
+      background-color: rgba(45, 125, 179, 0.815); }
+      body #section-4 .container .section__box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 500px;
+        position: relative; }
+        body #section-4 .container .section__box #rank-img-1 {
+          position: absolute;
+          width: 250px;
+          top: -150px; }
+        body #section-4 .container .section__box #rank-img-2 {
+          position: absolute;
+          width: 280px;
+          top: -40px;
+          left: -50px; }
+        body #section-4 .container .section__box #rank-img-3 {
+          position: absolute;
+          width: 400px;
+          top: 200px;
+          left: 150px; }
+        body #section-4 .container .section__box p {
+          text-indent: 30px; }
+        body #section-4 .container .section__box .wrapper {
+          height: 500px; }

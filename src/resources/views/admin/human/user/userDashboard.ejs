@@ -243,14 +243,13 @@
 
   $(function() {
     $button.click(function() {
-      const idList = [];
+      const deleteList = [];
       document.querySelectorAll("[name='btSelectItem']:checked").forEach((item, index) => {
-        idList.push(item.parentElement.parentElement.parentElement.id)
+        deleteList.push({
+          userId: item.parentElement.parentElement.parentElement.id,
+          passport: item.parentElement.parentElement.parentElement.querySelectorAll("td")[8].querySelector("span").innerHTML
+        })
       })
-      // console.log(idList)
-      const payload = {
-        idList
-      }
       swal({
         title: "Bạn có chắc chắn muốn xóa không",
         text: "Nếu xóa bạn vẫn có thể khôi phục truyện !",
@@ -259,13 +258,13 @@
         dangerMode: true,
       }).then((willDelete) => {
         if (willDelete) {
-          fetch(`/management/human/admin/softDeleteChecked`, {
+          fetch(`/management/human/user/softDeleteChecked`, {
               method: "DELETE", // or 'PUT'
               headers: {
                 "Content-Type": "application/json",
                 // 'Content-Type': 'application/x-www-form-urlencoded',
               },
-              body: JSON.stringify(payload)
+              body: JSON.stringify(deleteList)
             })
             .then((response) => response.json())
             .then((data) => {

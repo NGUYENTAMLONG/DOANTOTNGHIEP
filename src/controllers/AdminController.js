@@ -13,6 +13,7 @@ const UserFacebook = require("../models/UserFacebook");
 const UserGoogle = require("../models/UserGoogle");
 dotenv.config();
 class adminManagementController {
+  //ADMIN ACCOUNT CONTROLLER ***********************************************************************************
   async showAdminDashboard(req, res) {
     try {
       const adminList = await Admin.find();
@@ -188,9 +189,7 @@ class adminManagementController {
   //3.Get Deleted Admin List
   async getDeletedAdmins(req, res) {
     try {
-      const admins = await Admin.findDeleted({})
-        .skip(Number(offset))
-        .limit(Number(limit));
+      const admins = await Admin.findDeleted({});
       res.status(STATUS.SUCCESS).json({
         rows: admins,
       });
@@ -202,7 +201,7 @@ class adminManagementController {
     }
   }
 
-  // ***********************************************************************************
+  //USER ACCOUNT CONTROLLER ***********************************************************************************
 
   async showUserDashboard(req, res) {
     Promise.all([
@@ -312,6 +311,39 @@ class adminManagementController {
         .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
     }
   }
+  async softDeleteCheckedUser(req, res) {
+    const deleteList = req.body;
+    if (!deleteList || deleteList.length === 0) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      deleteList.forEach(async (element) => {
+        try {
+          if (element.passport === "LOCAL") {
+            await UserLocal.delete({ _id: element.userId });
+          } else if (element.passport === "GOOGLE") {
+            await UserGoogle.delete({ _id: element.userId });
+          } else {
+            await UserFacebook.delete({ _id: element.userId });
+          }
+        } catch (error) {
+          throw new Error("ERROR DELETE CHECKED");
+        }
+      });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async restoreUser(req, res) {
     const idUser = req.params.id;
     const { passport } = req.body;
@@ -373,7 +405,7 @@ class adminManagementController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  // API *******************************************************************
+  // API USER*******************************************************************
   async getDeletedUsers(req, res) {
     Promise.all([
       UserLocal.findDeleted({}),

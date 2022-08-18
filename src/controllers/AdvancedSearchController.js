@@ -15,6 +15,11 @@ class AdvancedSearchController {
         { $group: { _id: "$author" } },
         { $sort: { _id: 1 } },
       ]);
+      const translationList = await Manga.aggregate([
+        { $group: { _id: "$translation" } },
+        { $sort: { _id: 1 } },
+      ]);
+      // const tralation = await Manga.a
       res.render("showAdvancedSearch", {
         user: req.user,
         moment: moment,
@@ -23,6 +28,7 @@ class AdvancedSearchController {
         countries: COUNTRY,
         serves: SERVE,
         authors: authorList,
+        translation: translationList,
       });
     } catch (error) {
       console.log(error);

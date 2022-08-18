@@ -89,6 +89,37 @@
           <%}) %>
         </select>
       </div>
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <label for="serve">Dịch giả</label><br>
+        <select class="form-select form-control">
+          <option selected>Tất cả</option>
+          <% translation.forEach(function(elm,index){ %>
+          <option value="<%= elm._id %>"><%= elm._id %></option>
+          <%}) %>
+        </select>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <label for="serve">Số chương truyện</label><br>
+        <select class="form-select form-control">
+          <option selected>Tất cả</option>
+          <option value="50">
+            <= 50 </option>
+          <option value="100">
+            <=100 </option>
+          <option value="200">
+            <=200 </option>
+          <option value="500">
+            <=500 </option>
+          <option value="1000">
+            <=1000 </option>
+          <option value="2000">
+            <=2000 </option>
+          <option value="5000">
+            <=5000 </option>
+          <option value="10000">
+            <=10000 </option>
+        </select>
+      </div>
     </div>
     <div class="row">
       <input type="text" name="filter" id="filter" hidden>

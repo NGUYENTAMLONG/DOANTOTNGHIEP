@@ -7,6 +7,7 @@ const {
   showUserTrash,
   getUserList,
   softDeleteUser,
+  softDeleteCheckedUser,
   getDeletedUsers,
   restoreUser,
   restoreCheckedUser,
@@ -30,6 +31,7 @@ router.get("/", showUserDashboard);
 router.get("/trash", showUserTrash);
 
 router.delete("/softDelete/:id", softDeleteUser);
+router.delete("/softDeleteChecked", softDeleteCheckedUser);
 router.patch("/restoreChecked", restoreCheckedUser);
 router.patch("/restore/:id", restoreUser);
 
