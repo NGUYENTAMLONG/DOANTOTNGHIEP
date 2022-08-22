@@ -54,29 +54,9 @@
       <% } %>
     </div>
   </section>
-  <div class="container mt-4 d-flex justify-content-center">
-    <nav aria-label="Page navigation">
-      <ul class="pagination">
-        <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','<%= (navigator.previous) && navigator.previous.previousPage %>','limit','<%= navigator.limit %>')">Previous</button></li>
-        <% for(var i=1; i<=navigator.totalPages; i++) {%>
-        <li class=" page-item <%= (navigator.activePage === i) && 'active' %>"><a class="page-link" onclick="changeQueryPaging('page','<%= i %>','limit','<%= navigator.limit %>')"><%= i %></a></li>
-        <% }%>
-        <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= (navigator.next) && navigator.next.nextPage %>', 'limit', '<%= navigator.limit %>')">Next</button></li>
 
-        <li class="page-item">
-          <select class="form-select form-control ml-2" onchange="changeLimitQuery(this)">
-            <option selected>Giới hạn</option>
-            <option value="2" <%= (navigator.limit === 2) && "selected" %>>2</option>
-            <option value="3" <%= (navigator.limit === 3) && "selected" %>>3</option>
-            <option value=" 5" <%= (navigator.limit === 5) && "selected" %>>5</option>
-            <option value="10" <%= (navigator.limit === 10) && "selected" %>>10</option>
-            <option value="20" <%= (navigator.limit === 20) && "selected" %>>20</option>
-            <option value="30" <%= (navigator.limit === 30) && "selected" %>>30</option>
-          </select>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  <!-- Pagination -->
+  <%- include("partials/pagination") %>
   <%- include('partials/footer') %>
 </body>
 

@@ -44,6 +44,11 @@ class adminManagementController {
         .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
     }
   }
+  async showAdminCreate(req, res) {
+    return res.status(STATUS.SUCCESS).render("admin/human/admin/create", {
+      admin: req.user,
+    });
+  }
   async softDeleteAdmin(req, res) {
     const idAdmin = req.params.id;
     if (!idAdmin) {
@@ -174,7 +179,15 @@ class adminManagementController {
   async createAdmin(req, res) {
     const { username, password, role, email } = req.body;
     // return res.json({ username, password, role, email });
+    if (!username || !password || !role || !email) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
     try {
+      console.log({ username, password, role, email });
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const newAmin = new Admin({
@@ -209,7 +222,11 @@ class adminManagementController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-
+  //4. Create Avatar Admin
+  async createAvatarAdmin(req, res) {
+    console.log(req.file);
+    res.json(req.file);
+  }
   //USER ACCOUNT CONTROLLER ***********************************************************************************
 
   async showUserDashboard(req, res) {

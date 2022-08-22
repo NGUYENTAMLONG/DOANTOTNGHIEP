@@ -4,6 +4,7 @@ const path = require("path");
 const appRoot = require("app-root-path");
 const {
   showAdminDashboard,
+  showAdminCreate,
   showAdminTrash,
   softDeleteAdmin,
   softDeleteCheckedAdmin,
@@ -13,6 +14,7 @@ const {
   showUserDashboard,
   getAdminList,
   createAdmin,
+  createAvatarAdmin,
   getDeletedAdmins,
 } = require("../../../controllers/AdminController");
 
@@ -20,7 +22,7 @@ const router = express.Router();
 
 const storageAdmin = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "images/admins");
+    cb(null, "src/public/avatars/admin");
   },
   filename: (req, file, cb) => {
     console.log(file);
@@ -30,6 +32,9 @@ const storageAdmin = multer.diskStorage({
 
 const uploadAdmin = multer({ storage: storageAdmin }); //for admin
 
+// Get Admin Creating Page
+// route:-> /management/human/admin/create...
+router.get("/create", showAdminCreate);
 // Get Admin Trash Table
 // route:-> /management/human/admin/trash...
 router.get("/trash", showAdminTrash);
@@ -57,5 +62,10 @@ router.patch("/restoreChecked", restoreCheckedAdmin);
 router.get("/api/getList", getAdminList);
 router.get("/api/getDeletedAdmins", getDeletedAdmins);
 router.post("/api/create", createAdmin);
+router.post(
+  "/api/create/avatar",
+  uploadAdmin.single("avatar"),
+  createAvatarAdmin
+);
 
 module.exports = router;

@@ -1,8 +1,8 @@
- <div class="col-sm-4 col-md-3 col-lg-2 p-2">
+ <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-2">
    <div class="manga-card">
      <% if (manga.hot === true) {
             %>
-     <span class="manga-tag__hot">Hot</span>
+     <span class="manga-tag__hot badge badge-sm">Hot</span>
      <% } %>
      <% if (manga.contentId.chapters.length > 0) {%>
      <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"><%= moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() %></span>

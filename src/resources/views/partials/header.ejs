@@ -25,7 +25,6 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/about">Giới thiệu</a>
-                <a class="dropdown-item" href="https://www.facebook.com/truyentranh" target="_blank">Fanpage</a>
                 <a class="dropdown-item" href="#">Tải App</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item text-light bg-success" href="#">Ủng hộ</a>
@@ -35,20 +34,7 @@
           <form action="/search" method="GET" class="form-inline my-2 my-lg-0 form-seach d-flex justify-content-end">
             <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Manga ..." aria-label="Search" onkeyup="liveSearch(this)" onclick="liveSearch(this)" autocomplete="off">
             <section id="result-live-search" class="bg-dark text-light d-none">
-              <!-- <div class="found-manga d-flex">
-                <img src="http://localhost:3416/image/1658053540044.jpg" width="60px" alt="">
-                <div class="found-manga__info">
-                  <b class="found-manga__info__name">
-                    Con nha giau
-                  </b>
-                  <p class="found-manga__info__anothername">
-                    Con nha giau 2
-                  </p>
-                  <span class="badge badge-primary">
-                    Chuong 1
-                  </span>
-                </div>
-              </div> -->
+              <!-- **** -->
             </section>
             <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit"><i class="fas fa-search"></i></button>
           </form>
@@ -64,7 +50,7 @@
                 <p id="userName"><%= user.username %></p>
               </div>
               <div class="dropdown-menu" id="settings" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="/follow">Danh sách theo dõi</a>
+                <a class="dropdown-item" href="/follow?page=1&limit=2">Danh sách theo dõi</a>
                 <a class="dropdown-item" href="/user/history?page=1&limit=2">Lịch sử đọc truyện</a>
                 <a class="dropdown-item" href="/user/profile">Cài đặt thông tin</a>
                 <a class="dropdown-item logoutBtn" href="/logout">Đăng xuất</a>
@@ -77,313 +63,213 @@
         </div>
       </div>
     </nav>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#be151b;">
-      <div class=" container">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sub-menu" aria-controls="sub-menu" aria-expanded="false" aria-label="Toggle navigation">
-          <i class='bx bx-menu-alt-left'></i>
-        </button>
-        <div class="collapse navbar-collapse" id="sub-menu">
-          <ul class="navbar-nav mr-auto  text-center">
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="fa fa-home" aria-hidden="true"></i>
-                Trang Chủ
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Thể loại
-              </a>
-              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-150px ; width: 91vw;">
-                <ul>
-
-
-
-
-                </ul>
-              </div>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sắp xếp
-              </a>
-              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-250px ; width: 91vw;">
-                <ul>
-                  <li><a href="/top/today">Top Ngày</a></li>
-                  <li><a href="/top/week"">Top Tuần</a></li>
-                  <li> <a href=" /top/month">Top Tháng</a></li>
-                  <li> <a href="/filter/favourite?page=1&limit=2">Yêu thích nhất</a></li>
-                  <li> <a href="/filter/highest-views?page=1&limit=2">Lượt views cao nhất</a></li>
-                  <li> <a href="/just-updated?page=1&limit=2">Mới cập nhật</a></li>
-                  <li> <a href="/filter/new?page=1&limit=2">Truyện mới</a></li>
-                  <li> <a href="/filter/complete?page=1&limit=2">Truyện full</a></li>
-                  <li> <a href="/filter/unfinished?page=1&limit=2">Truyện đang tiến hành</a></li>
-                  <li> <a href="/filter/author">Truyện đồng tác giả</a></li>
-                  <li><a href="/filter/prolongation?page=1&limit=2">Truyện trường kỳ</a></li>
-                  <li><a href="/filter/random">Truyện ngẫu nhiên</a></li>
-                  <li><a href="/filter/flop?page=1&limit=2">Truyện ít đọc</a></li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Quốc gia
-              </a>
-              <div class="dropdown-menu category-menu" aria-labelledby=" navbarDropdown2" style="left:-350px ; width: 91vw;">
-                <ul>
-                  <li><a href="/country/Trung Quốc?page=1&limit=2">Trung Quốc</a></li>
-                  <li><a href="/country/Mỹ?page=1&limit=2">Mỹ</a></li>
-                  <li><a href="/country/Nhật Bản?page=1&limit=2">Nhật Bản</a></li>
-                  <li><a href="/country/Hàn Quốc?page=1&limit=2">Hàn Quốc</a></li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/popular/female?page=1&limit=2">Con gái</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/popular/male?page=1&limit=2">Con trai</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://www.facebook.com/truyentranh" target="_blank">Fanpage</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Tiểu thuyết</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Truyện famade</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/advanced-search">Tìm truyện</a>
-            </li>
-            <li class="nav-item">
-              <!-- <form action="/history?page=1&limit=2" method="post" id="form-history">
-                <input type="text" name="visit" id="visit" value="" hidden>
-                <button class="btn btn-info" type="submit"><i class='bx bxs-time'></i> Lịch sử</button>
-              </form> -->
-            </li>
-        </div>
-      </div>
-    </nav>
     <nav class="my__navbar">
       <div class="container">
         <a href="/">
           <i class="fa fa-home" aria-hidden="true"></i>
           Trang Chủ
         </a>
-        <div class="d">
-          <button class="d-btn">Thể loại <i class="fas fa-caret-down"></i></button>
-          <div class="d-content">
-            <div class="row">
-              <div class="container d-flex">
-                <ul class="column">
-                  <li>
-                    <a href="/category/Action?page=1&limit=2">Action</a>
-                  </li>
-                  <li>
-                    <a href="/category/Phiêu lưu?page=1&limit=2">Phiêu lưu</a>
-                  </li>
-                  <li>
-                    <a href="/category/Magic?page=1&limit=2">Magic</a>
-                  </li>
-                  <li>
-                    <a href="/category/Kỳ ảo?page=1&limit=2">Kỳ ảo</a>
-                  </li>
-                  <li>
-                    <a href="/category/Ninja?page=1&limit=2">Ninja</a>
-                  </li>
-                  <li>
-                    <a href="/category/Đấu trí?page=1&limit=2">Đấu trí</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Truyện Scan?page=1&limit=2">Truyện Scan</a>
-                  </li>
-                  <li>
-                    <a href="/category/Supernatural?page=1&limit=2">Supernatural</a>
-                  </li>
-                  <li>
-                    <a href="/category/Chuyển sinh?page=1&limit=2">Chuyển sinh</a>
-                  </li>
-                  <li>
-                    <a href="/category/Chiến dịch?page=1&limit=2">Chiến dịch</a>
-                  </li>
-                  <li>
-                    <a href="/category/Trung cổ?page=1&limit=2">Trung cổ</a>
-                  </li>
-                  <li>
-                    <a href="/category/Lãng mạn?page=1&limit=2">Lãng mạn</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Drama?page=1&limit=2">Drama</a>
-                  </li>
-                  <li>
-                    <a href="/category/Ngôn tình?page=1&limit=2">Ngôn tình</a>
-                  </li>
-                  <li>
-                    <a href="/category/Trinh thám?page=1&limit=2">Trinh thám</a>
-                  </li>
-                  <li>
-                    <a href="/category/School Life?page=1&limit=2">School Life</a>
-                  </li>
-                  <li>
-                    <a href="/category/Webtoon?page=1&limit=2">Webtoon</a>
-                  </li>
-                  <li>
-                    <a href="/category/Hài kịch?page=1&limit=2">Hài kịch</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Chuyển thể?page=1&limit=2">Chuyển thể</a>
-                  </li>
-                  <li>
-                    <a href="/category/Slice Of Life?page=1&limit=2">Slice Of Life</a>
-                  </li>
-                  <li>
-                    <a href="/category/Sports?page=1&limit=2">Sports</a>
-                  </li>
-                  <li>
-                    <a href="/category/Mystery?page=1&limit=2">Mystery</a>
-                  </li>
-                  <li>
-                    <a href="/category/Psychological?page=1&limit=2">Psychological</a>
-                  </li>
-                  <li>
-                    <a href="/category/Võ thuật?page=1&limit=2">Võ thuật</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Truyện màu?page=1&limit=2">Truyện màu</a>
-                  </li>
-                  <li>
-                    <a href="/category/Tâm lí?page=1&limit=2">Tâm lí</a>
-                  </li>
-                  <li>
-                    <a href="/category/Thiếu nhi?page=1&limit=2">Thiếu nhi</a>
-                  </li>
-                  <li>
-                    <a href="/category/Mecha?page=1&limit=2">Mecha</a>
-                  </li>
-                  <li>
-                    <a href="/category/Adult?page=1&limit=2">Adult</a>
-                  </li>
-                  <li>
-                    <a href="/category/Horror?page=1&limit=2">Horror</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Xuyên không?page=1&limit=2">Xuyên không</a>
-                  </li>
-                  <li>
-                    <a href="/category/Mature?page=1&limit=2">Mature</a>
-                  </li>
-                  <li>
-                    <a href="/category/Shounen?page=1&limit=2">Shounen</a>
-                  </li>
-                  <li>
-                    <a href="/category/Kinh dị - Đen tối?page=1&limit=2">Kinh dị - Đen tối</a>
-                  </li>
-                  <li>
-                    <a href="/category/Military?page=1&limit=2">Military</a>
-                  </li>
-                  <li>
-                    <a href="/category/Manhua?page=1&limit=2">Manhua</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Manwua?page=1&limit=2">Manwua</a>
-                  </li>
-                  <li>
-                    <a href="/category/Demons - Monster?page=1&limit=2">Demons - Monster</a>
-                  </li>
-                  <li>
-                    <a href="/category/Historical?page=1&limit=2">Historical</a>
-                  </li>
-                  <li>
-                    <a href="/category/Ecchi?page=1&limit=2">Ecchi</a>
-                  </li>
-                  <li>
-                    <a href="/category/Doujinshi?page=1&limit=2">Doujinshi</a>
-                  </li>
-                  <li>
-                    <a href="/category/Comic?page=1&limit=2">Comic</a>
-                  </li>
-                </ul>
-                <ul class="column">
-                  <li>
-                    <a href="/category/Kiếm & Phép thuật?page=1&limit=2">Kiếm & Phép thuật</a>
-                  </li>
-                  <li>
-                    <a href="/category/16+?page=1&limit=2">16+</a>
-                  </li>
-                  <li>
-                    <a href="/category/18+?page=1&limit=2">18+</a>
-                  </li>
-                </ul>
-              </div>
+        <div class="nav__dropdown">
+          <button class="nav__dropdown-btn">Thể loại <i class="fas fa-caret-down"></i></button>
+          <div class="nav__dropdown-content">
+            <div class="row" style="margin: 0px 25px;">
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Action?page=1&limit=2">Action</a>
+                </li>
+                <li>
+                  <a href="/category/Phiêu lưu?page=1&limit=2">Phiêu lưu</a>
+                </li>
+                <li>
+                  <a href="/category/Magic?page=1&limit=2">Magic</a>
+                </li>
+                <li>
+                  <a href="/category/Kỳ ảo?page=1&limit=2">Kỳ ảo</a>
+                </li>
+                <li>
+                  <a href="/category/Ninja?page=1&limit=2">Ninja</a>
+                </li>
+                <li>
+                  <a href="/category/Đấu trí?page=1&limit=2">Đấu trí</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Truyện Scan?page=1&limit=2">Truyện Scan</a>
+                </li>
+                <li>
+                  <a href="/category/Supernatural?page=1&limit=2">Supernatural</a>
+                </li>
+                <li>
+                  <a href="/category/Chuyển sinh?page=1&limit=2">Chuyển sinh</a>
+                </li>
+                <li>
+                  <a href="/category/Chiến dịch?page=1&limit=2">Chiến dịch</a>
+                </li>
+                <li>
+                  <a href="/category/Trung cổ?page=1&limit=2">Trung cổ</a>
+                </li>
+                <li>
+                  <a href="/category/Lãng mạn?page=1&limit=2">Lãng mạn</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Drama?page=1&limit=2">Drama</a>
+                </li>
+                <li>
+                  <a href="/category/Ngôn tình?page=1&limit=2">Ngôn tình</a>
+                </li>
+                <li>
+                  <a href="/category/Trinh thám?page=1&limit=2">Trinh thám</a>
+                </li>
+                <li>
+                  <a href="/category/School Life?page=1&limit=2">School Life</a>
+                </li>
+                <li>
+                  <a href="/category/Webtoon?page=1&limit=2">Webtoon</a>
+                </li>
+                <li>
+                  <a href="/category/Hài kịch?page=1&limit=2">Hài kịch</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Chuyển thể?page=1&limit=2">Chuyển thể</a>
+                </li>
+                <li>
+                  <a href="/category/Slice Of Life?page=1&limit=2">Slice Of Life</a>
+                </li>
+                <li>
+                  <a href="/category/Sports?page=1&limit=2">Sports</a>
+                </li>
+                <li>
+                  <a href="/category/Mystery?page=1&limit=2">Mystery</a>
+                </li>
+                <li>
+                  <a href="/category/Psychological?page=1&limit=2">Psychological</a>
+                </li>
+                <li>
+                  <a href="/category/Võ thuật?page=1&limit=2">Võ thuật</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Truyện màu?page=1&limit=2">Truyện màu</a>
+                </li>
+                <li>
+                  <a href="/category/Tâm lí?page=1&limit=2">Tâm lí</a>
+                </li>
+                <li>
+                  <a href="/category/Thiếu nhi?page=1&limit=2">Thiếu nhi</a>
+                </li>
+                <li>
+                  <a href="/category/Mecha?page=1&limit=2">Mecha</a>
+                </li>
+                <li>
+                  <a href="/category/Adult?page=1&limit=2">Adult</a>
+                </li>
+                <li>
+                  <a href="/category/Horror?page=1&limit=2">Horror</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Xuyên không?page=1&limit=2">Xuyên không</a>
+                </li>
+                <li>
+                  <a href="/category/Mature?page=1&limit=2">Mature</a>
+                </li>
+                <li>
+                  <a href="/category/Shounen?page=1&limit=2">Shounen</a>
+                </li>
+                <li>
+                  <a href="/category/Kinh dị - Đen tối?page=1&limit=2">Kinh dị - Đen tối</a>
+                </li>
+                <li>
+                  <a href="/category/Military?page=1&limit=2">Military</a>
+                </li>
+                <li>
+                  <a href="/category/Manhua?page=1&limit=2">Manhua</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Manwua?page=1&limit=2">Manwua</a>
+                </li>
+                <li>
+                  <a href="/category/Demons - Monster?page=1&limit=2">Demons - Monster</a>
+                </li>
+                <li>
+                  <a href="/category/Historical?page=1&limit=2">Historical</a>
+                </li>
+                <li>
+                  <a href="/category/Ecchi?page=1&limit=2">Ecchi</a>
+                </li>
+                <li>
+                  <a href="/category/Doujinshi?page=1&limit=2">Doujinshi</a>
+                </li>
+                <li>
+                  <a href="/category/Comic?page=1&limit=2">Comic</a>
+                </li>
+              </ul>
+              <ul class="nav__column-category">
+                <li>
+                  <a href="/category/Kiếm & Phép thuật?page=1&limit=2">Kiếm & Phép thuật</a>
+                </li>
+                <li>
+                  <a href="/category/16+?page=1&limit=2">16+</a>
+                </li>
+                <li>
+                  <a href="/category/18+?page=1&limit=2">18+</a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-        <div class="d">
-          <button class="d-btn">Sắp xếp <i class="fas fa-caret-down"></i></button>
-          <div class="d-content">
-            <div class="row">
-              <div class="container d-flex">
-                <ul class="column">
-                  <li>
-                    <a href="/category/Action?page=1&limit=2">Action</a>
-                  </li>
-                  <li>
-                    <a href="/category/Phiêu lưu?page=1&limit=2">Phiêu lưu</a>
-                  </li>
-                  <li>
-                    <a href="/category/Magic?page=1&limit=2">Magic</a>
-                  </li>
-                  <li>
-                    <a href="/category/Kỳ ảo?page=1&limit=2">Kỳ ảo</a>
-                  </li>
-                  <li>
-                    <a href="/category/Ninja?page=1&limit=2">Ninja</a>
-                  </li>
-                  <li>
-                    <a href="/category/Đấu trí?page=1&limit=2">Đấu trí</a>
-                  </li>
-                  <li>
-                    <a href="/category/Truyện Scan?page=1&limit=2">Truyện Scan</a>
-                  </li>
-                  <li>
-                    <a href="/category/Supernatural?page=1&limit=2">Supernatural</a>
-                  </li>
-                  <li>
-                    <a href="/category/Chuyển sinh?page=1&limit=2">Chuyển sinh</a>
-                  </li>
-                  </li>
-                </ul>
-              </div>
+        <div class="nav__dropdown">
+          <button class="nav__dropdown-btn">Sắp xếp <i class="fas fa-caret-down"></i></button>
+          <div class="nav__dropdown-content">
+            <div class="row" style="margin: 0px 25px;">
+              <ul class="nav__column-sort">
+                <li><a href="/top/today">Top Ngày</a></li>
+                <li><a href="/top/week"">Top Tuần</a></li>
+                <li> <a href=" /top/month">Top Tháng</a></li>
+              </ul>
+              <ul class="nav__column-sort">
+                <li> <a href="/filter/favourite?page=1&limit=2">Yêu thích nhất</a></li>
+                <li> <a href="/filter/highest-views?page=1&limit=2">Lượt views cao nhất</a></li>
+                <li> <a href="/just-updated?page=1&limit=2">Mới cập nhật</a></li>
+              </ul>
+              <ul class="nav__column-sort">
+                <li> <a href="/filter/new?page=1&limit=2">Truyện mới</a></li>
+                <li> <a href="/filter/complete?page=1&limit=2">Truyện full</a></li>
+                <li> <a href="/filter/unfinished?page=1&limit=2">Truyện đang tiến hành</a></li>
+              </ul>
+              <ul class="nav__column-sort">
+                <li> <a href="/filter/author">Truyện đồng tác giả</a></li>
+                <li><a href="/filter/prolongation?page=1&limit=2">Truyện trường kỳ</a></li>
+                <li><a href="/filter/random">Truyện ngẫu nhiên</a></li>
+                <li><a href="/filter/flop?page=1&limit=2">Truyện ít đọc</a></li>
+              </ul>
             </div>
           </div>
         </div>
-        <div class="d">
-          <button class="d-btn">Quốc gia <i class="fas fa-caret-down"></i></button>
-          <div class="d-content">
+        <div class="nav__dropdown">
+          <button class="nav__dropdown-btn">Quốc gia <i class="fas fa-caret-down"></i></button>
+          <div class="nav__dropdown-content">
             <div class="row">
               <div class="container d-flex">
-                <ul class="column">
+                <ul class="nav__column-country">
                   <li><a href="/country/Trung Quốc?page=1&limit=2">Trung Quốc</a></li>
                 </ul>
-                <ul class="column">
+                <ul class="nav__column-country">
                   <li><a href="/country/Mỹ?page=1&limit=2">Mỹ</a></li>
                 </ul>
-                <ul class="column">
+                <ul class="nav__column-country">
                   <li><a href="/country/Nhật Bản?page=1&limit=2">Nhật Bản</a></li>
                 </ul>
-                <ul class="column">
+                <ul class="nav__column-country">
                   <li><a href="/country/Hàn Quốc?page=1&limit=2">Hàn Quốc</a></li>
                 </ul>
               </div>
@@ -395,12 +281,12 @@
         <a href="#">Tiểu thuyết</a>
         <a href="#">Truyện famade</a>
         <a href="/advanced-search">Tìm truyện</a>
-        <form action="/history?page=1&limit=2" method="post" id="form-history">
+        <a href="https://www.facebook.com/truyentranh" target="_blank">Fanpage</a>
+        <form action="/history?page=1&limit=2" method="post" class="d-flex justify-content-center aligh-items-center" id="form-history">
           <input type="text" name="visit" id="visit" value="" hidden>
-          <button class="btn btn-info" type="submit"><i class='bx bxs-time'></i> Lịch sử</button>
+          <button class="btn btn-info btn-sm mt-1 ml-2" type="submit"><i class='bx bxs-time'></i> Lịch sử</button>
         </form>
-    </nav>
-    </div>
+      </div>
   </header>
   <script src="/js/authen.js"></script>
   <script>
