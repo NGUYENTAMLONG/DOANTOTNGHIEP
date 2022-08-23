@@ -9,19 +9,23 @@
 
 if (localStorage.getItem("light") !== "on") {
   document.querySelector("#checkboxLight").checked = false;
+  document.querySelector(".lightbulb-status").innerHTML = `Bật đèn`;
 } else {
   toggleClass();
   document.querySelector("#checkboxLight").checked = true;
+  document.querySelector(".lightbulb-status").innerHTML = `Tắt đèn`;
 }
 
 function toggleDarkmode(it) {
   if (localStorage.getItem("light") !== "on") {
     localStorage.setItem("light", "on");
     console.log(localStorage.getItem("light"));
+    document.querySelector(".lightbulb-status").innerHTML = `Tắt đèn`;
     toggleClass();
   } else {
     localStorage.setItem("light", "off");
     console.log(localStorage.getItem("light"));
+    document.querySelector(".lightbulb-status").innerHTML = `Bật đèn`;
     toggleClass();
   }
 }

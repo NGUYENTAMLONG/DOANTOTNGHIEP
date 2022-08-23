@@ -24,9 +24,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; }
+  flex-direction: column;
+  margin: 0px 10px; }
   #section-2 p img {
-    margin: 10px 0px; }
+    margin: 10px 0px;
+    width: 100% !important;
+    height: 100% !important; }
 
 #section-3 {
   margin-bottom: 20px;
@@ -58,14 +61,78 @@ body {
         padding: 10px; }
         #section-4 .chapter-nav ul li a {
           text-decoration: none;
-          color: white; }
+          color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column; }
+          #section-4 .chapter-nav ul li a p {
+            font-size: 13px; }
         #section-4 .chapter-nav ul li span,
         #section-4 .chapter-nav ul li label {
-          cursor: pointer; }
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column; }
+          #section-4 .chapter-nav ul li span p,
+          #section-4 .chapter-nav ul li label p {
+            font-size: 13px; }
       #section-4 .chapter-nav ul .nav {
         width: 450px; }
         #section-4 .chapter-nav ul .nav i {
-          cursor: pointer; }
+          cursor: pointer;
+          margin-bottom: 20px; }
         #section-4 .chapter-nav ul .nav select {
-          line-height: 100%;
+          width: 300px;
+          margin-bottom: 20px; }
+
+@media (max-width: 767.98px) {
+  #section-3 h3 {
+    font-size: 20px; }
+  #section-4 {
+    width: 100%; }
+    #section-4 .fa-angle-up {
+      font-size: 20px; }
+    #section-4 .chapter-nav {
+      position: fixed;
+      z-index: 100;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background-color: #be151b; }
+      #section-4 .chapter-nav ul {
+        display: flex;
+        justify-content: space-around;
+        list-style: none; }
+        #section-4 .chapter-nav ul li span,
+        #section-4 .chapter-nav ul li a,
+        #section-4 .chapter-nav ul li label {
+          font-size: 15px; }
+        #section-4 .chapter-nav ul li p {
+          display: none; }
+        #section-4 .chapter-nav ul .nav {
           width: 300px; }
+          #section-4 .chapter-nav ul .nav i {
+            cursor: pointer; }
+          #section-4 .chapter-nav ul .nav select {
+            line-height: 100%;
+            width: 70px;
+            height: 30px;
+            font-size: 12px; } }
+
+@media (max-width: 991.98px) {
+  #section-3 h3 {
+    font-size: 20px; }
+  #section-4 {
+    width: 100%; }
+    #section-4 .fa-angle-up {
+      font-size: 20px; }
+    #section-4 .chapter-nav .nav {
+      width: 300px; }
+      #section-4 .chapter-nav .nav i {
+        cursor: pointer; }
+      #section-4 .chapter-nav .nav select {
+        width: 70px;
+        height: 30px;
+        font-size: 12px; } }

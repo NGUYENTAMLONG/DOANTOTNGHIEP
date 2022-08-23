@@ -7,10 +7,16 @@
   border-top: solid 1px gray; }
 
 #section-2 .timeline {
-  padding: 5px 0px 5px 20px; }
+  padding: 5px 0px 5px 20px;
+  overflow: scroll;
+  height: 300px; }
 
 #section-2 a {
   text-decoration: none; }
+
+@media (max-width: 650px) {
+  #section-2 .timeline p {
+    font-size: 13px; } }
 
 .section a,
 #section-3 a,

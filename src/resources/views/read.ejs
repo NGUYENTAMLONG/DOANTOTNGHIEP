@@ -128,10 +128,10 @@
                    chapters[indexChapter + 1].chapterNumber}"><i class="fas fa-2x fa-caret-right ml-4"></i></a>`:""}`;
 
           document.querySelector(".btns-nav").innerHTML = `${indexChapter !== 0 ? `<a href='/detail/${slug}/read/chapter-${
-                  chapters[indexChapter - 1].chapterNumber}' class="btn btn-success">Chương trước</a>`: ""
+                  chapters[indexChapter - 1].chapterNumber}' class="btn btn-success btn-sm">Chương trước</a>`: ""
           }
           ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
-                   chapters[indexChapter + 1].chapterNumber}" class="btn btn-primary">Chương sau</a>`:""}`
+                   chapters[indexChapter + 1].chapterNumber}" class="btn btn-primary btn-sm">Chương sau</a>`:""}`
         }
       });
   }

@@ -8,6 +8,7 @@ const { types, COUNTRY, SERVE } = require("../config/default");
 const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
 const lodash = require("lodash");
+const { Mongoose } = require("mongoose");
 class AdvancedSearchController {
   async show(req, res, next) {
     try {
@@ -49,19 +50,96 @@ class AdvancedSearchController {
       // const limit = parseInt(req.query.limit);
       // const startPage = (page - 1) * limit;
       // const result = pagination(req, totalMangas);
-      const foundMangas = await Manga.find({
-        $and: [
-          { type: { $all: condition.includeArr } },
-          { type: { $nin: condition.exceptArr } },
-          { type: { $in: condition.defaultArr } },
-        ],
-      }).populate("contentId", {
-        chapters: { $slice: -1 },
-      });
-      // .limit(limit)
-      // .skip(startPage)
-      // .exec();
-      // return res.json(JSON.parse(filter));
+      let subCondition = {};
+      if (condition.hot !== "null") {
+        subCondition.hot = condition.hot;
+      }
+      if (condition.country !== "null") {
+        subCondition.country = condition.country;
+      }
+      if (condition.author !== "null") {
+        subCondition.author = condition.author;
+      }
+      if (condition.translation !== "null") {
+        subCondition.translation = condition.translation;
+      }
+      if (condition.status !== "null") {
+        subCondition.status = condition.status;
+      }
+      if (condition.serve !== "null") {
+        subCondition.serve = condition.serve;
+      }
+      // if (condition.countChapter !== "null") {
+      //   subCondition.countChapter = condition.serve;
+      // }
+
+      let finalCondition = {};
+      if (
+        condition.exceptArr.length !== 0 ||
+        condition.includeArr.length !== 0
+      ) {
+        finalCondition = {
+          $and: [
+            { type: { $nin: condition.exceptArr } },
+            { type: { $all: condition.includeArr } },
+            subCondition,
+          ],
+        };
+      } else {
+        finalCondition = subCondition;
+      }
+      // const foundMangas = await Manga.find(finalCondition).populate(
+      //   "contentId",
+      //   {
+      //     // chapters: { $slice: -1 },
+      //     // "contentId.chapters": {
+      //     //   $size: 2,
+      //     // },
+      //   }
+      // );
+      const foundMangas = await Manga.aggregate([
+        {
+          $match: finalCondition,
+        },
+        {
+          $addFields: {
+            contentId: { $toObjectId: "$contentId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "Chapters",
+            localField: "contentId",
+            foreignField: "_id",
+            as: "Chapters",
+          },
+        },
+        {
+          $addFields: {
+            count: "$Chapters",
+          },
+        },
+        {
+          $addFields: {
+            count: {
+              $size: {
+                $arrayElemAt: ["$Chapters.chapters", 0],
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $lte: ["$count", Number(condition.countChapter)],
+            },
+          },
+        },
+      ]);
+      // .find({
+      //   "contentId._id[0]":
+      // });
+      return res.json(foundMangas);
       res.render("showResultAdvancedSearch", {
         user: req.user,
         moment: moment,

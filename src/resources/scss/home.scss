@@ -11,9 +11,18 @@
 #section-2 {
   .timeline {
     padding: 5px 0px 5px 20px;
+    overflow: scroll;
+    height: 300px;
   }
   a {
     text-decoration: none;
+  }
+  @media (max-width: 650px) {
+    .timeline {
+      p {
+        font-size: 13px;
+      }
+    }
   }
 }
 .section,

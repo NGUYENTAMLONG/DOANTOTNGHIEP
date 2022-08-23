@@ -27,7 +27,7 @@
 
   <form action="/advanced-search/result" method="post" class="container d-flex flex-wrap" id="form-advanced-search">
     <div class="row">
-      <label>Tình trạng</label> <br>
+      <label>Thể loại : </label> <br>
       <% categories.forEach(function(type,index){ %>
       <div class="btn-group-toggle m-2" data-toggle="buttons">
         <input type="radio" name="<%= type.name %>" value="2" checked hidden>
@@ -42,19 +42,19 @@
       <div class="col-sm-4 col-md-4 col-lg-4">
         <label for="status">Tình trạng</label> <br>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status1">
+          <input class="form-check-input" type="radio" name="status" value="Hoàn thành" id="status1">
           <label class="form-check-label" for="status1">
             Hoàn thành
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status2">
+          <input class="form-check-input" type="radio" name="status" value="Đang tiến hành" id="status2">
           <label class="form-check-label" for="status2">
-            Đã hoàn thành
+            Đang tiến hành
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status3" checked>
+          <input class="form-check-input" type="radio" name="status" value="null" id="status3" checked>
           <label class="form-check-label" for="status3">
             Tất cả
           </label>
@@ -62,8 +62,8 @@
       </div>
       <div class="col-sm-4 col-md-4 col-lg-4">
         <label for="country">Quốc gia</label><br>
-        <select class="form-select form-control">
-          <option selected>Tất cả</option>
+        <select class="form-select form-control" id="country">
+          <option selected value="null">Tất cả</option>
           <% for (const country in countries) { %>
           <option value="<%= countries[country] %>"><%= countries[country] %></option>
           <%} %>
@@ -71,8 +71,8 @@
       </div>
       <div class="col-sm-4 col-md-4 col-lg-4">
         <label for="serve">Đối tượng</label><br>
-        <select class="form-select form-control">
-          <option selected>Mặc định</option>
+        <select class="form-select form-control" id="serve">
+          <option selected value="null">Mặc định</option>
           <% for (const serve in serves) { %>
           <option value="<%= serves[serve] %>"><%= serves[serve] %></option>
           <%} %>
@@ -81,27 +81,31 @@
     </div>
     <div class="row" style="width:100%;">
       <div class="col-sm-4 col-md-4 col-lg-4">
-        <label for="serve">Tác giả</label><br>
-        <select class="form-select form-control">
-          <option selected>Tất cả</option>
+        <label for="author">Tác giả</label><br>
+        <select class="form-select form-control" id="author">
+          <option selected value="null">Tất cả</option>
           <% authors.forEach(function(author,index){ %>
           <option value="<%= author._id %>"><%= author._id %></option>
           <%}) %>
         </select>
       </div>
       <div class="col-sm-4 col-md-4 col-lg-4">
-        <label for="serve">Dịch giả</label><br>
-        <select class="form-select form-control">
-          <option selected>Tất cả</option>
+        <label for="translation">Dịch giả</label><br>
+        <select class="form-select form-control" id="translation">
+          <option selected value="null">Tất cả</option>
           <% translation.forEach(function(elm,index){ %>
           <option value="<%= elm._id %>"><%= elm._id %></option>
           <%}) %>
         </select>
       </div>
       <div class="col-sm-4 col-md-4 col-lg-4">
-        <label for="serve">Số chương truyện</label><br>
-        <select class="form-select form-control">
-          <option selected>Tất cả</option>
+        <label for="count-chapter">Số chương truyện</label><br>
+        <select class="form-select form-control" id="count-chapter">
+          <option selected value="null">Tất cả</option>
+          <option value="2">
+            <= 2 </option>
+          <option value="4">
+            <= 4 </option>
           <option value="50">
             <= 50 </option>
           <option value="100">
@@ -121,11 +125,34 @@
         </select>
       </div>
     </div>
-    <div class="row">
-      <input type="text" name="filter" id="filter" hidden>
-      <button class="btn btn-warning ml-4" type="submit">
-        Tìm kiếm
-      </button>
+    <div class="row" style="width:100%;">
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <label for="hot">Độ hot</label><br>
+        <select class="form-select form-control" id="hot">
+          <option value="null" selected>Tất cả</option>
+          <option value="true">Có</option>
+          <option value="false">Không</option>
+        </select>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <label for="sort">Sắp xếp</label><br>
+        <select class="form-select form-control" id="sort">
+          <option value="date-down" selected>Ngày đăng giảm dần</option>
+          <option value="date-up">Ngày đăng tăng dần</option>
+          <option value="like-down">Lượt thích giảm dần</option>
+          <option value="like-up">Lượt thích tăng dần</option>
+          <option value="view-down">Lượt views giảm dần</option>
+          <option value="view-up">Lượt views tăng dần</option>
+          <option value="rate-down">Đánh giá sao giảm dần</option>
+          <option value="rate-up">Đánh giá sao tăng dần</option>
+        </select>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 text-center">
+        <input type="text" name="filter" id="filter" hidden>
+        <button class="btn btn-warning ml-4 mt-3" type="submit" onclick="">
+          Tìm kiếm
+        </button>
+      </div>
     </div>
   </form>
   <%- include('partials/footer') %>
@@ -176,12 +203,27 @@
   function submit() {
     const defaultRadios = document.querySelectorAll(`input[type="radio"][value="2"]:checked`);
     const defaultArr = [...[...defaultRadios].map((item) => item.name)]
-
+    const status = document.querySelector("input[name='status']:checked");
+    const selectAuthor = document.getElementById("author");
+    const selectHot = document.getElementById("hot");
+    const selectCountry = document.getElementById("country");
+    const selectServe = document.getElementById("serve");
+    const selectTranslation = document.getElementById("translation");
+    const selectSort = document.getElementById("sort");
+    const selectCountChapter = document.getElementById("count-chapter");
     // advanced - search / result
     const data = {
       includeArr,
       exceptArr,
-      defaultArr
+      defaultArr,
+      status: status.value,
+      author: selectAuthor.value,
+      hot: selectHot.value,
+      country: selectCountry.value,
+      serve: selectServe.value,
+      translation: selectTranslation.value,
+      sort: selectSort.value,
+      countChapter: selectCountChapter.value
     };
     return data;
     // fetch('/advanced-search/result', {
@@ -202,7 +244,6 @@
   }
 
 
-  // Set History
   document.getElementById('form-advanced-search').addEventListener('submit', function(event) {
     // block form submit event
     event.preventDefault();
