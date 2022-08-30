@@ -15,6 +15,7 @@
 
 <body>
   <%- include('partials/header') %>
+
   <section class="section container mt-3" id="section-1">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -23,13 +24,23 @@
           <a href="/detail/<%= reading.slug%>"> <%= reading.slug%></a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">chapter-<%= reading.Chapters.chapters.chapterNumber%></li>
+        <li class="float-right" aria-current="page" style="width: 75%;">
+          <div class="float-right">
+            <button class="view-mode-button" aria-label="Toggle View Mode" onclick="toggle_view_mode()" data-toggle="tooltip" data-placement="bottom" title="Chế độ đọc">
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </li>
       </ol>
     </nav>
     <div class="text-light d-flex justify-content-between">
       <div class="btns-nav">
       </div>
+
       <span class="darkmode float-right">
         Đăng lúc: <span class="badge badge-primary"><%= moment(reading.Chapters.chapters.createdTime).format("L") %> - <%= moment(reading.Chapters.chapters.createdTime).format("LT") %></span>
+
       </span>
     </div>
     <div class="text-light text-center">
@@ -40,7 +51,16 @@
     </div>
   </section>
   <section class="section container" id="section-2">
-    <%- reading.Chapters.chapters.chapterContent %>
+    <div class="chapter-container" hidden id="chapter-container-row">
+      <span id="btn-prev-page" onclick="prevPage(this)"><i class="fas fa-arrow-circle-left fa-2x"></i></span>
+      <span id="btn-next-page" onclick="nextPage(this)"><i class="fas fa-arrow-circle-right fa-2x"></i></span>
+      <div class="chapter-content">
+        <%- reading.Chapters.chapters.chapterContent %>
+      </div>
+    </div>
+    <div class="chapter-container" hidden id="chapter-container-column">
+      <%- reading.Chapters.chapters.chapterContent %>
+    </div>
   </section>
   <section class="section container text-light text-center" id="section-3">
     <h3 class="text-dark">Bình luận chương <span class="badge badge-success text-light">
@@ -131,7 +151,7 @@
                   chapters[indexChapter - 1].chapterNumber}' class="btn btn-success btn-sm">Chương trước</a>`: ""
           }
           ${indexChapter !== chapters.length - 1 ? `<a href="/detail/${slug}/read/chapter-${
-                   chapters[indexChapter + 1].chapterNumber}" class="btn btn-primary btn-sm">Chương sau</a>`:""}`
+                   chapters[indexChapter + 1].chapterNumber}" class="btn btn-primary btn-sm mt-2">Chương sau</a>`:""}`
         }
       });
   }
@@ -191,6 +211,103 @@
         })
         .catch((error) => console.log(error));
     }
+  }
+</script>
+<script>
+  $('[data-toggle="tooltip"]').tooltip();
+  const array = document.querySelector(".chapter-container").querySelectorAll("p img");
+  const arrayURL = [];
+  array.forEach((item) => {
+    arrayURL.push(item.src)
+  });
+  const chapterContainer = document.querySelector(".chapter-container")
+  const chapterContent = document.querySelector(".chapter-content")
+
+  function prevPage(btn) {
+    const currentPage = document.querySelector(".chapter-content p img");
+    const indexPage = arrayURL.indexOf(currentPage.src)
+    if (indexPage === 0) {
+      return;
+    } else {
+      chapterContent.innerHTML = `<p>
+        <img src="${arrayURL[indexPage-1]}" />
+        </p>`
+    }
+  }
+
+  function nextPage(btn) {
+    const currentPage = document.querySelector(".chapter-content p img");
+    const indexPage = arrayURL.indexOf(currentPage.src)
+    if (indexPage === (arrayURL.length - 1)) {
+      return;
+    } else {
+      chapterContent.innerHTML = `<p>
+       <img src="${arrayURL[indexPage+1]}" />
+     </p>`
+      // if (indexPage === arrayURL.length - 1) {
+      //   console.log(btn)
+      //   btn.style.display = "none"
+      // }
+    }
+  }
+
+
+  //Toggle Darkmode
+  const span = document
+    .querySelector(".view-mode-button")
+    .querySelectorAll("span")[1];
+
+
+  const containerColumn = document.getElementById("chapter-container-column");
+  const containerRow = document.getElementById("chapter-container-row");
+
+  function toggle_view_mode() {
+    if (localStorage.getItem("view") === "column") {
+      localStorage.view = "row";
+      showRow()
+      changeRight();
+    } else {
+      localStorage.view = "column";
+      showColumn();
+      changeLeft();
+    }
+  }
+
+  window.onload = () => {
+    if (localStorage.getItem("view") === "column") {
+      showColumn()
+      changeLeft();
+    } else if (localStorage.getItem("view") == "row") {
+      showRow()
+      changeRight();
+    } else {
+      localStorage.setItem("view", "column")
+      showColumn()
+      changeLeft();
+    }
+  };
+
+  function changeLeft() {
+    span.style.left = "5px";
+    span.style.backgroundColor = "white";
+  }
+
+  function changeRight() {
+    span.style.left = "45px";
+    span.style.backgroundColor = "#343a40";
+  }
+
+  function showRow() {
+    containerRow.removeAttribute("hidden")
+    containerColumn.setAttribute("hidden", "")
+    containerRow.querySelector(".chapter-content").innerHTML = `<p>
+      <img src="${arrayURL[0]}" />
+    </p>`;
+  }
+
+  function showColumn() {
+    containerColumn.removeAttribute("hidden")
+    containerRow.setAttribute("hidden", "")
   }
 </script>
 

@@ -33,9 +33,15 @@
   <div class="container">
     <div class="box">
       <object data="/public/statuses/<%= status %>.svg" width="300" height="300"> </object>
+      <% if(status === 504){%>
+      <a class="btn btn-success" href="/management/forgot">
+        Quay lại trang khôi phục
+      </a>
+      <%}else{%>
       <a class="btn btn-success" href="/">
         Quay lại trang chủ
       </a>
+      <%} %>
     </div>
   </div>
 </body>

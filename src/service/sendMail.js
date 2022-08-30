@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 const path = require("path");
 const appRoot = require("app-root-path");
-const { ADMIN_EMAIL } = require("../config/default");
+const { ADMIN_EMAIL, JWT } = require("../config/default");
 const { MESSAGE } = require("../config/httpResponse");
-
+const jwt = require("jsonwebtoken");
 async function sendRegisterMail(toEmail, otp) {
   const EMAIL = ADMIN_EMAIL.EMAIL;
   const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
@@ -118,8 +118,60 @@ async function sendMailToRetrievalPassword(toEmail) {
     }
   );
 }
+
+async function sendMailToRetrievalAdminAccount(toEmail, username, originUrl) {
+  const EMAIL = ADMIN_EMAIL.EMAIL;
+  const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
+  const SERVICE = ADMIN_EMAIL.SERVICE;
+  // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
+  let transporter = nodemailer.createTransport({
+    service: SERVICE,
+    auth: {
+      user: EMAIL,
+      pass: EMAILPASSWORD,
+    },
+  });
+  // const payload = { email: toEmail };
+  const payload = {
+    username,
+  };
+  const randomJwt = await jwt.sign(payload, JWT.SERCRET_JWT, {
+    expiresIn: JWT.EXPIRE,
+  });
+  await transporter.sendMail(
+    {
+      from: '"Admin 👻"', // sender address
+      to: toEmail, // list of receivers
+      subject: "Notification ✔ ", // Subject line
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(appRoot.path, `/src/public/images/logo.png`),
+          cid: "unique@kreata.ee",
+        },
+      ],
+
+      text: "Did you forget your password ? Please, Fill out the form below to retrieve your password: ", // plain text body
+      html: `
+      <div style="text-align: center;">
+        <img src="cid:unique@kreata.ee" width="100px" style="text-align:center" alt="">
+        <h2>Bạn đã quên mật khẩu 🤔 đối với tài khoản (${username}) ? Vui lòng truy cập vào đường link dưới đây để lấy lại tài khoản : 🍀🍀🍀 </h2> <br>
+        <a href="${originUrl}/management/recover/${randomJwt}">Link lấy lại mật khẩu</a>
+        <p style="color:red">* Lưu ý đường link sẽ hết hiệu lực sau 5 phút !</p>
+       </div>
+   `, // html body
+    },
+    (err) => {
+      if (err) {
+        return console.log({ ERROR: err });
+      }
+      return console.log({ message: MESSAGE.SEND_MAIL_SUCCESS });
+    }
+  );
+}
 module.exports = {
   sendRegisterMail,
   sendMailToFix,
   sendMailToRetrievalPassword,
+  sendMailToRetrievalAdminAccount,
 };

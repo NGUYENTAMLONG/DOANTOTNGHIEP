@@ -31,7 +31,11 @@
             %>
           <span class="manga-tag__hot badge badge-sm">Hot</span>
           <% } %>
+          <% if (manga.contentId.chapters.length > 0) {%>
+          <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"><%= moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() %></span>
+          <%}else{%>
           <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">Chưa công bố</span>
+          <%} %>
           <a href="/detail/<%= manga.slug %>">
             <img class="card-img-top manga-img" src="<%= manga.image %>" alt="Card image cap" />
           </a>
@@ -40,37 +44,41 @@
               <h5><%= manga.name%></h5>
             </a>
             <a href="/detail/<%= manga.slug %>" class="manga-chapter">
-              fix
-            </a>
-          </div>
-          <div id="template-<%=manga._id%>" style="display: none;">
-            <div class="info text-light">
-              <h4 class="info__name"><%= manga.name%></h4>
-              <p class="info__another-name"><b>Tên khác:</b> <%= manga.anotherName%></p>
-              <ul class="info__follows">
-                <li>
-                  Tình trạng: <b><%= manga.status%></b>
-                </li>
-                <li>
-                  Lượt xem: <b><%= manga.statistical.views%></b>
-                </li>
-                <li>
-                  Đánh giá: <b><%= manga.statistical.rating%></b>
-                </li>
-                <li>
-                  Xếp hạng: <b><%= manga.statistical.ranks%></b>
-                </li>
-              </ul>
-              <div class="info__type">
-                <b>Thể loại:</b>
-                <%manga.type.forEach(function(item){ %>
-                <a href="/category/<%= item  %>"><%= item  %></a>
-                <% }); %>
+              <% if (manga.contentId.chapters.length > 0) {%>
+              Chương <%= manga.contentId.chapters.slice(-1)[0].chapterNumber %>
+              <%}else{%>
+              Chưa công bố
+              <%}%>
+        </a>
+     </div>
+     <div id="template-<%=manga._id%>" style="display: none;">
+              <div class="info text-light">
+                <h4 class="info__name"><%= manga.name%></h4>
+                <p class="info__another-name"><b>Tên khác:</b> <%= manga.anotherName%></p>
+                <ul class="info__follows">
+                  <li>
+                    Tình trạng: <b><%= manga.status%></b>
+                  </li>
+                  <li>
+                    Lượt xem: <b><%= manga.statistical.views%></b>
+                  </li>
+                  <li>
+                    Đánh giá: <b><%= manga.statistical.rating%></b>
+                  </li>
+                  <li>
+                    Xếp hạng: <b><%= manga.statistical.ranks%></b>
+                  </li>
+                </ul>
+                <div class="info__type">
+                  <b>Thể loại:</b>
+                  <%manga.type.forEach(function(item){ %>
+                  <a href="/category/<%= item  %>"><%= item  %></a>
+                  <% }); %>
+                </div>
+                <p class="info__desc">
+                  <%= manga.description%>
+                </p>
               </div>
-              <p class="info__desc">
-                <%= manga.description%>
-              </p>
-            </div>
           </div>
         </div>
       </div>

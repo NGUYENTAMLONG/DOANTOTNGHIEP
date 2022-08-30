@@ -2,7 +2,7 @@ body {
   background-color: blue;
   width: 100%;
   height: 500px;
-  background-image: url("https://i.etsystatic.com/27232002/r/il/23445c/3593109555/il_fullxfull.3593109555_2ezr.jpg");
+  background-image: url("/public/about/draw_theme.jpg");
   background-size: 100%;
   background-repeat: repeat;
   object-fit: cover;
@@ -84,7 +84,8 @@ body {
     position: relative;
     min-height: 500px;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.815); }
+    background-color: rgba(0, 0, 0, 0.815);
+    overflow: hidden; }
     body #section-5 .container .section__box {
       display: flex;
       justify-content: center;
@@ -100,10 +101,37 @@ body {
         bottom: 0;
         left: 0;
         margin: auto; }
+      body #section-5 .container .section__box #rate-img {
+        position: absolute;
+        width: 50%;
+        bottom: 0;
+        left: -50px; }
+      body #section-5 .container .section__box #share-img {
+        position: absolute;
+        width: 45%;
+        top: -10px;
+        right: -90px; }
       body #section-5 .container .section__box p {
         text-indent: 30px; }
       body #section-5 .container .section__box .wrapper {
         height: 500px; }
+  body #section-6 {
+    width: 100%;
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    overflow: hidden; }
+    body #section-6 .container {
+      background-color: rgba(45, 125, 179, 0.815);
+      min-height: 600px;
+      padding: 50px; }
+      body #section-6 .container #reading-img {
+        margin-top: 30px;
+        width: 100%; }
 
 @media (max-width: 650px) {
   #section-1 a img {

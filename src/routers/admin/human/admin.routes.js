@@ -5,6 +5,7 @@ const appRoot = require("app-root-path");
 const {
   showAdminDashboard,
   showAdminCreate,
+  showAdminUpdate,
   showAdminTrash,
   softDeleteAdmin,
   softDeleteCheckedAdmin,
@@ -15,7 +16,12 @@ const {
   getAdminList,
   createAdmin,
   createAvatarAdmin,
+  editAvatarAdmin,
+  changePasswordAdmin,
   getDeletedAdmins,
+  changeEmailAdmin,
+  changeUsernameAdmin,
+  changeRoleAdmin,
 } = require("../../../controllers/AdminController");
 
 const router = express.Router();
@@ -26,6 +32,7 @@ const storageAdmin = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     console.log(file);
+    req.file = file;
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
@@ -35,9 +42,13 @@ const uploadAdmin = multer({ storage: storageAdmin }); //for admin
 // Get Admin Creating Page
 // route:-> /management/human/admin/create...
 router.get("/create", showAdminCreate);
+// Get Admin Updating Page
+// route:-> /management/human/admin/update...
+router.post("/update", showAdminUpdate);
 // Get Admin Trash Table
 // route:-> /management/human/admin/trash...
 router.get("/trash", showAdminTrash);
+
 // Get Admin Table
 // route:-> /management/human/admin/...
 router.get("/", showAdminDashboard);
@@ -67,5 +78,14 @@ router.post(
   uploadAdmin.single("avatar"),
   createAvatarAdmin
 );
+router.post(
+  "/api/change/avatar/:id",
+  uploadAdmin.single("avatar"),
+  editAvatarAdmin
+);
+router.patch("/api/change/username", changeUsernameAdmin);
+router.patch("/api/change/password", changePasswordAdmin);
+router.patch("/api/change/email", changeEmailAdmin);
+router.patch("/api/change/role", changeRoleAdmin);
 
 module.exports = router;

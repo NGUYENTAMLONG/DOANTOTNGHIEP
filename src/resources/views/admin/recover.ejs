@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RECOVER</title>
+  <%- include("../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <style>
+    .background {
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      background-image: url("/image/i1.jpg");
+      background-size: cover;
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      margin-top: 50px;
+      width: 350px;
+      background-color: rgba(0, 0, 0, 0.527);
+      padding: 10px;
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background"></div>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center">
+      <a class="navbar-brand" href="#"><a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></a>
+    </nav>
+  </header>
+
+  <div class="container text-light">
+    <form action="#" method="POST">
+      <h3 class="text-center">Khôi phục tài khoản</h3>
+      <div class="form-group">
+        <label for="username">Tài khoản</label>
+        <input type="text" class="form-control" name="username" id=" username" placeholder="Enter username / Nhập tài khoản admin" value="<%= admin.username %>" disabled />
+      </div>
+      <div class="form-group">
+        <label for="new-password">Mật khẩu mới</label>
+        <input type="password" class="form-control" name="new-password" id="new-password" placeholder=" Enter password/ Nhập mật khẩu admin" />
+        <small id="passwordHelp" class="form-text text-light">* Mật khẩu có chứa ít nhất từ 6 đến tối đa 20 ký tự, một chữ cái viết hoa, một chữ cái viết thường và một ký tự đặc biệt (#, $, %,..)</small>
+      </div>
+      <div class="form-group">
+        <label for="again-password">Xác nhận mật khẩu</label>
+        <input type="password" class="form-control" name="again-password" id="again-password" placeholder=" Enter password/ Nhập mật khẩu admin" />
+      </div>
+      <div class="form-group">
+        <label for="show-password" style="cursor: pointer;">Hiển thị mật khẩu</label>
+        <input type="checkbox" id="show-password" style="cursor: pointer;" onchange="showPassword()">
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" onclick="submitRecover('<%= admin.username %>')">Xác nhận</button>
+      </div>
+    </form>
+  </div>
+</body>
+<%- include("../partials/script") %>
+<script>
+  let flag = true;
+
+  function showPassword() {
+    const newPasswordInput = document.querySelector("#new-password");
+    const againPasswordInput = document.querySelector("#again-password");
+    if (flag === true) {
+      newPasswordInput.setAttribute("type", "text");
+      againPasswordInput.setAttribute("type", "text");
+      flag = false;
+    } else {
+      newPasswordInput.setAttribute("type", "password");
+      againPasswordInput.setAttribute("type", "password");
+      flag = true;
+    }
+  }
+
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+
+  function submitRecover(username) {
+    const newPassword = document.getElementById("new-password").value;
+    const againPassword = document.getElementById("again-password").value;
+    if (newPassword !== againPassword) {
+      swal({
+        title: "Có lỗi rồi :<",
+        text: "Bạn không nhập lại đúng mật khẩu !",
+        icon: "error",
+        button: "Ok!",
+      });
+    } else {
+      const payload = {
+        username,
+        newPassword
+      }
+      fetch('/management/recover', {
+          method: 'PATCH', // or 'PUT' , 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }).then(response => response.json())
+        .then(result => {
+          if (result.isSuccess) {
+            swal({
+              title: "Thành công",
+              text: "Đã thay đổi mật khẩu ^^",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => location.reload())
+          } else if (!result.isSuccess) {
+            swal({
+              title: "Có lỗi =(",
+              text: "Mật khẩu không đúng dịnh dạng",
+              icon: "error",
+              button: "Nhập lại!",
+            });
+          }
+        }).catch((error) => {
+          console.log(error)
+          swal({
+            title: "Có lỗi rồi :<",
+            text: "Lỗi có thể do bên phía máy chủ",
+            icon: "error",
+            button: "Ok!",
+          });
+        })
+    }
+  }
+</script>
+
+</html>

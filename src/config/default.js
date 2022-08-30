@@ -33,6 +33,10 @@ module.exports.ADMIN_EMAIL = {
   PASSWORD: "uqoukvtmwpcjllzf",
   SERVICE: "gmail",
 };
+module.exports.JWT = {
+  SERCRET_JWT: "tamlongdev",
+  EXPIRE: "5m",
+};
 module.exports.types = [
   {
     name: "Action",

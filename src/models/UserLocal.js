@@ -30,7 +30,7 @@ const UserLocalSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: "/public/avatars/user_avatar_default.jpg",
+      default: "/public/avatars/user/user_avatar_default.jpg",
     },
     active: {
       type: Boolean,

@@ -1,4 +1,9 @@
 const express = require("express");
+const { showInfomationAdmin } = require("../../controllers/AdminController");
+const {
+  changePasswordInfoAdmin,
+  changeEmailInfoAdmin,
+} = require("../../controllers/InfomationController");
 const Chapter = require("../../models/Chapter");
 const Manga = require("../../models/Manga");
 const Slide = require("../../models/Slide");
@@ -12,6 +17,11 @@ const slideRouter = require("./manga/slide.routes");
 router.use("/manga", mangaRouter);
 
 router.use("/slide", slideRouter);
+
+//path: /management/content/infomation
+router.get("/infomation", showInfomationAdmin);
+router.patch("/api/change/password", changePasswordInfoAdmin);
+router.patch("/api/change/email", changeEmailInfoAdmin);
 
 router.use("/", async (req, res) => {
   try {

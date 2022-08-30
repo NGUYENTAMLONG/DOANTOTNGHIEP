@@ -21,6 +21,7 @@
 
 <body onload="handleAPI('<%= manga._id %>','<%= manga.type %>')">
   <%- include('partials/header',{user:user}) %>
+
   <section class="section container" id="section-1">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -67,7 +68,9 @@
               <i class="fas fa-abacus"></i> <%= manga.statistical.counting %>
             </span>
             <span data-toggle="tooltip" data-placement="bottom" title="Tổng số bình luận">
-              <i class="fas fa-comments"></i> FIX
+              <i class="fas fa-comments"></i>
+              <span id="count-comment" style="margin-left:-5px">
+              </span>
             </span>
           </p>
           <% manga.type.forEach(function(type,index){ %>
@@ -138,7 +141,7 @@
         </span>
       </a>
     </div>
-    <div>
+    <div class="table-container">
       <table class="table table-striped table-reponsive">
         <thead>
           <tr>
@@ -177,6 +180,8 @@
     <!-- Bình luận ver 2 -->
     <div id="disqus_thread">
     </div>
+
+
     <!-- ******************************** -->
     <!-- Binh luan commentbox -->
     <div class="commentbox"></div>
@@ -210,7 +215,7 @@
 <script src="/js/moment.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/rating.js"></script>
-
+<script id="dsq-count-scr" src="https://my-site-zlkjtgow8a.disqus.com/count.js" async></script>
 <script>
   // Sorting Top Bottom list
   const checkSortButtons = document.querySelectorAll("[name='sort']");
@@ -301,7 +306,7 @@
             return `<div class="item p-2">
             <div class="manga-card">
               ${ (manga.hot === true)  ?
-              `<span class="manga-tag__hot">Hot</span>`:""
+              `<span class="manga-tag__hot badge badge-sm">Hot</span>`:""
                } 
             ${(manga.contentId.chapters.length > 0) ?
               `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`
@@ -342,8 +347,8 @@
           autoplayTimeout: 4000,
           autoplayHoverPause: true,
           responsive: {
-            0: {
-              items: 1
+            400: {
+              items: 2
             },
             600: {
               items: 2
@@ -367,6 +372,7 @@
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   })();
+  document.getElementById("count-comment").innerHTML = `<span class="disqus-comment-count" data-disqus-url="${window.location.href}">Số bình luận</span>`
 </script>
 
 

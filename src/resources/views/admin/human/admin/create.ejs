@@ -18,23 +18,33 @@
 
 <body>
 
+  <%- include("../../../admin/partials/header") %>
 
   <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/management/human/admin/">Trang quản lí</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Thêm tài khoản quản trị viên</li>
+      </ol>
+    </nav>
     <h2 class="text-center mt-2">Tạo quản trị viên</h1>
       <div class="container" style="width: 400px;">
         <!-- enctype="multipart/form-data" -->
-        <form action="/manage/admin_hrm" method="POST" enctype="multipart/form-data">
+        <form action="#" method="POST" enctype="multipart/form-data">
           <div class="form-group">
             <label for="username">Tài khoản</label>
             <input type="text" class="form-control" required name="username" id="username" placeholder="Enter username/ Nhập tài khoản admin" />
+            <small id="usernameHelp" class="form-text text-muted">* Username không chứa khoảng trắng hai đầu...</small>
           </div>
           <div class="form-group">
             <label for="password">Mật khẩu</label>
             <input type="password" class="form-control" required name="password" id="password" placeholder=" Enter password/ Nhập mật khẩu admin" />
+            <small id="passwordHelp" class="form-text text-muted">* Mật khẩu có chứa ít nhất từ 6 đến tối đa 20 ký tự, một chữ cái viết hoa, một chữ cái viết thường và một ký tự đặc biệt (#, $, %,..)</small>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
             <input type="email" class="form-control" required name="email" id="email" placeholder="Enter email/ Nhập email admin" />
+            <small id="emailHelp" class="form-text text-muted">* Định dạng @gmail.com, @yahoo.com.vn,...</small>
           </div>
           <div class="form-group">
             <label for="role">Role</label>
@@ -62,7 +72,7 @@
           </div>
           <div class="preview-zone">
             <p class="bg-warning boderred">Preview Avatar</p>
-            <img id="preview" src="#" alt="your avatar">
+            <img id="preview" src="#" alt="your avatar" width="100%" class="mb-3">
             <!-- The Modal -->
             <div id="myModal" class="modal">
               <span class="close-btn">&times;</span>
@@ -70,7 +80,7 @@
             </div>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-primary">Thêm mới <i class="fa-solid fa-plane-departure"></i></button>
+            <button type="submit" class="btn btn-primary mb-4">Thêm mới <i class="fa-solid fa-plane-departure"></i></button>
           </div>
         </form>
       </div>
@@ -110,18 +120,24 @@
         const checkAccount = data.rows.some((admin) => admin.username === username);
         const checkEmail = data.rows.some((admin) => admin.email === email);
         if (checkAccount === true) {
-          alert("Tài khoản đã tồn tại ! Vui lòng đăng ký tài khoản khác !!!")
+          swal({
+            title: "Thông báo",
+            text: "Tài khoản đã tồn tại ! Vui lòng đăng ký tài khoản khác !!!",
+            icon: "error",
+            button: "Ok!",
+          });
         } else if (checkEmail === true) {
-          alert("Email đã dùng với tài khoản khác !")
+          swal({
+            title: "Thông báo",
+            text: "Email đã dùng với tài khoản khác !",
+            icon: "error",
+            button: "Ok!",
+          });
         } else {
           if (typeof imgFiles.files[0] === "undefined") {
             submitDataWithoutAvatar(obj)
-            console.log("NO")
-
           } else {
             submitData(formData, obj)
-            console.log("YESS")
-
           }
         }
       })

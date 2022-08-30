@@ -10,10 +10,26 @@ const userManagementRouter = require("./human/user.routes");
 const UserLocal = require("../../models/UserLocal");
 const UserFacebook = require("../../models/UserFacebook");
 const UserGoogle = require("../../models/UserGoogle");
+const { showInfomationAdmin } = require("../../controllers/AdminController");
+const {
+  changeUsernameInfoAdmin,
+  changeRoleInfoAdmin,
+  changePasswordInfoAdmin,
+  changeEmailInfoAdmin,
+  changeAvatarInfoAdmin,
+} = require("../../controllers/InfomationController");
 
 //path: /management/human/...
 router.use("/admin", adminManagementRouter);
 router.use("/user", userManagementRouter);
+
+//path: /management/human/infomation...
+router.get("/infomation", showInfomationAdmin);
+router.patch("/api/change/avatar", changeAvatarInfoAdmin);
+router.patch("/api/change/username", changeUsernameInfoAdmin);
+router.patch("/api/change/role", changeRoleInfoAdmin);
+router.patch("/api/change/password", changePasswordInfoAdmin);
+router.patch("/api/change/email", changeEmailInfoAdmin);
 
 router.use("/", async (req, res) => {
   Promise.all([

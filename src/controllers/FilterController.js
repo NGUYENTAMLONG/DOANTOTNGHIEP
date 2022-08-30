@@ -289,6 +289,25 @@ class FilterController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async showAllTranslators(req, res, next) {
+    try {
+      const translatorList = await Manga.aggregate([
+        { $group: { _id: "$translation" } },
+        { $sort: { _id: 1 } },
+      ]);
+      res.render("showTranslatorList", {
+        user: req.user,
+        moment: moment,
+        title: `<i class="fas fa-language"></i> Lọc truyện theo dịch giả`,
+        translatorList,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async showMangasOfAuthor(req, res, next) {
     const { slug } = req.params;
     try {
@@ -313,6 +332,51 @@ class FilterController {
           ? "<i class='bx bx-layer'></i> Chưa cập nhật tác giả"
           : `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm của ${slug}`;
       res.render("showMangasOfAuthor", {
+        user: req.user,
+        moment: moment,
+        title,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showMangasOfTranslator(req, res, next) {
+    const { slug } = req.params;
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find({ author: slug })
+        .find(match)
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find({ translation: slug })
+        .find(match)
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+      const title =
+        slug === PENDING.INFOMATION
+          ? "<i class='bx bx-layer'></i> Chưa cập nhật dịch giả"
+          : `<i class='bx bx-layer'></i> Tuyển tập các tác phẩm được dịch bởi ${slug}`;
+      res.render("showMangasOfTranslator", {
         user: req.user,
         moment: moment,
         title,

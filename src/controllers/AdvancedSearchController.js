@@ -8,7 +8,8 @@ const { types, COUNTRY, SERVE } = require("../config/default");
 const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
 const lodash = require("lodash");
-const { Mongoose } = require("mongoose");
+const mongoose = require("mongoose");
+const Chapter = require("../models/Chapter");
 class AdvancedSearchController {
   async show(req, res, next) {
     try {
@@ -69,10 +70,49 @@ class AdvancedSearchController {
       if (condition.serve !== "null") {
         subCondition.serve = condition.serve;
       }
-      // if (condition.countChapter !== "null") {
-      //   subCondition.countChapter = condition.serve;
-      // }
-
+      // Select Sort
+      let conditionSort = null;
+      if (condition.sort === "like-down") {
+        conditionSort = {
+          "statistical.likes": -1,
+        };
+      } else if (condition.sort === "like-up") {
+        conditionSort = {
+          "statistical.likes": 1,
+        };
+      } else if (condition.sort === "view-down") {
+        conditionSort = {
+          "statistical.views": -1,
+        };
+      } else if (condition.sort === "view-up") {
+        conditionSort = {
+          "statistical.views": 1,
+        };
+      } else if (condition.sort === "rate-down") {
+        conditionSort = {
+          "statistical.rating": -1,
+        };
+      } else if (condition.sort === "rate-up") {
+        conditionSort = {
+          "statistical.rating": 1,
+        };
+      } else if (condition.sort === "counter-rate-down") {
+        conditionSort = {
+          "statistical.counting": -1,
+        };
+      } else if (condition.sort === "counter-rate-up") {
+        conditionSort = {
+          "statistical.counting": 1,
+        };
+      } else if (condition.sort === "follow-down") {
+        conditionSort = {
+          "statistical.follows": -1,
+        };
+      } else if (condition.sort === "follow-up") {
+        conditionSort = {
+          "statistical.follows": -1,
+        };
+      }
       let finalCondition = {};
       if (
         condition.exceptArr.length !== 0 ||
@@ -88,58 +128,115 @@ class AdvancedSearchController {
       } else {
         finalCondition = subCondition;
       }
-      // const foundMangas = await Manga.find(finalCondition).populate(
-      //   "contentId",
-      //   {
-      //     // chapters: { $slice: -1 },
-      //     // "contentId.chapters": {
-      //     //   $size: 2,
-      //     // },
-      //   }
-      // );
-      const foundMangas = await Manga.aggregate([
-        {
-          $match: finalCondition,
-        },
-        {
-          $addFields: {
-            contentId: { $toObjectId: "$contentId" },
+
+      //Find Mangas using Find
+      // return res.json(conditionSort);
+      let foundMangas = await Manga.find(finalCondition)
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .sort(conditionSort);
+
+      // Check Sort by Recently Chapter
+      let arrayRepoIds = null;
+      if (condition.sort === "date-down") {
+        arrayRepoIds = await sortByChapterDate(foundMangas, -1);
+        // return res.json(arrayRepoIds);
+        foundMangas = await Manga.find({
+          contentId: {
+            $in: arrayRepoIds,
           },
-        },
-        {
-          $lookup: {
-            from: "Chapters",
-            localField: "contentId",
-            foreignField: "_id",
-            as: "Chapters",
+        }).populate("contentId", {
+          chapters: { $slice: -1 },
+        });
+        const a = [];
+        for (let i = 0; i < arrayRepoIds.length; i++) {
+          a.push(orderMangaList(foundMangas, arrayRepoIds[i]));
+        }
+        foundMangas = a;
+      } else if (condition.sort === "date-up") {
+        arrayRepoIds = await sortByChapterDate(foundMangas, 1);
+        // return res.json(arrayRepoIds);
+
+        foundMangas = await Manga.find({
+          contentId: {
+            $in: arrayRepoIds,
           },
-        },
-        {
-          $addFields: {
-            count: "$Chapters",
+        }).populate("contentId", {
+          chapters: { $slice: -1 },
+        });
+        const a = [];
+        for (let i = 0; i < arrayRepoIds.length; i++) {
+          a.push(orderMangaList(foundMangas, arrayRepoIds[i]));
+        }
+        foundMangas = a;
+      }
+
+      // Filter By Count Chapter
+      if (condition.countChapter !== "null") {
+        let repoChapterIds = foundMangas.map((manga) => manga.contentId);
+        repoChapterIds = repoChapterIds.map(function (el) {
+          return mongoose.Types.ObjectId(el);
+        });
+        const foundRepoChapter = await Chapter.aggregate([
+          {
+            $match: {
+              _id: { $in: repoChapterIds },
+            },
           },
-        },
-        {
-          $addFields: {
-            count: {
-              $size: {
-                $arrayElemAt: ["$Chapters.chapters", 0],
+          {
+            $addFields: {
+              chapters: {
+                $size: "$chapters",
               },
             },
           },
-        },
-        {
-          $match: {
-            $expr: {
-              $lte: ["$count", Number(condition.countChapter)],
+          {
+            $match: {
+              chapters: {
+                $lte: Number(condition.countChapter),
+              },
             },
           },
-        },
-      ]);
-      // .find({
-      //   "contentId._id[0]":
-      // });
-      return res.json(foundMangas);
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ]);
+        const contentIds = foundRepoChapter.map((repo) =>
+          mongoose.Types.ObjectId(repo._id)
+        );
+
+        foundMangas = await Manga.find({
+          contentId: {
+            $in: contentIds,
+          },
+        }).populate("contentId", {
+          chapters: { $slice: -1 },
+        });
+        const arr = [];
+        for (let i = 0; i < repoChapterIds.length; i++) {
+          arr.push(orderMangaList(foundMangas, repoChapterIds[i]));
+        }
+        foundMangas = arr.filter((element) => {
+          return element != null;
+        });
+      }
+      // ********************************************
+      // return res.json(foundMangas.map((manga) => manga._id));
+
+      // const countChapterCondition = condition.countChapter;
+      //Find Mangas using Aggregate
+      // const foundMangas = await Manga.aggregate([
+      //   {
+      //     $match: finalCondition,
+      //   },
+      // ]);
+      // ********************************************
+
+      // return res.json(foundMangas);
+
       res.render("showResultAdvancedSearch", {
         user: req.user,
         moment: moment,
@@ -152,5 +249,51 @@ class AdvancedSearchController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+}
+async function sortByChapterDate(foundMangas, sort) {
+  const sortByDate = await Chapter.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: foundMangas.map((manga) =>
+            mongoose.Types.ObjectId(manga.contentId)
+          ),
+        },
+      },
+    },
+    {
+      $unwind: "$chapters",
+    },
+    {
+      $addFields: {
+        isDate: "$chapters.createdTime",
+      },
+    },
+    {
+      $addFields: {
+        isDate: {
+          $toDate: "$isDate",
+        },
+      },
+    },
+    {
+      $sort: {
+        isDate: sort,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+      },
+    },
+  ]);
+  return (arrayRepoIds = Array.from(
+    new Set(sortByDate.map((elm) => elm._id.toString()))
+  ));
+}
+function orderMangaList(mangas, contentId) {
+  return mangas.find(
+    (elm, index) => elm.contentId._id.toString() === contentId.toString()
+  );
 }
 module.exports = new AdvancedSearchController();

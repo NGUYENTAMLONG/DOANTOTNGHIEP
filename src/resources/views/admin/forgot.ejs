@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FORGOT</title>
+  <%- include("../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <style>
+    .background {
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      background-image: url("/image/i1.jpg");
+      background-size: cover;
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      margin-top: 100px;
+      width: 450px;
+      background-color: rgba(0, 0, 0, 0.527);
+      padding: 10px;
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background"></div>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center">
+      <a class="navbar-brand" href="#"><a class="navbar-brand" href="/"><img src="/image/logo.png" class="logo" width="100px" alt="logo"></a></a>
+    </nav>
+  </header>
+
+  <div class="container text-light">
+    <form action="#" method="POST">
+      <h1 class="text-center">Lấy lại tài khoản</h1>
+      <div class="form-group">
+        <label for="email">Email đã đăng ký</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email / Nhập email admin mà bạn đã đăng ký" />
+        <small id="emailHelp" class="form-text text-light">* Nhập email bạn đã đăng ký... Sau đó đăng nhập vào gmail này để lấy lại tài khoản!</small>
+      </div>
+      <div class="text-center" id="send">
+        <a href="/management" class="btn btn-success">Đăng nhập</a>
+        <button type="submit" class="btn btn-primary" onclick="sendMail()">Gửi thư</button>
+      </div>
+    </form>
+  </div>
+</body>
+<%- include("../partials/script") %>
+<script>
+  window.onsubmit = function(event) {
+    event.preventDefault()
+  }
+
+  function sendMail() {
+    const email = document.getElementById("email").value;
+    const originUrl = window.location.origin;
+    const payload = {
+      email,
+      originUrl
+    }
+
+    fetch("/management/forgot", {
+        method: 'POST', // or 'PUT' ,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).then(response => response.json())
+      .then(result => {
+        if (result.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã gửi thư tới gmail của bạn !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            document.querySelector("#send").innerHTML = `
+            <div>Chưa nhận được email !? Hãy gửi lại !</div>
+            <button type="submit" class="btn btn-primary" onclick="sendMail()">Gửi</button>
+            `
+          });
+        }
+      }).catch((error) => {
+        console.log(error)
+        swal({
+          title: "Có lỗi rồi :<",
+          text: "Lỗi có thể do bên phía máy chủ",
+          icon: "error",
+          button: "Ok!",
+        });
+      })
+  }
+</script>
+
+</html>

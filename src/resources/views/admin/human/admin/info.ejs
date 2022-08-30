@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INFOMATION</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/manage_hrm.css">
+
+  <%- include("../../../partials/link") %>
+  <!-- {{!-- Link fontawesome 5 --}} -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <%- include("../../../admin/partials/header") %>
+
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <% if(admin.role === "HA") {%>
+        <li class="breadcrumb-item"><a href="/management/human/admin/">Trang quản lí</a></li>
+        <% }else{%>
+        <li class="breadcrumb-item"><a href="/management/content/manga/">Trang quản lí</a></li>
+        <% } %>
+        <li class="breadcrumb-item active" aria-current="page">Thông tin quản trị viên</li>
+      </ol>
+    </nav>
+    <h1 class="text-center mt-2">Thông tin tài khoản</h1>
+    <div class="avatar text-center">
+      <form action="/management/human/admin/api/change/avatar" method="POST">
+        <div class="form-group">
+          <label for="avatar-input"><img src="/public/avatars/admin/<%= admin.avatar %>" class="rounded" style="cursor: pointer;" width="50px" alt="avatar" data-toggle="tooltip" data-placement="bottom" title="Click để thay đổi avatar" id="avatar"></label>
+          <input type="file" class="form-control" required name="avatar" id="avatar-input" hidden onchange="changeAvatar('<%= admin._id %>')" />
+        </div>
+      </form>
+    </div>
+    <div class="container mb-4" style="width: 400px;">
+      <!-- enctype="multipart/form-data" -->
+      <form action="#" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="username">Tài khoản</label>
+          <div class="d-flex align-items-center">
+            <input type="text" class="form-control" required name="username" id="username" value="<%= admin.username %>" placeholder="Enter username/ Nhập tài khoản admin" disabled />
+            <% if(admin.role === "HA") {%>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary ml-3" data-toggle="modal" data-target="#modalChangeUsername" title="Click để thay đổi tên tài khoản" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangeRole">
+              <i class="fas fa-edit text-light" data-toggle="tooltip" data-placement="bottom" title="Click để đổi mật khẩu" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangeUsername">
+              </i>
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="modalChangeUsername" tabindex="-1" role="dialog" aria-labelledby="modalChangeUsernameLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalChangeUsernameLabel">Nhập tài khoản mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="new-username">Username mới</label>
+                    <input type="email" class="form-control" required name="new-username" id="new-username" value="<%= admin.username %>" placeholder="Enter username/ Nhập username admin account" />
+                    <small id="usernameHelp" class="form-text text-muted">* Username không chứa khoảng trắng hai đầu...</small>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="changeUsername('<%= admin._id %>')">Lưu thay đổi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <div class="d-flex align-items-center">
+            <input type="password" class="form-control" required name="password" id="password" value="● ● ● ● ●" placeholder="Enter password/ Nhập mật khẩu admin" disabled />
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary ml-3" data-toggle="modal" data-target="#modalChangePassword">
+              <i class="fas fa-edit text-light" data-toggle="tooltip" data-placement="bottom" title="Click để đổi mật khẩu" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangePassword">
+              </i>
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="modalChangePassword" tabindex="-1" role="dialog" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalChangePasswordLabel">Nhập mật khẩu mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="new-password">Mật khẩu mới</label>
+                    <input type="password" class="form-control" required name="new-password" id="new-password" placeholder="Enter password/ Nhập mật khẩu admin" />
+                    <small id="passwordHelp" class="form-text text-muted">* Mật khẩu có chứa ít nhất từ 6 đến tối đa 20 ký tự, một chữ cái viết hoa, một chữ cái viết thường và một ký tự đặc biệt (#, $, %,..)</small>
+                    <label for="again-password">Nhập lại mật khẩu</label>
+                    <input type="password" class="form-control" required name="again-password" id="again-password" placeholder="Enter password/ Nhập lại mật khẩu admin" />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="changePassword('<%= admin._id %>','<%= admin.role %>')">Lưu thay đổi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="d-flex align-items-center">
+            <input type="email" class="form-control" required name="email" id="email" value="<%= admin.email %>" placeholder="Enter email/ Nhập email admin" disabled />
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary ml-3" data-toggle="modal" data-target="#modalChangeEmail" title="Click để thay đổi Email" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangeRole">
+              <i class="fas fa-edit text-light" data-toggle="tooltip" data-placement="bottom" title="Click để đổi mật khẩu" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangeEmail">
+              </i>
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="modalChangeEmail" tabindex="-1" role="dialog" aria-labelledby="modalChangeEmailLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalChangeEmailLabel">Nhập email mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="new-email">Email mới</label>
+                    <input type="email" class="form-control" required name="new-email" id="new-email" value="<%= admin.email %>" placeholder="Enter email/ Nhập email admin" />
+                    <small id="emailHelp" class="form-text text-muted">* Định dạng @gmail.com, @yahoo.com.vn,...</small>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="changeEmail('<%= admin._id %>','<%= admin.role %>')">Lưu thay đổi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="role">Vai trò</label>
+          <% if( admin.role === "HA") {%>
+          <span class="badge badge-warning"> <%= admin.role %> </span>
+          <% }else{%>
+          <span class="badge badge-success"> <%= admin.role %> </span>
+          <%} %>
+          <% if(admin.role === "HA") {%>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary ml-3" data-toggle="modal" data-target="#modalChangeRole">
+            <i class="fas fa-edit text-light" data-toggle="tooltip" data-placement="bottom" title="Click để thay đổi vai trò" style="cursor: pointer;" data-toggle="modal" data-target="#modalChangeRole">
+            </i>
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="modalChangeRole" tabindex="-1" role="dialog" aria-labelledby="modalChangeRoleLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalChangeRoleLabel">Thay đổi vai trò</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+                  <h3>Vai trò</h3>
+                  <div class="form-check">
+                    <div class="d-flex">
+                      <label for="CA">Admin nội dung (CA)</label>
+                      <input type="radio" name="new-role" class="form-check-input" id="CA" value="CA" name="CA" <%= (admin.role === "CA") ? "checked" : "" %>>
+                    </div>
+                    <div class="d-flex">
+                      <label for="HA">Admin nhân lực (HA)</label>
+                      <input type="radio" name="new-role" class="form-check-input" id="HA" value="HA" name="HA" <%= (admin.role === "HA") ? "checked" : "" %>>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="changeRole('<%= admin._id %>')">Lưu thay đổi</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </form>
+      <div class="d-flex">
+        <b>Ngày tạo</b>
+        <div class="ml-3"><%=  moment(admin.createdAt).format("L") %> lúc <%= moment(admin.createdAt).format("LT")  %> </div>
+      </div>
+      <div class="d-flex">
+        <b>Cập nhật</b>
+        <div class="ml-3"><%=  moment(admin.updatedAt).format("L")  %> lúc <%= moment(admin.updatedAt).format("LT")  %> </div>
+      </div>
+    </div>
+
+</body>
+<%- include("../../../partials/script") %>
+
+<script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
+  function changeAvatar(adminId) {
+    const imgFiles = document.getElementById("avatar-input");
+
+    const formData = new FormData();
+    formData.append("avatar", imgFiles.files[0])
+    fetch('/management/human/admin/api/change/avatar/' + adminId, {
+        method: 'POST', // or 'PUT',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.isSuccess) {
+          console.log(result)
+          swal({
+            title: "Thành công",
+            text: "Đã thay đổi avatar ^^",
+            icon: "success",
+            button: "Ok!",
+          });
+          document.getElementById("avatar").setAttribute("src",
+            `/public/avatars/admin/${result.data.filename}`)
+        }
+      }).catch((error) => {
+        console.log(error)
+        swal({
+          title: "Có lỗi rồi :<",
+          text: "Lỗi có thể do bên phía máy chủ",
+          icon: "error",
+          button: "Ok!",
+        });
+      })
+  }
+  // window.onsubmit = function(event) {
+  //   event.preventDefault();
+
+  // }
+
+  function changePassword(adminId, role) {
+    const newPassword = document.getElementById("new-password").value;
+    const againPassword = document.getElementById("again-password").value;
+    if (newPassword !== againPassword) {
+      swal({
+        title: "Có lỗi rồi :<",
+        text: "Bạn không nhập lại đúng mật khẩu !",
+        icon: "error",
+        button: "Ok!",
+      });
+    } else {
+      const payload = {
+        adminId: adminId,
+        newPassword: newPassword
+      }
+      let url = null;
+      if (role === "HA") {
+        url = '/management/human/api/change/password'
+      } else {
+        url = '/management/content/api/change/password'
+      }
+      fetch(url, {
+          method: 'PATCH', // or 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.isSuccess) {
+            swal({
+              title: "Thành công",
+              text: "Đã thay đổi mật khẩu ^^",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => location.reload())
+          } else if (!result.isSuccess) {
+            swal({
+              title: "Có lỗi =(",
+              text: "Mật khẩu không đúng dịnh dạng",
+              icon: "error",
+              button: "Nhập lại!",
+            });
+          }
+        }).catch((error) => {
+          console.log(error)
+          swal({
+            title: "Có lỗi rồi :<",
+            text: "Lỗi có thể do bên phía máy chủ",
+            icon: "error",
+            button: "Ok!",
+          });
+        })
+    }
+  }
+
+  function changeEmail(adminId, role) {
+    const newEmail = document.getElementById("new-email").value;
+
+    const payload = {
+      adminId: adminId,
+      newEmail: newEmail
+    }
+    let url = null;
+    if (role === "HA") {
+      url = '/management/human/api/change/email/'
+    } else {
+      url = '/management/content/api/change/email/'
+    }
+    fetch(url, {
+        method: 'PATCH', // or 'PUT' ,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).then(response => response.json())
+      .then(result => {
+        if (result.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã thay đổi email ^^",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          });
+        } else if (!result.isSuccess && result.errorCode === "BAD_REQUEST") {
+          swal({
+            title: "Có lỗi =(",
+            text: "Email không đúng dịnh dạng",
+            icon: "error",
+            button: "Nhập lại!",
+          })
+        } else if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+          swal({
+            title: "Có lỗi =(",
+            text: "Email đã tồn tại",
+            icon: "error",
+            button: "Nhập lại!",
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        swal({
+          title: "Có lỗi rồi :<",
+          text: "Lỗi có thể do bên phía máy chủ",
+          icon: "error",
+          button: "Ok!",
+        });
+      })
+  }
+
+  function changeUsername(adminId) {
+    const newUsername = document.getElementById("new-username").value;
+
+    const payload = {
+      adminId: adminId,
+      newUsername: newUsername
+    }
+    fetch('/management/human/api/change/username/', {
+        method: 'PATCH', // or 'PUT' ,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).then(response => response.json())
+      .then(result => {
+        if (result.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã thay đổi username ^^",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          });
+        } else if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+          swal({
+            title: "Có lỗi =(",
+            text: "username đã tồn tại",
+            icon: "error",
+            button: "Nhập lại!",
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        swal({
+          title: "Có lỗi rồi :<",
+          text: "Lỗi có thể do bên phía máy chủ",
+          icon: "error",
+          button: "Ok!",
+        });
+      })
+  }
+
+  function changeRole(adminId) {
+    const newRole = document.querySelector("[name='new-role']:checked").value;
+    const payload = {
+      adminId: adminId,
+      newRole: newRole
+    }
+    fetch('/management/human/api/change/role', {
+        method: 'PATCH', // or 'PUT' ,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if (result.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã thay đổi vai trò ^^",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
+          });
+        } else if (!result.isSuccess && result.errorCode === "BAD_REQUEST") {
+          swal({
+            title: "Có lỗi =(",
+            text: "Lỗi đầu vào",
+            icon: "error",
+            button: "Điền lại",
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        swal({
+          title: "Có lỗi rồi :<",
+          text: "Lỗi có thể do bên phía máy chủ",
+          icon: "error",
+          button: "Ok!",
+        });
+      })
+  }
+</script>
+<script>
+  // avatar.onchange = () => {
+  //   const [file] = avatar.files
+  //   if (file) {
+  //     preview.src = URL.createObjectURL(file)
+  //   }
+  // }
+</script>
+
+</html>

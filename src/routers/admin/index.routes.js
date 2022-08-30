@@ -3,6 +3,10 @@ const {
   login,
   getLogin,
   adminLogout,
+  getForgot,
+  sendForgot,
+  getRecover,
+  recoverAccount,
 } = require("../../controllers/ManageController");
 
 const router = express.Router();
@@ -10,7 +14,6 @@ const passport = require("passport");
 
 const contentRouter = require("./content.routes");
 const humanRouter = require("./human.routes");
-const { VALUES } = require("../../config/default");
 const Authentication = require("../../middleware/authentication");
 const {
   AuthorizationHA,
@@ -34,6 +37,10 @@ router.post(
 );
 
 router.get("/logout", adminLogout);
+router.get("/forgot", getForgot);
+router.post("/forgot", sendForgot);
+router.get("/recover/:jwt", getRecover);
+router.patch("/recover", recoverAccount);
 router.get("/", getLogin);
 
 module.exports = router;

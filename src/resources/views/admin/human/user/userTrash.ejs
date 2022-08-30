@@ -25,7 +25,7 @@
 
   <div class="container mt-2">
     <div class="text-center">
-      <h3>Danh sách người dùng</h3>
+      <h3>Danh sách người dùng đã xóa</h3>
     </div>
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-sm-12 col-md-5 col-lg-5">
@@ -187,13 +187,13 @@
   function handleFormatter(data, row, index) {
     return `<div class="text-center">
       <button class="btn btn-success btn-sm mt-2" onclick="restoreUser('${row._id}','${row.passport}')">Khôi phục</button>
-      <button class="btn btn-danger btn-sm mt-2" onclick="destroyUser('${row._id}','${row.passport}')">Xóa</button>
+      <button class="btn btn-danger btn-sm mt-2" onclick="destroyUser('${row._id}','${row.passport}','${row.avatar}')">Xóa</button>
       </div>
     `
   }
 </script>
 <script>
-  function destroyUser(idUser, passport) {
+  function destroyUser(idUser, passport, avatar) {
     swal({
       title: "Bạn có chắc chắn muốn xóa không ?",
       text: "Nếu xóa bạn không thể khôi phục tài khoản !",
@@ -202,10 +202,11 @@
       dangerMode: true,
     }).then((willDelete) => {
       const payload = {
-        passport
+        passport,
+        avatar
       }
       if (willDelete) {
-        fetch(`/management/human/user/destroy/${idUser,passport}`, {
+        fetch(`/management/human/user/destroy/${idUser}`, {
             method: "DELETE", // or 'PUT'
             headers: {
               "Content-Type": "application/json",
@@ -215,6 +216,7 @@
           })
           .then((response) => response.json())
           .then((data) => {
+            console.log(data)
             if (data.isSuccess) {
               swal({
                 title: "Thành công",
