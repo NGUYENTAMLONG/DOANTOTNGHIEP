@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MANGA DASHBOARD</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/manage_manga.css">
+
+  <%- include("../../partials/link") %>
+
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+
+</head>
+
+<body>
+  <%- include("../../admin/partials/header") %>
+  <div class="container" id="section-1">
+    <div class="text-center">
+      <h3><i class="fas fa-calendar-alt"></i> Số liệu</h3>
+    </div>
+    <table class="table table-dark">
+      <thead class="text-center">
+        <tr>
+          <th scope="col">Tổng số manga</th>
+          <th scope="col">Số thể loại</th>
+          <th scope="col">Dành cho nam</th>
+          <th scope="col">Dành cho nữ</th>
+          <th scope="col">Dành cho tất cả</th>
+          <th scope="col">Dành cho tuổi 16+</th>
+          <th scope="col">Dành cho tuổi 18+</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center">
+          <th scope="row"><%= mangas.length %></th>
+          <td><%= categories.length %></td>
+          <td><%= mangas.filter((manga)=>manga.serve==="male").length %></td>
+          <td><%= mangas.filter((manga)=>manga.serve==="female").length %></td>
+          <td><%= mangas.filter((manga)=>manga.serve==="all").length %></td>
+          <td><%= mangas.filter((manga)=>manga.type.indexOf("16+") !== -1).length %></td>
+          <td><%= mangas.filter((manga)=>manga.type.indexOf("18+") !== -1).length %></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-dark">
+      <thead class="text-center">
+        <tr>
+          <th scope="col">Nhật Bản</th>
+          <th scope="col">Trung Quốc</th>
+          <th scope="col">Hàn Quốc</th>
+          <th scope="col">Mỹ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center">
+          <td><%= mangas.filter((manga)=>manga.country==="Nhật Bản").length %></td>
+          <td><%= mangas.filter((manga)=>manga.country==="Trung Quốc").length %></td>
+          <td><%= mangas.filter((manga)=>manga.country==="Hàn Quốc").length %></td>
+          <td><%= mangas.filter((manga)=>manga.country==="Mỹ").length %></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-dark">
+      <thead class="text-center">
+        <tr>
+          <th scope="col">Độ hot cao</th>
+          <th scope="col">Độ hot thấp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center">
+          <td><%= mangas.filter((manga)=>manga.hot === true).length %></td>
+          <td><%= mangas.filter((manga)=>manga.hot === false).length %></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-dark">
+      <thead class="text-center">
+        <tr>
+          <th scope="col">Fanmade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center">
+          <td><%= mangas.filter((manga)=>manga.fanmade === true).length %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="container" id="section-2">
+    <div class="text-center">
+      <h3><i class='bx bxs-pie-chart-alt-2'></i>Biểu đồ</h3>
+    </div>
+    <div class="row">
+      <div class="col-6 col-lg-8 p-2">
+        <canvas id="barChart"></canvas>
+      </div>
+      <!-- <div class="col-6 col-lg-4 p-2">
+        <canvas id="doughnutChart"></canvas>
+      </div> -->
+    </div>
+</body>
+<%- include("../../partials/script") %>
+<script src="/js/moment.min.js"></script>
+<script src="/js/darkMode.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+  const dataBar = {
+    labels: [
+      'male',
+      'female',
+      'all',
+    ],
+    datasets: [{
+      label: "Biểu đồ đối tượng phục vụ",
+      data: [<%= mangas.filter((manga)=>manga.serve==="male").length %>, <%= mangas.filter((manga)=>manga.serve==="female").length %>, <%= mangas.filter((manga)=>manga.serve==="all").length %>],
+      backgroundColor: [
+        '#007bff',
+        '#dc3545',
+        '#28a745',
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configBar = {
+    type: 'bar',
+    data: dataBar,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tương quan đối tượng phục vụ'
+        },
+      }
+    }
+  };
+  const myBarChart = new Chart(
+    document.getElementById('barChart'),
+    configBar
+  );
+</script>
+
+</html>

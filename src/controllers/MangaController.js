@@ -784,6 +784,21 @@ class MangaController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async getMangaAnalysis(req, res) {
+    try {
+      const allMangas = await Manga.find({});
+      res.render("admin/manga/analysis", {
+        admin: req.user,
+        mangas: allMangas,
+        categories: types,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
 }
 
 module.exports = new MangaController();

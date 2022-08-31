@@ -10,8 +10,8 @@ const Slide = require("../../models/Slide");
 
 const router = express.Router();
 
-const mangaRouter = require("./manga/manga.routes");
-const slideRouter = require("./manga/slide.routes");
+const mangaRouter = require("./content/manga.routes");
+const slideRouter = require("./content/slide.routes");
 
 //path: /management/content/...
 router.use("/manga", mangaRouter);

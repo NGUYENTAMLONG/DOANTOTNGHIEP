@@ -35,6 +35,7 @@ const {
   submitUpdateChapter,
   deleteChecked,
   restoreChecked,
+  getMangaAnalysis,
 } = require("../../../controllers/MangaController");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -194,4 +195,7 @@ router.post("/submit/update/:chapterNumber", submitUpdateChapter);
 router.delete("/deleteChecked", deleteChecked);
 router.patch("/restoreChecked", restoreChecked);
 
+//1. Get Page (MANGA ANALYSIS)
+// ex: /management/content/manga/analysis - Method: GET
+router.get("/analysis", getMangaAnalysis);
 module.exports = router;
