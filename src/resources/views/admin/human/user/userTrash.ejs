@@ -281,6 +281,10 @@
           passport: item.parentElement.parentElement.parentElement.querySelectorAll("td")[8].querySelector("span").innerHTML
         })
       })
+      if (restoreList.length === 0) {
+
+        return;
+      }
       fetch(`/management/human/user/restoreChecked`, {
           method: "PATCH", // or 'PUT'
           headers: {

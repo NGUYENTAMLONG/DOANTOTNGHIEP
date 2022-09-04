@@ -7,6 +7,7 @@ const router = express.Router();
 
 const adminManagementRouter = require("./human/admin.routes");
 const userManagementRouter = require("./human/user.routes");
+const analysisRouter = require("./human/analysis.routes");
 const UserLocal = require("../../models/UserLocal");
 const UserFacebook = require("../../models/UserFacebook");
 const UserGoogle = require("../../models/UserGoogle");
@@ -22,6 +23,7 @@ const {
 //path: /management/human/...
 router.use("/admin", adminManagementRouter);
 router.use("/user", userManagementRouter);
+router.use("/analysis", analysisRouter);
 
 //path: /management/human/infomation...
 router.get("/infomation", showInfomationAdmin);

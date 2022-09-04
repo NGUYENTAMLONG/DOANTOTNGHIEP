@@ -19,6 +19,14 @@
 
 <body>
   <%- include("../../admin/partials/header") %>
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/management/content/manga">Trang quản lí</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Thống kê phân tích</li>
+      </ol>
+    </nav>
+  </div>
   <div class="container" id="section-1">
     <div class="text-center">
       <h3><i class="fas fa-calendar-alt"></i> Số liệu</h3>
@@ -39,11 +47,11 @@
         <tr class="text-center">
           <th scope="row"><%= mangas.length %></th>
           <td><%= categories.length %></td>
-          <td><%= mangas.filter((manga)=>manga.serve==="male").length %></td>
-          <td><%= mangas.filter((manga)=>manga.serve==="female").length %></td>
-          <td><%= mangas.filter((manga)=>manga.serve==="all").length %></td>
-          <td><%= mangas.filter((manga)=>manga.type.indexOf("16+") !== -1).length %></td>
-          <td><%= mangas.filter((manga)=>manga.type.indexOf("18+") !== -1).length %></td>
+          <td id="male"><%= mangas.filter((manga)=>manga.serve==="male").length %></td>
+          <td id="female"><%= mangas.filter((manga)=>manga.serve==="female").length %></td>
+          <td id="all"><%= mangas.filter((manga)=>manga.serve==="all").length %></td>
+          <td id="16+"><%= mangas.filter((manga)=>manga.type.indexOf("16+") !== -1).length %></td>
+          <td id="18+"><%= mangas.filter((manga)=>manga.type.indexOf("18+") !== -1).length %></td>
         </tr>
       </tbody>
     </table>
@@ -58,10 +66,10 @@
       </thead>
       <tbody>
         <tr class="text-center">
-          <td><%= mangas.filter((manga)=>manga.country==="Nhật Bản").length %></td>
-          <td><%= mangas.filter((manga)=>manga.country==="Trung Quốc").length %></td>
-          <td><%= mangas.filter((manga)=>manga.country==="Hàn Quốc").length %></td>
-          <td><%= mangas.filter((manga)=>manga.country==="Mỹ").length %></td>
+          <td id="jp"><%= mangas.filter((manga)=>manga.country==="Nhật Bản").length %></td>
+          <td id="cn"><%= mangas.filter((manga)=>manga.country==="Trung Quốc").length %></td>
+          <td id="kr"><%= mangas.filter((manga)=>manga.country==="Hàn Quốc").length %></td>
+          <td id="us"><%= mangas.filter((manga)=>manga.country==="Mỹ").length %></td>
         </tr>
       </tbody>
     </table>
@@ -98,20 +106,59 @@
     </div>
     <div class="row">
       <div class="col-6 col-lg-8 p-2">
-        <canvas id="barChart"></canvas>
+        <canvas id="barChart-gender"></canvas>
+      </div>
+      <div class="col-6 col-lg-4 p-2">
+        <canvas id="doughnutChart"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 col-lg-8 p-2">
+        <canvas id="barChart-age"></canvas>
       </div>
       <!-- <div class="col-6 col-lg-4 p-2">
         <canvas id="doughnutChart"></canvas>
       </div> -->
     </div>
+  </div>
+  <div class="container" id="section-3">
+    <div class="text-center">
+      <h3><i class="fas fa-calendar-alt"></i> Số liệu</h3>
+    </div>
+    <div class="box-scroll" style="width:100% ; overflow: scroll;">
+      <table class="table table-dark">
+        <thead class="text-center">
+          <tr>
+            <th scope="col">Tổng số thể loại</th>
+            <% categories.forEach((category)=>{%>
+            <th class="category" scope="col"><%= category.name %></th>
+            <%}) %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center">
+            <th scope="row"><%= categories.length %></th>
+            <% categories.forEach((category,index)=>{%>
+            <td id="cat_<%= index + 1%>"><%= mangas.filter((manga)=>manga.type.indexOf(category.name) !== -1).length %></td>
+            <%}) %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <canvas id="barChart-category"></canvas>
+    </div>
+  </div>
 </body>
 <%- include("../../partials/script") %>
 <script src="/js/moment.min.js"></script>
-<script src="/js/darkMode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <script>
+  const male = document.getElementById("male").innerHTML;
+  const female = document.getElementById("female").innerHTML;
+  const all = document.getElementById("all").innerHTML;
   const dataBar = {
     labels: [
       'male',
@@ -120,7 +167,7 @@
     ],
     datasets: [{
       label: "Biểu đồ đối tượng phục vụ",
-      data: [<%= mangas.filter((manga)=>manga.serve==="male").length %>, <%= mangas.filter((manga)=>manga.serve==="female").length %>, <%= mangas.filter((manga)=>manga.serve==="all").length %>],
+      data: [male, female, all],
       backgroundColor: [
         '#007bff',
         '#dc3545',
@@ -146,8 +193,117 @@
     }
   };
   const myBarChart = new Chart(
-    document.getElementById('barChart'),
+    document.getElementById('barChart-gender'),
     configBar
+  );
+</script>
+<script>
+  const jp = document.getElementById("jp").innerHTML;
+  const cn = document.getElementById("cn").innerHTML;
+  const kr = document.getElementById("kr").innerHTML;
+  const us = document.getElementById("us").innerHTML;
+
+  const dataDoughnut = {
+    labels: [
+      'Nhật Bản',
+      'Hàn Quốc',
+      'Trung Quốc',
+      "Mỹ",
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: [jp, cn, kr, us],
+      backgroundColor: [
+        '#007bff',
+        '#28a745',
+        '#ffc107',
+        '#dc3545',
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configDoughnut = {
+    type: 'doughnut',
+    data: dataDoughnut,
+  };
+  const myDoughnutChart = new Chart(
+    document.getElementById('doughnutChart'),
+    configDoughnut
+  );
+</script>
+<script>
+  const age_16 = document.getElementById("16+").innerHTML;
+  const age_18 = document.getElementById("18+").innerHTML;
+  const dataBar2 = {
+    labels: ["16+", "18+"],
+    datasets: [{
+      label: "Biểu đồ đối tượng phục vụ lứa tuổi",
+      data: [age_16, age_18],
+      backgroundColor: [
+        '#078d8c',
+        '#ff8f00',
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configBar2 = {
+    type: 'bar',
+    data: dataBar2,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tương quan đối tượng phục vụ theo độ tuổi'
+        },
+      }
+    }
+  };
+  const myBarChart2 = new Chart(
+    document.getElementById('barChart-age'),
+    configBar2
+  );
+</script>
+<script>
+  const arr = [];
+  document.querySelectorAll(".category").forEach((elm, index) => {
+    arr.push(elm.innerHTML)
+  })
+  const dataArr = [];
+  arr.forEach((item, index) => {
+    dataArr.push(document.getElementById(`cat_${index+1}`).innerHTML)
+  })
+  const dataBar3 = {
+    labels: arr,
+    datasets: [{
+      label: `Số lượng truyện`,
+      data: dataArr,
+      backgroundColor: "#FF6700",
+      hoverOffset: 4
+    }]
+  };
+  const configBar3 = {
+    type: 'bar',
+    data: dataBar3,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tương quan đối tượng phục vụ theo độ tuổi'
+        },
+      }
+    }
+  };
+  const myBarChart3 = new Chart(
+    document.getElementById('barChart-category'),
+    configBar3
   );
 </script>
 

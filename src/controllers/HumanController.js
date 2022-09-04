@@ -1,11 +1,12 @@
 const Admin = require("../models/Admin");
-const User = require("../models/User");
+// const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
 const { VALUES } = require("../config/default");
+const { STATUS } = require("../config/httpResponse");
 dotenv.config();
 class humanController {
   async showDeletePage(req, res) {
@@ -54,6 +55,15 @@ class humanController {
     try {
       // const admin = await Admin.findOne({ account: tokenVerify.account });
       res.json("HEERER");
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error, message: "No Authentication" });
+    }
+  }
+  async showHumanAnalysis(req, res) {
+    try {
+      // const admin = await Admin.findOne({ account: tokenVerify.account });
+      res.status(STATUS.SUCCESS).render("admin/human/analysis/analysis");
     } catch (error) {
       console.log(error);
       res.status(400).json({ error: error, message: "No Authentication" });
