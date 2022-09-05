@@ -5,6 +5,7 @@ const Manga = require("../models/Manga");
 const UserLocal = require("../models/UserLocal");
 const UserGoogle = require("../models/UserGoogle");
 const UserFacebook = require("../models/UserFacebook");
+const lodash = require("lodash");
 
 class RateController {
   async rateManga(req, res) {
@@ -17,16 +18,56 @@ class RateController {
         );
     }
     try {
+      const userId = req.user.id;
       if (req.user.provider === PASSPORT.LOCAL) {
-        await UserLocal.findByIdAndUpdate(req.user.id, {
+        const checkRating = await UserLocal.findById(userId).select(
+          "ratedList"
+        );
+        if (checkRating.ratedList.includes(mangaId)) {
+          return res
+            .status(STATUS.BAD_REQUEST)
+            .json(
+              new ErrorResponse(
+                ERRORCODE.ERROR_BAD_REQUEST,
+                MESSAGE.ALREADY_REATED
+              )
+            );
+        }
+        await UserLocal.findByIdAndUpdate(userId, {
           $push: { ratedList: mangaId },
         });
       } else if (req.user.provider === PASSPORT.GOOGLE) {
-        await UserGoogle.findByIdAndUpdate(req.user.id, {
+        const checkRating = await UserGoogle.findById(userId).select(
+          "ratedList"
+        );
+        if (checkRating.ratedList.includes(mangaId)) {
+          return res
+            .status(STATUS.BAD_REQUEST)
+            .json(
+              new ErrorResponse(
+                ERRORCODE.ERROR_BAD_REQUEST,
+                MESSAGE.ALREADY_REATED
+              )
+            );
+        }
+        await UserGoogle.findByIdAndUpdate(userId, {
           $push: { ratedList: mangaId },
         });
       } else if (req.user.provider === PASSPORT.FACEBOOK) {
-        await UserFacebook.findByIdAndUpdate(req.user.id, {
+        const checkRating = await UserFacebook.findById(userId).select(
+          "ratedList"
+        );
+        if (checkRating.ratedList.includes(mangaId)) {
+          return res
+            .status(STATUS.BAD_REQUEST)
+            .json(
+              new ErrorResponse(
+                ERRORCODE.ERROR_BAD_REQUEST,
+                MESSAGE.ALREADY_REATED
+              )
+            );
+        }
+        await UserFacebook.findByIdAndUpdate(userId, {
           $push: { ratedList: mangaId },
         });
       }
@@ -45,9 +86,10 @@ class RateController {
           "statistical.rating": parseFloat(newRating.toFixed(1)),
         }
       );
+      const rank = await rankSorting(mangaId);
       return res
         .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.LIKED, req.user.id));
+        .json(new SuccessResponse(MESSAGE.RATED));
     } catch (error) {
       console.log(error);
       res
@@ -57,4 +99,28 @@ class RateController {
   }
 }
 
+async function rankSorting(mangaId) {
+  try {
+    // const sortingManga = await Manga.aggregate([
+    //   {
+    //     $addFields: {
+    //       top: "",
+    //     },
+    //   },
+    // ]);
+    const sortingManga = await Manga.find({})
+      .sort({
+        "statistical.rating": -1,
+      })
+      .select("name");
+    lodash.findIndex(sortingManga, function (manga) {
+      //  return manga._id == ;
+    });
+
+    return sortingManga;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
 module.exports = new RateController();

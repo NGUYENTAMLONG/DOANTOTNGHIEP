@@ -1,3 +1,7 @@
+window.onsubmit = function (event) {
+  event.preventDefault();
+};
+
 const logoutBtn = document.querySelector(".logoutBtn");
 const loginBtn = document.querySelector(".loginBtn");
 const submitBtn = document.querySelector(".submitBtn");
@@ -114,7 +118,7 @@ function resendOTP() {
           text: "Xác thực qua email của bạn ngay nhé!",
           icon: "success",
           button: "OK!",
-        }).then(() => {});
+        });
       } else {
         swal({
           title: "Gửi lại mã không thành công!",

@@ -179,8 +179,13 @@ class UserController {
   }
   async updateDob(req, res) {
     const { dob } = req.body;
-    //Validate Blank
-    // return res.json(new SuccessResponse(MESSAGE.SUCCESS, dob));
+    if (!dob) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
     try {
       let foundUser;
       if (req.user.provider === "LOCAL") {
@@ -188,9 +193,6 @@ class UserController {
         await UserLocal.findByIdAndUpdate(foundUser._id, {
           dob: dob,
         });
-        return res
-          .status(STATUS.SUCCESS)
-          .json(new SuccessResponse(MESSAGE.SUCCESS, null));
       } else if (req.user.provider === "GOOGLE") {
         foundUser = await UserGoogle.findById(req.user.id);
         await UserGoogle.findByIdAndUpdate(foundUser._id, {
@@ -276,6 +278,44 @@ class UserController {
         { email: Useremail },
         { password: hashedPassword }
       );
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async updateGender(req, res) {
+    const { gender } = req.body;
+    if (!gender) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      let foundUser;
+      if (req.user.provider === "LOCAL") {
+        foundUser = await UserLocal.findById(req.user.id);
+        await UserLocal.findByIdAndUpdate(foundUser._id, {
+          gender: gender,
+        });
+      } else if (req.user.provider === "GOOGLE") {
+        foundUser = await UserGoogle.findById(req.user.id);
+        await UserGoogle.findByIdAndUpdate(foundUser._id, {
+          gender: gender,
+        });
+      } else if (req.user.provider === "FACEBOOK") {
+        foundUser = await UserFacebook.findById(req.user.id);
+        await UserFacebook.findByIdAndUpdate(foundUser._id, {
+          gender: gender,
+        });
+      }
+
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));

@@ -177,23 +177,6 @@ class adminManagementController {
     }
   }
 
-  async showAnalysis(req, res) {
-    Promise.all([Admin.find()])
-      .then(([adminList]) => {
-        res.render("admin/human/analysis/analysis", {
-          admin: req.user,
-          adminList,
-          moment,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        res
-          .status(STATUS.SERVER_ERROR)
-          .json(new ErrorResponse(ERRORCODE, MESSAGE.ERROR_SERVER));
-      });
-  }
-
   async showNotification(req, res) {}
 
   //API

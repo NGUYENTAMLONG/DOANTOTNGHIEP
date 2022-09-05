@@ -27,7 +27,7 @@ window.addEventListener("click", function (click) {
 
 function rating(mangaId) {
   const counterStar = document.querySelectorAll(".stars .active").length;
-  console.log(mangaId, counterStar);
+  // console.log(mangaId, counterStar);
   const data = {
     mangaId: mangaId,
     counterStar,
@@ -42,7 +42,30 @@ function rating(mangaId) {
   })
     .then((response) => response.json())
     .then((result) => {
-      alert("RATED");
+      console.log(result);
+      if (result.isSuccess === true) {
+        swal({
+          title: "Thành công",
+          text: "Cảm ơn bạn đã đánh giá tác phẩm manga này",
+          icon: "success",
+          button: "OK!",
+        }).then(() => {
+          location.reload();
+        });
+      } else if (
+        !result.isSuccess &&
+        result.errorCode === "BAD_REQUEST" &&
+        result.message === "ALREADY REATED"
+      ) {
+        swal({
+          title: "Thông báo",
+          text: "Bạn đã đánh giá bộ truyện này rồi",
+          icon: "warning",
+          button: "OK!",
+        }).then(() => {
+          location.reload();
+        });
+      }
     })
     .catch((error) => {
       console.error("Error:", error);

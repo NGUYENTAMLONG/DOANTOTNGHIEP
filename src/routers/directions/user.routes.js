@@ -13,6 +13,7 @@ const {
   submitMailToRetrievalPassword,
   getFormRecoverPassword,
   submitRecoverPassword,
+  updateGender,
 } = require("../../controllers/UserController");
 const { decodeBase64 } = require("../../middleware/handleBase64");
 const router = express.Router();
@@ -27,6 +28,7 @@ router.get("/history", showHistory);
 
 router.patch("/update-username", updateUsername);
 router.patch("/update-dob", updateDob);
+router.patch("/update-gender", updateGender);
 router.patch("/update-avatar", decodeBase64, updateAvatar);
 
 router.post("/alert-error", alertError);

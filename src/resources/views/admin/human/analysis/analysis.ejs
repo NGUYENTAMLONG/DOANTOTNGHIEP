@@ -16,7 +16,8 @@
 </head>
 
 <body>
-  "../../admin/partials/header"
+  <%- include("../../../admin/partials/header") %>
+
   <div class="container">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mt-2">
@@ -32,113 +33,131 @@
     <table class="table table-dark">
       <thead class="text-center">
         <tr>
-          <th scope="col">Tổng số manga</th>
-          <th scope="col">Số thể loại</th>
-          <th scope="col">Dành cho nam</th>
-          <th scope="col">Dành cho nữ</th>
-          <th scope="col">Dành cho tất cả</th>
-          <th scope="col">Dành cho tuổi 16+</th>
-          <th scope="col">Dành cho tuổi 18+</th>
+          <th scope="col">Tổng số quản trị viên</th>
+          <th scope="col">Quản trị viên người dùng</th>
+          <th scope="col">Quản trị viên nội dung</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="text-center">
+        <td><%= adminList.length %></td>
+        <td id="ha"><%= adminList.filter(admin=>admin.role==="HA").length %></td>
+        <td id="ca"><%= adminList.filter(admin=>admin.role==="CA").length %></td>
       </tbody>
     </table>
     <table class="table table-dark">
       <thead class="text-center">
         <tr>
-          <th scope="col">Nhật Bản</th>
-          <th scope="col">Trung Quốc</th>
-          <th scope="col">Hàn Quốc</th>
-          <th scope="col">Mỹ</th>
+          <th scope="col">Tổng số người dùng</th>
+          <th scope="col">Đăng nhập bằng Facebook</th>
+          <th scope="col">Đăng nhập bằng Google</th>
+          <th scope="col">Tài khoản đăng ký</th>
         </tr>
       </thead>
-      <tbody>
-        <tr class="text-center">
-        </tr>
+      <tbody class="text-center">
+        <td><%= lcUser.length + fbUser.length+ ggUser.length %></td>
+        <td id="fb-user"><%= fbUser.length %></td>
+        <td id="gg-user"><%= ggUser.length %></td>
+        <td id="lc-user"><%= lcUser.length %></td>
       </tbody>
     </table>
-    <table class="table table-dark">
-      <thead class="text-center">
-        <tr>
-          <th scope="col">Độ hot cao</th>
-          <th scope="col">Độ hot thấp</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="text-center">
-
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-dark">
-      <thead class="text-center">
-        <tr>
-          <th scope="col">Fanmade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="text-center">
-        </tr>
-      </tbody>
-    </table>
+  </div>
+  <div class="container" id="section-2">
+    <div class="text-center">
+      <h3><i class='bx bxs-pie-chart-alt-2'></i>Biểu đồ</h3>
+    </div>
+    <div class="row">
+      <div class="col-6 col-lg-4 p-2">
+        <canvas id="barChart-admin"></canvas>
+      </div>
+      <div class="col-6 col-lg-8 p-2">
+        <canvas id="barChart-user"></canvas>
+      </div>
+    </div>
   </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-  ];
+  const ha = document.getElementById("ha").innerHTML;
+  const ca = document.getElementById("ca").innerHTML;
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'My First dataset',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  };
-
-  const config = {
-    type: 'line',
-    data: data,
-    options: {}
-  };
-  const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-  );
-
-  const dataDoughnut = {
+  const dataAdminBar = {
     labels: [
-      'Likes',
-      'Views',
-      'Comments'
+      'Quản trị viên người dùng',
+      'Quản trị viên nội dung',
     ],
     datasets: [{
-      label: 'My First Dataset',
-      data: [300, 50, 100],
+      label: 'Số lượng ',
+      data: [ha, ca],
       backgroundColor: [
-        '#28a745',
         '#007bff',
-        '#dc3545'
+        '#28a745',
       ],
       hoverOffset: 4
     }]
   };
-  const configDoughnut = {
-    type: 'doughnut',
-    data: dataDoughnut,
+  const configAdminBar = {
+    type: 'bar',
+    data: dataAdminBar,
   };
-  const myDoughnutChart = new Chart(
-    document.getElementById('myDoughnutChart'),
-    configDoughnut
+  const adminChart = new Chart(
+    document.getElementById('barChart-admin'),
+    configAdminBar
+  );
+</script>
+<script>
+  const fbUser = document.getElementById("fb-user").innerHTML;
+  const ggUser = document.getElementById("gg-user").innerHTML;
+  const lcUser = document.getElementById("lc-user").innerHTML;
+
+  const dataUserBar = {
+    labels: [
+      'Đăng nhập bằng Facebook',
+      'Đăng nhập bằng Google',
+      'Tài khoản đăng ký'
+    ],
+    datasets: [{
+      label: 'Số lượng ',
+      data: [fbUser, ggUser, lcUser],
+      backgroundColor: [
+        '#FF5733',
+        '#2ECC71',
+        '#CCCCFF'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configUserBar = {
+    type: 'bar',
+    data: dataUserBar,
+  };
+  const userChart = new Chart(
+    document.getElementById('barChart-user'),
+    configUserBar
+  );
+</script>
+<script>
+  const dataAgeDoughnut = {
+    labels: [
+      'Đối tượng trên 18+',
+      'Đối tượng dưới 18+',
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: [],
+      backgroundColor: [
+        '#007bff',
+        '#28a745',
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const configAgeDoughnut = {
+    type: 'doughnut',
+    data: dataAgeDoughnut,
+  };
+  const ageDoughnutChart = new Chart(
+    document.getElementById('doughnutChart-age'),
+    configAgeDoughnut
   );
 </script>
 

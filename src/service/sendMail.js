@@ -11,9 +11,13 @@ async function sendRegisterMail(toEmail, otp) {
   // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
   let transporter = nodemailer.createTransport({
     service: SERVICE,
+    secure: false,
     auth: {
       user: EMAIL,
       pass: EMAILPASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
   await transporter.sendMail(
