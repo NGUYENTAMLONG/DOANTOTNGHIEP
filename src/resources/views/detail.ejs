@@ -47,7 +47,7 @@
             </a>
           </p>
           <p class="manga-info__status">Tình trạng: <a href="/just-updated?page=1&limit=2&status=<%= manga.status === 'Hoàn thành' ? true : false %>"><%= manga.status %></a></p>
-          <p class="manga-info__translation"> Nhóm dịch: <a href="#"><%= manga.translation %></a></p>
+          <p class="manga-info__translation"> Nhóm dịch: <a href="/filter/translation/<%= manga.translation %>?page=1&limit=2"><%= manga.translation %></a></p>
           <p class="manga-info__statistical">Thống kê:
             <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
               <i class="far fa-thumbs-up"></i> <%= manga.statistical.likes %>

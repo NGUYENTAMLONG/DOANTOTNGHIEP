@@ -111,6 +111,88 @@ class FilterController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async showMangaRank(req, res, next) {
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find(match)
+        .sort({ "statistical.rating": -1 })
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .sort({ "statistical.rating": -1 })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("showRankManga", {
+        user: req.user,
+        moment: moment,
+        title: `<i class="fas fa-mountain"></i> Bảng xếp hạng theo lượt đánh giá`,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showMangaRateCounting(req, res, next) {
+    try {
+      const match = filterMangas(req);
+      const totalMangas = await Manga.find(match)
+        .sort({ "statistical.counting": -1 })
+        .countDocuments();
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .sort({ "statistical.counting": -1 })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("showRateCountingManga", {
+        user: req.user,
+        moment: moment,
+        title: `<i class="fas fa-tally"></i> Lượng đánh giá`,
+        mangas: result.mangas,
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async showUnfinishedManga(req, res, next) {
     try {
       const match = filterMangas(req);
@@ -357,7 +439,7 @@ class FilterController {
     const { slug } = req.params;
     try {
       const match = filterMangas(req);
-      const totalMangas = await Manga.find({ author: slug })
+      const totalMangas = await Manga.find({ translation: slug })
         .find(match)
         .countDocuments();
       const page = parseInt(req.query.page);
