@@ -58,8 +58,10 @@
             <span data-toggle="tooltip" data-placement="bottom" title="Lượng views">
               <i class="far fa-eye"></i> <%= manga.statistical.views %>
             </span>
-            <span data-toggle="tooltip" data-placement="bottom" title="Thứ hạng">
-              <i class="fas fa-mountain"></i> <%= manga.statistical.ranks %>
+            <span id="rank-of-manga" data-toggle="tooltip" data-placement="bottom" title="Thứ hạng" data-id="<%= manga._id %>">
+              <i class="fas fa-mountain"></i> <span>
+                <i class="fa fa-spinner fa-spin"></i>
+              </span>
             </span>
             <span data-toggle="tooltip" data-placement="bottom" title="Điểm đánh giá">
               <i class="fas fa-star"></i> <%= manga.statistical.rating %>
@@ -372,8 +374,25 @@
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   })();
-  document.getElementById("count-comment").innerHTML = `<span class="disqus-comment-count" data-disqus-url="${window.location.href}">Số bình luận</span>`
+  document.getElementById("count-comment").innerHTML = `<span class="disqus-comment-count" data-disqus-url="${window.location.href}"><i class="fa fa-spinner fa-spin"></i></span>`
 </script>
-
+<script>
+  function getRankOfManga() {
+    const spanRank = document.getElementById("rank-of-manga")
+    const mangaId = spanRank.getAttribute("data-id");
+    const siteRank = spanRank.querySelector("span")
+    console.log(mangaId)
+    fetch('/filter/rank-of-manga/' + mangaId)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess) {
+          siteRank.innerHTML = result.data
+        } else {
+          siteRank.innerHTML = `Chưa xếp hạng`
+        }
+      }).catch(error => console.log(error))
+  };
+  getRankOfManga();
+</script>
 
 </html>

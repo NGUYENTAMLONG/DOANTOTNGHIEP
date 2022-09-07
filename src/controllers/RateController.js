@@ -18,6 +18,13 @@ class RateController {
         );
     }
     try {
+      if (!req.user) {
+        return res
+        .status(STATUS.UNAUTHORIZED)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, MESSAGE.UNAUTHORIZED)
+        );
+      }
       const userId = req.user.id;
       if (req.user.provider === PASSPORT.LOCAL) {
         const checkRating = await UserLocal.findById(userId).select(
@@ -86,10 +93,9 @@ class RateController {
           "statistical.rating": parseFloat(newRating.toFixed(1)),
         }
       );
-      const rank = await rankSorting(mangaId);
       return res
         .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.RATED));
+        .json(new SuccessResponse(MESSAGE.RATED), null);
     } catch (error) {
       console.log(error);
       res
@@ -99,28 +105,4 @@ class RateController {
   }
 }
 
-async function rankSorting(mangaId) {
-  try {
-    // const sortingManga = await Manga.aggregate([
-    //   {
-    //     $addFields: {
-    //       top: "",
-    //     },
-    //   },
-    // ]);
-    const sortingManga = await Manga.find({})
-      .sort({
-        "statistical.rating": -1,
-      })
-      .select("name");
-    lodash.findIndex(sortingManga, function (manga) {
-      //  return manga._id == ;
-    });
-
-    return sortingManga;
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-}
 module.exports = new RateController();

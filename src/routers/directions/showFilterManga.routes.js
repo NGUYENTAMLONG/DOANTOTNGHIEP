@@ -15,6 +15,7 @@ const {
   showMangasOfTranslator,
   showMangaRank,
   showMangaRateCounting,
+  getRankOfManga,
 } = require("../../controllers/FilterController");
 const router = express.Router();
 
@@ -29,6 +30,7 @@ router.get("/author", showAllAuthors);
 router.get("/translation/:slug", showMangasOfTranslator);
 router.get("/translation", showAllTranslators);
 router.get("/rank", showMangaRank);
+router.get("/rank-of-manga/:id", getRankOfManga);
 router.get("/rate-counting", showMangaRateCounting);
 router.get("/favourite", showFavouriteManga);
 router.get("/highest-views", showHighestViewsManga);

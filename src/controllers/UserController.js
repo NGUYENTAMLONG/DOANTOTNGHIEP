@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const appRoot = require("app-root-path");
 const bcrypt = require("bcrypt");
-const { VALUES, types } = require("../config/default");
+const { VALUES, types, PASSPORT } = require("../config/default");
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
 const { redirect } = require("../service/redirect");
@@ -285,6 +285,29 @@ class UserController {
       console.log(error);
       res
         .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async checkFollow(req,res){
+    const mangaId = req.params.id;
+    try{
+      let result;
+      if (req.user) {
+        if (req.user.provider === PASSPORT.LOCAL) {
+          result = await UserLocal.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+        }
+        if (req.user.provider === PASSPORT.GOOGLE) {
+          result = await UserGoogle.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+        }
+        if (req.user.provider === PASSPORT.FACEBOOK) {
+          result = await UserFacebook.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+        }
+      }
+      return res.status(STATUS.SUCCESS).json(new SuccessResponse(MESSAGE.SUCCESS,result));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }

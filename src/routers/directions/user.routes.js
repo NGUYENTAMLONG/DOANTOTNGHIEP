@@ -4,6 +4,7 @@ const { rateManga } = require("../../controllers/RateController");
 const {
   getUserInfo,
   showProfile,
+  checkFollow,
   showHistory,
   updateUsername,
   updateDob,
@@ -22,9 +23,10 @@ router.get("/info", getUserInfo);
 router.post("/like", likeManga);
 router.delete("/unlike", unlikeManga);
 router.post("/rate", rateManga);
-
 router.get("/profile", showProfile);
 router.get("/history", showHistory);
+router.get("/check-follow/:id", checkFollow);
+
 
 router.patch("/update-username", updateUsername);
 router.patch("/update-dob", updateDob);

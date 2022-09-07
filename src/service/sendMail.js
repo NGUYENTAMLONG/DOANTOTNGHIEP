@@ -51,6 +51,9 @@ async function sendMailToFix(fromEmail, content) {
       user: EMAIL,
       pass: EMAILPASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
   await transporter.sendMail(
     {
@@ -133,6 +136,9 @@ async function sendMailToRetrievalAdminAccount(toEmail, username, originUrl) {
     auth: {
       user: EMAIL,
       pass: EMAILPASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
   // const payload = { email: toEmail };

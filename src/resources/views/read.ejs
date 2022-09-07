@@ -123,14 +123,12 @@
     fetch(`/detail/${slug}/navigator`)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         if (result.isSuccess) {
           const chapters = result.data.Chapters.chapters;
           var indexChapter = chapters.findIndex(
             (chapter) => chapter.chapterNumber === chapterNumber
           );
           let htmls = [];
-          console.log(indexChapter);
           chapters.forEach((chapter, index) => {
             htmls.push(`<option value="chapter-${chapter.chapterNumber}" 
             ${chapterNumber===chapter.chapterNumber && "selected" }>
@@ -310,5 +308,36 @@
     containerRow.setAttribute("hidden", "")
   }
 </script>
-
+<script>
+   function handleAPI() {
+    const spanNavbarFollow = document.getElementById("navbar-follow");
+    const mangaId= spanNavbarFollow.getAttribute("data-manga-id");    
+    fetch(`/user/check-follow/${mangaId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const check = result.data;
+        console.log("CHECK", check)
+        if (result.isSuccess && check.followedList.length !== 0) {
+          spanNavbarFollow.innerHTML = `
+          <span onclick="unFollow('${check._id}')">
+            <i class="fas fa-heartbeat"></i> 
+               <p>
+              Đang theo dõi
+              </p>
+            </span>
+              `;
+        }else if(result.isSuccess && check.followedList.length !== 0){
+          spanNavbarFollow.innerHTML = `
+          <span onclick="addFollow('${check._id}')">
+          <i class="fas fa-heart"></i> 
+         <p>
+          Theo dõi
+         </p>
+        </span>
+         `;
+        }
+      }).catch(error => console.log(error))
+  }
+  handleAPI()
+</script>
 </html>

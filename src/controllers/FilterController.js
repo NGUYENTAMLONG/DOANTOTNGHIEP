@@ -152,6 +152,35 @@ class FilterController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async getRankOfManga(req, res) {
+    const mangaId = req.params.id;
+    if (!mangaId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const rank = await Manga.find({})
+        .sort({
+          "statistical.rating": -1,
+        })
+        .select("name");
+      const indexOfManga =
+        lodash.findIndex(rank, function (manga) {
+          return manga._id == mangaId;
+        }) + 1;
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, indexOfManga));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async showMangaRateCounting(req, res, next) {
     try {
       const match = filterMangas(req);

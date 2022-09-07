@@ -65,6 +65,17 @@ function rating(mangaId) {
         }).then(() => {
           location.reload();
         });
+      }else if(
+        !result.isSuccess &&
+        result.errorCode === "UNAUTHORIZED" &&
+        result.message === "UNAUTHORIZED"
+      ) {
+        swal({
+          title: "Thông báo !",
+          text: "Bạn phải đăng nhập trước :>",
+          icon: "error",
+          button: "OK!",
+        });
       }
     })
     .catch((error) => {
