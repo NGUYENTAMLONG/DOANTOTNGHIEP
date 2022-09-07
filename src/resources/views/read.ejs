@@ -309,35 +309,118 @@
   }
 </script>
 <script>
-   function handleAPI() {
+  function addFollow(mangaId) {
     const spanNavbarFollow = document.getElementById("navbar-follow");
-    const mangaId= spanNavbarFollow.getAttribute("data-manga-id");    
+    const data = {
+      mangaId: mangaId,
+    };
+
+    fetch("/follow", {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đã theo dõi",
+            text: "Hãy theo dõi bộ này hàng tuần nhé <3",
+            icon: "success",
+            button: "OK!",
+          });
+          spanNavbarFollow.innerHTML = ` <span onclick="unFollow('${mangaId}')">
+    <i class="fas fa-heartbeat"></i>
+    <p>
+      Đang theo dõi
+    </p>
+    </span>
+    `;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    // alert("A")
+  }
+
+  function unFollow(mangaId) {
+    const spanNavbarFollow = document.getElementById("navbar-follow");
+    const payload = {
+      mangaId: mangaId,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/follow", {
+        method: "DELETE",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đã bỏ theo dõi",
+            text: "Cảm ơn bạn đã ủng hộ !",
+            icon: "success",
+            button: "OK!",
+          });
+          spanNavbarFollow.innerHTML = `
+    <span onclick="addFollow('${mangaId}')">
+      <i class="fas fa-heart"></i>
+      <p>
+        Theo dõi
+      </p>
+    </span>
+    `;
+        } else {
+          swal({
+            title: "Thông báo !",
+            text: "Bạn phải đăng nhập trước :>",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+    // alert("B")
+  }
+
+  function handleAPI() {
+    const spanNavbarFollow = document.getElementById("navbar-follow");
+    const mangaId = spanNavbarFollow.getAttribute("data-manga-id");
+    console.log(mangaId);
     fetch(`/user/check-follow/${mangaId}`)
       .then((response) => response.json())
       .then((result) => {
         const check = result.data;
-        console.log("CHECK", check)
+        console.log("CHECK", check);
         if (result.isSuccess && check.followedList.length !== 0) {
           spanNavbarFollow.innerHTML = `
-          <span onclick="unFollow('${check._id}')">
-            <i class="fas fa-heartbeat"></i> 
-               <p>
-              Đang theo dõi
-              </p>
-            </span>
-              `;
-        }else if(result.isSuccess && check.followedList.length !== 0){
+  <span onclick="unFollow('${mangaId}')">
+    <i class="fas fa-heartbeat"></i>
+    <p>
+      Đang theo dõi
+    </p>
+  </span>
+  `;
+        } else if (result.isSuccess && check.followedList.length === 0) {
           spanNavbarFollow.innerHTML = `
-          <span onclick="addFollow('${check._id}')">
-          <i class="fas fa-heart"></i> 
-         <p>
-          Theo dõi
-         </p>
-        </span>
-         `;
+  <span onclick="addFollow('${mangaId}')">
+    <i class="fas fa-heart"></i>
+    <p>
+      Theo dõi
+    </p>
+  </span>
+  `;
         }
-      }).catch(error => console.log(error))
+      })
+      .catch((error) => console.log(error));
   }
-  handleAPI()
+  handleAPI();
 </script>
+
 </html>
