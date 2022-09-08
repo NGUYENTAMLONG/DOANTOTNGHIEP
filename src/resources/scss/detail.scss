@@ -40,18 +40,23 @@
   }
   .manga-info__type {
   }
-  .read,
+  .read-first,
+  .read-last,
   .follow,
   .like,
   .rate {
     border-radius: 5px;
     cursor: pointer;
     color: white;
-    padding: 5px 8px;
+    padding: 3px 6px;
     margin-bottom: 10px;
   }
-  .read {
+  .read-first {
     background-color: #8bc34a;
+    text-decoration: none;
+  }
+  .read-last {
+    background-color: #17a2b8;
     text-decoration: none;
   }
   .follow {

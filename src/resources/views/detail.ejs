@@ -80,17 +80,20 @@
           <% }) %>
           <div class="d-flex mt-3">
             <% if (manga.contentId.chapters.length >0){ %>
-            <a class="read" href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[0].chapterNumber%>">
+            <a class="read-first" href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[0].chapterNumber%>">
               <i class="fas fa-book-open"></i> Đọc từ đầu
             </a>
+            <a class="read-last ml-2" href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[manga.contentId.chapters.length-1].chapterNumber%>">
+              <i class="fas fa-fire"></i> Chương mới nhất
+            </a>
             <%} %>
-            <label class="follow ml-3 mr-3 form-check-label" for="checkFollow">
+            <label class="follow ml-2 mr-2 form-check-label" for="checkFollow">
               <span>
                 <i class="fas fa-heart"></i> Theo dõi
               </span>
               <input type="checkbox" class="form-check-input" id="checkFollow" onchange="handleFollow('<%= manga._id%>')" hidden />
             </label>
-            <label class="like mr-3 form-check-label" for="checkLike">
+            <label class="like mr-2 form-check-label" for="checkLike">
               <span>
                 <i class="fas fa-thumbs-up"></i> Thích
               </span>

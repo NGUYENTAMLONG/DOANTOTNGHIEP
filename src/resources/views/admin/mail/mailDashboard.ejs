@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLIDE MANAGEMENT</title>
+  <title>MAIL MANAGEMENT</title>
   <link rel="icon" href="/image/tablogo.png">
   <%- include("../../partials/link") %>
   <link rel="stylesheet" href="/css/fullscreenImg.css">
@@ -24,22 +24,22 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mt-2">
         <li class="breadcrumb-item"><a href="/management/content/admin">Trang quản lí</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Quản lí manga</li>
+        <li class="breadcrumb-item active" aria-current="page">Quản lí mail</li>
       </ol>
     </nav>
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-sm-12 col-md-4 col-lg-4">
-        <h3>Quản lí Slide</h3>
+        <h3>Quản lí Mail</h3>
         <div class="statistical d-flex">
-          <p>Tổng : <span class="badge badge-primary slideSum"><%= slides.length %> </span> | </p>
-          <p class="ml-1 mr-1"><span class="badge badge-success"><%= slides.filter((slide)=>slide.active === true).length %> </span> slide hiển thị</p>
-          <p><span class="badge badge-warning"><%= slides.length - slides.filter((slide)=>slide.active === true).length %></span> slide ẩn </p>
+          <p>Tổng : <span class="badge badge-primary slideSum"><%= mails.length %> </span> | </p>
+          <p class="ml-1 mr-1"><span class="badge badge-success"><%= mails.filter((mail)=>mail.deleted === false).length %> </span> mail hoạt động</p>
+          <p><span class="badge badge-warning"><%= mails.length - mails.filter((mail)=>mail.deleted === false).length %></span> mail đã hủy </p>
         </div>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-2">
-        <a href="/management/content/manga" class="btn btn-sm btn-warning">Quản lí manga <i class="fas fa-book"></i></a>
-        <a href="/management/content/slide/create" class="btn btn-sm btn-primary ml-2">Tạo Slide <i class="fas fa-plus-circle"></i></a>
-        <a href="/management/content/slide/trash" class="btn btn-sm btn-danger ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
+        <a href="/management/content" class="btn btn-sm btn-warning">Quản lí chung <i class="fas fa-book"></i></a>
+        <a href="/management/content/mail/send-mail" class="btn btn-sm btn-primary ml-2">Gửi mail <i class="fas fa-share-square"></i></a>
+        <a href="/management/content/mail/trash" class="btn btn-sm btn-danger ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex align-items-center justify-content-end">
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
@@ -53,21 +53,15 @@
     <button id="deleteChecked" class="btn btn-danger btn-sm">Xóa hết <i class="fas fa-trash"></i></button>
   </div>
   <section class="container">
-    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/slide/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
+    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/mail/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
-          <th scope="col" data-field="image" data-formatter="imageFormatter">Ảnh</th>
-          <th scope="col" data-field="manga" data-sortable="true" data-formatter="nameFormatter">Tên</th>
-          <th scope="col" data-field="author" data-sortable="true" data-formatter="authorFormatter">Tác giả</th>
-          <th scope="col" data-field="type" data-formatter="typeFormatter">Thể loại</th>
-          <th scope="col" data-field="chapter" data-sortable="true" data-formatter="chapterFormatter">Chương</th>
-          <th scope="col" data-field="description" data-formatter="descFormatter">Mô tả</th>
+          <th scope="col" data-field="email" data-sortable="true" data-formatter="emailFormatter">Email</th>
           <th scope="col" data-field="createdAt" data-sortable="true" data-formatter="createdAtFormatter">Đã tạo</th>
           <th scope="col" data-field="updatedAt" data-sortable="true" data-formatter="updatedAtFormatter">Đã cập nhật</th>
           <th data-field="state" data-checkbox="true"></th>
           <th scope="col" data-field="_id" data-formatter="handleFormatter">Tác vụ</th>
-          <th scope="col" data-field="active" data-formatter="activeFormatter">Active</th>
         </tr>
       </thead>
     </table>
@@ -94,50 +88,19 @@
     return res
   }
 
-  function imageFormatter(data) {
-    return `<img src="${ data }" class="slide-image" width="200px" alt="" onclick="zoomImg(this)">
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="preview-modal" style="zoom: 2;margin-top: 30px;">
-  </div>`
-  }
 
-  function nameFormatter(data, slide, index) {
+  function emailFormatter(data, mail, index) {
     return `
      <div class="text-center">
-      ${slide.manga.name}
+      ${mail.email}
      </div>`
   }
 
-  function authorFormatter(data, slide, index) {
-    return `
-    <div class="text-center">
-      ${slide.manga.author}
-    </div>`
-  }
-
-  function typeFormatter(data, slide, index) {
-    return `
-  <span class="type bg-primary text-light">${slide.manga.type}</span>
-  `
-  }
-
-  function chapterFormatter(data, slide, index) {
-    return `<div class="text-center">
-      <span class="badge badge-success">
-        ${(slide.manga.contentId.chapters.length !== 0) ? `<h4>${slide.manga.contentId.chapters[0].chapterNumber}</h4>` : "<i class='fas fa-2x fa-empty-set'></i>"}
-      </span>
-      </div>
- `
-  }
-
-  function descFormatter(data, slide, index) {
-    return `
-   <div class="desc__less">
-     ${slide.manga.description}
-   </div>
-   `
+  function handleFormatter(data) {
+    return `   <div class="text-center">
+        <button class="btn btn-primary btn-sm" onclick="sendMail('${data}')">Gửi thư</button>
+        <button class="btn btn-danger btn-sm mt-1" onclick="deleteEmail('${data}')">Xóa</button>
+        </div>`
   }
 
   function createdAtFormatter(data, slide, index) {
@@ -160,59 +123,18 @@
     });
   });
 </script>
-<script>
-  //Turn on turn off modal
-  function zoomImg(it) {
-    var modal = document.getElementById("myModal");
-    var modalImg = document.getElementById("preview-modal");
 
-    modal.style.display = "block";
-    modalImg.src = it.src;
-  }
-
-  function closeModal() {
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
-  }
-</script>
 <script>
-  function toggleActive(e) {
-    const idSlide = e.target.dataset.id;
-    fetch("/management/content/slide/api/switch/" + idSlide, {
-        method: 'PUT', // or 'PUT'
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify(data),
-      })
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    reloadStatistical()
-  }
-
-  function reloadStatistical() {
-    const array = [...document.querySelectorAll(".toggleBtn")];
-    const checkedCount = array.filter((item, index) => item.checked === true).length
-    document.querySelector(".statistical .badge-success").innerHTML = checkedCount;
-    document.querySelector(".statistical .badge-warning").innerHTML = array.length - checkedCount;
-  }
-</script>
-<script>
-  function deleteSlide(slideId) {
+  function deleteEmail(emailId) {
     swal({
       title: "Bạn có chắc chắn muốn xóa không",
-      text: "Nếu xóa bạn vẫn có thể khôi phục slide !",
+      text: "Nếu xóa bạn vẫn có thể khôi phục email !",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        fetch(`/management/content/slide/api/delete/${slideId}`, {
+        fetch(`/management/content/mail/api/delete/${emailId}`, {
             method: 'DELETE', // or 'PUT'
           })
           .then(response => response.json())
@@ -237,19 +159,6 @@
       }
     });
   }
-
-  function handleFormatter(data) {
-    return ` <a href="/management/content/slide/update/${data}" class="btn btn-primary">Sửa</a>
-  <button class="btn btn-danger mt-2" onclick="deleteSlide('${data}')">Xóa</button>`
-  }
-
-  function activeFormatter(data, slide, index) {
-    return `<label class="switch mt-2">
-      <input type="checkbox" class="toggleBtn"  onchange="toggleActive(event)" data-id="${slide._id}" ${(data===true) && "checked"} />
-      <span class="slider round"></span>
-    </label>
-    `
-  }
 </script>
 <script>
   //Delete checked 
@@ -265,13 +174,13 @@
       // console.log(idList)
       swal({
         title: "Bạn có chắc chắn muốn xóa không",
-        text: "Nếu xóa bạn vẫn có thể khôi phục slide !",
+        text: "Nếu xóa bạn vẫn có thể khôi phục email!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
       }).then((willDelete) => {
         if (willDelete) {
-          fetch(`/management/content/slide/api/deleteChecked`, {
+          fetch(`/management/content/mail/api/deleteChecked`, {
               method: "DELETE", // or 'PUT'
               headers: {
                 "Content-Type": "application/json",

@@ -332,12 +332,11 @@
             button: "OK!",
           });
           spanNavbarFollow.innerHTML = ` <span onclick="unFollow('${mangaId}')">
-    <i class="fas fa-heartbeat"></i>
-    <p>
-      Đang theo dõi
-    </p>
-    </span>
-    `;
+                                              <i class="fas fa-heartbeat"></i>
+                                              <p>
+                                                Đang theo dõi
+                                              </p>
+                                          </span>`;
         }
       })
       .catch((error) => {
@@ -369,13 +368,13 @@
             button: "OK!",
           });
           spanNavbarFollow.innerHTML = `
-    <span onclick="addFollow('${mangaId}')">
-      <i class="fas fa-heart"></i>
-      <p>
-        Theo dõi
-      </p>
-    </span>
-    `;
+                                        <span onclick="addFollow('${mangaId}')">
+                                          <i class="fas fa-heart"></i>
+                                          <p>
+                                        Theo dõi
+                                          </p>
+                                        </span>
+                                        `;
         } else {
           swal({
             title: "Thông báo !",
@@ -392,22 +391,21 @@
   function handleAPI() {
     const spanNavbarFollow = document.getElementById("navbar-follow");
     const mangaId = spanNavbarFollow.getAttribute("data-manga-id");
-    console.log(mangaId);
     fetch(`/user/check-follow/${mangaId}`)
       .then((response) => response.json())
       .then((result) => {
         const check = result.data;
-        console.log("CHECK", check);
-        if (result.isSuccess && check.followedList.length !== 0) {
-          spanNavbarFollow.innerHTML = `
-  <span onclick="unFollow('${mangaId}')">
-    <i class="fas fa-heartbeat"></i>
-    <p>
-      Đang theo dõi
-    </p>
-  </span>
-  `;
-        } else if (result.isSuccess && check.followedList.length === 0) {
+        if (result.isSuccess) {
+          if (check.followedList.length !== 0) {
+            spanNavbarFollow.innerHTML = `
+    <span onclick="unFollow('${mangaId}')">
+      <i class="fas fa-heartbeat"></i>
+      <p>
+        Đang theo dõi
+      </p>
+    </span>
+    `;
+        } else if (check.followedList.length === 0) {
           spanNavbarFollow.innerHTML = `
   <span onclick="addFollow('${mangaId}')">
     <i class="fas fa-heart"></i>
@@ -417,10 +415,27 @@
   </span>
   `;
         }
+      }else{
+          spanNavbarFollow.innerHTML = `
+  <span onclick="canNotFollow()">
+    <i class="fas fa-heart"></i>
+    <p>
+      Theo dõi
+    </p>
+  </span>`
+        }
       })
       .catch((error) => console.log(error));
   }
   handleAPI();
+  function canNotFollow(){
+    swal({
+            title: "Thông báo !",
+            text: "Bạn phải đăng nhập trước :>",
+            icon: "error",
+            button: "OK!",
+          });
+  }
 </script>
 
 </html>

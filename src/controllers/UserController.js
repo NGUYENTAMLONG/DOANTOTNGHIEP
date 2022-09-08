@@ -302,6 +302,8 @@ class UserController {
         if (req.user.provider === PASSPORT.FACEBOOK) {
           result = await UserFacebook.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
         }
+      }else{
+        return res.status(STATUS.NOT_FOUND).json(new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND,MESSAGE.NOT_FOUND));
       }
       return res.status(STATUS.SUCCESS).json(new SuccessResponse(MESSAGE.SUCCESS,result));
     } catch (error) {

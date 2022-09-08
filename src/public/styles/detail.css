@@ -22,17 +22,21 @@
     text-decoration: none; }
   .manga-info .manga-info__statistical span {
     margin: 0px 5px; }
-  .manga-info .read,
+  .manga-info .read-first,
+  .manga-info .read-last,
   .manga-info .follow,
   .manga-info .like,
   .manga-info .rate {
     border-radius: 5px;
     cursor: pointer;
     color: white;
-    padding: 5px 8px;
+    padding: 3px 6px;
     margin-bottom: 10px; }
-  .manga-info .read {
+  .manga-info .read-first {
     background-color: #8bc34a;
+    text-decoration: none; }
+  .manga-info .read-last {
+    background-color: #17a2b8;
     text-decoration: none; }
   .manga-info .follow {
     background-color: #ff2853; }
