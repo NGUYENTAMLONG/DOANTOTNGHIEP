@@ -89,16 +89,16 @@
   }
 
 
-  function emailFormatter(data, mail, index) {
+  function emailFormatter(data, row, index) {
     return `
      <div class="text-center">
-      ${mail.email}
+      ${row.email}
      </div>`
   }
 
-  function handleFormatter(data) {
+  function handleFormatter(data, row) {
     return `   <div class="text-center">
-        <button class="btn btn-primary btn-sm" onclick="sendMail('${data}')">Gửi thư</button>
+        <a href="/management/content/mail/send-mail-to-one/${data}" class="btn btn-primary btn-sm mt-1">Gửi thư</a>
         <button class="btn btn-danger btn-sm mt-1" onclick="deleteEmail('${data}')">Xóa</button>
         </div>`
   }
@@ -172,6 +172,15 @@
         idList.push(item.parentElement.parentElement.parentElement.id)
       })
       // console.log(idList)
+      if (idList.length === 0) {
+        swal({
+          title: "Có lỗi rồi",
+          text: "Danh sách cần xóa trống !",
+          icon: "error",
+          button: "Ok!",
+        })
+        return
+      }
       swal({
         title: "Bạn có chắc chắn muốn xóa không",
         text: "Nếu xóa bạn vẫn có thể khôi phục email!",

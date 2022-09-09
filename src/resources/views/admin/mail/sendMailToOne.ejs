@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SEND MAIL</title>
+  <title>SEND MAIL TO ONE</title>
   <link rel="icon" href="/image/tablogo.png">
   <%- include("../../partials/link") %>
   <link rel="stylesheet" href="/froalacss" />
@@ -76,64 +76,23 @@
       </ol>
     </nav>
     <div class="d-flex">
-      <label for="to" class="mr-4">Tới: </label>
-      <div>
-        <input type="checkbox" id="all" value="all" name="all" onchange="changeSendTo(this)">
-        <label for="all"> Tất cả địa chỉ</label>
-      </div>
+      <label for="to" class="mr-4">Tới: <%= mail.email %> </label>
     </div>
-    <div class="pick-zone m-4">
-      <input type="text" id="pick-email" class="form-control" placeholder="Email">
-    </div>
+
     <section class="container mb-4">
       <textarea id="froala-edit" name="contentMail"></textarea><br>
-      <button class="btn btn-primary float-right" onclick="sendMail()"><i class="fas fa-plane-departure"></i> Gửi mail</button>
+      <button class="btn btn-primary float-right" onclick="sendMail('<%= mail.email %>',)"><i class="fas fa-plane-departure"></i> Gửi mail</button>
     </section>
   </div>
 </body>
 <%- include("../../partials/script") %>
 <script src="/js/moment.min.js"></script>
-<script src="/js/jquery.email.multiple.js"></script>
 <script src="/froalajs"></script>
 <script>
-  $(document).ready(function($) {
-    let data = []
-    $("#pick-email").email_multiple({
-      data: data
-    })
-  });
-
-  const selectEmails = document.querySelector(".pick-zone")
-
-  function changeSendTo(it) {
-    let flag = it.checked
-    if (!flag) {
-      selectEmails.removeAttribute("hidden")
-    } else {
-      selectEmails.setAttribute("hidden", "")
-    }
-  }
-
-  function sendMail() {
-    const pickAll = document.getElementById("all");
-    const pickEmails = $("#pick-email").val()
-    const content = document.querySelector("#froala-edit").value;
-    let emails = null;
-    if (!pickAll.checked) {
-      if (!pickEmails.includes(";")) {
-        emails = pickEmails
-      } else {
-        emails = pickEmails.split(";")
-      }
-    }
-    fetchSendMail(emails, content)
-  }
-
-
-  function fetchSendMail(emails, content) {
+  function sendMail(email) {
     const payload = {
-      emails,
-      content
+      emails: email,
+      content: document.getElementById("froala-edit").value
     }
     fetch(`/management/content/mail/api/send-mail`, {
         method: "POST", // or 'PUT'

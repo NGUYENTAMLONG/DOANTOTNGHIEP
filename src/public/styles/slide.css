@@ -25,7 +25,10 @@
     -moz-transition: flex 0.3s;
     -ms-transition: flex 0.3s;
     -o-transition: flex 0.3s;
-    overflow: hidden; }
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
     .box-slide .slide.active {
       flex: 10; }
       .box-slide .slide.active h3 {
@@ -53,7 +56,8 @@
         overflow: hidden; }
       .box-slide .slide .slide__info .btn {
         opacity: 0;
-        transition: 2s ease-in-out; }
+        transition: 2s ease-in-out;
+        margin-bottom: 20px; }
     .box-slide .slide.active:hover .slide__info {
       opacity: 1; }
     .box-slide .slide.active:hover .btn {
@@ -81,7 +85,7 @@
   display: none; }
   #mangaCarousel .slide {
     position: relative;
-    height: 80vh;
+    height: 50vh;
     margin: 10px;
     display: flex;
     flex: 1;
@@ -101,21 +105,25 @@
     -ms-transition: flex 0.3s;
     -o-transition: flex 0.3s;
     overflow: hidden; }
-    #mangaCarousel .slide .slide__info .slide__types {
-      background-color: #007bff;
-      text-decoration: none;
-      color: white;
-      border-radius: 5px;
-      padding: 0px 2px; }
-    #mangaCarousel .slide .slide__info .slide__desc {
-      text-indent: 25px;
-      display: -webkit-box;
-      -webkit-line-clamp: 7;
-      -webkit-box-orient: vertical;
-      overflow: hidden; }
-    #mangaCarousel .slide .slide__info .btn {
-      opacity: 0;
-      transition: 2s ease-in-out; }
+    #mangaCarousel .slide .slide__info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 0px 50px;
+      transition: 0.5s ease-in-out;
+      opacity: 0; }
+      #mangaCarousel .slide .slide__info .slide__types {
+        background-color: #007bff;
+        text-decoration: none;
+        color: white;
+        border-radius: 5px;
+        padding: 0px 2px; }
+      #mangaCarousel .slide .slide__info .slide__desc {
+        display: none; }
+      #mangaCarousel .slide .slide__info:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.63); }
   #mangaCarousel h3 {
     font-size: 45px;
     letter-spacing: 3px;

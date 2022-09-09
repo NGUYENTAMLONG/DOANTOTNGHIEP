@@ -179,9 +179,63 @@ async function sendMailToRetrievalAdminAccount(toEmail, username, originUrl) {
     }
   );
 }
+
+async function sendMailToMany(emails, content) {
+  const EMAIL = ADMIN_EMAIL.EMAIL;
+  const EMAILPASSWORD = ADMIN_EMAIL.PASSWORD;
+  const SERVICE = ADMIN_EMAIL.SERVICE;
+  // console.log({ EMAIL, EMAILPASSWORD, SERVICE, toEmail });
+  let transporter = nodemailer.createTransport({
+    service: SERVICE,
+    auth: {
+      user: EMAIL,
+      pass: EMAILPASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  await transporter.sendMail(
+    {
+      from: '"Admin 👻"', // sender address
+      to: emails, // list of receivers
+      subject: "📢📢📢 Notification 🌠🌠🌠", // Subject line
+      text: "Bug reports from users: ", // plain text body
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(appRoot.path, `/src/public/images/logo.png`),
+          cid: "unique@kreata.ee",
+        },
+      ],
+      html: `
+      <div style="text-align: center;">
+      <div>
+      <img src="cid:unique@kreata.ee" width="100px" style="text-align:center" alt="">
+      </div>
+      <h2>📢📢📢 Thông báo mới </h2>
+      ${content}
+      <span>🔥🔥🔥🔥</span>
+      <i>From Admin with ❤️💛💚💙💜</i>
+      <span>🔥🔥🔥🔥</span>
+
+      </div>
+      
+   `, // html body
+    },
+    (err) => {
+      if (err) {
+        return console.log({ ERROR: err });
+      }
+      return console.log({ message: MESSAGE.SEND_MAIL_SUCCESS });
+    }
+  );
+}
+
 module.exports = {
   sendRegisterMail,
   sendMailToFix,
   sendMailToRetrievalPassword,
   sendMailToRetrievalAdminAccount,
+  sendMailToMany,
 };
