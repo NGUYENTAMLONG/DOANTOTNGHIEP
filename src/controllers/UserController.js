@@ -23,6 +23,7 @@ const {
   sendMailToFix,
   sendMailToRetrievalPassword,
 } = require("../service/sendMail");
+const Blog = require("../models/Blog");
 dotenv.config();
 
 let Useremail;
@@ -114,6 +115,51 @@ class UserController {
           filter: match,
         },
       });
+      // res.status(STATUS.SUCCESS).json({ mangas });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+  }
+  async showBlogUser(req, res) {
+    try {
+      let foundUser;
+      if (req.user.provider === "LOCAL") {
+        foundUser = await UserLocal.findById(req.user.id);
+      } else if (req.user.provider === "GOOGLE") {
+        foundUser = await UserGoogle.findById(req.user.id);
+      } else if (req.user.provider === "FACEBOOK") {
+        foundUser = await UserFacebook.findById(req.user.id);
+      }
+
+      // const foundBlogOfUser = await Blog.find({});
+      // result.mangas = await Manga.find(match)
+      //   .populate({
+      //     path: "contentId",
+      //     options: {
+      //       chapters: { $slice: -1 },
+      //     },
+      //   })
+      //   .limit(limit)
+      //   .skip(startPage)
+      //   .exec();
+      return res.json("BLOG USER");
+      // res.render("showHistory", {
+      //   user: req.user,
+      //   moment,
+      //   flag: true,
+      //   title: `<i class="fas fa-compass"></i> Các bộ truyện bạn đã ghé thăm`,
+      //   categories: types,
+      //   mangas: result.mangas,
+      //   navigator: {
+      //     previous: result.previous,
+      //     next: result.next,
+      //     totalPages: Math.ceil(totalMangas / limit),
+      //     limit: limit,
+      //     activePage: page,
+      //     filter: match,
+      //   },
+      // });
       // res.status(STATUS.SUCCESS).json({ mangas });
     } catch (error) {
       console.log(error);
@@ -288,24 +334,36 @@ class UserController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  async checkFollow(req,res){
+  async checkFollow(req, res) {
     const mangaId = req.params.id;
-    try{
+    try {
       let result;
       if (req.user) {
         if (req.user.provider === PASSPORT.LOCAL) {
-          result = await UserLocal.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+          result = await UserLocal.findById(req.user.id, {
+            followedList: { $elemMatch: { $eq: mangaId } },
+          });
         }
         if (req.user.provider === PASSPORT.GOOGLE) {
-          result = await UserGoogle.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+          result = await UserGoogle.findById(req.user.id, {
+            followedList: { $elemMatch: { $eq: mangaId } },
+          });
         }
         if (req.user.provider === PASSPORT.FACEBOOK) {
-          result = await UserFacebook.findById(req.user.id,{ followedList: { $elemMatch: { $eq:mangaId } } });
+          result = await UserFacebook.findById(req.user.id, {
+            followedList: { $elemMatch: { $eq: mangaId } },
+          });
         }
-      }else{
-        return res.status(STATUS.NOT_FOUND).json(new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND,MESSAGE.NOT_FOUND));
+      } else {
+        return res
+          .status(STATUS.NOT_FOUND)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.NOT_FOUND)
+          );
       }
-      return res.status(STATUS.SUCCESS).json(new SuccessResponse(MESSAGE.SUCCESS,result));
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, result));
     } catch (error) {
       console.log(error);
       res

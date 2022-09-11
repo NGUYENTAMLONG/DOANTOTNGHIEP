@@ -286,6 +286,26 @@ module.exports.GENDER = {
   MALE: "Nam",
   FEMALE: "Nữ",
 };
+module.exports.BLOG_TYPE = {
+  NEWS: {
+    CODE: "NEWS",
+    DESC: "Tin tức về manga, anime, và các thong tin liên quan đế thế giới truyện tranh, anime",
+  },
+  SPREAD: {
+    CODE: "SPREAD",
+    DESC: "Tản mạn về các câu truyện thuộc chính truyện hoặc bên lề của các bộ manga, anime và thế giới truyện tranh, anime",
+  },
+};
+module.exports.BLOG_WRITE_BY = {
+  ADMIN: {
+    CODE: "ADMIN",
+    DESC: "Được viết bởi quản trị viên nội dung",
+  },
+  MEMBER: {
+    CODE: "SPREAD",
+    DESC: "Được viết bởi các thành viên đã đăng ký tài khoản MANGA website",
+  },
+};
 module.exports.PROLONGATION = 2;
 module.exports.RANDOM_SIZE = 12;
 module.exports.SECRET_KEY = "tamlongdev";

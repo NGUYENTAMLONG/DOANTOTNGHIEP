@@ -66,6 +66,13 @@
     <h3 class="text-dark">Bình luận chương <span class="badge badge-success text-light">
         <%= reading.Chapters.chapters.chapterNumber %>
       </span> <i class="fas fa-comments"></i></h3>
+    <div class="text-center">
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="AckQt6Ew">
+      </script>
+      <div id="btn-share"></div>
+      </p>
+    </div>
     <!-- Plugin Comments Facebook -->
     <div class="comments-area container bg-light">
       <div id="disqus_thread">
@@ -405,8 +412,8 @@
       </p>
     </span>
     `;
-        } else if (check.followedList.length === 0) {
-          spanNavbarFollow.innerHTML = `
+          } else if (check.followedList.length === 0) {
+            spanNavbarFollow.innerHTML = `
   <span onclick="addFollow('${mangaId}')">
     <i class="fas fa-heart"></i>
     <p>
@@ -414,8 +421,8 @@
     </p>
   </span>
   `;
-        }
-      }else{
+          }
+        } else {
           spanNavbarFollow.innerHTML = `
   <span onclick="canNotFollow()">
     <i class="fas fa-heart"></i>
@@ -428,14 +435,23 @@
       .catch((error) => console.log(error));
   }
   handleAPI();
-  function canNotFollow(){
+
+  function canNotFollow() {
     swal({
-            title: "Thông báo !",
-            text: "Bạn phải đăng nhập trước :>",
-            icon: "error",
-            button: "OK!",
-          });
+      title: "Thông báo !",
+      text: "Bạn phải đăng nhập trước :>",
+      icon: "error",
+      button: "OK!",
+    });
   }
 </script>
+<script>
+  function shareSocial() {
+    return `
+<div class="fb-like" data-href="${window.location.href}" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>`
+  }
+  document.querySelector("#btn-share").innerHTML = shareSocial();
+</script>
+
 
 </html>

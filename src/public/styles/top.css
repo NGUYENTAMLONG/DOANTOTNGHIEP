@@ -7,9 +7,10 @@ body {
   overflow-x: hidden; }
 
 #section-1 {
-  height: 100vh; }
+  height: 100vh;
+  text-align: center; }
   #section-1 .leaderboard {
-    width: 100%; }
+    width: 90%; }
     #section-1 .leaderboard .title {
       background-color: white;
       transform: skewX(-30deg);
@@ -19,7 +20,8 @@ body {
       -o-transform: skewX(-30deg);
       text-align: center;
       display: flex;
-      align-items: center; }
+      align-items: center;
+      overflow: hidden; }
       #section-1 .leaderboard .title p {
         font-size: 30px;
         margin: 0px 20px; }
@@ -53,6 +55,7 @@ body {
           width: 8%;
           font-size: 50px;
           background-color: orange;
+          padding: 0px 2px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -77,7 +80,14 @@ body {
           align-items: center; }
           #section-1 .leaderboard ul li .rank__manga .rank__manga-name {
             font-size: 25px;
-            text-transform: uppercase; }
+            text-transform: uppercase;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center; }
+            #section-1 .leaderboard ul li .rank__manga .rank__manga-name a {
+              color: white;
+              text-decoration: none; }
           #section-1 .leaderboard ul li .rank__manga .rank__manga-author {
             font-size: 12px;
             text-transform: uppercase; }
@@ -109,11 +119,27 @@ body {
     font-size: 20px; }
   #section-1 .leaderboard ul li .rank__number {
     font-size: 20px; }
+    #section-1 .leaderboard ul li .rank__number::after {
+      right: -15px; }
   #section-1 .leaderboard ul li .rank__manga {
     height: 100%;
     width: 35%;
     margin-left: 30px; }
     #section-1 .leaderboard ul li .rank__manga .rank__manga-name {
-      font-size: 13px; }
+      font-size: 11px; }
     #section-1 .leaderboard ul li .rank__manga .rank__manga-author {
-      font-size: 10px; } }
+      font-size: 8px;
+      margin-left: 10px; } }
+
+@media (max-width: 960px) {
+  #section-1 .leaderboard .title p {
+    font-size: 25px; }
+  #section-1 .leaderboard ul li .rank__number {
+    font-size: 23px; }
+    #section-1 .leaderboard ul li .rank__number::after {
+      right: -15px; }
+  #section-1 .leaderboard ul li .rank__manga .rank__manga-name {
+    font-size: 15px; }
+  #section-1 .leaderboard ul li .rank__manga .rank__manga-author {
+    font-size: 10px;
+    margin-left: 10px; } }

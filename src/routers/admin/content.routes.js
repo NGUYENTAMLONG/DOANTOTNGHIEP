@@ -12,13 +12,16 @@ const router = express.Router();
 const mangaRouter = require("./content/manga.routes");
 const slideRouter = require("./content/slide.routes");
 const mailRouter = require("./content/mail.routes");
-
+const blogRouter = require("./content/blog.routes");
 //path: /management/content/...
 router.use("/manga", mangaRouter);
 
 router.use("/slide", slideRouter);
 
 router.use("/mail", mailRouter);
+
+router.use("/blog", blogRouter);
+
 //path: /management/content/infomation
 router.get("/infomation", showInfomationAdmin);
 router.patch("/api/change/password", changePasswordInfoAdmin);

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>HOME</title>
+  <title>TOP</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/top.css">
@@ -36,7 +36,9 @@
         <li>
           <span class="rank__number"><%= index + 1 %> </span>
           <span class="rank__manga">
-            <p class="rank__manga-name"><%= rank.Mangas.name %> </p>
+            <p class="rank__manga-name">
+              <a href="/detail/<%= rank.Mangas.slug %>"><%= rank.Mangas.name %></a>
+            </p>
             <small class="rank__manga-author"><%= rank.Mangas.author %></small>
           </span>
           <span class="rank__statistical">

@@ -179,6 +179,13 @@
     <% } %>
   </section>
   <section class="section container text-center" id="section-3">
+    <div class="text-center">
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="AckQt6Ew">
+      </script>
+      <div id="btn-share"></div>
+      </p>
+    </div>
     <h3>Bình luận tổng quan <i class="fas fa-comments"></i></h3>
     <!-- Plugin Comments Facebook -->
     <!-- ******************************** -->
@@ -396,6 +403,13 @@
       }).catch(error => console.log(error))
   };
   getRankOfManga();
+</script>
+<script>
+  function shareSocial() {
+    return `
+<div class="fb-like" data-href="${window.location.href}" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>`
+  }
+  document.querySelector("#btn-share").innerHTML = shareSocial();
 </script>
 
 </html>

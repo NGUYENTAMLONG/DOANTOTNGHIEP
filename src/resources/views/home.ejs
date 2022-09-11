@@ -61,6 +61,14 @@
   </section>
   <section class="section container" id="section-3">
     <a href="/just-updated?page=1&limit=2">
+      <div class="text-center">
+        <div id="fb-root"></div>
+        <p class="d-flex">👋👋👋 Chia sẻ trang của chúng tôi đến bạn bè ^^
+          <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="AckQt6Ew">
+          </script><span id="btn-share"><i class="fas fa-circle-notch fa-spin"></i></span>
+          </span> 🙌🙌🙌
+        </p>
+      </div>
       <h3 class="text-info"><i class="fas fa-book-reader"></i> Mới cập nhật</h3>
     </a>
     <div class="row">
@@ -249,6 +257,13 @@
     </div>
     </div>`
     }).catch(error => console.log(error))
+</script>
+<script>
+  function shareSocial() {
+    return `
+<div class="fb-share-button" data-href="${window.location.href}" data-layout="button_count" data-size="large"> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A3416%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>`
+  }
+  document.querySelector("#btn-share").innerHTML = shareSocial();
 </script>
 
 </html>

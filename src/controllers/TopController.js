@@ -87,7 +87,7 @@ class TopController {
         .uniqBy(statistical, function (e) {
           return e._id;
         })
-        .slice(0, 10);
+        .slice(0, 20);
       res.render("showTop", {
         title: "Top 20 manga trong ngày",
         user: req.user,
@@ -188,9 +188,110 @@ class TopController {
         .uniqBy(statistical, function (e) {
           return e._id;
         })
-        .slice(0, 10);
+        .slice(0, 20);
       res.render("showTop", {
         title: "Top 20 manga trong tuần",
+        user: req.user,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async showMonthTop(req, res, next) {
+    const date = new Date();
+    try {
+      const statistical = await Chapter.aggregate([
+        {
+          $unwind: "$chapters",
+        },
+        {
+          $addFields: {
+            isMonth: { $split: ["$chapters.createdTime", "T"] },
+          },
+        },
+        {
+          $addFields: {
+            isMonth: { $arrayElemAt: ["$isMonth", 0] },
+          },
+        },
+        {
+          $addFields: {
+            isMonth: {
+              $dateFromString: {
+                dateString: "$isMonth",
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            isMonth: {
+              $eq: [{ $week: "$isMonth" }, { $week: date }],
+            },
+          },
+        },
+        {
+          $addFields: {
+            viewsOfChapter: "$chapters.statistical.views",
+          },
+        },
+        {
+          $match: {
+            isMonth: true,
+          },
+        },
+        {
+          $sort: {
+            viewsOfChapter: -1,
+          },
+        },
+
+        {
+          $addFields: {
+            _id: { $toString: "$_id" },
+          },
+        },
+        {
+          $lookup: {
+            from: "Mangas",
+            localField: "_id",
+            foreignField: "contentId",
+            as: "Mangas",
+          },
+        },
+        { $unwind: "$Mangas" },
+        {
+          $unset: [
+            "Mangas.anotherName",
+            "Mangas.serve",
+            "Mangas.status",
+            "Mangas.hot",
+            "Mangas.country",
+            "Mangas.contentId",
+            "Mangas.image",
+            "Mangas.type",
+            "Mangas.statistical",
+            "Mangas.description",
+            "Mangas.fanmade",
+            "Mangas.deleted",
+            "Mangas.createdAt",
+            "Mangas.updatedAt",
+            "Mangas.deletedAt",
+            "Mangas.translation",
+          ],
+        },
+      ]);
+      const result = lodash
+        .uniqBy(statistical, function (e) {
+          return e._id;
+        })
+        .slice(0, 20);
+      res.render("showTop", {
+        title: "Top 20 manga trong tháng",
         user: req.user,
         result,
       });
