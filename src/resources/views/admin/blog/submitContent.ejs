@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEND MAIL</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <%- include("../../partials/link") %>
+  <link rel="stylesheet" href="/froalacss" />
+</head>
+
+<body>
+  <%- include("../../admin/partials/header") %>
+
+  <div class="container mt-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/management/content/blog">Trang quản lí</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Viết nội dung</li>
+      </ol>
+    </nav>
+    <section class="container mb-4">
+      <textarea id="froala-edit" name="contentBlog"></textarea><br>
+      <button class="btn btn-primary float-right mb-4" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài </button>
+    </section>
+  </div>
+</body>
+<%- include("../../partials/script") %>
+<script src="/froalajs"></script>
+<script>
+  //Froala Editor set up
+  const editor = new FroalaEditor("#froala-edit", {
+    imageUploadURL: `/management/content/blog/image`,
+    height: 800,
+    // events: {
+    //   'image.beforeUpload': function($img) {
+    //     console.log("ImageData", ImageData);
+    //   },
+    //   'image.removed': function($img) {
+    //     const data = {
+    //       path: $img.attr('src')
+    //     }
+    //     fetch(`/management/content/blog/api/stream/${}`, {
+    //       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //         // 'Content-Type': 'application/x-www-form-urlencoded',
+    //       },
+    //       fileUploadParam: 'file_name',
+    //       body: JSON.stringify(data)
+    //     }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+    //   },
+    //   contentChanged: function() {
+    //     $('#preview').html(this.html.get());
+    //   }
+    // }
+  });
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+</script>
+
+</html>

@@ -1,10 +1,12 @@
 const express = require("express");
 const {
   getBlogDashboard,
-  getBlogCreate,
+  getInfoBlogCreate,
+  getContentBlogCreate,
   getBlogList,
-  writeBlog,
   getWritor,
+  submitInfoBlog,
+  streamBlogImage,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -25,13 +27,18 @@ const uploadBlog = multer({ storage: storageCover });
 
 // route:-> /management/content/blog/...
 router.get("/", getBlogDashboard);
-router.get("/write-blog", getBlogCreate);
+router.get("/write-blog/submit-info", getInfoBlogCreate);
+router.get("/write-blog/submit-content", getContentBlogCreate);
 
 //route (API-JSON): -> /management/content/blog/api
 // router.post("/api/send-mail", sendMail);
 router.get("/api/getList", getBlogList);
 router.get("/api/get-writor/:role/:writerId", getWritor);
-router.post("/api/write-blog", writeBlog);
+//create Blog
+//1. Initialize Blog
+router.post("/api/write-blog/submit-info", submitInfoBlog);
+router.post("/api/stream-image/:type/:slug", streamBlogImage);
+
 router.post(
   "/api/upload/cover",
   uploadBlog.single("cover"),

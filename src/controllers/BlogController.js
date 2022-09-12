@@ -7,6 +7,13 @@ const UserFacebook = require("../models/UserFacebook");
 const UserGoogle = require("../models/UserGoogle");
 const UserLocal = require("../models/UserLocal");
 const { redirect } = require("../service/redirect");
+const fs = require("fs");
+const path = require("path");
+const appRoot = require("app-root-path");
+const FroalaEditor = require(path.join(
+  appRoot.path,
+  "/node_modules/wysiwyg-editor-node-sdk/lib/froalaEditor.js"
+));
 
 class BlogController {
   async getBlogPage(req, res) {
@@ -19,11 +26,22 @@ class BlogController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  async getBlogCreate(req, res) {
+  async getInfoBlogCreate(req, res) {
+    try {
+      res.status(STATUS.SUCCESS).render("admin/blog/submitInfo", {
+        admin: req.user,
+        url: "/management/content/blog/write-blog/submit-content",
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async getContentBlogCreate(req, res) {
     try {
       res
         .status(STATUS.SUCCESS)
-        .render("admin/blog/writeBlog", { admin: req.user });
+        .render("admin/blog/submitContent", { admin: req.user });
     } catch (error) {
       console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);
@@ -40,16 +58,14 @@ class BlogController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
-  async writeBlog(req, res) {
-    const { title, author, type, keywordArray, source, link, content, image } =
-      req.body;
+  async submitInfoBlog(req, res) {
+    const { title, author, type, keywordArray, source, link, image } = req.body;
     if (
       !title ||
       !author ||
       !type ||
       keywordArray.length === 0 ||
       !source ||
-      !content ||
       !image
     ) {
       return res
@@ -67,8 +83,8 @@ class BlogController {
         keywords: keywordArray,
         source,
         link,
-        content,
         writtenBy: req.user._id,
+        content: null,
       });
       const createdBlog = await newBlog.save();
       return res
@@ -80,6 +96,30 @@ class BlogController {
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
+  }
+  async streamBlogImage(req, res) {
+    const { type, slug } = req.params;
+
+    fs.mkdir(
+      path.join(appRoot.path, `/src/public/blog/${type}/${slug}/`),
+      { recursive: true },
+      (err) => {
+        if (err) {
+          return console.error(err);
+        }
+        FroalaEditor.Image.upload(
+          req,
+          `/public/blog/${type}/${slug}/`,
+          function (err, data) {
+            if (err) {
+              console.log(err);
+              return res.send(JSON.stringify(err));
+            }
+            res.send(data);
+          }
+        );
+      }
+    );
   }
   async getWritor(req, res) {
     const { role, writerId, passport } = req.params;

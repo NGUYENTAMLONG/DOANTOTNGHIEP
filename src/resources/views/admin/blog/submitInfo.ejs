@@ -8,7 +8,6 @@
   <title>SEND MAIL</title>
   <link rel="icon" href="/image/tablogo.png">
   <%- include("../../partials/link") %>
-  <link rel="stylesheet" href="/froalacss" />
   <style>
     .box-upload {
       border-radius: 15px;
@@ -131,7 +130,6 @@
         <label for="writen">Quyền</label>
         <span class="badge badge-success">ADMIN</span>
       </div>
-      <textarea id="froala-edit" name="contentBlog"></textarea><br>
       <button class="btn btn-primary float-right mb-4" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài </button>
     </section>
   </div>
@@ -139,36 +137,7 @@
 <%- include("../../partials/script") %>
 <script src="/js/moment.min.js"></script>
 <script src="/js/jquery.email.multiple.js"></script>
-<script src="/froalajs"></script>
 <script>
-  //Froala Editor set up
-  const editor = new FroalaEditor("#froala-edit", {
-    height: 800,
-    imageUploadURL: `/management/content/blog/image`,
-    events: {
-      'image.beforeUpload': function($img) {
-        console.log("ImageData", ImageData);
-      },
-      'image.removed': function($img) {
-        const data = {
-          path: $img.attr('src')
-        }
-        fetch(`/management/content/blog/image/remove/${}`, {
-          method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          fileUploadParam: 'file_name',
-          body: JSON.stringify(data)
-        }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
-      },
-      contentChanged: function() {
-        $('#preview').html(this.html.get());
-      }
-    }
-  });
-
   // Cover upload
   const cover = document.querySelector(".cover");
   $('#gallery-photo-cover').on('change', function() {
@@ -209,10 +178,9 @@
     keywordInputs.forEach((elm) => keywordArray.push(elm.getAttribute("data-keyword")));
     const source = document.getElementById("source").value;
     const link = document.getElementById("link").value;
-    const content = document.getElementById("froala-edit").value;
-    console.log(title, author, type, keywordArray, source, link, content)
+    // console.log(title, author, type, keywordArray, source, link)
 
-    if (!title || !author || !type || keywordArray.length === 0 || !source || !content) {
+    if (!title || !author || !type || keywordArray.length === 0 || !source) {
       swal({
         title: "Thông báo",
         text: "Bạn phải điền đầy đủ thông tin >.<",
@@ -228,7 +196,6 @@
       keywordArray,
       source,
       link,
-      content
     }
     const imgFiles = document.getElementById("gallery-photo-cover");
     if (!imgFiles.files[0]) {
@@ -255,7 +222,7 @@
           data
         })
         blogInfo.image = `/public/blog/covers/${data.filename}`;
-        fetch('/management/content/blog/api/write-blog', {
+        fetch('/management/content/blog/api/write-blog/submit-info', {
             method: 'POST', // or 'PUT'
             headers: {
               'Content-Type': 'application/json',
@@ -271,7 +238,7 @@
               icon: "success",
               button: "Ok!",
             }).then(() => {
-              location.reload()
+              window.location.href = data.url
             })
 
           })
