@@ -50,10 +50,10 @@
         <a class="card bg-warning text-light" href="/management/content/blog">
           <div class="card-body">
             <h5 class="card-title"><i class="fab fa-slideshare"></i> BLOG</h5>
-            <b>Số lượng : 100 </b>
+            <b>Số lượng : <%= blogs.length %> </b>
             <br>
-            <span> <i class="fas fa-eye"></i> : <%= mangas.filter((manga)=>manga.active===true).length %> </span>
-            <span> <i class="fas fa-eye-slash"></i> : <%= mangas.filter((manga)=>manga.active===false).length %> </span>
+            <span> ADMIN: <%= blogs.filter((blog)=>blog.role==="ADMIN").length %> </span>
+            <span> MEMBER : <%= blogs.filter((blog)=>blog.role==="MEMBER").length %> </span>
           </div>
         </a>
       </div>
@@ -80,21 +80,10 @@
         </a>
       </div>
       <div class="col-6 col-lg-4 p-2">
-        <a class="card bg-dark text-light" href="#">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fab fa-slideshare"></i> News</h5>
-            <b>Số lượng : 120 </b>
-            <br>
-            <span> <i class="fas fa-eye"></i> : <%= mangas.filter((manga)=>manga.active===true).length %> </span>
-            <span> <i class="fas fa-eye-slash"></i> : <%= mangas.filter((manga)=>manga.active===false).length %> </span>
-          </div>
-        </a>
-      </div>
-      <div class="col-6 col-lg-4 p-2">
-        <a class="card bg-secondary text-light" href="/management/content/mail">
+        <a class="card bg-dark text-light" href="/management/content/mail">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-envelope"></i> Mails</h5>
-            <b>Số lượng : 120 </b>
+            <b>Số lượng : <%= emails.length %> </b>
             <br>
           </div>
         </a>
@@ -163,11 +152,10 @@
       'Blogs',
       "Novels",
       "Fanmades",
-      "News",
     ],
     datasets: [{
       label: 'My First Dataset',
-      data: [<%= mangas.length %>, <%= slides.length %>, 100, 150, 120, 60],
+      data: [<%= mangas.length %>, <%= slides.length %>, 100, 150, 120],
       backgroundColor: [
         '#007bff',
         '#28a745',
@@ -195,11 +183,10 @@
       'Blogs',
       "Novels",
       "Fanmades",
-      "News"
     ],
     datasets: [{
       label: 'So sánh theo biểu đồ cột',
-      data: [<%= mangas.length %>, <%= slides.length %>, 100, 150, 120, 60],
+      data: [<%= mangas.length %>, <%= slides.length %>, 100, 150, 120],
       backgroundColor: [
         '#007bff',
         '#28a745',

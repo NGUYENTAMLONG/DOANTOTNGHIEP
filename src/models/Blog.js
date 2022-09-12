@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const slug = require("mongoose-slug-updater");
 mongoose.plugin(slug);
-const { BLOG_WRITE_BY } = require("../config/default");
+const { BLOG_STATUS, BLOG_ROLE } = require("../config/default");
 const BlogSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -41,16 +41,30 @@ const BlogSchema = new Schema(
       type: String,
       required: true,
     },
-    writenBy: {
+    role: {
       type: String,
       required: true,
-      default: BLOG_WRITE_BY.ADMIN.CODE,
+      default: BLOG_ROLE.ADMIN.CODE,
     },
     link: {
       type: String,
       required: false,
     },
-    slug: { type: String, slug: "name", unique: true },
+    status: {
+      type: String,
+      required: false,
+      default: BLOG_STATUS.ACTIVE,
+    },
+    writtenBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    passport: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    slug: { type: String, slug: "title", unique: true },
   },
   {
     timestamps: true,

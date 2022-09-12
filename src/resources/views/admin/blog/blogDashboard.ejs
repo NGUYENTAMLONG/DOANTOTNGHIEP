@@ -18,7 +18,25 @@
   <link href="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/manage_manga.css">
+  <style>
+    .keywordZone {
+      width: 200px;
+      overflow-x: scroll;
+    }
 
+    .keywordZone::-webkit-scrollbar {
+      height: 8px;
+      background-color: #f5f5f5;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .keywordZone::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #555;
+    }
+  </style>
 </head>
 
 <body>
@@ -60,15 +78,18 @@
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
-          <th scope="col" data-field="cover" class="pull" data-formatter="coverFormatter">Ảnh bìa</th>
-          <th scope="col" data-field="title" data-sortable="true">Tiêu đề</th>
+          <th scope="col" data-field="cover" data-formatter="coverFormatter">Ảnh bìa</th>
+          <th scope="col" data-field="title" data-sortable="true" data-formatter="titleFormatter">Tiêu đề</th>
           <th scope="col" data-field="author">Tác giả</th>
-          <th scope="col" data-field="type" data-formatter="typeFormatter">Phân loại</th>
+          <th scope="col" data-field="type" data-formatter="typeFormatter">Loại</th>
           <th scope="col" data-field="content" data-sortable="true" data-formatter="contentFormatter">Nội dung</th>
           <th scope="col" data-field="statistical" data-sortable="true" data-formatter="statisticalFormatter">Thống kê</th>
-          <th scope="col" data-field="writeBy" data-sortable="true" data-formatter="writeByFormatter">Vai trò người viết</th>
-          <th scope="col" data-field="keyword" data-sortable="true" data-formatter="keywordFormatter">Từ khóa</th>
+          <th scope="col" data-field="role" data-sortable="true" data-formatter="roleFormatter">Vai trò người viết</th>
+          <th scope="col" data-field="keywords" data-sortable="true" data-formatter="keywordFormatter">Từ khóa</th>
           <th scope="col" data-field="source" data-sortable="true" data-formatter="sourceFormatter">Nguồn</th>
+          <th scope="col" data-field="link" data-sortable="true" data-formatter="linkFormatter">Link</th>
+          <th scope="col" data-field="status" data-sortable="true" data-formatter="statusFormatter">Trạng thái</th>
+          <th scope="col" data-field="writtenBy" data-sortable="true" data-formatter="writtenByFormatter">Người viết</th>
           <th scope="col" data-field="createdAt" data-sortable="true" data-formatter="createdAtFormatter">Tạo</th>
           <th scope="col" data-field="updatedAt" data-sortable="true" data-formatter="updatedAtFormatter">Cập nhật</th>
           <th data-field="state" data-checkbox="true"></th>
@@ -100,6 +121,14 @@
     return res
   }
 
+  function titleFormatter(data) {
+    return `
+     <div class="text-center">
+       <p style="width:300px">${data}</p>
+     </div>
+     `
+  }
+
   function coverFormatter(data) {
     return `<img src="${data}" class="blog-image" width="100%" alt="" onclick="zoomImg(this)">
     <!-- The Modal -->
@@ -111,10 +140,19 @@
 
   function typeFormatter(data) {
     return `
-    <span class="type bg-primary text-light">${data}</span>
+    <div class="text-center">
+      <span class="type badge badge-info">${data}</span>
+      </div>
     `
   }
 
+  function contentFormatter(data) {
+    return `
+<div class="text-center">
+  <span class="btn btn-primary btn-sm">Chi tiết</span>
+</div>
+`
+  }
 
   function statisticalFormatter(data) {
     return `
@@ -139,8 +177,72 @@
    `
   }
 
+  function roleFormatter(data) {
+    return `
+     <div class="text-center">      
+      <span class="badge ${(data==="ADMIN")? 'badge-success' :'badge-warning'}">${data}</span>
+      </div>
+     `
+  }
 
+  function keywordFormatter(data) {
+    return `
+<div class="text-center keywordZone">
+  ${data.map((elm,index)=>elm).join(", ")}
+</div>
+`
+  }
 
+  function sourceFormatter(data) {
+    return `
+<div class="text-center">
+  ${data}
+</div>
+`
+  }
+
+  function linkFormatter(data) {
+    return `
+<div class="text-center">
+  <a href="${data}" target="_blank">Link bài viết</a>
+</div>
+`
+  }
+
+  function statusFormatter(data) {
+    return `
+ <div class="text-center">
+  ${(data === "PENDING")?`<span class="badge badge-warning"> ${data} </span>`:(data === "ACTIVE" ? `<span class="badge badge-success"> ${data} </span>`:`<span class="badge badge-danger"> ${data} </span>`)}
+ </div>
+ `
+  }
+
+  function writtenByFormatter(data, row) {
+    return `<div class="text-center">
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#${data}" onclick="getWritor('${row.role}','${data}','${row.passport}')">
+       Chi tiết
+      </button>
+      <div class="modal fade" id="${data}" tabindex="-1" role="dialog" aria-labelledby="writerDetailLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-dark" id="writerDetailLabel">Tài khoản viết Blog</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ABC
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>`
+  }
 
   function createdAtFormatter(data) {
     return `<div class="text-center">${ moment(data).format("L") }<br> ${ moment(data).format("LT") }</div>`
@@ -152,12 +254,34 @@
 
   function handleFormatter(data, row, index) {
     return `<div class="text-center">
-      <p>Tac vu</p>
+         <span class="btn btn-primary btn-sm">Sửa</span>
+         <span class="btn btn-danger btn-sm mt-2">Xóa</span>
       </div>
     `
   }
-</script>w
+
+  function getWritor(role, passport, writerId) {
+    fetch(`/management/content/blog/api/get-writor/${role}/${passport}/${writerId}`)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error))
+  }
+</script>
 <script>
+  //Turn on turn off modal
+  function zoomImg(it) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("preview-modal");
+
+    modal.style.display = "block";
+    modalImg.src = it.src;
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+
   //Delete checked 
   var $table = $('#table')
   var $button = $('#deleteChecked')

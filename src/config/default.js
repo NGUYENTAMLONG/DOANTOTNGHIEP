@@ -296,15 +296,20 @@ module.exports.BLOG_TYPE = {
     DESC: "Tản mạn về các câu truyện thuộc chính truyện hoặc bên lề của các bộ manga, anime và thế giới truyện tranh, anime",
   },
 };
-module.exports.BLOG_WRITE_BY = {
+module.exports.BLOG_ROLE = {
   ADMIN: {
     CODE: "ADMIN",
     DESC: "Được viết bởi quản trị viên nội dung",
   },
   MEMBER: {
-    CODE: "SPREAD",
+    CODE: "MEMBER",
     DESC: "Được viết bởi các thành viên đã đăng ký tài khoản MANGA website",
   },
+};
+module.exports.BLOG_STATUS = {
+  PENDING: "PENDING",
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
 };
 module.exports.PROLONGATION = 2;
 module.exports.RANDOM_SIZE = 12;

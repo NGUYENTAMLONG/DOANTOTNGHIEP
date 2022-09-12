@@ -95,7 +95,7 @@
         <label for="cover">Ảnh bìa</label>
         <div class="box-upload text-center">
           <form action="#" class="form-upload" enctype="multipart/form-data">
-            <label for="gallery-photo-cover" class="manga-img cover text-center">
+            <label for="gallery-photo-cover" class="blog-img cover text-center">
               <img class="img-cover" width="100%" alt="img-cover" hidden />
               <label for="gallery-photo-cover" class="icon-upload"> <i class="fas fa-5x fa-upload"></i><br> Upload Blog Cover</label>
             </label>
@@ -129,10 +129,10 @@
       </div>
       <div class="form-group">
         <label for="writen">Quyền</label>
-        <input type="text" class="form-control mr-4" id="link" name="link" placeholder="Nhập link của bài viết (Nếu có)">
+        <span class="badge badge-success">ADMIN</span>
       </div>
       <textarea id="froala-edit" name="contentBlog"></textarea><br>
-      <button class="btn btn-primary float-right" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài</button>
+      <button class="btn btn-primary float-right mb-4" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài </button>
     </section>
   </div>
 </body>
@@ -144,6 +144,29 @@
   //Froala Editor set up
   const editor = new FroalaEditor("#froala-edit", {
     height: 800,
+    imageUploadURL: `/management/content/blog/image`,
+    events: {
+      'image.beforeUpload': function($img) {
+        console.log("ImageData", ImageData);
+      },
+      'image.removed': function($img) {
+        const data = {
+          path: $img.attr('src')
+        }
+        fetch(`/management/content/blog/image/remove/${}`, {
+          method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          fileUploadParam: 'file_name',
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+      },
+      contentChanged: function() {
+        $('#preview').html(this.html.get());
+      }
+    }
   });
 
   // Cover upload
@@ -181,103 +204,84 @@
     const title = document.getElementById("title").value;
     const author = document.getElementById("author").value;
     const type = $("input[name='type']:checked").val();
-    const keywordArray = document.querySelectorAll(".keyword__name");
-    const arr = [];
-    keywordArray.forEach((elm) => arr.push(elm.textContent))
-    console.log(title, author, type, arr)
-    // const status = $("input[name='status']:checked").val();
-    // const hot = document.querySelector("input[name='hot']").checked;
-    // const description = document.getElementById("description").value;
-    // const country = document.getElementById("country").value;
+    const keywordInputs = document.querySelectorAll(".keyword__name");
+    const keywordArray = [];
+    keywordInputs.forEach((elm) => keywordArray.push(elm.getAttribute("data-keyword")));
+    const source = document.getElementById("source").value;
+    const link = document.getElementById("link").value;
+    const content = document.getElementById("froala-edit").value;
+    console.log(title, author, type, keywordArray, source, link, content)
 
-    // document.querySelectorAll('input[class="form-checbox-type"]:checked').forEach((type, index) => {
-    //   typeArray.push(type.value)
-    // });
+    if (!title || !author || !type || keywordArray.length === 0 || !source || !content) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải điền đầy đủ thông tin >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
+    const blogInfo = {
+      title,
+      author,
+      type,
+      keywordArray,
+      source,
+      link,
+      content
+    }
+    const imgFiles = document.getElementById("gallery-photo-cover");
+    if (!imgFiles.files[0]) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải upload trang bìa của bài viết >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
+    //set up avatar file 
+    const formData = new FormData();
+    formData.append("cover", imgFiles.files[0])
+    fetch('/management/content/blog/api/upload/cover', {
+        method: 'POST',
+        // or 'PUT' 
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log({
+          formData,
+          data
+        })
+        blogInfo.image = `/public/blog/covers/${data.filename}`;
+        fetch('/management/content/blog/api/write-blog', {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(blogInfo),
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("CREATED BLOG:", data)
+            swal({
+              title: "Thành công",
+              text: "Đã xuất bản thành công !",
+              icon: "success",
+              button: "Ok!",
+            }).then(() => {
+              location.reload()
+            })
 
-    // if (!name || !anotherName || typeArray.length === 0 || !serve || !status || !description || !country) {
-    //   swal({
-    //     title: "Thông báo",
-    //     text: "Bạn phải điền đầy đủ thông tin >.<",
-    //     icon: "warning",
-    //     button: "OK!",
-    //   });
-    //   return;
-    // }
-    // // console.log({ 
-    // // name, 
-    // // anotherName, 
-    // // author: author.length, 
-    // // translation: translation.length, 
-    // // type: typeArray, 
-    // // serve, 
-    // // status, 
-    // // hot, 
-    // // description 
-    // // }) 
-    // const mangaInfo = {
-    //   name,
-    //   anotherName,
-    //   author,
-    //   type: typeArray,
-    //   serve,
-    //   status,
-    //   translation,
-    //   hot,
-    //   description,
-    //   country
-    // }
-    // const imgFiles = document.getElementById("gallery-photo-cover");
-    // if (!imgFiles.files[0]) {
-    //   swal({
-    //     title: "Thông báo",
-    //     text: "Bạn phải upload trang bìa của manga >.<",
-    //     icon: "warning",
-    //     button: "OK!",
-    //   });
-    //   return;
-    // }
-    // //set up avatar file 
-    // const formData = new FormData();
-    // formData.append("cover", imgFiles.files[0])
-    // fetch('/management/content/manga/publish/cover', {
-    //     method: 'POST',
-    //     // or 'PUT' 
-    //     body: formData,
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log({
-    //       formData,
-    //       data
-    //     })
-    //     mangaInfo.image = `/image/${data.filename}`;
-    //     fetch('/management/content/manga/publish', {
-    //         method: 'POST', // or 'PUT'
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(mangaInfo),
-    //       })
-    //       .then(response => response.json())
-    //       .then(data => {
-    //         console.log("CREATED MANGA:", data)
-    //         swal({
-    //           title: "Thành công",
-    //           text: "Đã xuất bản thành công !",
-    //           icon: "success",
-    //           button: "Ok!",
-    //         }).then(() => {
-    //           location.reload()
-    //         })
-
-    //       })
-    //       .catch((error) => {
-    //         console.log('Error:', error);
-    //       })
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    //   });
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 </script>
 <script>
@@ -286,7 +290,7 @@
 
   function addKeyword() {
     keywordSpan.innerHTML += `<span class="keyword d-flex">
-  <span class="keyword__name">
+  <span class="keyword__name" data-keyword="${keywordInput.value}" >
     ${keywordInput.value}
   </span>
   <span class="keyword__x" onclick="removeKeyword(this)">x</span>
