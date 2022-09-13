@@ -6,6 +6,7 @@ const Blog = require("../models/Blog");
 const UserFacebook = require("../models/UserFacebook");
 const UserGoogle = require("../models/UserGoogle");
 const UserLocal = require("../models/UserLocal");
+const moment = require("moment");
 const { redirect } = require("../service/redirect");
 const fs = require("fs");
 const path = require("path");
@@ -18,7 +19,27 @@ const FroalaEditor = require(path.join(
 class BlogController {
   async getBlogPage(req, res) {
     try {
-      res.status(STATUS.SUCCESS).render("blog", { user: req.user });
+      const foundBlog = await Blog.find({})
+        .limit(2)
+        .skip(0)
+        .sort({ createdAt: -1 })
+        .exec();
+      res
+        .status(STATUS.SUCCESS)
+        .render("blog", { user: req.user, blogs: foundBlog, moment });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getBlogInfinite(req, res) {
+    try {
+      const foundBlog = await Blog.find({}).limit(2).skip(0).exec();
+      res
+        .status(STATUS.SUCCESS)
+        .render("blog", { user: req.user, blogs: foundBlog });
     } catch (error) {
       console.log(error);
       res
@@ -30,7 +51,6 @@ class BlogController {
     try {
       res.status(STATUS.SUCCESS).render("admin/blog/submitInfo", {
         admin: req.user,
-        url: "/management/content/blog/write-blog/submit-content",
       });
     } catch (error) {
       console.log(error);
@@ -38,10 +58,21 @@ class BlogController {
     }
   }
   async getContentBlogCreate(req, res) {
+    const { type, slug } = req.params;
+    if (!type || !slug) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
     try {
-      res
-        .status(STATUS.SUCCESS)
-        .render("admin/blog/submitContent", { admin: req.user });
+      const foundBlog = await Blog.findOne({ slug: slug });
+      if (!foundBlog) {
+        return res.status(STATUS.NOT_FOUND).render("admin/blog/submitInfo", {
+          admin: req.user,
+        });
+      }
+      res.status(STATUS.SUCCESS).render("admin/blog/submitContent", {
+        admin: req.user,
+        blog: foundBlog,
+      });
     } catch (error) {
       console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);
@@ -59,9 +90,11 @@ class BlogController {
     }
   }
   async submitInfoBlog(req, res) {
-    const { title, author, type, keywordArray, source, link, image } = req.body;
+    const { title, desc, author, type, keywordArray, source, link, image } =
+      req.body;
     if (
       !title ||
+      !desc ||
       !author ||
       !type ||
       keywordArray.length === 0 ||
@@ -77,6 +110,7 @@ class BlogController {
     try {
       const newBlog = new Blog({
         title,
+        desc,
         type,
         author,
         cover: image,
@@ -87,9 +121,34 @@ class BlogController {
         content: null,
       });
       const createdBlog = await newBlog.save();
+      return res.status(STATUS.CREATED).json(
+        new SuccessResponse(MESSAGE.CREATE_SUCCESS, {
+          createdBlog,
+          url: `/management/content/blog/write-blog/submit-content/${createdBlog.type}/${createdBlog.slug}`,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async submitContentBlog(req, res) {
+    const { slug, content } = req.body;
+    if (!slug || !content) {
+      console.log({ slug, content });
       return res
-        .status(STATUS.CREATED)
-        .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, createdBlog));
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await Blog.findOneAndUpdate({ slug: slug }, { content: content });
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       res
@@ -118,6 +177,26 @@ class BlogController {
             res.send(data);
           }
         );
+      }
+    );
+  }
+
+  async deleteBlogImage(req, res) {
+    fs.unlink(
+      path.join(appRoot.path + "/src/", req.body.path),
+      function (error) {
+        if (error) {
+          console.log(error);
+          return res
+            .status(STATUS.SERVER_ERROR)
+            .json(
+              new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
+            );
+        }
+        // if no error, file has been deleted successfully
+        return res
+          .status(STATUS.SUCCESS)
+          .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
       }
     );
   }

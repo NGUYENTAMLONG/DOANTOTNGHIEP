@@ -19,19 +19,22 @@
 
   <link rel="stylesheet" href="/css/manage_manga.css">
   <style>
-    .keywordZone {
+    .keywordZone,
+    .descZone {
       width: 200px;
       overflow-x: scroll;
     }
 
-    .keywordZone::-webkit-scrollbar {
+    .keywordZone::-webkit-scrollbar,
+    .descZone::-webkit-scrollbar {
       height: 8px;
       background-color: #f5f5f5;
       overflow: hidden;
       border-radius: 10px;
     }
 
-    .keywordZone::-webkit-scrollbar-thumb {
+    .keywordZone::-webkit-scrollbar-thumb,
+    .descZone::-webkit-scrollbar-thumb {
       border-radius: 10px;
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
       background-color: #555;
@@ -49,22 +52,22 @@
       </ol>
     </nav>
     <div class="row d-flex justify-content-center align-items-center">
-      <div class="col-sm-12 col-md-4 col-lg-4">
+      <div class="col-sm-12 col-md-6 col-lg-4 d-flex">
         <h3>Danh sách Blog</h3>
         <p class="align-items-center">
           <b>Số lượng: </b> <span class="badge badge-primary mr-3"> <%= blogs.length %> </span>
-          <b><i class="fas fa-mars text-primary"></i></b> <span class="badge badge-primary"> <%= blogs.filter((blog)=> blog.type === "NEWS").length %> </span>
-          <b><i class="fas fa-venus text-danger"></i></b> <span class="badge badge-danger"> <%= blogs.filter((blog)=> blog.type === "SPREAD").length %> </span>
+          <b>News: </b> <span class="badge badge-success"> <%= blogs.filter((blog)=> blog.type === "NEWS").length %> </span>
+          <b>Spread: </b> <span class="badge badge-danger"> <%= blogs.filter((blog)=> blog.type === "SPREAD").length %> </span>
         </p>
       </div>
-      <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-1">
+      <div class="col-sm-12 col-md-6 col-lg-4 d-flex mb-1">
         <a href="/management/content/blog/write-blog/submit-info" class="btn btn-sm btn-warning">Đăng Blog <i class="fab fa-slideshare"></i></a>
-        <a href="/management/content/blog/censorship" class="btn btn-sm btn-success ml-2">Duyệt Blog <i class="fas fa-book-medical"></i></a>
+        <a href="/management/content/blog/censorship" class="btn btn-sm btn-success ml-2">Duyệt <i class="fas fa-book-medical"></i></a>
         <a href="/management/content/blog/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
       </div>
-      <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center mb-1">
+      <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-between align-items-center mb-1">
         <a href="/management/content/blog/analysis" class="btn btn-sm btn-info">Thống kê <i class='bx bxs-pie-chart-alt-2'></i></a>
-        <a href="https://my-site-zlkjtgow8a.disqus.com/admin/moderate/pending" class="btn btn-sm btn-danger" target="_blank">Quản lí bình luận <i class='bx bx-message-dots'></i></a>
+        <a href="https://my-site-zlkjtgow8a.disqus.com/admin/moderate/pending" class="btn btn-sm btn-danger" target="_blank">Bình luận <i class='bx bx-message-dots'></i></a>
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
           <span></span>
           <span></span>
@@ -80,6 +83,7 @@
           <th scope="col" data-field="index" data-sortable="true">STT</th>
           <th scope="col" data-field="cover" data-formatter="coverFormatter">Ảnh bìa</th>
           <th scope="col" data-field="title" data-sortable="true" data-formatter="titleFormatter">Tiêu đề</th>
+          <th scope="col" data-field="desc" data-sortable="true" data-formatter="descFormatter">Tiêu đề</th>
           <th scope="col" data-field="author">Tác giả</th>
           <th scope="col" data-field="type" data-formatter="typeFormatter">Loại</th>
           <th scope="col" data-field="content" data-sortable="true" data-formatter="contentFormatter">Nội dung</th>
@@ -129,12 +133,22 @@
      `
   }
 
+  function descFormatter(data) {
+    return `
+    <div class="text-center descZone">
+      <p style="width:300px">${data}</p>
+  </div>
+  `
+  }
+
   function coverFormatter(data) {
     return `<img src="${data}" class="blog-image" width="100%" alt="" onclick="zoomImg(this)">
     <!-- The Modal -->
     <div id="myModal" class="modal">
       <span class="close-btn" onclick="closeModal()">&times;</span>
-      <img class="modal-content" id="preview-modal">
+      <div class="img-box">
+        <img class="modal-content" id="preview-modal">
+        </div>
     </div>`
   }
 
@@ -219,10 +233,10 @@
 
   function writtenByFormatter(data, row) {
     return `<div class="text-center">
-      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#${data}" onclick="getWritor('${row.role}','${data}','${row.passport}')">
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-${row._id}" onclick="getWritor('${row._id}','${row.role}','${data}','${row.passport}')">
        Chi tiết
       </button>
-      <div class="modal fade" id="${data}" tabindex="-1" role="dialog" aria-labelledby="writerDetailLabel" aria-hidden="true">
+      <div class="modal fade" id="modal-${row._id}" tabindex="-1" role="dialog" aria-labelledby="writerDetailLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -231,8 +245,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-              ABC
+            <div class="modal-body text-dark text-center" id="blog-${row._id}">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -260,10 +273,21 @@
     `
   }
 
-  function getWritor(role, passport, writerId) {
+  function getWritor(blogId, role, passport, writerId) {
     fetch(`/management/content/blog/api/get-writor/${role}/${passport}/${writerId}`)
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        const writer = data.writer;
+        console.log(writer, document.getElementById(blogId))
+        document.getElementById(`blog-${blogId}`).innerHTML = `<img src="/public/avatars/admin/${writer.avatar}" width="150px" />
+        <br>
+        <b>Username: </b>
+        <p>${writer.username}</p>
+        <b>Email: </b>
+        <p>${writer.email}</p>
+        <b>Role: </b>
+        <p class="badge badge-success">${writer.role}</p>`
+      })
       .catch((error) => console.log(error))
   }
 </script>

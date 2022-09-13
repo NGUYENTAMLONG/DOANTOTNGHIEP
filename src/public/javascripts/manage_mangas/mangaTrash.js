@@ -1,3 +1,16 @@
+//Turn on turn off modal
+function zoomImg(it) {
+  var modal = document.getElementById("myModal");
+  var modalImg = document.getElementById("preview-modal");
+
+  modal.style.display = "block";
+  modalImg.src = it.src;
+}
+
+function closeModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
+}
 // Tooltip & Searching by filter
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
@@ -10,22 +23,6 @@ $(document).ready(function () {
     });
   });
 });
-
-// Control Modal
-var modal = document.getElementById("myModal");
-
-var modalImg = document.getElementById("preview-modal");
-document.querySelectorAll(".manga-image").forEach((item, index) => {
-  item.onclick = function () {
-    modal.style.display = "block";
-    modalImg.src = this.src;
-  };
-});
-
-const span = document.getElementsByClassName("close-btn")[0];
-span.onclick = function () {
-  modal.style.display = "none";
-};
 
 // Review Chapter of DeletedManga
 function showChapters(btn) {

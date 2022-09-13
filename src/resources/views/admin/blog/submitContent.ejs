@@ -22,6 +22,24 @@
       </ol>
     </nav>
     <section class="container mb-4">
+      <div class="blog__info">
+        <div class="d-flex">
+          <b class="title d-flex mr-2">
+            Tiêu đề:
+          </b>
+          <p>
+            <%= blog.title %>
+          </p>
+        </div>
+        <div class="d-flex">
+          <b class="title d-flex mr-2">
+            Tác giả:
+          </b>
+          <p>
+            <%= blog.author %>
+          </p>
+        </div>
+      </div>
       <textarea id="froala-edit" name="contentBlog"></textarea><br>
       <button class="btn btn-primary float-right mb-4" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài </button>
     </section>
@@ -30,36 +48,69 @@
 <%- include("../../partials/script") %>
 <script src="/froalajs"></script>
 <script>
+  const urlSplit = window.location.href.split("/");
+  const arr = urlSplit.slice(Math.max(urlSplit.length - 2, 1));
+  const type = arr[0];
+  const slug = arr[1];
   //Froala Editor set up
   const editor = new FroalaEditor("#froala-edit", {
-    imageUploadURL: `/management/content/blog/image`,
+    imageUploadURL: `/management/content/blog/api/stream-image/${type}/${slug}`,
     height: 800,
-    // events: {
-    //   'image.beforeUpload': function($img) {
-    //     console.log("ImageData", ImageData);
-    //   },
-    //   'image.removed': function($img) {
-    //     const data = {
-    //       path: $img.attr('src')
-    //     }
-    //     fetch(`/management/content/blog/api/stream/${}`, {
-    //       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //         // 'Content-Type': 'application/x-www-form-urlencoded',
-    //       },
-    //       fileUploadParam: 'file_name',
-    //       body: JSON.stringify(data)
-    //     }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
-    //   },
-    //   contentChanged: function() {
-    //     $('#preview').html(this.html.get());
-    //   }
-    // }
+    events: {
+      'image.beforeUpload': function($img) {
+        console.log("ImageData", ImageData);
+      },
+      'image.removed': function($img) {
+        const data = {
+          path: $img.attr('src')
+        }
+        fetch(`/management/content/blog/api/stream-image/delete/${type}/${slug}`, {
+          method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          fileUploadParam: 'file_name',
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+      },
+      contentChanged: function() {
+        $('#preview').html(this.html.get());
+      }
+    }
   });
 
   window.onsubmit = function(event) {
     event.preventDefault();
+  }
+
+  function postBlog() {
+    const content = document.getElementById("froala-edit").value;
+    const payload = {
+      slug,
+      content
+    }
+    fetch('/management/content/blog/api/write-blog/submit-content', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      .then(response => response.json())
+      .then(result => {
+        swal({
+          title: "Thành công",
+          text: "Đã đăng thành công !",
+          icon: "success",
+          button: "Ok!",
+        }).then(() => {
+          window.location.href = "/management/content/blog"
+        })
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 

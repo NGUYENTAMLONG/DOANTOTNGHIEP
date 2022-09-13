@@ -24,11 +24,20 @@
   background-color: black;
   /* Fallback color */
   background-color: rgba(0, 0, 0, 0.9);
-  /* Black w/ opacity */ }
+  /* Black w/ opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center; }
 
 /* Modal Content (image) */
+.img-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
 .modal-content {
-  margin: auto;
   display: block;
   width: 80%;
   max-width: 400px; }
@@ -62,7 +71,8 @@
   font-size: 50px;
   font-weight: bold;
   transition: 0.3s;
-  cursor: pointer !important; }
+  cursor: pointer !important;
+  outline: none; }
 
 .close-btn :hover,
 .close-btn :focus {

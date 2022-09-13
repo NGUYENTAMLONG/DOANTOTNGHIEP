@@ -7,6 +7,8 @@ const {
   getWritor,
   submitInfoBlog,
   streamBlogImage,
+  deleteBlogImage,
+  submitContentBlog,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -28,17 +30,20 @@ const uploadBlog = multer({ storage: storageCover });
 // route:-> /management/content/blog/...
 router.get("/", getBlogDashboard);
 router.get("/write-blog/submit-info", getInfoBlogCreate);
-router.get("/write-blog/submit-content", getContentBlogCreate);
+router.get("/write-blog/submit-content/:type/:slug", getContentBlogCreate);
 
 //route (API-JSON): -> /management/content/blog/api
-// router.post("/api/send-mail", sendMail);
-router.get("/api/getList", getBlogList);
-router.get("/api/get-writor/:role/:writerId", getWritor);
-//create Blog
+
+//CREATE BLOG
 //1. Initialize Blog
 router.post("/api/write-blog/submit-info", submitInfoBlog);
+//2. Submit Content
+router.post("/api/write-blog/submit-content", submitContentBlog);
+//3. Stream Image of Blog
 router.post("/api/stream-image/:type/:slug", streamBlogImage);
-
+//4. Delete Image of Blog
+router.delete("/api/stream-image/delete/:type/:slug", deleteBlogImage);
+//5. Upload Blog Cover
 router.post(
   "/api/upload/cover",
   uploadBlog.single("cover"),
@@ -47,5 +52,9 @@ router.post(
     res.json(req.file);
   }
 );
+//6. Get Blog List
+router.get("/api/getList", getBlogList);
+//7. Get Info of Writor
+router.get("/api/get-writor/:role/:writerId/:passport", getWritor);
 
 module.exports = router;

@@ -29,9 +29,9 @@
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-sm-12 col-md-4 col-lg-4">
         <p class="align-items-center">
-          <b>Số lượng: </b> <span class="badge badge-primary mr-3"> fix </span> <br>
-          <b>Quản trị viên người dùng</b> <span class="badge badge-warning"> fix </span><br>
-          <b>Quản trị viên nội dung</b> <span class="badge badge-success"> fix </span>
+          <b>Số lượng: </b> <span class="badge badge-primary mr-3"> <%= adminList.length %> </span> <br>
+          <b>Quản trị viên người dùng</b> <span class="badge badge-warning"> <%= adminList.filter((admin)=>admin.role==="HRM").length %> </span><br>
+          <b>Quản trị viên nội dung</b> <span class="badge badge-success"> <%= adminList.filter((admin)=>admin.role==="CA").length %> </span>
         </p>
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-1 justify-content-center">
@@ -99,11 +99,13 @@
 
   function avatarFormatter(data) {
     return `
-    <img src="/public/avatars/${data}" width="100%" alt="" onclick="zoomImg(this)" />
+    <img src="/public/avatars/admin/${data}" width="100%" alt="" onclick="zoomImg(this)" />
     <!-- The Modal -->
     <div id="myModal" class="modal">
       <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div class="img-box">
       <img class="modal-content" id="preview-modal">
+      </div>
     </div>`;
   }
 
@@ -132,6 +134,20 @@
   }
 </script>
 <script>
+  //Turn on turn off modal
+  function zoomImg(it) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("preview-modal");
+
+    modal.style.display = "block";
+    modalImg.src = it.src;
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+
   function restoreAdmin(idAdmin) {
     //Restore Admin
     fetch(`/management/human/admin/restore/${idAdmin}`, {

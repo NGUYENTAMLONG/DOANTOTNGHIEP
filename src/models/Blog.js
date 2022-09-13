@@ -6,6 +6,7 @@ const { BLOG_STATUS, BLOG_ROLE } = require("../config/default");
 const BlogSchema = new Schema(
   {
     title: { type: String, required: true },
+    desc: { type: String, required: true },
     type: { type: String, required: true },
     author: {
       type: String,
@@ -18,7 +19,7 @@ const BlogSchema = new Schema(
     },
     content: {
       type: String,
-      required: true,
+      required: false,
     },
     keywords: {
       type: Object,

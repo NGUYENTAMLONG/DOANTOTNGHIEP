@@ -71,6 +71,10 @@
         <label for="title">Tiêu đề</label>
         <input type="text" class="form-control" id="title" name="title" placeholder="Nhập tiêu đề bài viết">
       </div>
+      <div class="form-group">
+        <label for="desc">Mô tả sơ lược</label>
+        <input type="text" class="form-control" id="desc" name="desc" placeholder="Nhập mô tả sơ lược bài viết">
+      </div>
       <p>Thuộc loại</p>
       <div class="form-group">
         <div class="form-check">
@@ -130,7 +134,7 @@
         <label for="writen">Quyền</label>
         <span class="badge badge-success">ADMIN</span>
       </div>
-      <button class="btn btn-primary float-right mb-4" onclick="postBlog()"><i class="fas fa-plane-departure"></i> Đăng bài </button>
+      <button class="btn btn-primary float-right mb-4" onclick="initBlog()"><i class="fas fa-plane-departure"></i> Khởi tạo </button>
     </section>
   </div>
 </body>
@@ -168,9 +172,10 @@
 
 
 
-  function postBlog() {
+  function initBlog() {
     //find content
     const title = document.getElementById("title").value;
+    const desc = document.getElementById("desc").value;
     const author = document.getElementById("author").value;
     const type = $("input[name='type']:checked").val();
     const keywordInputs = document.querySelectorAll(".keyword__name");
@@ -180,7 +185,7 @@
     const link = document.getElementById("link").value;
     // console.log(title, author, type, keywordArray, source, link)
 
-    if (!title || !author || !type || keywordArray.length === 0 || !source) {
+    if (!title || !author || !desc || !type || keywordArray.length === 0 || !source) {
       swal({
         title: "Thông báo",
         text: "Bạn phải điền đầy đủ thông tin >.<",
@@ -191,6 +196,7 @@
     }
     const blogInfo = {
       title,
+      desc,
       author,
       type,
       keywordArray,
@@ -230,17 +236,15 @@
             body: JSON.stringify(blogInfo),
           })
           .then(response => response.json())
-          .then(data => {
-            console.log("CREATED BLOG:", data)
+          .then(result => {
             swal({
               title: "Thành công",
               text: "Đã xuất bản thành công !",
               icon: "success",
               button: "Ok!",
             }).then(() => {
-              window.location.href = data.url
+              window.location.href = result.data.url
             })
-
           })
           .catch((error) => {
             console.log('Error:', error);
