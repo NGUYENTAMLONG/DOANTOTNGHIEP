@@ -9,6 +9,7 @@ const {
   streamBlogImage,
   deleteBlogImage,
   submitContentBlog,
+  softDeleteBlog,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -56,5 +57,7 @@ router.post(
 router.get("/api/getList", getBlogList);
 //7. Get Info of Writor
 router.get("/api/get-writor/:role/:writerId/:passport", getWritor);
+//8. Softdelete blog
+router.get("/api/delete/:id", softDeleteBlog);
 
 module.exports = router;

@@ -10,106 +10,187 @@
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/blog.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-  <style>
-    #section-1 {
-      height: 800px;
-      position: relative;
-    }
-
-    .showMore__Btn {
-      position: absolute;
-      bottom: 0;
-    }
-
-    .blog-card {
-      height: 150px;
-      box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.671);
-    }
-
-    .blog-card__cover {
-      width: 250px;
-      height: 100%;
-    }
-
-    .blog-card__cover img {
-      width: 250px;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .blog-card__info {
-      padding: 10px 15px;
-      background-color: seagreen;
-      width: 100%;
-    }
-
-    .blog-card__info a {
-      text-decoration: none;
-      color: black;
-    }
-
-    .blog-card__info .blog-card__info__title {
-      width: 100%;
-      display: block;
-      background-color: aqua;
-    }
-
-    .blog-card__info__desc {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  </style>
 </head>
 
 <body>
   <%- include('partials/header') %>
   <section class="section container" id="section-1">
-    <h1>BLOG</h1>
+    <div class="title d-flex justify-content-center">
+      <h1>BLOG </h1><i class="fas fa-pen-nib"></i>
+    </div>
     <div class="container">
       <div class="row">
-        <% blogs.forEach(function(blog){ %>
-        <div class="col-12 p-2">
-          <div class="blog-card d-flex">
-            <div class="blog-card__cover">
-              <a href="/blog/read/<%= blog.slug %>" class="blog-card__cover">
-                <img src="<%= blog.cover %> " alt="">
-              </a>
-            </div>
-            <div class="blog-card__info">
-              <!-- <h3 class="blog-card__info__title"> -->
-              <a href="/blog/read/<%= blog.slug %>" class="blog-card__info__title">
-                <%= blog.title %>
-              </a>
-              <!-- </h3> -->
-              <span class="d-flex">
-                <b class="blog-card__info__type">
-                  <a href="/blog/type/<%= blog.type %>">
-                    <%= blog.type %>
+        <div class="col-8 p-2">
+          <div class="row blog-row">
+            <% blogs.forEach(function(blog){ %>
+            <div class="col-12">
+              <div class="blog-card d-flex">
+                <div class="blog-card__cover">
+                  <a href="/blog/read/<%= blog.slug %>" class="blog-card__cover">
+                    <img src="<%= blog.cover %>" alt="">
                   </a>
+                </div>
+                <div class="blog-card__info">
+                  <a href="/blog/read/<%= blog.slug %>" class="blog-card__info__title">
+                    <b>
+                      <%= blog.title %>
+                    </b>
+                  </a>
+                  <span class="d-flex">
+                    <b class="blog-card__info__type">
+                      <a href="/blog/type/<%= blog.type %>">
+                        <%= blog.type %>
+                      </a>
+                    </b>
+
+                    <p class="blog-card__info__updatedAt">
+                      <span class="ml-1 mr-1"> - </span><%= moment(blog.updatedAt).locale("vi").fromNow() %>
+                    </p>
+                  </span>
+                  <p class="blog-card__info__desc">
+                    <%= blog.desc %>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <% }); %>
+          </div>
+          <div class="row mb-4">
+            <button onclick="showMore(this)" data-skip="2" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
+          </div>
+        </div>
+        <div class="col-4 p-2">
+          <div class="blog-box">
+            <div class="blog-box__header">
+              <div class="blog-box__header__title bg-primary">
+                <b>
+                  Tin tức
                 </b>
-                <p class="ml-1 mr-1"> - </p>
-                <p class="blog-card__info__updatedAt"><%= moment(blog.updatedAt).locale("vi").fromNow() %></p>
-              </span>
-              <p class="blog-card__info__desc">
-                <%= blog.desc %>
-              </p>
+              </div>
+            </div>
+            <div class="blog-box__list">
+              <% news.forEach(function(blog,index){ %>
+              <div class="blog-box__acticle">
+                <a href="/blog/read/<%= blog.slug %>">
+                  <img class="blog-box__acticle__cover" src="<%= blog.cover %>" />
+                </a>
+                <div class="blog-box__acticle__info">
+                  <a href="/blog/read/<%= blog.slug %>">
+                    <b><%= blog.title %> </b>
+                  </a>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+          <div class="blog-box mt-4">
+            <div class="blog-box__header">
+              <div class="blog-box__header__title bg-danger">
+                <b>
+                  Tản mạn
+                </b>
+              </div>
+            </div>
+            <div class="blog-box__list">
+              <% spreads.forEach(function(blog,index){ %>
+              <div class="blog-box__acticle">
+                <a href="/blog/read/<%= blog.slug %>">
+                  <img class="blog-box__acticle__cover" src="<%= blog.cover %>" />
+                </a>
+                <div class="blog-box__acticle__info">
+                  <a href="/blog/read/<%= blog.slug %>">
+                    <b><%= blog.title %> </b>
+                  </a>
+                </div>
+              </div>
+              <% }) %>
             </div>
           </div>
         </div>
-        <hr />
-        <% }); %>
       </div>
     </div>
-    <button onclick="showMore()" class="btn btn-primary showMore__Btn">Xem thêm</button>
   </section>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
+<script src="/js/moment-with-locales.min.js"></script>
+
 <script>
+  const blogRow = document.querySelector(".blog-row")
+  const showMoreBtn = document.querySelector(".showMore__Btn")
+
+  function showMore(btn) {
+    const skip = btn.getAttribute("data-skip");
+    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    const payload = {
+      skip: skip,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/blog/get-more", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        // moment(blog.updatedAt).locale("vi").fromNow()
+        if (result.isSuccess === true) {
+          if (result.data.blogs.length === 0) {
+            showMoreBtn.innerHTML = "Đã tới giới hạn";
+            return;
+          }
+          console.log(result);
+          const htmls = result.data.blogs.map((blog) => `<div class="col-12">
+          <div class="blog-card d-flex">
+            <div class="blog-card__cover">
+              <a href="/blog/read/${blog.slug}" class="blog-card__cover">
+                <img src="${blog.cover}" alt="">
+              </a>
+            </div>
+            <div class="blog-card__info">
+              <a href="/blog/read/${blog.slug}" class="blog-card__info__title">
+                <b>
+                  ${blog.title}
+                </b>
+              </a>
+              <span class="d-flex">
+                <b class="blog-card__info__type">
+                  <a href="/blog/type/${blog.type}">
+                    ${blog.type}
+                  </a>
+                </b>
+                <p class="blog-card__info__updatedAt">
+                  <span class="ml-1 mr-1"> - </span>${moment(blog.updatedAt).locale("vi").fromNow()}
+                </p>
+              </span>
+              <p class="blog-card__info__desc">
+                ${blog.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr />`).join("")
+          blogRow.innerHTML += htmls;
+          showMoreBtn.setAttribute("data-skip", Number(skip) + 2);
+          showMoreBtn.innerHTML = "Xem tiếp"
+        } else {
+          console.log(result);
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi cập nhật :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
 </script>
 
 </html>

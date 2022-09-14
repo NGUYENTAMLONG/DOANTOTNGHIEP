@@ -78,7 +78,7 @@
           <% manga.type.forEach(function(type,index){ %>
           <a href="/category/<%= type %>?page=1&limit=2" class="btn btn-sm btn-outline-danger mb-1 manga-info__type"><%= type%></a>
           <% }) %>
-          <div class="d-flex mt-3">
+          <div class="d-flex flex-wrap mt-3">
             <% if (manga.contentId.chapters.length >0){ %>
             <a class="read-first" href="<%= manga.slug%>/read/chapter-<%= manga.contentId.chapters[0].chapterNumber%>">
               <i class="fas fa-book-open"></i> Đọc từ đầu

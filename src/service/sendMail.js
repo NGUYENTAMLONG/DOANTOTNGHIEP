@@ -90,6 +90,9 @@ async function sendMailToRetrievalPassword(toEmail) {
       user: EMAIL,
       pass: EMAILPASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
   // const payload = { email: toEmail };
 

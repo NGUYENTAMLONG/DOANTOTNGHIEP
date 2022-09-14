@@ -117,6 +117,11 @@ class EmailController {
   }
   async deleteMail(req, res) {
     const idEmail = req.params.id;
+    if (!idEmail) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
     try {
       await Email.delete({ _id: idEmail });
       res

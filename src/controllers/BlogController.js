@@ -1,4 +1,4 @@
-const { BLOG_ROLE, PASSPORT } = require("../config/default");
+const { BLOG_ROLE, PASSPORT, BLOG_TYPE } = require("../config/default");
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
 const { SuccessResponse, ErrorResponse } = require("../helper/response");
 const Admin = require("../models/Admin");
@@ -18,15 +18,56 @@ const FroalaEditor = require(path.join(
 
 class BlogController {
   async getBlogPage(req, res) {
+    Promise.all([
+      Blog.find({}).sort({ createdAt: -1 }).limit(2).skip(0).exec(),
+      Blog.find({ type: BLOG_TYPE.NEWS.CODE })
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .skip(0)
+        .exec(),
+      Blog.find({ type: BLOG_TYPE.SPREAD.CODE })
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .skip(0)
+        .exec(),
+    ])
+      .then(([blogs, news, spreads]) => {
+        res.render("blog", {
+          user: req.user,
+          blogs,
+          news,
+          spreads,
+          moment,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res
+          .status(STATUS.SERVER_ERROR)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
+          );
+      });
+  }
+  async getMoreBlog(req, res) {
+    const { skip } = req.body;
+    if (!skip) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
     try {
       const foundBlog = await Blog.find({})
-        .limit(2)
-        .skip(0)
         .sort({ createdAt: -1 })
+        .limit(2)
+        .skip(Number(skip))
         .exec();
-      res
-        .status(STATUS.SUCCESS)
-        .render("blog", { user: req.user, blogs: foundBlog, moment });
+      res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          user: req.user,
+          blogs: foundBlog,
+        })
+      );
     } catch (error) {
       console.log(error);
       res
@@ -34,17 +75,23 @@ class BlogController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  async getBlogInfinite(req, res) {
+  async readBlog(req, res) {
+    const { slug } = req.params;
+    if (!slug) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
     try {
-      const foundBlog = await Blog.find({}).limit(2).skip(0).exec();
-      res
-        .status(STATUS.SUCCESS)
-        .render("blog", { user: req.user, blogs: foundBlog });
+      const foundBlog = await Blog.findOne({ slug });
+      const foundBlogsOfType = await Blog.find({ type: foundBlog.type });
+      res.status(STATUS.SUCCESS).render("readBlog", {
+        user: req.user,
+        blog: foundBlog,
+        blogsOfType: foundBlogsOfType,
+        moment,
+      });
     } catch (error) {
       console.log(error);
-      res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
   async getInfoBlogCreate(req, res) {
@@ -236,6 +283,25 @@ class BlogController {
   async getBlogList(req, res) {
     try {
       const blogs = await Blog.find({});
+      res.status(STATUS.SUCCESS).json({
+        rows: blogs,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async softDeleteBlog(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      await Blog.delete({ _id: blogId });
       res.status(STATUS.SUCCESS).json({
         rows: blogs,
       });

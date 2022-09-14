@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>READ BLOG</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/readBlog.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <section class="section container  bg-light" id="section-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-8 p-2">
+          <div class="blog">
+            <div class="blog__info">
+              <h2 class="text-center m-3"><%= blog.title %></h2>
+              <p class="float-right"><b class="text-danger"><%= blog.author %></b> - <i class="fas fa-clock"></i> <%= moment(blog.updatedAt).format("L")%> <%=  moment(blog.updatedAt).format("LT")%> </p>
+            </div>
+            <div class="blog__share">
+              <div id="fb-root"></div>
+              <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="AckQt6Ew">
+              </script>
+              <div id="btn-share"></div>
+            </div>
+            <div class="blog__statistical text-center">
+              <span data-toggle="tooltip" data-placement="bottom" title="Số lượt thích">
+                <i class="far fa-thumbs-up"></i> <%= blog.statistical.likes %>
+              </span>
+              <span data-toggle="tooltip" data-placement="bottom" title="Lượng views">
+                <i class="far fa-eye"></i> <%= blog.statistical.views %>
+              </span>
+              <span data-toggle="tooltip" data-placement="bottom" title="Điểm đánh giá">
+                <i class="fas fa-star"></i> <%= blog.statistical.rating %>
+              </span>
+              <span data-toggle="tooltip" data-placement="bottom" title="Số lượng đánh giá">
+                <i class="fas fa-abacus"></i> <%= blog.statistical.counting %>
+              </span>
+              <span data-toggle="tooltip" data-placement="bottom" title="Tổng số bình luận">
+                <i class="fas fa-comments"></i>
+                <span id="count-comment" style="margin-left:-5px">
+                </span>
+              </span>
+            </div>
+            <div class="blog__content">
+              <b class="blog__content__desc"><%= blog.desc %> </b>
+              <img src="<%= blog.cover %>" width="100%" class="mt-3 mb-3" alt="">
+              <span class="blog__content__main mt-4"><%- blog.content %></span>
+            </div>
+            <div class="blog__more__info">
+              <hr>
+              <i>Nguồn </i><b class="blog__source"><%= blog.source %></b>
+              <% if (blog.link) {%>
+              <span class="float-right"><a href='<%= blog.link %>' class="blog__link"> Link gốc tham khảo</a></span>
+              <% } %>
+              <hr>
+              <i>Từ khóa</i>
+              <% blog.keywords.forEach((keyword)=>{%>
+              <a href="#" class="blog__keyword bg-secondary text-light"># <%= keyword %></a>
+              <%}) %>
+              <hr>
+            </div>
+            <div class="blog__comment">
+              <div class="comments-area container bg-light">
+                <div id="disqus_thread">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 p-2">
+          <div class="blog-box">
+            <div class="blog-box__header">
+              <div class="blog-box__header__title bg-primary">
+                <b>
+                  Bài viết cùng thể loại
+                </b>
+              </div>
+            </div>
+            <div class="blog-box__list">
+              <% blogsOfType.forEach(function(blog,index){ %>
+              <div class="blog-box__acticle">
+                <a href="/blog/read/<%= blog.slug %>">
+                  <img class="blog-box__acticle__cover" src="<%= blog.cover %>" />
+                </a>
+                <div class="blog-box__acticle__info">
+                  <a href="/blog/read/<%= blog.slug %>">
+                    <b><%= blog.title %> </b>
+                  </a>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+<script src="/js/moment-with-locales.min.js"></script>
+
+<script>
+  function shareSocial() {
+    return `
+<div class="fb-like" data-href="${window.location.href}" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>`
+  }
+  document.querySelector("#btn-share").innerHTML = shareSocial();
+</script>
+<script>
+  (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document,
+      s = d.createElement('script');
+    s.src = 'https://my-site-zlkjtgow8a.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  document.getElementById("count-comment").innerHTML = `<span class="disqus-comment-count" data-disqus-url="${window.location.href}"><i class="fa fa-spinner fa-spin"></i></span>`
+</script>
+
+</html>
