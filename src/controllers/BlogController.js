@@ -49,6 +49,18 @@ class BlogController {
           );
       });
   }
+  async getBlogTrash(req, res) {
+    try {
+      const deletedBlogs = await Blog.findDeleted({});
+      return res.status(STATUS.SUCCESS).render("admin/blog/blogTrash", {
+        admin: req.user,
+        blogs: deletedBlogs,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
   async getMoreBlog(req, res) {
     const { skip } = req.body;
     if (!skip) {
@@ -125,6 +137,22 @@ class BlogController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async getInfoBlogUpdate(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    try {
+      const foundBlog = await Blog.findById(blogId);
+      res.status(STATUS.SUCCESS).render("admin/blog/updateInfo", {
+        admin: req.user,
+        blog: foundBlog,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
   async getBlogDashboard(req, res) {
     try {
       const blogs = await Blog.find({});
@@ -136,6 +164,7 @@ class BlogController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+
   async submitInfoBlog(req, res) {
     const { title, desc, author, type, keywordArray, source, link, image } =
       req.body;
@@ -247,6 +276,20 @@ class BlogController {
       }
     );
   }
+  async restoreBlogChecked(req, res) {
+    const idList = req.body;
+    try {
+      await Blog.restore({ _id: { $in: idList } });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async getWritor(req, res) {
     const { role, writerId, passport } = req.params;
     if (!role || !writerId) {
@@ -302,9 +345,55 @@ class BlogController {
     }
     try {
       await Blog.delete({ _id: blogId });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getDeletedBlog(req, res) {
+    try {
+      const blogs = await Blog.findDeleted({});
       res.status(STATUS.SUCCESS).json({
         rows: blogs,
       });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async restoreBlog(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      await Blog.restore({ _id: blogId });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async deleteBlogChecked(req, res) {
+    const idList = req.body;
+    try {
+      await Blog.delete({ _id: { $in: idList } });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       res

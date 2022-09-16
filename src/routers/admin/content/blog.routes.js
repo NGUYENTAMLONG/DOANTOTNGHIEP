@@ -10,6 +10,12 @@ const {
   deleteBlogImage,
   submitContentBlog,
   softDeleteBlog,
+  getDeletedBlog,
+  restoreBlog,
+  getBlogTrash,
+  restoreBlogChecked,
+  deleteBlogChecked,
+  getInfoBlogUpdate,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -30,8 +36,10 @@ const uploadBlog = multer({ storage: storageCover });
 
 // route:-> /management/content/blog/...
 router.get("/", getBlogDashboard);
+router.get("/trash", getBlogTrash);
 router.get("/write-blog/submit-info", getInfoBlogCreate);
 router.get("/write-blog/submit-content/:type/:slug", getContentBlogCreate);
+router.get("/update-blog/submit-info/:id", getInfoBlogUpdate);
 
 //route (API-JSON): -> /management/content/blog/api
 
@@ -58,6 +66,14 @@ router.get("/api/getList", getBlogList);
 //7. Get Info of Writor
 router.get("/api/get-writor/:role/:writerId/:passport", getWritor);
 //8. Softdelete blog
-router.get("/api/delete/:id", softDeleteBlog);
+router.delete("/api/delete/:id", softDeleteBlog);
+//9. Restore blog
+router.patch("/api/restore/:id", restoreBlog);
+//10. Get Deleted Blog List
+router.get("/api/getDeletedList", getDeletedBlog);
+//11. Restore Checked blog
+router.patch("/api/restoreChecked", restoreBlogChecked);
+//12. Delete checked blog
+router.delete("/api/deleteChecked", deleteBlogChecked);
 
 module.exports = router;
