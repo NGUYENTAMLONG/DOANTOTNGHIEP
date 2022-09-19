@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPDATE BLOG CONTENT</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <%- include("../../partials/link") %>
+  <link rel="stylesheet" href="/froalacss" />
+</head>
+
+<body>
+  <%- include("../../admin/partials/header") %>
+
+  <div class="container mt-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/management/content/blog">Trang quản lí</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Viết nội dung</li>
+      </ol>
+    </nav>
+    <section class="container mb-4">
+      <div class="blog__info">
+        <div class="d-flex">
+          <b class="title d-flex mr-2">
+            Tiêu đề:
+          </b>
+          <p>
+            <%= blog.title %>
+          </p>
+        </div>
+        <div class="d-flex">
+          <b class="title d-flex mr-2">
+            Tác giả:
+          </b>
+          <p>
+            <%= blog.author %>
+          </p>
+        </div>
+      </div>
+      <textarea id="froala-edit" name="contentBlog" data-slug="<%= blog.slug %>" data-type="<%= blog.type %>">
+        <%= blog.content %> 
+      </textarea><br>
+      <button class="btn btn-primary float-right mb-4" onclick="updateBlog()"><i class="fas fa-plane-departure"></i> Cập nhật nội dung</button>
+    </section>
+  </div>
+</body>
+<%- include("../../partials/script") %>
+<script src="/froalajs"></script>
+<script>
+  const urlSplit = window.location.href.split("/");
+  const arr = urlSplit.slice(Math.max(urlSplit.length - 2, 1));
+  const type = document.getElementById("froala-edit").getAttribute("data-type");
+  const slug = document.getElementById("froala-edit").getAttribute("data-slug");
+  //Froala Editor set up
+  const editor = new FroalaEditor("#froala-edit", {
+    imageUploadURL: `/management/content/blog/api/stream-image/${type}/${slug}`,
+    height: 800,
+    events: {
+      'image.beforeUpload': function($img) {
+        console.log("ImageData", ImageData);
+      },
+      'image.removed': function($img) {
+        const data = {
+          path: $img.attr('src')
+        }
+        fetch(`/management/content/blog/api/stream-image/delete/${type}/${slug}`, {
+          method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          fileUploadParam: 'file_name',
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+      },
+      contentChanged: function() {
+        $('#preview').html(this.html.get());
+      }
+    }
+  });
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+
+  function updateBlog() {
+    const content = document.getElementById("froala-edit").value;
+    const payload = {
+      slug,
+      content
+    }
+    fetch('/management/content/blog/api/update-blog/update-content', {
+        method: 'PATCH', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      .then(response => response.json())
+      .then(result => {
+        swal({
+          title: "Thành công",
+          text: "Đã cập nhật thành công !",
+          icon: "success",
+          button: "Ok!",
+        }).then(() => {
+          // window.location.href = "/management/content/blog"
+          location.reload();
+        })
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
+  }
+</script>
+
+</html>

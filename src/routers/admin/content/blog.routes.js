@@ -16,6 +16,9 @@ const {
   restoreBlogChecked,
   deleteBlogChecked,
   getInfoBlogUpdate,
+  updateInfoBlog,
+  getContentBlogUpdate,
+  updateContentBlog,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -40,6 +43,7 @@ router.get("/trash", getBlogTrash);
 router.get("/write-blog/submit-info", getInfoBlogCreate);
 router.get("/write-blog/submit-content/:type/:slug", getContentBlogCreate);
 router.get("/update-blog/submit-info/:id", getInfoBlogUpdate);
+router.get("/update-blog/submit-content/:id", getContentBlogUpdate);
 
 //route (API-JSON): -> /management/content/blog/api
 
@@ -75,5 +79,17 @@ router.get("/api/getDeletedList", getDeletedBlog);
 router.patch("/api/restoreChecked", restoreBlogChecked);
 //12. Delete checked blog
 router.delete("/api/deleteChecked", deleteBlogChecked);
-
+//13. Update blog cover
+router.patch(
+  "/api/update-blog/update-cover",
+  uploadBlog.single("cover"),
+  async (req, res) => {
+    console.log(req.file);
+    res.json(req.file);
+  }
+);
+//14. Update blog infomation
+router.patch("/api/update-blog/update-info/:id", updateInfoBlog);
+//15. Update blog content
+router.patch("/api/update-blog/update-content", updateContentBlog);
 module.exports = router;

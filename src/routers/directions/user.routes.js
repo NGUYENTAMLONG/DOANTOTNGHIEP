@@ -1,6 +1,7 @@
 const express = require("express");
 const { likeManga, unlikeManga } = require("../../controllers/LikeController");
 const { rateManga } = require("../../controllers/RateController");
+const userBlogRouter = require("./userBlog.routes");
 const {
   getUserInfo,
   showProfile,
@@ -41,5 +42,5 @@ router.post("/retrieval", submitMailToRetrievalPassword);
 router.post("/recover/password", getFormRecoverPassword);
 router.patch("/recover/password", submitRecoverPassword);
 
-// router.use("/rate", home);
+router.use("/blog", userBlogRouter);
 module.exports = router;

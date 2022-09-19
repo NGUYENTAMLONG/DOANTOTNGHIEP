@@ -9,6 +9,13 @@ body {
     body #section-1 .blog__more__info .blog__keyword {
       padding: 3px 5px;
       text-decoration: none; }
+    body #section-1 .blog__statistical {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center; }
+      body #section-1 .blog__statistical span {
+        cursor: pointer; }
     body #section-1 .blog-box {
       margin-top: 100px;
       width: 100%; }

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>BLOG</title>
+  <title>BLOG WITH KEYWORD</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/profile.css">
@@ -19,11 +19,14 @@
   <%- include('partials/header') %>
   <section class="section container" id="section-1">
     <div class="title d-flex justify-content-center">
-      <h1>BLOG </h1><i class="fas fa-pen-nib"></i>
+      <h1>BLOG WITH KEYWORD</h1><i class="fas fa-pen-nib"></i>
+    </div>
+    <div>
+      <p><b>Keyword:</b> <span class="badge badge-secondary"><%= keyword %> </span></p>
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-8 p-2">
+        <div class="col-12 p-2">
           <div class="row blog-row">
             <% blogs.forEach(function(blog){ %>
             <div class="col-12">
@@ -59,58 +62,10 @@
             <hr />
             <% }); %>
           </div>
-          <div class="row mb-4">
-            <button onclick="showMore(this)" data-skip="2" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
-          </div>
         </div>
-        <div class="col-4 p-2">
-          <div class="blog-box">
-            <div class="blog-box__header bg-primary">
-              <a href="/blog/news" class="blog-box__header__title">
-                <b>
-                  Tin tức
-                </b>
-              </a>
-            </div>
-            <div class="blog-box__list">
-              <% news.forEach(function(blog,index){ %>
-              <div class="blog-box__acticle">
-                <a href="/blog/read/<%= blog.slug %>">
-                  <img class="blog-box__acticle__cover" src="<%= blog.cover %>" />
-                </a>
-                <div class="blog-box__acticle__info">
-                  <a href="/blog/read/<%= blog.slug %>">
-                    <b><%= blog.title %> </b>
-                  </a>
-                </div>
-              </div>
-              <% }) %>
-            </div>
-          </div>
-          <div class="blog-box mt-4">
-            <div class="blog-box__header bg-danger">
-              <a href="/blog/spreads" class="blog-box__header__title">
-                <b>
-                  Tản mạn
-                </b>
-              </a>
-            </div>
-            <div class="blog-box__list">
-              <% spreads.forEach(function(blog,index){ %>
-              <div class="blog-box__acticle">
-                <a href="/blog/read/<%= blog.slug %>">
-                  <img class="blog-box__acticle__cover" src="<%= blog.cover %>" />
-                </a>
-                <div class="blog-box__acticle__info">
-                  <a href="/blog/read/<%= blog.slug %>">
-                    <b><%= blog.title %> </b>
-                  </a>
-                </div>
-              </div>
-              <% }) %>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div class="row mb-4">
+        <button onclick="showMore(this)" data-skip="2" data-keyword="<%= keyword %>" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
       </div>
     </div>
   </section>
@@ -125,14 +80,16 @@
 
   function showMore(btn) {
     const skip = btn.getAttribute("data-skip");
+    const keyword = btn.getAttribute("data-keyword");
     showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
     const payload = {
-      skip: skip,
+      skip,
+      keyword
     };
     const headers = {
       "content-Type": "application/json",
     };
-    fetch("/blog/get-more", {
+    fetch("/blog/blog-with-keyword/get-more", {
         method: "POST",
         headers,
         body: JSON.stringify(payload),

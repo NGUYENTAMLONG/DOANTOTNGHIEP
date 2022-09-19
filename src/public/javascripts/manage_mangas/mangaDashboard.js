@@ -80,6 +80,7 @@ function showChapters(btn) {
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
       });
+
       $(document).ready(function () {
         $("#myInput-Chapter").on("keyup", function () {
           var value = $(this).val().toLowerCase();

@@ -145,7 +145,11 @@
         <span class="badge badge-success" value="<%= blog.role %>">ADMIN</span>
       </div>
       <a class="btn btn-secondary mb-4" href="/management/content/blog"> Hủy </a>
-      <button class="btn btn-primary float-right mb-4" onclick="initBlog()"><i class="fas fa-plane-departure"></i> Tiếp tục </button>
+
+      <button class="btn btn-primary float-right mb-4" onclick="updateBlog('<%= blog._id %>','<%= blog.cover %>')"><i class="fas fa-plane-departure"></i> Cập nhật thông tin </button>
+
+      <a class="btn btn-warning float-right mb-4 mr-3" href="/management/content/blog/update-blog/submit-content/<%= blog._id %>"> Cập nhật nội dung </a>
+
     </section>
   </div>
 </body>
@@ -182,7 +186,7 @@
 
 
 
-  function initBlog() {
+  function updateBlog(blogId, blogCover) {
     //find content
     const title = document.getElementById("title").value;
     const desc = document.getElementById("desc").value;
@@ -211,56 +215,58 @@
       type,
       keywordArray,
       source,
+      blogCover,
       link,
     }
     const imgFiles = document.getElementById("gallery-photo-cover");
     //set up avatar file 
     const formData = new FormData();
-    formData.append("cover", imgFiles.files[0])
-    console.log("FILE CLIENT UPLOAD", imgFiles.files[0])
+    formData.append("cover", imgFiles.files[0]);
+    console.log("FILE CLIENT UPLOAD", imgFiles.files[0]);
     if (imgFiles.files[0]) {
       fetch('/management/content/blog/api/update-blog/update-cover', {
-          method: 'POST',
+          method: 'PATCH',
           // or 'PUT'
           body: formData,
         })
         .then(response => response.json())
         .then(data => {
-          console.log({
-            formData,
-            data
-          })
           blogInfo.image = `/public/blog/covers/${data.filename}`;
-          fetch('/management/content/blog/api/write-blog/submit-info', {
-              method: 'POST', // or 'PUT'
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(blogInfo),
-            })
-            .then(response => response.json())
-            .then(result => {
-              swal({
-                title: "Thành công",
-                text: "Đã xuất bản thành công !",
-                icon: "success",
-                button: "Ok!",
-              }).then(() => {
-                window.location.href = result.data.url
-              })
-            })
-            .catch((error) => {
-              console.log('Error:', error);
-            })
+          submitPayload(blogId, blogInfo);
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     } else {
       blogInfo.image = null;
-      submitPayload(slug, mangaInfo)
+      submitPayload(blogId, blogInfo)
     }
+  }
 
+  function submitPayload(blogId, blogInfo) {
+    fetch(`/management/content/blog/api/update-blog/update-info/${blogId}`, {
+        method: 'PATCH', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(blogInfo),
+      })
+      .then(response => response.json())
+      .then(result => {
+        swal({
+          title: "Thành công",
+          text: "Đã cập nhật thành công !",
+          icon: "success",
+          button: "Ok!",
+        })
+        // .then(() => {
+        //   window.location.href = result.data.url
+        // });
+        console.log(result)
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 <script>
