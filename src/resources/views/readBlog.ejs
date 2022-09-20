@@ -11,6 +11,7 @@
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/profile.css">
   <link rel="stylesheet" href="/css/readBlog.css">
+  <link rel="stylesheet" href="/css/rating.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -18,6 +19,15 @@
 <body>
   <%- include('partials/header') %>
   <section class="section container  bg-light" id="section-1">
+    <div class="d-flex justify-content-center align-items-center">
+      <nav aria-label="breadcrumb" style="width:90%">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/blog">Blogs</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Đọc</li>
+        </ol>
+      </nav>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-8 p-2">
@@ -32,15 +42,48 @@
               </script>
               <div id="btn-share"></div>
             </div>
-            <div class="blog__statistical">
-              <span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="likeBlog()" id="like-blog-btn">
-                <i class="far fa-thumbs-up"></i> <%= blog.statistical.likes %>
+            <div class="blog__statistical" data-id="<%= blog._id %>">
+              <span id="span-like" data-counter="<%= blog.statistical.likes %>">
               </span>
               <span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Lượng views">
                 <i class="far fa-eye"></i> <%= blog.statistical.views %>
               </span>
-              <span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Điểm đánh giá" onclick="rateBlog()" id="rate-blog-btn">
-                <i class="far fa-star"></i> <%= blog.statistical.rating %>
+              <span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Điểm đánh giá" id="rate-blog-btn">
+                <span class="rate" data-toggle="modal" data-target="#ratingModal">
+                  <!-- Button trigger modal -->
+                  <i class="far fa-star"></i> <%= blog.statistical.rating %>
+                </span>
+                <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="ratingModalLabel">😍 Đánh giá bài viết tại đây 👇</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="text-center">
+                          <div class="row justify-content-center align-items-center">
+                            <div class="center col-12 col-md-9">
+                              <div id="rate" class="stars d-flex flex-row-reverse">
+                                <label id="star5" onclick="rate(5)"></label>
+                                <label id="star4" onclick="rate(4)"></label>
+                                <label id="star3" onclick="rate(3)"></label>
+                                <label id="star2" onclick="rate(2)"></label>
+                                <label id="star1" onclick="rate(1)"></label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-warning" onclick="ratingBlog('<%= blog._id %>')">Đánh giá</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </span>
               <span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượng đánh giá">
                 <i class="fas fa-abacus"></i> <%= blog.statistical.counting %>
@@ -111,8 +154,9 @@
 </body>
 <%- include("partials/script") %>
 <script src="/js/moment-with-locales.min.js"></script>
-
-<script>
+<script src="/js/rating.js"></script>
+<script src="/js/plugins/readBlog.js"></script>
+<!-- <script>
   $(function() {
     $('[data-toggle="tooltip"]').tooltip();
   });
@@ -134,12 +178,35 @@
   document.getElementById("count-comment").innerHTML = `<span class="disqus-comment-count" data-disqus-url="${window.location.href}"><i class="fa fa-spinner fa-spin"></i></span>`
 </script>
 <script>
+  const blogId = document.querySelector(".blog__statistical").getAttribute("data-id");
+  const likeSpan = document.getElementById("span-like");
+
+  fetch("/user/blog/api/check-liked/" + blogId).then(res => res.json()).then((result) => {
+    const counterLike = likeSpan.getAttribute("data-counter")
+    if (!result.isSuccess) {
+      likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="likeBlog('${blogId}')" id="like-blog-btn">
+        <i class="far fa-thumbs-up"></i> ${counterLike}
+      </span>`
+    } else {
+      const checkLiked = result.data;
+      if (!checkLiked.liked) {
+        likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="likeBlog('${blogId}')" id="like-blog-btn">
+        <i class="far fa-thumbs-up"></i> ${counterLike}
+          </span>`
+      } else {
+        likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="unlikeBlog('${blogId}')" id="like-blog-btn">
+          <i class="fas fa-thumbs-up"></i> ${counterLike}
+        </span>`
+      }
+    }
+  }).catch((error) => console.log(error))
+
   function likeBlog(blogId) {
+    const likeBtn = document.querySelector("#like-blog-btn");
     const data = {
       blogId: blogId,
     };
-
-    fetch("/user/blog/like", {
+    fetch("/user/blog/api/like", {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
@@ -148,19 +215,72 @@
       })
       .then((response) => response.json())
       .then((result) => {
-        if (!result.isSuccess) {
+        const counterLike = likeSpan.getAttribute("data-counter")
+        if (!result.isSuccess && result.errorCode === "UNAUTHORIZED") {
           swal({
             title: "Error",
-            text: "Bạn phải điền đầy đủ thông tin !",
+            text: "Hãy đăng nhập để thực hiện hành động này nhé :>",
             icon: "error",
             button: "OK!",
           });
+        } else {
+          swal({
+            title: "Đã like",
+            text: "Cảm ơn vì đã thích bài viêt này ^^",
+            icon: "success",
+            button: "OK!",
+          });
+          likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="unlikeBlog('${blogId}')" id="like-blog-btn">
+            <i class="fas fa-thumbs-up"></i> ${Number(counterLike) + 1}
+            </span>`;
+          likeSpan.setAttribute("data-counter", (Number(counterLike) + 1).toString())
         }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
-</script>
+
+  function unlikeBlog(blogId) {
+    const likeBtn = document.querySelector("#like-blog-btn");
+    const data = {
+      blogId: blogId,
+    };
+    fetch("/user/blog/api/unlike", {
+        method: "DELETE", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        const counterLike = likeSpan.getAttribute("data-counter")
+        if (!result.isSuccess) {
+          swal({
+            title: "Error",
+            text: "Lỗi rồi :(",
+            icon: "error",
+            button: "OK!",
+          });
+        } else {
+          swal({
+            title: "Đã unlike",
+            text: "Cảm ơn vì đã từng thích bài viêt này...",
+            icon: "success",
+            button: "OK!",
+          });
+          likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="likeBlog('${blogId}')" id="like-blog-btn">
+                      <i class="far fa-thumbs-up"></i> ${Number(counterLike) - 1}
+            </span>`
+          likeSpan.setAttribute("data-counter", (Number(counterLike) - 1).toString())
+
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+</script> -->
 
 </html>

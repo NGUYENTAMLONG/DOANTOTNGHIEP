@@ -20,10 +20,13 @@ class RateController {
     try {
       if (!req.user) {
         return res
-        .status(STATUS.UNAUTHORIZED)
-        .json(
-          new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, MESSAGE.UNAUTHORIZED)
-        );
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
       }
       const userId = req.user.id;
       if (req.user.provider === PASSPORT.LOCAL) {
@@ -95,7 +98,7 @@ class RateController {
       );
       return res
         .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.RATED), null);
+        .json(new SuccessResponse(MESSAGE.RATED, null));
     } catch (error) {
       console.log(error);
       res

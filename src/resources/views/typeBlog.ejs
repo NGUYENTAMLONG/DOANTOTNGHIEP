@@ -45,7 +45,7 @@
                   </a>
                   <span class="d-flex">
                     <b class="blog-card__info__type">
-                      <a href="/blog/type/<%= blog.type %>">
+                      <a href="/blog/<%= blog.type === "NEWS"?"news":"spreads" %>">
                         <%= blog.type %>
                       </a>
                     </b>
@@ -56,6 +56,14 @@
                   </span>
                   <p class="blog-card__info__desc">
                     <%= blog.desc %>
+                  </p>
+                  <p class="blog-card__info__statistical text-secondary">
+                    <span class="mr-3">
+                      <i class=" fas fa-thumbs-up"></i> <%= blog.statistical.likes %>
+                    </span>
+                    <span>
+                      <i class="fas fa-eye"></i> <%= blog.statistical.views %>
+                    </span>
                   </p>
                 </div>
               </div>
@@ -121,7 +129,7 @@
               </a>
               <span class="d-flex">
                 <b class="blog-card__info__type">
-                  <a href="/blog/type/${blog.type}">
+                  <a href="/blog/${blog.type === " NEWS" ? "news" :"spreads"}">
                     ${blog.type}
                   </a>
                 </b>
@@ -132,6 +140,14 @@
               <p class="blog-card__info__desc">
                 ${blog.desc}
               </p>
+                 <p class="blog-card__info__statistical text-secondary">
+                   <span class="mr-3">
+                     <i class=" fas fa-thumbs-up"></i> ${ blog.statistical.likes }
+                   </span>
+                   <span>
+                     <i class="fas fa-eye"></i> ${ blog.statistical.views }
+                   </span>
+                 </p>
             </div>
           </div>
         </div>

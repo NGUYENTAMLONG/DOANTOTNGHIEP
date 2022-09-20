@@ -65,7 +65,65 @@ function rating(mangaId) {
         }).then(() => {
           location.reload();
         });
-      }else if(
+      } else if (
+        !result.isSuccess &&
+        result.errorCode === "UNAUTHORIZED" &&
+        result.message === "UNAUTHORIZED"
+      ) {
+        swal({
+          title: "Thông báo !",
+          text: "Bạn phải đăng nhập trước :>",
+          icon: "error",
+          button: "OK!",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function ratingBlog(blogId) {
+  const counterStar = document.querySelectorAll(".stars .active").length;
+  // console.log(blogId, counterStar);
+  const data = {
+    blogId: blogId,
+    counterStar,
+  };
+
+  fetch("/user/blog/api/rate", {
+    method: "POST", // or 'PUT'
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      if (result.isSuccess === true) {
+        swal({
+          title: "Thành công",
+          text: "Cảm ơn bạn đã đánh giá bài viết này",
+          icon: "success",
+          button: "OK!",
+        }).then(() => {
+          location.reload();
+        });
+      } else if (
+        !result.isSuccess &&
+        result.errorCode === "ALREADY_EXISTS" &&
+        result.message === "ALREADY REATED"
+      ) {
+        swal({
+          title: "Thông báo",
+          text: "Bạn đã đánh giá bài viết này rồi",
+          icon: "warning",
+          button: "OK!",
+        }).then(() => {
+          location.reload();
+        });
+      } else if (
         !result.isSuccess &&
         result.errorCode === "UNAUTHORIZED" &&
         result.message === "UNAUTHORIZED"
