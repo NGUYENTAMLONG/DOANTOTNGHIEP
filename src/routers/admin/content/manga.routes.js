@@ -31,11 +31,12 @@ const {
   streamDeleteImageOfChapter,
   deleteChapter,
   updateChapter,
-  fixTitle,
+  fixChapterNumber,
   submitUpdateChapter,
   deleteChecked,
   restoreChecked,
   getMangaAnalysis,
+  fixChapterName,
 } = require("../../../controllers/MangaController");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -186,7 +187,8 @@ router.post("/updateChapter", updateChapter);
 
 //10. Update title
 //ex: /management/content/manga/updateChapter/fixTitle - Method:POST
-router.post("/updateChapter/fixTitle", fixTitle);
+router.patch("/updateChapter/fixChapterNumber", fixChapterNumber);
+router.patch("/updateChapter/fixChapterName", fixChapterName);
 
 //11. Submit Update chapter content
 //ex:/management/content/manga/post/:slug/submit/update/:chapterNumber- Method: POST

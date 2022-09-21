@@ -101,9 +101,11 @@ class UserBlogController {
         $inc: { "statistical.likes": 1 },
       });
 
-      return res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.LIKED, { blog: updateBlog }));
+      return res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.LIKED, {
+          counterLike: updateBlog.statistical.likes,
+        })
+      );
     } catch (error) {
       console.log(error);
       res
@@ -134,13 +136,15 @@ class UserBlogController {
       const userId = req.user.id;
 
       await Behavior.findOneAndDelete({ userId });
-      await Blog.findByIdAndUpdate(blogId, {
+      const updateBlog = await Blog.findByIdAndUpdate(blogId, {
         $inc: { "statistical.likes": -1 },
       });
 
-      return res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.UNLIKED, null));
+      return res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.UNLIKED, {
+          counterLike: updateBlog.statistical.likes,
+        })
+      );
     } catch (error) {
       console.log(error);
       res

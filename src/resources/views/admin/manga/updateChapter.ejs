@@ -110,17 +110,23 @@
       </caption>
       <div class="form-group">
         <label for="number">Chương số</label>
-        <input type="text" class="form-control" required name="chapterNumber" value="<%= chapter.chapterNumber %>" data-old="<%= chapter.chapterNumber %>" id="chapterNumber" placeholder="Enter number of chapter/ Nhập chương số" />
+        <div class="d-flex">
+          <input type="number" class="form-control mr-4" required name="chapterNumber" value="<%= chapter.chapterNumber %>" data-old="<%= chapter.chapterNumber %>" id="chapterNumber" placeholder="Enter number of chapter/ Nhập chương số" />
+          <button type="submit" class="btn btn-primary" onclick="fixChapterNumber(event,this)"><i class="fas fa-edit"></i></button>
+        </div>
       </div>
       <div class="form-group">
         <label for="username">Tên chương</label>
-        <input type="text" class="form-control" required name="chapterName" value="<%= chapter.chapterName %>" id="chapterName" placeholder="Enter name of chapter/ Nhập tên chương" />
+        <div class="d-flex">
+          <input type="text" class="form-control mr-4" required name="chapterName" value="<%= chapter.chapterName %>" id="chapterName" placeholder="Enter name of chapter/ Nhập tên chương" />
+          <button type="submit" class="btn btn-primary" onclick="fixChapterName(event,this)"><i class="fas fa-edit"></i></button>
+        </div>
       </div>
+      <textarea id="froala-edit" name="editchapter">
+          <%= chapter.chapterContent %>
+        </textarea><br>
       <div class="text-center">
-        <button type="submit" class="btn btn-primary" onclick="fixTitle(event,this)">Sửa</button>
-      </div>
-
-      <div class="form-group form-edit">
+        <button type="submit" class="btn btn-primary" onclick="fixChapterContent(event,this)">Cập nhật nội dung</button>
       </div>
     </form>
   </section>
@@ -155,19 +161,57 @@
   const chapterId = document.querySelector(".form-submit").getAttribute("data-chapterId");
   const manga = document.querySelector(".form-submit").getAttribute("data-manga");
 
-  function fixTitle(event, it) {
+  function fixChapterNumber(event, it) {
     event.preventDefault();
     const chapterNumber = document.getElementById("chapterNumber");
-    const chapterName = document.getElementById("chapterName");
     const payload = {
       chapterId: chapterId.trim(),
       chapterNumber: chapterNumber.value.trim(),
-      chapterName: chapterName.value.trim(),
       oldChapterNumber: chapterNumber.getAttribute("data-old"),
-      manga,
+      manga
     }
-    fetch(`/management/content/manga/updateChapter/fixTitle`, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    fetch(`/management/content/manga/updateChapter/fixChapterNumber`, {
+        method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result)
+        if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+          swal({
+            title: "Thông báo",
+            text: "Chương đã tồn tại",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Đã sửa số chương !",
+            icon: "success",
+            buttons: true,
+          }).then(() => {
+            location.reload();
+          });
+        }
+      })
+      .catch((error) => console.log(error))
+  }
+
+  function fixChapterName(event, it) {
+    event.preventDefault();
+    const chapterNumber = document.getElementById("chapterNumber").value.trim();
+    const payload = {
+      chapterId: chapterId.trim(),
+      chapterName: chapterName.value.trim(),
+      chapterNumber: chapterNumber,
+    }
+    fetch(`/management/content/manga/updateChapter/fixChapterName`, {
+        method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
         headers: {
           'Content-Type': 'application/json'
           // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -179,65 +223,49 @@
         if (!result.isSuccess) {
           swal({
             title: "Thông báo",
-            text: "Có lỗi xảy ra !",
+            text: "Đã có lỗi !",
             icon: "error",
             button: "OK!",
           })
         } else {
           swal({
             title: "Thông báo",
-            text: "Đã sửa số chương và tên chương ^^ . Bạn có muốn sửa nội dung không ?",
+            text: "Đã sửa tên chương !",
             icon: "success",
             buttons: true,
-          }).then((willGo) => {
-            if (willGo) {
-              chapterNumber.setAttribute("disabled", "");
-              chapterName.setAttribute("disabled", "");
-              it.remove()
-              getEditForm(payload.chapterId, payload.chapterNumber, result.data)
-              console.log(result)
-            } else {
-              window.location.href = `/management/content/manga/post/${manga}`;
-            }
+          }).then(() => {
+            location.reload();
           });
         }
       })
       .catch((error) => console.log(error))
   }
 
-  function getEditForm(chapterId, chapterNumber, replaceContent) {
-    document.querySelector(".form-edit").innerHTML = `<textarea id="froala-edit" name="editchapter"></textarea><br>
-  <div class="text-center">
-    <button type="submit" class="btn btn-warning">Hủy bỏ</button>
-    <button type="submit" class="btn btn-primary" data-id="${chapterId}" data-number="${chapterNumber}" onclick="submitChapter(event,this)">Đăng chương</button>
-  </div>`
 
-    document.querySelector("#froala-edit").innerHTML = `${replaceContent}`
-    const editor = new FroalaEditor("#froala-edit", {
-      // Set the image upload URL.
-      imageUploadURL: `/management/content/manga/post/${manga.trim()}/add/${chapterNumber}`,
-      events: {
-        'image.beforeUpload': function($img) {
-          console.log("ImageData", ImageData);
+  const editor = new FroalaEditor("#froala-edit", {
+    // Set the image upload URL.
+    imageUploadURL: `/management/content/manga/post/${manga.trim()}/add/${chapterNumber}`,
+    events: {
+      'image.beforeUpload': function($img) {
+        console.log("ImageData", ImageData);
 
-        },
-        'image.removed': function($img) {
-          const data = {
-            path: $img.attr('src')
-          }
-          fetch(`/management/content/manga/post/${manga.trim()}/remove/${chapterNumber}`, {
-            method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-              'Content-Type': 'application/json'
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            fileUploadParam: 'file_name',
-            body: JSON.stringify(data)
-          }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+      },
+      'image.removed': function($img) {
+        const data = {
+          path: $img.attr('src')
         }
+        fetch(`/management/content/manga/post/${manga.trim()}/remove/${chapterNumber}`, {
+          method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          fileUploadParam: 'file_name',
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
       }
-    });
-  }
+    }
+  });
 
   function submitChapter(event, it) {
     event.preventDefault();

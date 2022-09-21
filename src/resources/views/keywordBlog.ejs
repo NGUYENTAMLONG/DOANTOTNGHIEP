@@ -56,6 +56,14 @@
                   <p class="blog-card__info__desc">
                     <%= blog.desc %>
                   </p>
+                  <p class="blog-card__info__statistical text-secondary">
+                    <span class="mr-3">
+                      <i class=" fas fa-thumbs-up"></i> <%= blog.statistical.likes %>
+                    </span>
+                    <span>
+                      <i class="fas fa-eye"></i> <%= blog.statistical.views %>
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,6 +136,14 @@
               </span>
               <p class="blog-card__info__desc">
                 ${blog.desc}
+              </p>
+              <p class="blog-card__info__statistical text-secondary">
+                <span class="mr-3">
+                  <i class=" fas fa-thumbs-up"></i> ${ blog.statistical.likes }
+                </span>
+                <span>
+                  <i class="fas fa-eye"></i> ${ blog.statistical.views }
+                </span>
               </p>
             </div>
           </div>

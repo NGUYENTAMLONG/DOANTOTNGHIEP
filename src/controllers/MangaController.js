@@ -616,22 +616,10 @@ class MangaController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
-  //16. Fix Title
-  async fixTitle(req, res) {
-    const { chapterId, chapterNumber, chapterName, oldChapterNumber, manga } =
-      req.body;
+  //16. Fix ChapterNumber
+  async fixChapterNumber(req, res) {
+    const { manga, chapterId, chapterNumber, oldChapterNumber } = req.body;
     try {
-      // const chapterRepository = await Chapter.findById(chapterId);
-      // const checkChapter = chapterRepository.chapters.find(
-      //   (chapter) => chapter.chapterNumber === chapterNumber
-      // );
-      // if (checkChapter) {
-      //   return res
-      //     .status(STATUS.BAD_REQUEST)
-      //     .json(
-      //       new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.CREATE_FAIL)
-      //     );
-      // }
       const foundChapter = await Chapter.findOne(
         {
           _id: chapterId,
@@ -644,35 +632,48 @@ class MangaController {
           },
         }
       );
-      const replaceContent = foundChapter.chapters[0].chapterContent.replaceAll(
-        `chapter-${oldChapterNumber}`,
-        `chapter-${chapterNumber}`
-      );
-      const initData = {
-        chapterNumber: parseFloat(chapterNumber),
-        chapterName: chapterName,
-        chapterContent: replaceContent,
-        createdTime: foundChapter.chapters[0].createdTime,
-        updatedTime: moment().format(),
-      };
-
-      await Chapter.findByIdAndUpdate(chapterId, {
-        $push: { chapters: initData },
-      });
-
-      await Chapter.findOneAndUpdate(
-        { _id: chapterId },
+      const checkChapterExisted = await Chapter.findOne(
         {
-          $pull: {
-            chapters: { chapterNumber: foundChapter.chapters[0].chapterNumber },
+          _id: chapterId,
+        },
+        {
+          chapters: {
+            $elemMatch: {
+              chapterNumber: Number(chapterNumber),
+            },
           },
         }
       );
-      await Chapter.findOneAndUpdate(
-        { _id: chapterId },
-        { $push: { chapters: { $each: [], $sort: 1 } } }
-      );
+      if (checkChapterExisted.chapters.length !== 0) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_ALREADY_EXISTS,
+              MESSAGE.CHAPTER_ALREADY
+            )
+          );
+      }
 
+      await Chapter.updateOne(
+        { _id: chapterId, "chapters.chapterNumber": Number(oldChapterNumber) },
+        { $set: { "chapters.$.chapterNumber": Number(chapterNumber) } }
+      );
+      await Chapter.updateOne(
+        {
+          _id: chapterId,
+          "chapters.chapterNumber": Number(chapterNumber),
+        },
+        {
+          $set: {
+            "chapters.$.chapterContent":
+              foundChapter.chapters[0].chapterContent.replaceAll(
+                `chapter-${oldChapterNumber}`,
+                `chapter-${chapterNumber}`
+              ),
+          },
+        }
+      );
       fs.rename(
         path.join(
           appRoot.path,
@@ -695,10 +696,83 @@ class MangaController {
           }
         }
       );
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+
+      // const replaceContent = foundChapter.chapters[0].chapterContent.replaceAll(
+      //   `chapter-${oldChapterNumber}`,
+      //   `chapter-${chapterNumber}`
+      // );
+      // const initData = {
+      //   chapterNumber: parseFloat(chapterNumber),
+      //   chapterName: chapterName,
+      //   chapterContent: replaceContent,
+      //   createdTime: foundChapter.chapters[0].createdTime,
+      //   updatedTime: moment().format(),
+      // };
+
+      // await Chapter.findByIdAndUpdate(chapterId, {
+      //   $push: { chapters: initData },
+      // });
+
+      // await Chapter.findOneAndUpdate(
+      //   { _id: chapterId },
+      //   {
+      //     $pull: {
+      //       chapters: { chapterNumber: foundChapter.chapters[0].chapterNumber },
+      //     },
+      //   }
+      // );
+      // await Chapter.findOneAndUpdate(
+      //   { _id: chapterId },
+      //   { $push: { chapters: { $each: [], $sort: 1 } } }
+      // );
+
+      // fs.rename(
+      //   path.join(
+      //     appRoot.path,
+      //     `/src/public/mangas/${manga}/chapter-${oldChapterNumber}/`
+      //   ),
+      //   path.join(
+      //     appRoot.path,
+      //     `/src/public/mangas/${manga}/chapter-${chapterNumber}/`
+      //   ),
+      //   function (error) {
+      //     if (error) {
+      //       console.log(error);
+      //       return res
+      //         .status(STATUS.ERROR_SERVER)
+      //         .json(
+      //           new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
+      //         );
+      //     } else {
+      //       console.log("Successfully renamed the folder.");
+      //     }
+      //   }
+      // );
 
       res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, replaceContent));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  //16.5. Fix ChapterName
+  async fixChapterName(req, res) {
+    const { chapterId, chapterNumber, chapterName } = req.body;
+    try {
+      await Chapter.updateOne(
+        { _id: chapterId, "chapters.chapterNumber": Number(chapterNumber) },
+        { $set: { "chapters.$.chapterName": chapterName } }
+      );
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       return res

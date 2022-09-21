@@ -23,7 +23,7 @@
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-8 p-2">
+        <div class="col-sm-12 col-lg-8 p-2">
           <div class="row blog-row">
             <% blogs.forEach(function(blog){ %>
             <div class="col-12">
@@ -71,7 +71,7 @@
             <button onclick="showMore(this)" data-skip="2" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
           </div>
         </div>
-        <div class="col-4 p-2">
+        <div class="col-sm-12 col-lg-4 p-2 mt-4">
           <div class="blog-box">
             <div class="blog-box__header bg-primary">
               <a href="/blog/news" class="blog-box__header__title">
@@ -122,6 +122,9 @@
       </div>
     </div>
   </section>
+  <div id="to-top">
+    <i class="fas fa-angle-up fa-3x" onclick="toTop()"></i>
+  </div>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
@@ -206,6 +209,10 @@
         }
       })
       .catch((error) => console.log(error));
+  }
+
+  function toTop() {
+    window.scrollTo(0, 0);
   }
 </script>
 

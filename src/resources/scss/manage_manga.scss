@@ -61,6 +61,9 @@ table {
   }
 }
 .modal-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .modal-content {
     max-width: 1000px !important;
     img {

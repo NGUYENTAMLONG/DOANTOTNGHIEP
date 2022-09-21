@@ -34,6 +34,12 @@ header .navbar {
             margin-bottom: 5px; }
         header .navbar .form-seach #result-live-search .found-manga .found-manga__info {
           padding: 0px 5px; }
+          header .navbar .form-seach #result-live-search .found-manga .found-manga__info .found-manga__info__name {
+            text-decoration: none;
+            font-weight: bold;
+            color: white; }
+          header .navbar .form-seach #result-live-search .found-manga .found-manga__info .found-manga__info__anothername {
+            font-size: 12px; }
       header .navbar .form-seach #result-live-search::-webkit-scrollbar {
         width: 12px;
         background-color: #f5f5f5;

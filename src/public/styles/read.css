@@ -91,6 +91,7 @@ body {
     height: 100% !important; }
 
 #section-3 {
+  overflow: hidden;
   margin-bottom: 20px;
   padding: 20px;
   background-color: white;

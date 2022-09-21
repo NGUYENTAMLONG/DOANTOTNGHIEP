@@ -42,6 +42,14 @@ header {
           }
           .found-manga__info {
             padding: 0px 5px;
+            .found-manga__info__name {
+              text-decoration: none;
+              font-weight: bold;
+              color: white;
+            }
+            .found-manga__info__anothername {
+              font-size: 12px;
+            }
           }
         }
         &::-webkit-scrollbar {

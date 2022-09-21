@@ -67,4 +67,12 @@ body {
       }
     }
   }
+  #to-top {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 100;
+    color: $color-3;
+  }
 }

@@ -59,7 +59,6 @@ function likeBlog(blogId) {
   })
     .then((response) => response.json())
     .then((result) => {
-      const counterLike = likeSpan.getAttribute("data-counter");
       if (!result.isSuccess && result.errorCode === "UNAUTHORIZED") {
         swal({
           title: "Error",
@@ -68,16 +67,9 @@ function likeBlog(blogId) {
           button: "OK!",
         });
       } else {
-        swal({
-          title: "Đã like",
-          text: "Cảm ơn vì đã thích bài viêt này ^^",
-          icon: "success",
-          button: "OK!",
-        });
+        const counterLike = result.data.counterLike;
         likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="unlikeBlog('${blogId}')" id="like-blog-btn">
-            <i class="fas fa-thumbs-up"></i> ${
-              result.data.blog.statistical.likes + 1
-            }
+            <i class="fas fa-thumbs-up"></i> ${counterLike + 1}
             </span>`;
         likeSpan.setAttribute(
           "data-counter",
@@ -103,7 +95,6 @@ function unlikeBlog(blogId) {
   })
     .then((response) => response.json())
     .then((result) => {
-      const counterLike = likeSpan.getAttribute("data-counter");
       if (!result.isSuccess) {
         swal({
           title: "Error",
@@ -112,15 +103,10 @@ function unlikeBlog(blogId) {
           button: "OK!",
         });
       } else {
-        swal({
-          title: "Đã unlike",
-          text: "Cảm ơn vì đã từng thích bài viêt này...",
-          icon: "success",
-          button: "OK!",
-        });
+        const counterLike = result.data.counterLike;
         likeSpan.innerHTML = `<span data-toggle="tooltip" class="mr-3" data-placement="bottom" title="Số lượt thích" onclick="likeBlog('${blogId}')" id="like-blog-btn">
                       <i class="far fa-thumbs-up"></i>
-                    ${result.data.blog.statistical.likes - 1}
+                    ${counterLike - 1}
             </span>`;
         likeSpan.setAttribute(
           "data-counter",
@@ -131,4 +117,8 @@ function unlikeBlog(blogId) {
     .catch((error) => {
       console.error("Error:", error);
     });
+}
+
+function toTop() {
+  window.scrollTo(0, 0);
 }

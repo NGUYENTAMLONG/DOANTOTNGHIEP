@@ -44,14 +44,12 @@
     background-color: #bd10e0; }
   .manga-info .rate {
     background-color: #ffc107; }
-  .manga-info .manga-info__desc {
-    transition: display 5s ease-in-out; }
-    .manga-info .manga-info__desc p {
-      text-indent: 20px; }
-      .manga-info .manga-info__desc p::first-letter {
-        text-transform: uppercase;
-        font-size: 3em;
-        font-weight: bold; }
+  .manga-info .manga-info__desc p {
+    text-indent: 20px; }
+    .manga-info .manga-info__desc p::first-letter {
+      text-transform: uppercase;
+      font-size: 3em;
+      font-weight: bold; }
 
 .truncate {
   display: -webkit-box;
