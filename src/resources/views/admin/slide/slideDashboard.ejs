@@ -8,13 +8,14 @@
   <title>SLIDE MANAGEMENT</title>
   <link rel="icon" href="/image/tablogo.png">
   <%- include("../../partials/link") %>
-  <link rel="stylesheet" href="/css/fullscreenImg.css">
   <link rel="stylesheet" href="/css/slideDashboard.css">
   <link rel="stylesheet" href="/css/manage_manga.css">
   <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
   <link href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css" rel="stylesheet">
   <link href="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
+  <style>
 
+  </style>
 </head>
 
 <body>
@@ -94,13 +95,10 @@
     return res
   }
 
-  function imageFormatter(data) {
-    return `<img src="${ data }" class="slide-image" width="200px" alt="" onclick="zoomImg(this)">
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="preview-modal" style="zoom: 2;margin-top: 30px;">
-  </div>`
+  function imageFormatter(data, slide, index) {
+    return `
+  <img src="${data}" class="slideImg" width="300px">
+  `
   }
 
   function nameFormatter(data, slide, index) {
@@ -160,21 +158,7 @@
     });
   });
 </script>
-<script>
-  //Turn on turn off modal
-  function zoomImg(it) {
-    var modal = document.getElementById("myModal");
-    var modalImg = document.getElementById("preview-modal");
 
-    modal.style.display = "block";
-    modalImg.src = it.src;
-  }
-
-  function closeModal() {
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
-  }
-</script>
 <script>
   function toggleActive(e) {
     const idSlide = e.target.dataset.id;

@@ -158,12 +158,56 @@ body {
     color: white;
     overflow: hidden;
     .container {
-      background-color: rgba(45, 125, 179, 0.815);
+      background-color: rgba(255, 94, 0, 0.747);
       min-height: 600px;
       padding: 50px;
       #reading-img {
         margin-top: 30px;
         width: 100%;
+      }
+    }
+  }
+  #section-7 {
+    width: 100%;
+    position: relative;
+    min-height: 500px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.815);
+    overflow: hidden;
+    padding: 250px 0px;
+    .container {
+      .section__box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 500px;
+        position: relative;
+        #blog-page {
+          position: absolute;
+          width: 400px;
+          left: -200px;
+          transition: 0.5s ease-in-out;
+          &:hover {
+            width: 500px;
+            z-index: 3;
+          }
+        }
+        #read-blog {
+          position: absolute;
+          width: 350px;
+          transition: 0.5s ease-in-out;
+          &:hover {
+            width: 400px;
+            z-index: 3;
+          }
+        }
+        p {
+          text-indent: 30px;
+        }
+        .wrapper {
+          height: 500px;
+        }
       }
     }
   }

@@ -40,16 +40,9 @@ function showChapters(btn) {
               <button type="button" class="btn btn-warning mr-3" data-id="${id}" data-chapternumber="${
           chapter.chapterNumber
         }" data-location="${index}" onclick="Review(this)">Xem</button>
-              
-              <form action="/management/content/manga/updateChapter" method="POST">
-                <input type="text" name="chapterId" value="${id}" hidden>
-                <input type="text" name="manga" value="${slug}" hidden>
-                <input type="text" name="chapterNumber" value="${
-                  chapter.chapterNumber
-                }" hidden>
-                <button type="submit" class="btn btn-primary mr-3">Sửa</button>
-              </form>
-
+              <a href="/management/content/manga/updateChapter/${slug}/${id}/${
+          chapter.chapterNumber
+        }" class="btn btn-primary mr-3">Sửa</a>
               <button type="button" class="btn btn-danger" onclick="deleteChapter('${slug}','${id}','${
           chapter.chapterNumber
         }')">Xóa</button>

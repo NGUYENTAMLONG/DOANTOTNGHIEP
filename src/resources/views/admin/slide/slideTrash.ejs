@@ -8,7 +8,6 @@
   <title>TRASH DASHBOARD</title>
   <link rel="icon" href="/image/tablogo.png">
   <%- include("../../partials/link") %>
-  <link rel="stylesheet" href="/css/fullscreenImg.css">
   <link rel="stylesheet" href="/css/slideDashboard.css">
   <link rel="stylesheet" href="/css/manage_manga.css">
   <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
@@ -94,21 +93,6 @@
   });
 </script>
 <script>
-  //Turn on turn off modal
-  function zoomImg(it) {
-    var modal = document.getElementById("myModal");
-    var modalImg = document.getElementById("preview-modal");
-
-    modal.style.display = "block";
-    modalImg.src = it.src;
-  }
-
-  function closeModal() {
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
-  }
-</script>
-<script>
   function responseHandler(res) {
     res.rows.forEach(function(row, i) {
       row.index = `<div class="text-center">${i + 1}</div>`
@@ -117,12 +101,7 @@
   }
 
   function imageFormatter(data) {
-    return `<img src="${ data }" class="slide-image" width="200px" alt="" onclick="zoomImg(this)">
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="preview-modal" style="zoom: 2;margin-top: 30px;">
-  </div>`
+    return ` <img src="${data}" class="slideImg" width="300px">`
   }
 
   function nameFormatter(data, slide, index) {

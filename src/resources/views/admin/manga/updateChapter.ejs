@@ -126,7 +126,7 @@
           <%= chapter.chapterContent %>
         </textarea><br>
       <div class="text-center">
-        <button type="submit" class="btn btn-primary" onclick="fixChapterContent(event,this)">Cập nhật nội dung</button>
+        <button type="submit" class="btn btn-primary" data-id="<%= manga.contentId._id %>" data-number="<%= chapter.chapterNumber %> " onclick="fixChapterContent(event,this)">Cập nhật nội dung</button>
       </div>
     </form>
   </section>
@@ -180,7 +180,6 @@
       })
       .then(res => res.json())
       .then(result => {
-        console.log(result)
         if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
           swal({
             title: "Thông báo",
@@ -188,6 +187,16 @@
             icon: "error",
             button: "OK!",
           })
+          return;
+        }
+        if (!result.isSuccess && result.errorCode === "BAD_REQUEST") {
+          swal({
+            title: "Thông báo",
+            text: "Lỗi nhập thông tin",
+            icon: "error",
+            button: "OK!",
+          })
+          return;
         } else {
           swal({
             title: "Thông báo",
@@ -195,7 +204,7 @@
             icon: "success",
             buttons: true,
           }).then(() => {
-            location.reload();
+            location.href = result.data.redirect
           });
         }
       })
@@ -244,7 +253,7 @@
 
   const editor = new FroalaEditor("#froala-edit", {
     // Set the image upload URL.
-    imageUploadURL: `/management/content/manga/post/${manga.trim()}/add/${chapterNumber}`,
+    imageUploadURL: `/management/content/manga/post/${manga.trim()}/add/${document.getElementById("chapterNumber").value.trim()}`,
     events: {
       'image.beforeUpload': function($img) {
         console.log("ImageData", ImageData);
@@ -254,7 +263,7 @@
         const data = {
           path: $img.attr('src')
         }
-        fetch(`/management/content/manga/post/${manga.trim()}/remove/${chapterNumber}`, {
+        fetch(`/management/content/manga/post/${manga.trim()}/remove/${document.getElementById("chapterNumber").value.trim()}`, {
           method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
           headers: {
             'Content-Type': 'application/json'
@@ -267,7 +276,7 @@
     }
   });
 
-  function submitChapter(event, it) {
+  function fixChapterContent(event, it) {
     event.preventDefault();
     const chapterId = it.getAttribute("data-id");
     const chapterNumber = it.getAttribute("data-number");
@@ -276,8 +285,9 @@
       chapterId: chapterId,
       chapterContent: chapterContent,
     }
+
     fetch(`/management/content/manga/submit/update/${chapterNumber}`, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
         headers: {
           'Content-Type': 'application/json'
           // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -300,7 +310,7 @@
             icon: "success",
             button: "OK!",
           }).then(() => {
-            window.location.href = "/management/content/manga/post/one-piece"
+            location.reload()
           })
         }
       })

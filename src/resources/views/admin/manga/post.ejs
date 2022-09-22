@@ -87,14 +87,9 @@
                 <td class="text-center"> <span class="badge badge-primary"><%= chapter.chapterNumber%></span></td>
                 <td class="col-chapterName" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName%></td>
                 <td class="text-right"><%= moment(chapter.createdTime).format("L")%></td>
-                <td class="handle">
+                <td class="handle d-flex justify-content-around align-items-center">
                   <i class="fas fa-trash mr-1" data-toggle="tooltip" data-placement="bottom" title="Xóa chương <%= chapter.chapterName%>" onclick="deleteChapter('<%= manga.slug %>','<%= manga.contentId._id %>','<%= chapter.chapterNumber %>')"></i>
-                  <form action="/management/content/manga/updateChapter" method="POST">
-                    <input type="text" name="chapterId" value="<%= manga.contentId._id %>" hidden>
-                    <input type="text" name="manga" value="<%= manga.slug %>" hidden>
-                    <input type="text" name="chapterNumber" value="<%= chapter.chapterNumber %>" hidden>
-                    <button type="submit"><i class="fas fa-tools"></i></button>
-                  </form>
+                  <a data-toggle="tooltip" data-placement="bottom" title="Sửa chương <%= chapter.chapterName%>" href="/management/content/manga/updateChapter/<%= manga.slug %>/<%= manga.contentId._id %>/<%= chapter.chapterNumber %>"><i class="fas fa-tools"></i></a>
                 </td>
               </tr>
               <%})%>

@@ -32,7 +32,7 @@ const {
   deleteChapter,
   updateChapter,
   fixChapterNumber,
-  submitUpdateChapter,
+  fixChapterContent,
   deleteChecked,
   restoreChecked,
   getMangaAnalysis,
@@ -184,6 +184,7 @@ router.delete("/deleteChapter", deleteChapter);
 //9. Move to Update chapter page
 //ex: /management/content/manga/updateChapter - Method:POST
 router.post("/updateChapter", updateChapter);
+router.get("/updateChapter/:manga/:chapterId/:chapterNumber", updateChapter);
 
 //10. Update title
 //ex: /management/content/manga/updateChapter/fixTitle - Method:POST
@@ -192,7 +193,7 @@ router.patch("/updateChapter/fixChapterName", fixChapterName);
 
 //11. Submit Update chapter content
 //ex:/management/content/manga/post/:slug/submit/update/:chapterNumber- Method: POST
-router.post("/submit/update/:chapterNumber", submitUpdateChapter);
+router.patch("/submit/update/:chapterNumber", fixChapterContent);
 
 router.delete("/deleteChecked", deleteChecked);
 router.patch("/restoreChecked", restoreChecked);

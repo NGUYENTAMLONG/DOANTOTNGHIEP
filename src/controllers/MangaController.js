@@ -417,7 +417,21 @@ class MangaController {
   //10 Initialize Chapter Repository
   async initChapterRepo(req, res) {
     const { chapterId, chapterNumber, chapterName } = req.body;
+    if (!chapterNumber || !chapterName) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
     try {
+      if (!Number(chapterNumber)) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+          );
+      }
       const chapterRepository = await Chapter.findById(chapterId);
       const checkChapter = chapterRepository.chapters.find(
         (chapter) => chapter.chapterNumber === chapterNumber
@@ -458,23 +472,6 @@ class MangaController {
   }
   //11 Stream Images Of Chapter
   async streamImagesOfChapter(req, res) {
-    // const slug = req.params.slug;
-    // const chapterNumber = req.params.chapterNumber;
-
-    // try {
-    // const manga = await Manga.findOne({ slug: slug }).populate("contentId");
-    // const manga = await Manga.findOne({ slug: slug }).populate("contentId");
-
-    //   res
-    //     .status(STATUS.SUCCESS)
-    //     .render("admin/manga/post", { manga: manga, moment: moment });
-    // } catch (error) {
-    //   console.log(error);
-    //   res
-    //     .status(STATUS.SERVER_ERROR)
-    //     .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-    // }
-
     // Store image.
     const { slug, chapterNumber } = req.params;
 
@@ -586,11 +583,17 @@ class MangaController {
   }
   //15. Update Chapter
   async updateChapter(req, res) {
-    const { manga, chapterId, chapterNumber } = req.body;
+    const { manga, chapterId, chapterNumber } = req.params;
+    if (!manga || !chapterId || !chapterNumber) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
     try {
       const foundManga = await Manga.findOne({ slug: manga }).populate(
         "contentId"
       );
+      if (!foundManga) {
+        return res.status(STATUS.BAD_REQUEST).redirect("/management/manga");
+      }
       const foundChapter = await Chapter.findOne(
         {
           _id: chapterId,
@@ -603,6 +606,9 @@ class MangaController {
           },
         }
       );
+      if (foundChapter.chapters.length === 0) {
+        return res.status(STATUS.BAD_REQUEST).redirect("/management/manga");
+      }
       res.render("admin/manga/updateChapter", {
         admin: req.user,
         moment: moment,
@@ -611,15 +617,20 @@ class MangaController {
       });
     } catch (error) {
       console.log(error);
-      return res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
   //16. Fix ChapterNumber
   async fixChapterNumber(req, res) {
     const { manga, chapterId, chapterNumber, oldChapterNumber } = req.body;
     try {
+      if (!Number(chapterNumber)) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+          );
+      }
       const foundChapter = await Chapter.findOne(
         {
           _id: chapterId,
@@ -696,65 +707,11 @@ class MangaController {
           }
         }
       );
-      return res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
-
-      // const replaceContent = foundChapter.chapters[0].chapterContent.replaceAll(
-      //   `chapter-${oldChapterNumber}`,
-      //   `chapter-${chapterNumber}`
-      // );
-      // const initData = {
-      //   chapterNumber: parseFloat(chapterNumber),
-      //   chapterName: chapterName,
-      //   chapterContent: replaceContent,
-      //   createdTime: foundChapter.chapters[0].createdTime,
-      //   updatedTime: moment().format(),
-      // };
-
-      // await Chapter.findByIdAndUpdate(chapterId, {
-      //   $push: { chapters: initData },
-      // });
-
-      // await Chapter.findOneAndUpdate(
-      //   { _id: chapterId },
-      //   {
-      //     $pull: {
-      //       chapters: { chapterNumber: foundChapter.chapters[0].chapterNumber },
-      //     },
-      //   }
-      // );
-      // await Chapter.findOneAndUpdate(
-      //   { _id: chapterId },
-      //   { $push: { chapters: { $each: [], $sort: 1 } } }
-      // );
-
-      // fs.rename(
-      //   path.join(
-      //     appRoot.path,
-      //     `/src/public/mangas/${manga}/chapter-${oldChapterNumber}/`
-      //   ),
-      //   path.join(
-      //     appRoot.path,
-      //     `/src/public/mangas/${manga}/chapter-${chapterNumber}/`
-      //   ),
-      //   function (error) {
-      //     if (error) {
-      //       console.log(error);
-      //       return res
-      //         .status(STATUS.ERROR_SERVER)
-      //         .json(
-      //           new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
-      //         );
-      //     } else {
-      //       console.log("Successfully renamed the folder.");
-      //     }
-      //   }
-      // );
-
-      res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, replaceContent));
+      return res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.UPDATE_SUCCESS, {
+          redirect: `/management/content/manga/updateChapter/${manga}/${chapterId}/${chapterNumber}`,
+        })
+      );
     } catch (error) {
       console.log(error);
       return res
@@ -781,9 +738,14 @@ class MangaController {
     }
   }
   //17.Submit update chapter
-  async submitUpdateChapter(req, res) {
+  async fixChapterContent(req, res) {
     const { chapterNumber } = req.params;
     const { chapterId, chapterContent } = req.body;
+    if (!chapterNumber || !chapterId || !chapterContent) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
     try {
       await Chapter.findOneAndUpdate(
         { _id: chapterId, "chapters.chapterNumber": Number(chapterNumber) },
@@ -793,10 +755,6 @@ class MangaController {
             "chapters.$.updatedTime": moment().format(),
           },
         }
-      );
-      await Chapter.findOneAndUpdate(
-        { _id: chapterId },
-        { $push: { chapters: { $each: [], $sort: 1 } } }
       );
       res
         .status(STATUS.SUCCESS)
@@ -868,9 +826,7 @@ class MangaController {
       });
     } catch (error) {
       console.log(error);
-      res
-        .status(STATUS.SERVER_ERROR)
-        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+      redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
 }

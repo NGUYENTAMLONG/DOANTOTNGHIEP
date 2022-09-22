@@ -19,11 +19,6 @@ class detailController {
       }
       let checkFollow = false;
       setHistory(req, res, manga._id);
-      // if (req.user !== undefined) {
-      //   // const foundUser = await User.findById(req.user._id);
-      //   checkFollow = foundUser.follows.includes(manga._id);
-      //   console.log(checkFollow);
-      // }
       contentId = manga.contentId;
       res.render("detail", {
         slug,

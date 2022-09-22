@@ -1,3 +1,9 @@
+.slideImg {
+  transition: 0.5s ease-in-out; }
+
+.slideImg:hover {
+  width: 500px; }
+
 table tr .desc_td .desc {
   height: 150px;
   width: 300px;
