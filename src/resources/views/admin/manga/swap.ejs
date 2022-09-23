@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWAP CHAPTER</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <%- include("../../partials/link") %>
+  <style>
+    .wrapper {
+      background: #fff;
+      padding: 25px;
+      max-width: 860px;
+      width: 100%;
+      border-radius: 3px;
+      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .wrapper .chapter {
+      color: #fff;
+      display: flex;
+      margin-bottom: 8px;
+      padding: 12px 17px;
+      background: #304B5F;
+      border-radius: 3px;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grabbing;
+    }
+
+    .wrapper .chapter:last-child {
+      margin-bottom: 0px;
+    }
+
+    .wrapper .chapter .text {
+      font-size: 18px;
+      font-weight: 400;
+      width: 100%;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      min-height: 10px;
+      overflow: hidden;
+    }
+
+    .wrapper .chapter i {
+      font-size: 18px;
+      cursor: grabbing;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include("../../admin/partials/header") %>
+  <div class="container mt-2">
+    <div class="text-center">
+      <h1>Thay đổi trật tự các chương <i class="fas fa-sort"></i></h1>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="wrapper">
+        <% manga.contentId.chapters.forEach((chapter,index)=>{%>
+        <div class="chapter" data-index="<%= index %>">
+          <span class="badge badge-success">Chương <%= chapter.chapterNumber %></span>
+          <span class="text p-1" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName %> </span>
+          <i class="fas fa-arrows-alt"></i>
+        </div>
+        <%}) %>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn btn-primary" onclick="changeOrder('<%= manga.contentId._id%>')">Lưu</button>
+    </div>
+  </div>
+</body>
+<%- include("../../partials/script") %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"></script>
+<script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  const dragArea = document.querySelector(".wrapper");
+  new Sortable(dragArea, {
+    animation: 350
+  });
+  const chapterTags = document.querySelectorAll(".chapter");
+  const oldIndexArr = [];
+  chapterTags.forEach((tag, index) => {
+    oldIndexArr.push(tag.getAttribute("data-index"))
+  })
+  //   console.log(oldIndexArr)
+
+  function changeOrder(chapterId) {
+    const chapterTags = document.querySelectorAll(".chapter");
+    const newIndexArr = [];
+    chapterTags.forEach((tag, index) => {
+      newIndexArr.push(tag.getAttribute("data-index"))
+    })
+    // console.log({
+    //   newIndexArr,
+    //   oldIndexArr
+    // })
+
+    const dataOrder = []
+    newIndexArr.forEach((elm, index) => {
+      if (elm !== oldIndexArr[index]) {
+        dataOrder.push([oldIndexArr[index], elm])
+      }
+    })
+
+    console.log(JSON.stringify(dataOrder))
+    fetch(`/management/content/manga/swap/${chapterId}`, {
+        method: "PATCH", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+          dataOrder
+        })
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        // if (data.isSuccess) {
+        //   swal({
+        //     title: "Thành công",
+        //     text: "Đã cập nhật thành công !",
+        //     icon: "success",
+        //     button: "Ok!",
+        //   }).then(() => {
+        //     location.reload();
+        //   });
+        // }
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }
+</script>
+
+</html>

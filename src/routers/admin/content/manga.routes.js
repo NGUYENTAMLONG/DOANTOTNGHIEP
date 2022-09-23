@@ -37,6 +37,8 @@ const {
   restoreChecked,
   getMangaAnalysis,
   fixChapterName,
+  getSwapChapterPage,
+  updateSwapChapter,
 } = require("../../../controllers/MangaController");
 const FroalaEditor = require(path.join(
   appRoot.path,
@@ -197,6 +199,10 @@ router.patch("/submit/update/:chapterNumber", fixChapterContent);
 
 router.delete("/deleteChecked", deleteChecked);
 router.patch("/restoreChecked", restoreChecked);
+//12. Get swap chapter page
+router.get("/swap/:mangaId", getSwapChapterPage);
+//13. Update swap
+router.patch("/swap/:chapterId", updateSwapChapter);
 
 //1. Get Page (MANGA ANALYSIS)
 // ex: /management/content/manga/analysis - Method: GET

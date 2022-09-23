@@ -829,6 +829,78 @@ class MangaController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async getSwapChapterPage(req, res) {
+    const { mangaId } = req.params;
+    if (!mangaId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .redirect("/management/content/manga");
+    }
+    try {
+      const foundManga = await Manga.findById(mangaId)
+        .select(["name", "contentId", "slug"])
+        .populate("contentId", [
+          "chapters.chapterNumber",
+          "chapters.chapterName",
+        ]);
+      // return res.json(foundManga);
+      res.render("admin/manga/swap", {
+        admin: req.user,
+        manga: foundManga,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async updateSwapChapter(req, res) {
+    const { chapterId } = req.params;
+    const { dataOrder } = req.body;
+
+    try {
+      // const foundChapter = ă
+      // await Chapter.findOneAndUpdate(
+      //   { _id: chapterId },
+      //   { $set: { "chapters.0": "chapters.1", "chapters.1": "chapters.0" } }
+      // );
+      const newOrder = {};
+      // dataOrder.map((elm,index)=>{
+      //   return
+      // })
+      function setOrder(elm, array) {
+        array.forEach((item) => {
+          newOrder[`chapters.${item[0]}`] = elm.chapters[Number(item[1])];
+        });
+        return newOrder;
+      }
+
+      Chapter.find({}, (err, chapters) => {
+        chapters.forEach(async function (doc) {
+          await Chapter.findByIdAndUpdate(chapterId, {
+            // $set: {
+            //   // "chapters.0": doc.chapters[1],
+            //   // "chapters.1": doc.chapters[0],
+            // },
+            $set: setOrder(doc, dataOrder),
+          });
+        });
+        if (err) {
+          return res
+            .status(STATUS.SERVER_ERROR)
+            .json(
+              new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
+            );
+        }
+        console.log(newOrder);
+      });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, dataOrder));
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
 }
 
 module.exports = new MangaController();

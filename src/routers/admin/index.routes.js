@@ -22,7 +22,6 @@ const {
 
 //path: /management/:slug/...
 router.use("/human", AuthorizationHA, humanRouter);
-
 router.use("/content", AuthorizationCA, contentRouter);
 
 //LOGIN
