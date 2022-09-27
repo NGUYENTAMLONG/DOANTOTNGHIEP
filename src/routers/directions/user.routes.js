@@ -7,7 +7,6 @@ const {
   showProfile,
   checkFollow,
   showHistory,
-  showBlogUser,
   updateUsername,
   updateDob,
   updateAvatar,
@@ -27,7 +26,6 @@ router.delete("/unlike", unlikeManga);
 router.post("/rate", rateManga);
 router.get("/profile", showProfile);
 router.get("/history", showHistory);
-router.get("/my-blog", showBlogUser);
 router.get("/check-follow/:id", checkFollow);
 
 router.patch("/update-username", updateUsername);

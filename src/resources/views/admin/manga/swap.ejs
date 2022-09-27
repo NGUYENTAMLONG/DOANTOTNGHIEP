@@ -16,6 +16,8 @@
       width: 100%;
       border-radius: 3px;
       box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+      /* height: 200px;
+      overflow-y: scroll; */
     }
 
     .wrapper .chapter {
@@ -63,6 +65,7 @@
       <div class="wrapper">
         <% manga.contentId.chapters.forEach((chapter,index)=>{%>
         <div class="chapter" data-index="<%= index %>">
+          <span class="badge badge-danger mr-1"><%= index + 1 %></span>
           <span class="badge badge-success">Chương <%= chapter.chapterNumber %></span>
           <span class="text p-1" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><%= chapter.chapterName %> </span>
           <i class="fas fa-arrows-alt"></i>
@@ -71,7 +74,7 @@
       </div>
     </div>
     <div class="text-center mt-4">
-      <button class="btn btn-primary" onclick="changeOrder('<%= manga.contentId._id%>')">Lưu</button>
+      <button class="btn btn-primary" onclick="changeOrder('<%= manga.contentId._id%>')" id="save-btn">Lưu</button>
     </div>
   </div>
 </body>
@@ -93,17 +96,15 @@
   })
   //   console.log(oldIndexArr)
 
+  const saveBtn = document.getElementById("save-btn")
+
   function changeOrder(chapterId) {
     const chapterTags = document.querySelectorAll(".chapter");
+    saveBtn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`
     const newIndexArr = [];
     chapterTags.forEach((tag, index) => {
       newIndexArr.push(tag.getAttribute("data-index"))
     })
-    // console.log({
-    //   newIndexArr,
-    //   oldIndexArr
-    // })
-
     const dataOrder = []
     newIndexArr.forEach((elm, index) => {
       if (elm !== oldIndexArr[index]) {
@@ -124,17 +125,18 @@
       })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-        // if (data.isSuccess) {
-        //   swal({
-        //     title: "Thành công",
-        //     text: "Đã cập nhật thành công !",
-        //     icon: "success",
-        //     button: "Ok!",
-        //   }).then(() => {
-        //     location.reload();
-        //   });
-        // }
+        // console.log(data)
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã cập nhật thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload();
+            saveBtn.innerHTML = `Lưu`
+          });
+        }
       })
       .catch((error) => {
         console.log("Error:", error);

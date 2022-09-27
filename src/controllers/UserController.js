@@ -121,51 +121,6 @@ class UserController {
       redirect(req, res, STATUS.UNAUTHORIZED);
     }
   }
-  async showBlogUser(req, res) {
-    try {
-      let foundUser;
-      if (req.user.provider === "LOCAL") {
-        foundUser = await UserLocal.findById(req.user.id);
-      } else if (req.user.provider === "GOOGLE") {
-        foundUser = await UserGoogle.findById(req.user.id);
-      } else if (req.user.provider === "FACEBOOK") {
-        foundUser = await UserFacebook.findById(req.user.id);
-      }
-
-      // const foundBlogOfUser = await Blog.find({});
-      // result.mangas = await Manga.find(match)
-      //   .populate({
-      //     path: "contentId",
-      //     options: {
-      //       chapters: { $slice: -1 },
-      //     },
-      //   })
-      //   .limit(limit)
-      //   .skip(startPage)
-      //   .exec();
-      return res.json("BLOG USER");
-      // res.render("showHistory", {
-      //   user: req.user,
-      //   moment,
-      //   flag: true,
-      //   title: `<i class="fas fa-compass"></i> Các bộ truyện bạn đã ghé thăm`,
-      //   categories: types,
-      //   mangas: result.mangas,
-      //   navigator: {
-      //     previous: result.previous,
-      //     next: result.next,
-      //     totalPages: Math.ceil(totalMangas / limit),
-      //     limit: limit,
-      //     activePage: page,
-      //     filter: match,
-      //   },
-      // });
-      // res.status(STATUS.SUCCESS).json({ mangas });
-    } catch (error) {
-      console.log(error);
-      redirect(req, res, STATUS.UNAUTHORIZED);
-    }
-  }
   async updateUsername(req, res) {
     const { username } = req.body;
     // return res.json(new SuccessResponse(MESSAGE.SUCCESS, username));

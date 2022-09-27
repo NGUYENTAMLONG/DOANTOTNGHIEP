@@ -199,9 +199,10 @@
     return `
     <div class="text-center">
        ${(data.chapters.length !== 0)?`<span class='badge badge-warning'>Tới chương ${data.chapters[0].chapterNumber}</span>`: `<span class='badge badge-danger'>Chưa cập nhật</span>`}
-        <button type="button" class="btn btn-info btn-sm mt-2 launch-modal" onclick='showChapters(this)' data-toggle="modal" data-target="#modalChapters" data-id="${manga.contentId._id}" data-slug="${ manga.slug}">
+        <button type="button" class="btn btn-info btn-sm mt-2 launch-modal" onclick='showChapters(this)' data-toggle="modal" data-target="#modalChapters" data-id="${manga.contentId._id}" data-slug="${manga.slug}">
           Chi tiết
         </button>
+         <a href="/management/content/manga/swap/${manga._id}" class="btn btn-secondary btn-sm mt-2">Hoán đổi</a>
       </div>
       <div class="modal fade" id="modalChapters" tabindex="-1" role="dialog" aria-labelledby="modalChaptersLabel" aria-hidden="true">
         <div class="modal-dialog mw-100 w-75" role="document">
@@ -221,7 +222,6 @@
             </div>
             <div class="modal-footer">
                   <input class="form-control mt-2 mb-2 float-left" style="width: 100%;" id="myInput-Chapter" type="text" placeholder="Tìm chương ...">
-                    <a href="/management/content/manga/swap/${manga._id}" class="btn btn-info">Hoán đổi</a>
               <span></span>
               <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal" onclick="Close()">Close</button>
               <button type="button" class="btn btn-primary btn-back" hidden onclick="Back()">Back</button>

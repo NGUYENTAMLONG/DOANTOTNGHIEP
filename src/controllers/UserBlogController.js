@@ -16,7 +16,45 @@ dotenv.config();
 
 class UserBlogController {
   async getUserBlogPage(req, res) {
-    res.status(200).json("SUCCESS");
+    if (!req.user) {
+      return redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+    try {
+      // let foundUser;
+      // if (req.user.provider === "LOCAL") {
+      //   foundUser = await UserLocal.findById(req.user.id);
+      // } else if (req.user.provider === "GOOGLE") {
+      //   foundUser = await UserGoogle.findById(req.user.id);
+      // } else if (req.user.provider === "FACEBOOK") {
+      //   foundUser = await UserFacebook.findById(req.user.id);
+      // }
+      const userId = req.user._id;
+      const foundBlogs = await Blog.find({ writtenBy: userId });
+      return res.status(STATUS.SUCCESS).render("userBlog", {
+        user: req.user,
+        blogs: foundBlogs,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getUserCreateBlog(req, res) {
+    if (!req.user) {
+      return redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+    try {
+      return res.status(STATUS.SUCCESS).render("userCreateBlog", {
+        user: req.user,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
   }
   async checkLiked(req, res) {
     const blogId = req.params.id;

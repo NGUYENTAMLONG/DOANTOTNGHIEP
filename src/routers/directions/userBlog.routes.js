@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  getUserCreateBlog,
   getUserBlogPage,
   likeBlog,
   checkLiked,
@@ -8,7 +9,9 @@ const {
 } = require("../../controllers/UserBlogController");
 const router = express.Router();
 
+router.get("/create-blog", getUserCreateBlog);
 router.get("/", getUserBlogPage);
+
 router.get("/api/check-liked/:id", checkLiked);
 
 router.post("/api/like", likeBlog);

@@ -25,9 +25,8 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/about">Giới thiệu</a>
-                <a class="dropdown-item" href="#">Tải App</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-light bg-success" href="#">Ủng hộ</a>
+                <a class="dropdown-item" href="#">Tải App</a>
               </div>
             </li>
           </ul>
@@ -52,7 +51,7 @@
               <div class="dropdown-menu" id="settings" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="/follow?page=1&limit=2">Danh sách theo dõi</a>
                 <a class="dropdown-item" href="/user/history?page=1&limit=2">Lịch sử đọc truyện</a>
-                <a class="dropdown-item" href="/user/my-blog">Blog của tôi</a>
+                <a class="dropdown-item" href="/user/blog">Blog của tôi</a>
                 <a class="dropdown-item" href="/user/profile">Cài đặt thông tin</a>
                 <a class="dropdown-item logoutBtn" href="/logout">Đăng xuất</a>
               </div>
@@ -285,12 +284,35 @@
         <a href="#">Tiểu thuyết</a>
         <a href="#">Truyện famade</a>
         <a href="/advanced-search">Tìm truyện</a>
+        <a href="#" data-toggle="modal" data-target="#donateModal">Ủng hộ</a>
+        <!-- Modal -->
+        <div class="modal fade" id="donateModal" tabindex="-1" role="dialog" aria-labelledby="donateModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="donateModalLabel">☕☕☕ DONATE 🙏🙏🙏</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body text-center">
+                <p>💪 Tiếp sức truyền lửa tạo động lực cho nhóm dịch 🔥</p>
+                <img src="/public/qr/qr.jpg" width="100%" alt="">
+                <p>💙💜🖤💖 Xin chân thành cảm ơn ♥️❤️💛💚</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <a href="https://www.facebook.com/truyentranh" target="_blank">Fanpage</a>
         <form action="/history?page=1&limit=2" method="post" class="d-flex justify-content-center aligh-items-center" id="form-history">
           <input type="text" name="visit" id="visit" value="" hidden>
           <button class="btn btn-info btn-sm mt-1 ml-2 mb-1" type="submit"><i class='bx bxs-time'></i> Lịch sử</button>
         </form>
       </div>
+
   </header>
   <script src="/js/authen.js"></script>
   <script>

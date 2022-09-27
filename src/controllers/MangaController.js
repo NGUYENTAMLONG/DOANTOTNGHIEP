@@ -858,44 +858,29 @@ class MangaController {
     const { dataOrder } = req.body;
 
     try {
-      // const foundChapter = ă
-      // await Chapter.findOneAndUpdate(
-      //   { _id: chapterId },
-      //   { $set: { "chapters.0": "chapters.1", "chapters.1": "chapters.0" } }
-      // );
+      const oldIndex = dataOrder.map((elm, index) => {
+        return Number(elm[0]);
+      });
+      const newIndex = dataOrder.map((elm, index) => {
+        return Number(elm[1]);
+      });
+      const repoChapter = await Chapter.findById(chapterId);
+      const foundChapterArray = newIndex.map(
+        (elm, index) => repoChapter.chapters[elm]
+      );
       const newOrder = {};
-      // dataOrder.map((elm,index)=>{
-      //   return
-      // })
-      function setOrder(elm, array) {
-        array.forEach((item) => {
-          newOrder[`chapters.${item[0]}`] = elm.chapters[Number(item[1])];
+      function setOrder(oldIndex, array) {
+        oldIndex.forEach((elm, index) => {
+          newOrder[`chapters.${elm}`] = array[index];
         });
         return newOrder;
       }
-
-      Chapter.find({}, (err, chapters) => {
-        chapters.forEach(async function (doc) {
-          await Chapter.findByIdAndUpdate(chapterId, {
-            // $set: {
-            //   // "chapters.0": doc.chapters[1],
-            //   // "chapters.1": doc.chapters[0],
-            // },
-            $set: setOrder(doc, dataOrder),
-          });
-        });
-        if (err) {
-          return res
-            .status(STATUS.SERVER_ERROR)
-            .json(
-              new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
-            );
-        }
-        console.log(newOrder);
+      await Chapter.findByIdAndUpdate(chapterId, {
+        $set: setOrder(oldIndex, foundChapterArray),
       });
       res
         .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, dataOrder));
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLOG OF USER</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <section class="section container" id="section-1">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center">
+      <div class="float-right" style="width: 100%;">
+        <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navBlog" aria-controls="navBlog" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" style="width: 100%;" id="navBlog">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Bài viết của tôi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/blog/create-blog">Viết bài</a>
+          </li>
+        </ul>
+      </div>
+      <form class="form-inline my-2 my-lg-0">
+        <div class="d-flex">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success ml-3" type="submit">Search</button>
+        </div>
+      </form>
+    </nav>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+<script src="/js/moment-with-locales.min.js"></script>
+
+<script>
+
+</script>
+
+</html>
