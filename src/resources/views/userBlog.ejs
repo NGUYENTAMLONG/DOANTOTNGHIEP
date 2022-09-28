@@ -41,6 +41,21 @@
       </form>
     </nav>
   </section>
+  <section class="section container" id="section-2">
+    <% blogs.forEach((blog,index)=>{%>
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="<%= blog.cover %>" alt="Image for <%= blog.title %> ">
+      <div class="card-body">
+        <h5 class="card-title"><%= blog.title %></h5>
+        <p class="card-text"><%= blog.desc %></p>
+        <div class="d-flex">
+          <b>Trạng thái: <%= blog.status %></b>
+          <a href="#" class="btn btn-primary">Tới bài viết</a>
+        </div>
+      </div>
+    </div>
+    <%}) %>
+  </section>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>

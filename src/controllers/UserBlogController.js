@@ -12,6 +12,7 @@ const UserGoogle = require("../models/UserGoogle");
 
 const Blog = require("../models/Blog");
 const Behavior = require("../models/Behavior");
+const { BLOG_ROLE, BLOG_STATUS } = require("../config/default");
 dotenv.config();
 
 class UserBlogController {
@@ -251,6 +252,61 @@ class UserBlogController {
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.RATED, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async createUserBlog(req, res) {
+    const {
+      title,
+      desc,
+      author,
+      type,
+      keywordArray,
+      source,
+      link,
+      image,
+      content,
+    } = req.body;
+    if (
+      !title ||
+      !desc ||
+      !author ||
+      !type ||
+      keywordArray.length === 0 ||
+      !source ||
+      !image ||
+      !content
+    ) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const newBlog = new Blog({
+        title,
+        desc,
+        type,
+        author,
+        cover: image,
+        keywords: keywordArray,
+        source,
+        link,
+        writtenBy: req.user.id,
+        content,
+        role: BLOG_ROLE.MEMBER.CODE,
+        status: BLOG_STATUS.PENDING,
+        passport: req.user.provider,
+      });
+      await newBlog.save();
+      return res
+        .status(STATUS.CREATED)
+        .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       res

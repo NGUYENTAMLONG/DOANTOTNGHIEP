@@ -1,4 +1,9 @@
-const { BLOG_ROLE, PASSPORT, BLOG_TYPE } = require("../config/default");
+const {
+  BLOG_ROLE,
+  PASSPORT,
+  BLOG_TYPE,
+  BLOG_STATUS,
+} = require("../config/default");
 const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
 const { SuccessResponse, ErrorResponse } = require("../helper/response");
 const Admin = require("../models/Admin");
@@ -20,13 +25,17 @@ const FroalaEditor = require(path.join(
 class BlogController {
   async getBlogPage(req, res) {
     Promise.all([
-      Blog.find({}).sort({ createdAt: -1 }).limit(2).skip(0).exec(),
-      Blog.find({ type: BLOG_TYPE.NEWS.CODE })
+      Blog.find({ status: BLOG_STATUS.ACTIVE })
+        .sort({ createdAt: -1 })
+        .limit(2)
+        .skip(0)
+        .exec(),
+      Blog.find({ status: BLOG_STATUS.ACTIVE, type: BLOG_TYPE.NEWS.CODE })
         .sort({ createdAt: -1 })
         .limit(5)
         .skip(0)
         .exec(),
-      Blog.find({ type: BLOG_TYPE.SPREAD.CODE })
+      Blog.find({ status: BLOG_STATUS.ACTIVE, type: BLOG_TYPE.SPREAD.CODE })
         .sort({ createdAt: -1 })
         .limit(5)
         .skip(0)
@@ -56,7 +65,7 @@ class BlogController {
       redirect(req, res, STATUS.BAD_REQUEST);
     }
     Promise.all([
-      Blog.find({ keywords: { $in: [keyword] } })
+      Blog.find({ status: BLOG_STATUS.ACTIVE, keywords: { $in: [keyword] } })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(0)
@@ -93,7 +102,7 @@ class BlogController {
   }
   async getSpreadsBlogPage(req, res) {
     Promise.all([
-      Blog.find({ type: BLOG_TYPE.SPREAD.CODE })
+      Blog.find({ status: BLOG_STATUS.ACTIVE, type: BLOG_TYPE.SPREAD.CODE })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(0)
@@ -118,7 +127,7 @@ class BlogController {
   }
   async getNewsBlogPage(req, res) {
     Promise.all([
-      Blog.find({ type: BLOG_TYPE.NEWS.CODE })
+      Blog.find({ status: BLOG_STATUS.ACTIVE, type: BLOG_TYPE.NEWS.CODE })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(0)
@@ -149,7 +158,7 @@ class BlogController {
         .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
     }
     try {
-      const foundBlog = await Blog.find({})
+      const foundBlog = await Blog.find({ status: BLOG_STATUS.ACTIVE })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(Number(skip))
@@ -175,7 +184,10 @@ class BlogController {
         .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
     }
     try {
-      const foundBlog = await Blog.find({ keywords: { $in: [keyword] } })
+      const foundBlog = await Blog.find({
+        status: BLOG_STATUS.ACTIVE,
+        keywords: { $in: [keyword] },
+      })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(Number(skip))
@@ -201,7 +213,10 @@ class BlogController {
         .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
     }
     try {
-      const foundBlog = await Blog.find({ type: type })
+      const foundBlog = await Blog.find({
+        status: BLOG_STATUS.ACTIVE,
+        type: type,
+      })
         .sort({ createdAt: -1 })
         .limit(2)
         .skip(Number(skip))
@@ -225,7 +240,10 @@ class BlogController {
       redirect(req, res, STATUS.BAD_REQUEST);
     }
     try {
-      const foundBlog = await Blog.findOne({ slug });
+      const foundBlog = await Blog.findOne({
+        status: BLOG_STATUS.ACTIVE,
+        slug,
+      });
       const foundBlogsOfType = await Blog.find({ type: foundBlog.type });
       await increaseView(req, res, slug);
       res.status(STATUS.SUCCESS).render("readBlog", {
