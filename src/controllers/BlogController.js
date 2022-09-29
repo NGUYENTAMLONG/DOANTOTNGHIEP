@@ -257,6 +257,23 @@ class BlogController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async getBlogCensorship(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    try {
+      const foundBlog = await Blog.findById(blogId);
+      res.status(STATUS.SUCCESS).render("admin/blog/censorship", {
+        admin: req.user,
+        blog: foundBlog,
+        moment,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
   async getInfoBlogCreate(req, res) {
     try {
       res.status(STATUS.SUCCESS).render("admin/blog/submitInfo", {
@@ -643,6 +660,29 @@ class BlogController {
     try {
       await Blog.findOneAndUpdate({ slug: slug }, { content: content });
       return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async acceptBlog(req, res) {
+    const { blogId } = req.body;
+    if (!blogId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await Blog.findByIdAndUpdate(blogId, {
+        status: BLOG_STATUS.ACTIVE,
+      });
+      res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
     } catch (error) {

@@ -90,20 +90,13 @@
             <p class="card-text"><%= blog.desc %></p>
             <div class="d-flex">
               <b>Trạng thái:
-                <%  if(blog.status === "PENDING"){%>
-                <span class="badge badge-warning">
-                  Chờ phê duyệt
+                <span class="badge badge-danger">
+                  Đã xóa
                 </span>
-                <%}else{%>
-                <span class="badge badge-success">
-                  Hoạt động
-                </span>
-                <%} %>
               </b>
             </div>
             <div class="text-right">
-              <a href="#" class="text-primary" data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
-              <i class="fas fa-trash-alt text-danger" data-toggle="tooltip" data-placement="bottom" title="Loại bỏ" style="cursor: pointer;" onclick="deleteBlog('<%= blog._id %>')"></i>
+              <i class="fas fa-repeat-alt text-danger" data-toggle="tooltip" data-placement="bottom" title="Loại bỏ" style="cursor: pointer;" onclick="recoverBlog('<%= blog._id %>')"></i>
             </div>
           </div>
         </div>
@@ -120,39 +113,27 @@
   //Tooltip
   $('[data-toggle="tooltip"]').tooltip();
 
-  function deleteBlog(blogId) {
-    swal({
-      title: "Bạn có chắc chắn muốn xóa bài viết này không? ",
-      text: "Nếu xóa bạn vẫn có thể khôi phục bài viết !",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        fetch(`/user/blog/api/delete-blog/${blogId}`, {
-            method: 'DELETE', // or 'PUT'
+  function recoverBlog(blogId) {
+    fetch(`/user/blog/api/recover-blog/${blogId}`, {
+        method: 'PATCH', // or 'PUT'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.isSuccess) {
+          swal({
+            title: "Thành công",
+            text: "Đã khôi phục thành công !",
+            icon: "success",
+            button: "Ok!",
+          }).then(() => {
+            location.reload()
           })
-          .then(response => response.json())
-          .then(data => {
-            if (data.isSuccess) {
-              swal({
-                title: "Thành công",
-                text: "Đã xóa thành công !",
-                icon: "success",
-                button: "Ok!",
-              }).then(() => {
-                location.reload()
-              })
-            }
+        }
 
-          })
-          .catch((error) => {
-            console.log('Error:', error);
-          })
-      } else {
-        return;
-      }
-    });
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 

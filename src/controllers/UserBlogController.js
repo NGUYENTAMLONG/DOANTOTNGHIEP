@@ -14,6 +14,7 @@ const Blog = require("../models/Blog");
 const Behavior = require("../models/Behavior");
 const { BLOG_ROLE, BLOG_STATUS } = require("../config/default");
 dotenv.config();
+const mongoose = require("mongoose");
 
 class UserBlogController {
   async getUserBlogPage(req, res) {
@@ -21,17 +22,31 @@ class UserBlogController {
       return redirect(req, res, STATUS.UNAUTHORIZED);
     }
     try {
-      // let foundUser;
-      // if (req.user.provider === "LOCAL") {
-      //   foundUser = await UserLocal.findById(req.user.id);
-      // } else if (req.user.provider === "GOOGLE") {
-      //   foundUser = await UserGoogle.findById(req.user.id);
-      // } else if (req.user.provider === "FACEBOOK") {
-      //   foundUser = await UserFacebook.findById(req.user.id);
-      // }
-      const userId = req.user._id;
-      const foundBlogs = await Blog.find({ writtenBy: userId });
+      const userId = req.user.id;
+      const foundBlogs = await Blog.find({
+        writtenBy: userId,
+      });
       return res.status(STATUS.SUCCESS).render("userBlog", {
+        user: req.user,
+        blogs: foundBlogs,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getTrashPage(req, res) {
+    if (!req.user) {
+      return redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+    try {
+      const userId = req.user.id;
+      const foundBlogs = await Blog.findDeleted({
+        writtenBy: userId,
+      });
+      return res.status(STATUS.SUCCESS).render("userBlogTrash", {
         user: req.user,
         blogs: foundBlogs,
       });
@@ -307,6 +322,25 @@ class UserBlogController {
       return res
         .status(STATUS.CREATED)
         .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async deleteUserBlog(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      await Blog.delete({ _id: blogId });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       res

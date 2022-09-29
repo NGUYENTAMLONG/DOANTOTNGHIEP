@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CREATE BLOG</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/froalacss" />
+  <%- include("partials/link") %>
+  <style>
+    .box-upload {
+      border-radius: 15px;
+      border: dashed gray 2px;
+      padding: 20px;
+    }
+
+    .icon-upload {
+      cursor: pointer;
+    }
+
+    .img-cover {
+      height: 400px;
+      max-width: 600px;
+      object-fit: contain;
+    }
+
+    .keywords {
+      margin-top: 10px;
+    }
+
+    .keyword {
+      background-color: rgba(128, 128, 128, 0.692);
+      color: white;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      margin: 0px 2px;
+      padding: 0px 5px 0px 10px;
+    }
+
+    .keyword .keyword__x {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      background-color: gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      margin-left: 5px;
+      font-size: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+
+  <div class="container mt-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/user/blog">Blog của tôi</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tạo Blog</li>
+      </ol>
+    </nav>
+    <section class="container mb-4">
+      <div class="form-group">
+        <label for="title">Tiêu đề</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="Nhập tiêu đề bài viết">
+      </div>
+      <div class="form-group">
+        <label for="desc">Mô tả sơ lược</label>
+        <textarea class="form-control" id="desc" name="desc" placeholder="Nhập mô tả sơ lược bài viết"></textarea>
+      </div>
+      <p>Thuộc loại</p>
+      <div class="form-group">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="type" id="news" value="NEWS">
+          <label class="form-check-label" for="news">
+            Tin tức
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="type" id="spread" value="SPREAD">
+          <label class="form-check-label" for="spread">
+            Tản mạn
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="author">Tác giả</label>
+        <input type="text" class="form-control" id="author" name="author" placeholder="Nhập tên giác giả của bài viết">
+      </div>
+      <div class="form-group">
+        <label for="cover">Ảnh bìa</label>
+        <div class="box-upload text-center">
+          <form action="#" class="form-upload" enctype="multipart/form-data">
+            <label for="gallery-photo-cover" class="blog-img cover text-center">
+              <img class="img-cover" width="100%" alt="img-cover" hidden />
+              <label for="gallery-photo-cover" class="icon-upload"> <i class="fas fa-5x fa-upload"></i><br> Upload Blog Cover</label>
+            </label>
+            <div class="text-center">
+              <input type="file" id="gallery-photo-cover" name="cover" hidden>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cover">Từ khóa</label>
+        <div class="d-flex">
+          <input type="text" class="form-control mr-4" id="keyword" name="keyword" placeholder="Nhập từ khóa"><button class="btn btn-sm btn-warning" onclick="addKeyword()">Thêm</button>
+        </div>
+        <div class="d-flex keywords">
+          <!-- <span class="keyword d-flex">
+            <span>
+              Manga
+            </span>
+            <span class="keyword__x">x</span>
+          </span> -->
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="source">Nguồn</label>
+        <input type="text" class="form-control mr-4" id="source" name="source" placeholder="Nhập nguồn của bài viết">
+      </div>
+      <div class="form-group">
+        <label for="link">Link</label>
+        <input type="text" class="form-control mr-4" id="link" name="link" placeholder="Nhập link của bài viết (Nếu có)">
+      </div>
+      <div class="form-group">
+        <label for="writen">Quyền</label>
+        <span class="badge badge-info">MEMBER/USER</span>
+      </div>
+      <div class="form-group">
+        <label for="content">Nội dung</label>
+        <textarea id="froala-edit" name="contentBlog"></textarea><br>
+      </div>
+      <button class="btn btn-primary float-right mb-4" onclick="createBlog()"><i class="fas fa-plane-departure"></i> Đăng bài viết </button>
+    </section>
+  </div>
+</body>
+<%- include("partials/script") %>
+<script src="/js/moment.min.js"></script>
+<script src="/js/jquery.email.multiple.js"></script>
+<script src="/froalajs"></script>
+<script>
+  //Froala Editor set up
+  const editor = new FroalaEditor("#froala-edit", {
+    // imageUploadURL: `/management/content/blog/api/stream-image/${type}/${slug}`,
+    height: 800,
+    // events: {
+    //   'image.beforeUpload': function($img) {
+    //     console.log("ImageData", ImageData);
+    //   },
+    //   'image.removed': function($img) {
+    //     const data = {
+    //       path: $img.attr('src')
+    //     }
+    //     fetch(`/management/content/blog/api/stream-image/delete/${type}/${slug}`, {
+    //       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //         // 'Content-Type': 'application/x-www-form-urlencoded',
+    //       },
+    //       fileUploadParam: 'file_name',
+    //       body: JSON.stringify(data)
+    //     }).then(res => res.json()).then(data => console.log(data)).catch((error) => console.log(error))
+    //   },
+    //   contentChanged: function() {
+    //     $('#preview').html(this.html.get());
+    //   }
+    // }
+  });
+
+  window.onsubmit = function(event) {
+    event.preventDefault();
+  }
+  // Cover upload
+  const cover = document.querySelector(".cover");
+  $('#gallery-photo-cover').on('change', function() {
+    const imageFile = document.querySelector('#gallery-photo-cover').files[0];
+    if (!imageFile) {
+      return
+    }
+    if (!imageFile.name.endsWith(".jpg") && !imageFile.name.endsWith(".jpeg") && !imageFile.name.endsWith(".png")) {
+      alert("ERROR")
+      return
+    }
+    // imagesPreview(this, 'div.gallery');
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.querySelector(".img-cover").setAttribute("src", e.target.result);
+      document.querySelector(".img-cover").removeAttribute("hidden");
+
+      if (document.querySelector(".icon-upload")) {
+        document.querySelector(".icon-upload").remove()
+      }
+    };
+    reader.readAsDataURL(imageFile);
+  });
+
+  function createBlog() {
+    const title = document.getElementById("title").value;
+    const desc = document.getElementById("desc").value;
+    const author = document.getElementById("author").value;
+    const type = $("input[name='type']:checked").val();
+    const keywordInputs = document.querySelectorAll(".keyword__name");
+    const keywordArray = [];
+    keywordInputs.forEach((elm) => keywordArray.push(elm.getAttribute("data-keyword")));
+    const source = document.getElementById("source").value;
+    const link = document.getElementById("link").value;
+    const content = document.getElementById("froala-edit").value;
+
+    if (!title || !author || !desc || !type || keywordArray.length === 0 || !source || !content) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải điền đầy đủ thông tin >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
+
+    const payload = {
+      title,
+      desc,
+      author,
+      type,
+      keywordArray,
+      source,
+      link,
+      content
+    }
+    const imgFiles = document.getElementById("gallery-photo-cover");
+    if (!imgFiles.files[0]) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải upload trang bìa của bài viết >.<",
+        icon: "warning",
+        button: "OK!",
+      });
+      return;
+    }
+    //set up avatar file
+    const formData = new FormData();
+    formData.append("cover", imgFiles.files[0])
+    fetch('/user/blog/api/upload/cover', {
+        method: 'POST',
+        // or 'PUT'
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log({
+          formData,
+          data
+        })
+        payload.image = `/public/blog/covers/${data.filename}`;
+        fetch('/user/blog/api/create-blog', {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          })
+          .then(response => response.json())
+          .then(result => {
+            console.log(result)
+            if (!result.isSuccess) {
+              swal({
+                title: "Thông báo",
+                text: "Có lỗi khi tạo bài viết !",
+                icon: "error",
+                button: "Ok!",
+              })
+            } else {
+              swal({
+                title: "Thành công",
+                text: "Đã đăng thành công !",
+                icon: "success",
+                button: "Ok!",
+              }).then(() => {
+                window.location.href = "/user/blog"
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Error:', error);
+          })
+      }).catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+<script>
+  const keywordInput = document.getElementById("keyword");
+  const keywordSpan = document.querySelector(".keywords");
+
+  function addKeyword() {
+    keywordSpan.innerHTML += `<span class="keyword d-flex">
+  <span class="keyword__name" data-keyword="${keywordInput.value}" >
+    ${keywordInput.value}
+  </span>
+  <span class="keyword__x" onclick="removeKeyword(this)">x</span>
+</span>`
+  }
+
+  function removeKeyword(keyword) {
+    keyword.parentElement.remove();
+  }
+</script>
+
+</html>

@@ -19,6 +19,8 @@ const {
   updateInfoBlog,
   getContentBlogUpdate,
   updateContentBlog,
+  getBlogCensorship,
+  acceptBlog,
 } = require("../../../controllers/BlogController");
 const path = require("path");
 const multer = require("multer");
@@ -44,6 +46,7 @@ router.get("/write-blog/submit-info", getInfoBlogCreate);
 router.get("/write-blog/submit-content/:type/:slug", getContentBlogCreate);
 router.get("/update-blog/submit-info/:id", getInfoBlogUpdate);
 router.get("/update-blog/submit-content/:id", getContentBlogUpdate);
+router.get("/censorship/:id", getBlogCensorship);
 
 //route (API-JSON): -> /management/content/blog/api
 
@@ -92,4 +95,7 @@ router.patch(
 router.patch("/api/update-blog/update-info/:id", updateInfoBlog);
 //15. Update blog content
 router.patch("/api/update-blog/update-content", updateContentBlog);
+//16. Accept Blog
+router.patch("/api/accept-blog", acceptBlog);
+
 module.exports = router;

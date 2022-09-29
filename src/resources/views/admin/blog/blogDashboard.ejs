@@ -78,8 +78,8 @@
 
       <select id="select" class="form-control ml-2" name="filterAlgorithm">
         <option value="and" selected>Tất cả</option>
-        <option value="PENDING">Chưa duyệt</option>
-        <option value="ACTIVE">Đã duyệt</option>
+        <option value="PENDING" class="status-option">Chưa duyệt</option>
+        <option value="ACTIVE" class="status-option">Đã duyệt</option>
       </select>
       <button class="btn btn-secondary ml-2" id="filterBy"><i class="fas fa-filter"></i></button>
     </div>
@@ -275,7 +275,7 @@
     return `<div class="text-center">
          <a class="btn btn-primary btn-sm" href="/management/content/blog/update-blog/submit-info/${row._id}">Sửa</a>
          <span class="btn btn-danger btn-sm mt-2" onclick="deleteBlog('${row._id}')">Xóa</span>
-         ${row.status==="PENDING"? '<a class="btn btn-warning btn-sm mt-2" href="/management/content/blog/update-blog/get-accept" >Duyệt</a>':""}
+         ${row.status==="PENDING"? `<a class="btn btn-warning btn-sm mt-2" href="/management/content/blog/censorship/${row._id}">Duyệt</a>`:""}
       </div>
     `
   }
@@ -406,17 +406,24 @@
   }
 </script>
 <script>
+  var $table = $('#table')
+  var filterAlgorithm = $('[name="filterAlgorithm"]').val();
+  const statusArr = [];
+  document.querySelectorAll(".status-option").forEach((elm, index) => {
+    statusArr.push(elm.value)
+  })
   $('#filterBy').click(function() {
-    var filterAlgorithm = $('[name="filterAlgorithm"]').val()
-    console.log(filterAlgorithm)
+    let status = document.querySelector('[name="filterAlgorithm"]').value;
+    if (status === "and") {
+      status = statusArr;
+    }
     $table.bootstrapTable('refreshOptions', {
       filterOptions: {
         filterAlgorithm: filterAlgorithm
       }
     })
-
     $table.bootstrapTable('filterBy', {
-      status: "PENDING"
+      status: status
     })
   })
 </script>

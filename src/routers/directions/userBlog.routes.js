@@ -7,6 +7,8 @@ const {
   unlikeBlog,
   rateBlog,
   createUserBlog,
+  deleteUserBlog,
+  getTrashPage,
 } = require("../../controllers/UserBlogController");
 const router = express.Router();
 const path = require("path");
@@ -26,6 +28,7 @@ const storageCover = multer.diskStorage({
 const uploadBlog = multer({ storage: storageCover });
 
 router.get("/create-blog", getUserCreateBlog);
+router.get("/trash", getTrashPage);
 router.get("/", getUserBlogPage);
 
 router.get("/api/check-liked/:id", checkLiked);
@@ -44,5 +47,6 @@ router.post(
 );
 
 router.post("/api/create-blog", createUserBlog);
+router.delete("/api/delete-blog/:id", deleteUserBlog);
 
 module.exports = router;
