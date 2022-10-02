@@ -70,9 +70,13 @@
       <% blogs.forEach((blog,index)=>{%>
       <div class="col-6 col-sm-4 col-md-3 p-2">
         <div class="card" style="width: 100%;">
+          <% if(blog.status !== "PENDING" ){%>
           <a href="/blog/read/<%= blog.slug %>">
             <img class="card-img-top" src="<%= blog.cover %>" alt="Image for <%= blog.title %> ">
           </a>
+          <%}else{%>
+          <img class="card-img-top" src="<%= blog.cover %>" alt="Image for <%= blog.title %> ">
+          <%} %>
           <div class="card-body">
             <%  if(blog.status === "PENDING"){%>
             <h5 class="card-title"><%= blog.title %></h5>
@@ -169,9 +173,10 @@
       const htmls = result.data.map((blog) => `
       <div class="col-6 col-sm-4 col-md-3 p-2">
       <div class="card" style="width: 100%;">
+          ${ (blog.status !== "PENDING") ? `
         <a href="/blog/read/${blog.slug}">
           <img class="card-img-top" src="${blog.cover}" alt="Image for ${ blog.title } ">
-        </a>
+        </a>`:` <img class="card-img-top" src="${blog.cover}" alt="Image for ${ blog.title } ">`}
         <div class="card-body">
           ${ (blog.status === "PENDING") ?
           `<h5 class="card-title">${ blog.title }</h5>`

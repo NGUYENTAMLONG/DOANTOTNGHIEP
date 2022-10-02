@@ -185,9 +185,10 @@ body {
         position: relative;
         #blog-page {
           position: absolute;
-          width: 400px;
-          left: -200px;
+          width: 300px;
+          left: -70px;
           transition: 0.5s ease-in-out;
+          z-index: 1;
           &:hover {
             width: 500px;
             z-index: 3;
@@ -195,16 +196,95 @@ body {
         }
         #read-blog {
           position: absolute;
-          width: 350px;
+          width: 250px;
           transition: 0.5s ease-in-out;
+          z-index: 2;
           &:hover {
             width: 400px;
             z-index: 3;
           }
         }
+        #write-blog {
+          position: absolute;
+          width: 250px;
+          right: -70px;
+          transition: 0.5s ease-in-out;
+          z-index: 1;
+          &:hover {
+            width: 400px;
+            z-index: 3;
+          }
+        }
+        .section__box {
+          z-index: 4;
+        }
         p {
           text-indent: 30px;
         }
+
+        z-index: 4;
+        .wrapper {
+          height: 500px;
+        }
+      }
+    }
+  }
+  #section-8 {
+    width: 100%;
+    position: relative;
+    min-height: 500px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.815);
+    overflow: hidden;
+    padding: 250px 0px;
+    .container {
+      .section__box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 500px;
+        position: relative;
+        #shop-page {
+          position: absolute;
+          width: 300px;
+          left: -70px;
+          transition: 0.5s ease-in-out;
+          z-index: 1;
+          &:hover {
+            width: 500px;
+            z-index: 3;
+          }
+        }
+        #list-item {
+          position: absolute;
+          width: 250px;
+          transition: 0.5s ease-in-out;
+          z-index: 2;
+          &:hover {
+            width: 400px;
+            z-index: 3;
+          }
+        }
+        #buy-item {
+          position: absolute;
+          width: 250px;
+          right: -70px;
+          transition: 0.5s ease-in-out;
+          z-index: 1;
+          &:hover {
+            width: 400px;
+            z-index: 3;
+          }
+        }
+        .section__box {
+          z-index: 4;
+        }
+        p {
+          text-indent: 30px;
+        }
+
+        z-index: 4;
         .wrapper {
           height: 500px;
         }

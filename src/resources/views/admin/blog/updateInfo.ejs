@@ -100,7 +100,9 @@
           <img class="old-cover" src="<%= blog.cover %>" width="100%" alt="img-cover" />
           <form action="#" class="form-upload" enctype="multipart/form-data">
             <label for="gallery-photo-cover" class="blog-img cover text-center d-flex flex-column">
-              <img class="img-cover" width="100%" alt="img-cover" hidden />
+              <div class="text-center">
+                <img class="img-cover" width="100%" alt="img-cover" hidden />
+              </div>
               <label for="gallery-photo-cover" class="icon-upload"> <i class="fas fa-5x fa-upload"></i><br> Click để cập nhật ảnh bìa</label>
             </label>
             <div class="text-center">
@@ -254,14 +256,14 @@
       .then(response => response.json())
       .then(result => {
         swal({
-          title: "Thành công",
-          text: "Đã cập nhật thành công !",
-          icon: "success",
-          button: "Ok!",
-        })
-        // .then(() => {
-        //   window.location.href = result.data.url
-        // });
+            title: "Thành công",
+            text: "Đã cập nhật thành công !",
+            icon: "success",
+            button: "Ok!",
+          })
+          .then(() => {
+            location.reload()
+          });
         console.log(result)
       })
       .catch((error) => {

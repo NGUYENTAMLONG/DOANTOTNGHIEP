@@ -18,8 +18,7 @@ const topRouter = require("./directions/top.routes");
 const Authentication = require("../middleware/authentication");
 
 function configRoute(app) {
-  app.use("/follow", Authentication, followMangaRouter); ///
-  // app.use("/like", Authentication, followMangaRouter);
+  app.use("/follow", Authentication, followMangaRouter);
   app.use("/filter", Authentication, filterRouter);
   app.use("/category", Authentication, categoryRouter);
   app.use("/just-updated", Authentication, justUpdatedRouter);

@@ -68,9 +68,19 @@ class siteController {
   async search(req, res, next) {
     // const regex = new RegExp(escapeRegex(req.query.q), "gi");
     // next();
-
+    if (!req.query) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
     try {
       const searchStr = req.query.q.trim();
+      const counter = await Manga.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { name: { $regex: searchStr, $options: "i" } },
+          { anotherName: { $regex: searchStr, $options: "i" } },
+          { author: { $regex: searchStr, $options: "i" } },
+        ],
+      }).countDocuments();
       const foundManga = await Manga.find({
         // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
         $or: [
@@ -78,18 +88,59 @@ class siteController {
           { anotherName: { $regex: searchStr, $options: "i" } },
           { author: { $regex: searchStr, $options: "i" } },
         ],
-      }).populate("contentId", {
-        chapters: { $slice: -1 },
-      });
+      })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(5)
+        .skip(0)
+        .exec();
 
       res.render("search", {
-        status: true,
         moment: moment,
+        counter,
+        keyword: searchStr,
         user: req.user,
         mangas: foundManga,
       });
     } catch (error) {
-      console.log("HETE", error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async getMoreSearching(req, res, next) {
+    const { keyword, skip } = req.body;
+    if (!skip || !keyword) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      console.log({ keyword, skip });
+      const searchStr = keyword.trim();
+      const foundManga = await Manga.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { name: { $regex: searchStr, $options: "i" } },
+          { anotherName: { $regex: searchStr, $options: "i" } },
+          { author: { $regex: searchStr, $options: "i" } },
+        ],
+      })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(5)
+        .skip(Number(skip))
+        .exec();
+
+      res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          status: true,
+          moment: moment,
+          mangas: foundManga,
+        })
+      );
+    } catch (error) {
+      console.log(error);
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }

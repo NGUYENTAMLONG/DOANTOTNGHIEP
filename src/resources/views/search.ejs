@@ -18,14 +18,17 @@
   <div class="container">
     <h3><i class="fas fa-clipboard-check"></i> Kết quả tìm kiếm : </h3>
   </div>
-  <div class="container text-right">Có <span class="badge badge-secondary"><%= mangas.length %></span> bộ truyện tìm được</div>
-  <section class="section container" id="section-1">
-    <div class="row">
+  <div class="container text-right">Có <span class="badge badge-secondary"><%= counter %></span> bộ truyện tìm được</div>
+  <section class="section container mb-4" id="section-1">
+    <div class="row manga-row">
       <% mangas.forEach(function(manga,index){ %>
       <%- include('partials/mangaList.ejs',{manga:manga}) %>
       <% }); %>
     </div>
   </section>
+  <div class="container">
+    <button onclick="showMore(this,'<%= keyword %>')" data-skip="5" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
+  </div>
   <% } else {%>
   <div class="container text-center mt-4">
     <h3 class="mt-4"><i class="fas fa-sad-tear"></i> Không có kết quả nào trùng khớp </h3>
@@ -36,4 +39,119 @@
 
 </html>
 <%- include("partials/script") %>
+
+<script src="/js/moment-with-locales.min.js"></script>
+
+<script>
+  const mangaRow = document.querySelector(".manga-row")
+  const showMoreBtn = document.querySelector(".showMore__Btn")
+
+  function showMore(btn, keyword) {
+    const skip = btn.getAttribute("data-skip");
+    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    const payload = {
+      skip: skip,
+      keyword
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/search/get-more", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          const mangas = result.data.mangas
+          if (mangas.length === 0) {
+            showMoreBtn.innerHTML = "Đã tới giới hạn";
+            return;
+          }
+          const htmls = mangas.map((manga) => ` <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-2">
+            <div class="manga-card">
+              ${ (manga.hot === true)?`
+              <span class="manga-tag__hot badge badge-sm">Hot</span>
+               `:""}
+              ${ (manga.contentId.chapters.length > 0) ?
+              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`
+              :
+              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">Chưa công bố</span>`
+               }
+              <a href="/detail/${ manga.slug }">
+                <img class="card-img-top manga-img" src="${ manga.image }" alt="Card image cap" />
+              </a>
+              <div class="manga-title div-template" data-template="${manga._id}">
+                <a class=" manga-name" href="/detail/${ manga.slug }">
+                  <h5>${ manga.name}</h5>
+                </a>
+                <a href="/detail/${ manga.slug }" class="manga-chapter">
+                  ${  (manga.contentId.chapters.length > 0) ?`
+                  Chương ${ manga.contentId.chapters.slice(-1)[0].chapterNumber }
+                  `
+                  :'Chưa công bố'
+                  }
+        </a>
+     </div>
+     <div id="template-${manga._id}" style="display: none;">
+                  <div class="info text-light">
+                    <h4 class="info__name">${ manga.name}</h4>
+                    <p class="info__another-name"><b>Tên khác:</b> ${ manga.anotherName}</p>
+                    <ul class="info__follows">
+                      <li>
+                        Tình trạng: <b>${ manga.status}</b>
+                      </li>
+                      <li>
+                        Lượt xem: <b>${ manga.statistical.views}</b>
+                      </li>
+                      <li>
+                        Đánh giá: <b>${ manga.statistical.rating}</b>
+                      </li>
+                      <li>
+                        Xếp hạng: <b>${ manga.statistical.ranks}</b>
+                      </li>
+                    </ul>
+                    <div class="info__type">
+                       <b>Thể loại:</b>
+                      ${ manga.type.map((item)=> 
+                      `<a href="/category/${ item }">${ item }</a>`
+                       ).join(" ")} 
+                    </div>
+                    <p class="info__desc">
+                      ${ manga.description}
+                    </p>
+                  </div>
+              </div>
+            </div>
+          </div>`).join("")
+          mangaRow.innerHTML += htmls;
+          showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
+          showMoreBtn.innerHTML = "Xem tiếp";
+          // Tippy tooltip js library
+          tippy(`.div-template`, {
+            content(reference) {
+              const id = reference.getAttribute("data-template");
+              const template = document.getElementById(`template-${id}`);
+              return template.innerHTML;
+            },
+            allowHTML: true,
+            interactive: true,
+            followCursor: true,
+            placement: "right-end",
+            arrow: true,
+          });
+        } else {
+          console.log(result);
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi cập nhật :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+</script>
 <script src="/js/tooltip.js"></script>
