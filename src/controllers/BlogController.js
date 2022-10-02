@@ -88,6 +88,69 @@ class BlogController {
           );
       });
   }
+  async getSearchBlogPage(req, res) {
+    // return res.json(req.query);
+    if (!req.query) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    try {
+      const { query } = req.query;
+      const foundBlogs = await Blog.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { desc: { $regex: query, $options: "i" } },
+        ],
+        status: BLOG_STATUS.ACTIVE,
+      })
+        .sort({ createdAt: -1 })
+        .limit(2)
+        .skip(0)
+        .exec();
+      return res.status(STATUS.SUCCESS).render("resultSearchingBlog", {
+        user: req.user,
+        blogs: foundBlogs,
+        query,
+        moment,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async getMoreResultSeaching(req, res) {
+    const { skip, query } = req.body;
+    if (!skip || !query) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      const foundBlogs = await Blog.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { desc: { $regex: query, $options: "i" } },
+        ],
+        status: BLOG_STATUS.ACTIVE,
+      })
+        .sort({ createdAt: -1 })
+        .limit(2)
+        .skip(Number(skip))
+        .exec();
+      res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          user: req.user,
+          blogs: foundBlogs,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
   async getBlogTrash(req, res) {
     try {
       const deletedBlogs = await Blog.findDeleted({});
@@ -659,6 +722,7 @@ class BlogController {
     }
     try {
       await Blog.findOneAndUpdate({ slug: slug }, { content: content });
+
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));

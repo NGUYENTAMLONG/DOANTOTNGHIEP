@@ -51,7 +51,7 @@ function likeBlog(blogId) {
     blogId: blogId,
   };
   fetch("/user/blog/api/like", {
-    method: "POST", // or 'PUT'
+    method: "PATCH", // or 'PUT'
     headers: {
       "Content-Type": "application/json",
     },
@@ -87,7 +87,7 @@ function unlikeBlog(blogId) {
     blogId: blogId,
   };
   fetch("/user/blog/api/unlike", {
-    method: "DELETE", // or 'PUT'
+    method: "PATCH", // or 'PUT'
     headers: {
       "Content-Type": "application/json",
     },
@@ -122,3 +122,6 @@ function unlikeBlog(blogId) {
 function toTop() {
   window.scrollTo(0, 0);
 }
+window.onsubmit = function (event) {
+  event.target.submit();
+};

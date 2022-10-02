@@ -41,4 +41,5 @@ router.post("/recover/password", getFormRecoverPassword);
 router.patch("/recover/password", submitRecoverPassword);
 
 router.use("/blog", userBlogRouter);
+
 module.exports = router;

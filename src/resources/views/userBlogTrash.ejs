@@ -13,18 +13,13 @@
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <style>
-    .card-img-top {
-      /* width: 100%;
-      height: 200px;
-      object-fit: contain; */
-    }
-
-    .card a {
-      text-decoration: none;
+    .card {
+      height: 100%;
+      width: 100%;
     }
 
     .card-title {
-      color: black;
+      display: block;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -53,7 +48,7 @@
       <div class="collapse navbar-collapse" style="width: 100%;" id="navBlog">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Bài viết của tôi</a>
+            <a class="nav-link" href="/user/blog">Bài viết của tôi</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/user/blog/create-blog">Viết bài</a>
@@ -65,14 +60,13 @@
       </div>
       <form class="form-inline my-2 my-lg-0">
         <div class="d-flex">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success ml-3" type="submit">Search</button>
+          <input class="form-control mr-sm-2" width="100%" type="search" name="q" placeholder="Tìm Blog ..." aria-label="Search" onkeyup="liveSearch(this)" onclick="liveSearch(this)" autocomplete="off">
         </div>
       </form>
     </nav>
   </section>
   <section class="section container" id="section-2">
-    <div class="row">
+    <div class="row" id="blog-list">
       <% blogs.forEach((blog,index)=>{%>
       <div class="col-6 col-sm-4 col-md-3 p-2">
         <div class="card" style="width: 100%;">
@@ -81,22 +75,23 @@
           </a>
           <div class="card-body">
             <%  if(blog.status === "PENDING"){%>
-            <h5><%= blog.title %></h5>
+            <h5 class="card-title"><%= blog.title %></h5>
             <%}else{%>
-            <a class="card-title" href="/blog/read/<%= blog.slug %>">
-              <h5><%= blog.title %></h5>
-            </a>
+            <h5><a class="card-title" href="/blog/read/<%= blog.slug %>" style="text-decoration: none; color: black;"><%= blog.title %></a></h5>
             <%} %>
             <p class="card-text"><%= blog.desc %></p>
             <div class="d-flex">
-              <b>Trạng thái:
+              <b>
+                <span>
+                  Trạng thái:
+                </span>
                 <span class="badge badge-danger">
                   Đã xóa
                 </span>
               </b>
             </div>
             <div class="text-right">
-              <i class="fas fa-repeat-alt text-danger" data-toggle="tooltip" data-placement="bottom" title="Loại bỏ" style="cursor: pointer;" onclick="recoverBlog('<%= blog._id %>')"></i>
+              <i class="fas fa-sync-alt text-success" data-toggle="tooltip" data-placement="bottom" title="Khôi phục" style="cursor: pointer;" onclick="recoverBlog('<%= blog._id %>')"></i>
             </div>
           </div>
         </div>
@@ -135,6 +130,59 @@
         console.log('Error:', error);
       })
   }
+</script>
+<script>
+  function liveSearch(e) {
+    // Live Searching
+    if (e.value === "") {
+      return
+    }
+    fetch("/user/blog/api/live-search-trash", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        payload: e.value
+      })
+    }).then(res => res.json()).then(result => {
+      console.log(result)
+      const htmls = result.data.map((blog) => `
+      <div class="col-6 col-sm-4 col-md-3 p-2">
+      <div class="card" style="width: 100%;">
+        <a href="/blog/read/${blog.slug}">
+          <img class="card-img-top" src="${blog.cover}" alt="Image for ${ blog.title } ">
+        </a>
+        <div class="card-body">
+          ${ (blog.status === "PENDING") ?
+          `<h5 class="card-title">${ blog.title }</h5>`
+          :`<h5><a class="card-title" href="/blog/read/${blog.slug}" style="text-decoration: none; color: black;">${ blog.title }</a></h5>`}
+          <p class="card-text">${ blog.desc }</p>
+          <div class="d-flex">
+            <b>
+              <span>
+                Trạng thái:
+              </span>
+             ${(blog.status === "PENDING")?
+              `<span class="badge badge-warning">
+                Chờ phê duyệt
+              </span>`
+              :
+              `<span class="badge badge-success">
+                Hoạt động
+              </span>`}
+            </b>
+          </div>
+          <div class="text-right">
+             <i class="fas fa-sync-alt text-success" data-toggle="tooltip" data-placement="bottom" title="Khôi phục" style="cursor: pointer;" onclick="recoverBlog('${ blog._id }')"></i>
+          </div>
+        </div>
+        </div>
+      </div>`).join("")
+      document.querySelector("#blog-list").innerHTML = htmls
+      // document.getElementById("result-live-search").innerHTML = htmls
+    }).catch(error => console.log(error));
+  };
 </script>
 
 </html>

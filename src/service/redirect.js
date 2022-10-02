@@ -1,5 +1,5 @@
 module.exports.redirect = (req, res, status) => {
-  return res.status(status).render("error", {
+  return res.status(status).render("error.ejs", {
     status: status,
   });
 };

@@ -8,6 +8,8 @@ const {
   getNewsBlogPage,
   getSpreadsBlogPage,
   getMoreOfType,
+  getSearchBlogPage,
+  getMoreResultSeaching,
 } = require("../../controllers/BlogController");
 const router = express.Router();
 
@@ -19,5 +21,7 @@ router.get("/blog-with-keyword/:keyword", getBlogWithKeyword);
 router.post("/get-more", getMoreBlog);
 router.post("/blog-with-keyword/get-more", getMoreBlogWithKeyword);
 router.post("/type/get-more", getMoreOfType);
+router.get("/search", getSearchBlogPage);
+router.post("/get-more-searching", getMoreResultSeaching);
 
 module.exports = router;

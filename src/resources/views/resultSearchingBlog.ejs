@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>BLOG WITH KEYWORD</title>
+  <title>RESULT OF SEARCHING</title>
   <%- include("partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/profile.css">
@@ -28,12 +28,6 @@
         </form>
       </div>
     </nav>
-    <div class="title d-flex justify-content-center">
-      <h1>BLOG WITH KEYWORD</h1><i class="fas fa-pen-nib"></i>
-    </div>
-    <div>
-      <p><b>Keyword:</b> <span class="badge badge-secondary"><%= keyword %> </span></p>
-    </div>
     <div class="container">
       <div class="row">
         <div class="col-12 p-2">
@@ -54,7 +48,7 @@
                   </a>
                   <span class="d-flex">
                     <b class="blog-card__info__type">
-                      <a href="/blog/type/<%= blog.type %>">
+                      <a href="/blog/<%= blog.type === "NEWS"?"news":"spreads" %>">
                         <%= blog.type %>
                       </a>
                     </b>
@@ -83,7 +77,7 @@
         </div>
       </div>
       <div class="row mb-4">
-        <button onclick="showMore(this)" data-skip="2" data-keyword="<%= keyword %>" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
+        <button onclick="showMore(this)" data-skip="2" data-query="<%= query %>" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
       </div>
     </div>
   </section>
@@ -98,16 +92,18 @@
 
   function showMore(btn) {
     const skip = btn.getAttribute("data-skip");
-    const keyword = btn.getAttribute("data-keyword");
+    const query = btn.getAttribute("data-query");
     showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
     const payload = {
       skip,
-      keyword
+      query
     };
+
     const headers = {
       "content-Type": "application/json",
     };
-    fetch("/blog/blog-with-keyword/get-more", {
+
+    fetch(`/blog/get-more-searching`, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
@@ -136,7 +132,7 @@
               </a>
               <span class="d-flex">
                 <b class="blog-card__info__type">
-                  <a href="/blog/type/${blog.type}">
+                  <a href="/blog/${blog.type === " NEWS" ? "news" :"spreads"}">
                     ${blog.type}
                   </a>
                 </b>
@@ -147,14 +143,14 @@
               <p class="blog-card__info__desc">
                 ${blog.desc}
               </p>
-              <p class="blog-card__info__statistical text-secondary">
-                <span class="mr-3">
-                  <i class=" fas fa-thumbs-up"></i> ${ blog.statistical.likes }
-                </span>
-                <span>
-                  <i class="fas fa-eye"></i> ${ blog.statistical.views }
-                </span>
-              </p>
+                 <p class="blog-card__info__statistical text-secondary">
+                   <span class="mr-3">
+                     <i class=" fas fa-thumbs-up"></i> ${ blog.statistical.likes }
+                   </span>
+                   <span>
+                     <i class="fas fa-eye"></i> ${ blog.statistical.views }
+                   </span>
+                 </p>
             </div>
           </div>
         </div>
@@ -180,5 +176,4 @@
     event.target.submit()
   }
 </script>
-
 </html>

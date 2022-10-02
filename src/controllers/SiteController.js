@@ -62,9 +62,6 @@ class siteController {
       )
       .catch(next);
   }
-  blogs(req, res, next) {
-    res.render("blogs");
-  }
   about(req, res) {
     res.render("about");
   }

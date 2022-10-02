@@ -25,7 +25,8 @@ class UserBlogController {
       const userId = req.user.id;
       const foundBlogs = await Blog.find({
         writtenBy: userId,
-      });
+      }).sort({ createdAt: -1 });
+
       return res.status(STATUS.SUCCESS).render("userBlog", {
         user: req.user,
         blogs: foundBlogs,
@@ -45,7 +46,7 @@ class UserBlogController {
       const userId = req.user.id;
       const foundBlogs = await Blog.findDeleted({
         writtenBy: userId,
-      });
+      }).sort({ createdAt: -1 });
       return res.status(STATUS.SUCCESS).render("userBlogTrash", {
         user: req.user,
         blogs: foundBlogs,
@@ -72,6 +73,28 @@ class UserBlogController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async getUserUpdateBlog(req, res) {
+    const blogId = req.params.id;
+    if (!req.user) {
+      return redirect(req, res, STATUS.UNAUTHORIZED);
+    }
+    if (!blogId) {
+      return redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    try {
+      const foundBlog = await Blog.findById(blogId);
+      return res.status(STATUS.SUCCESS).render("userUpdateBlog", {
+        user: req.user,
+        blog: foundBlog,
+      });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+
   async checkLiked(req, res) {
     const blogId = req.params.id;
     if (!blogId) {
@@ -329,6 +352,73 @@ class UserBlogController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async updateUserBlog(req, res) {
+    const {
+      title,
+      desc,
+      author,
+      type,
+      keywordArray,
+      source,
+      link,
+      image,
+      content,
+      oldCover,
+    } = req.body;
+
+    const blogId = req.params.id;
+
+    if (
+      !title ||
+      !desc ||
+      !author ||
+      !type ||
+      keywordArray.length === 0 ||
+      !source ||
+      !content
+    ) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const payload = {
+        title,
+        desc,
+        type,
+        author,
+        keywords: keywordArray,
+        source,
+        link,
+        writtenBy: req.user._id,
+        content,
+      };
+
+      if (image) {
+        payload.cover = image;
+        fs.unlinkSync(
+          path.join(
+            appRoot.path,
+            `/src/public/blog/covers/${oldCover.split("/")[4]}`
+          )
+        );
+      }
+
+      await Blog.findOneAndUpdate({ _id: blogId }, payload);
+
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+
   async deleteUserBlog(req, res) {
     const blogId = req.params.id;
     if (!blogId) {
@@ -346,6 +436,77 @@ class UserBlogController {
       res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async recoverUserBlog(req, res) {
+    const blogId = req.params.id;
+    if (!blogId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      await Blog.restore({ _id: blogId });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async liveSearchUserBlog(req, res) {
+    const payload = req.body.payload.trim();
+    if (!req.user) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      let result = await Blog.find({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { title: { $regex: payload, $options: "i" } },
+          { desc: { $regex: payload, $options: "i" } },
+        ],
+        writtenBy: req.user.id,
+      });
+
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, result));
+    } catch (error) {
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.SERVER_ERROR, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async liveSearchUserBlogTrash(req, res) {
+    const payload = req.body.payload.trim();
+    if (!req.user) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      let result = await Blog.findDeleted({
+        // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+        $or: [
+          { title: { $regex: payload, $options: "i" } },
+          { desc: { $regex: payload, $options: "i" } },
+        ],
+        writtenBy: req.user.id,
+      });
+
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, result));
+    } catch (error) {
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.SERVER_ERROR, MESSAGE.ERROR_SERVER));
     }
   }
 }

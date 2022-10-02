@@ -18,6 +18,16 @@
 <body>
   <%- include('partials/header') %>
   <section class="section container" id="section-1">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center  d-flex justify-content-center aligh-items-center">
+      <div class="blog-search">
+        <form class="form-inline my-2 my-lg-0" action="/blog/search" method="GET">
+          <div class="d-flex">
+            <input class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm blog" aria-label="search" name="query">
+            <button type="submit" class="btn btn-outline-success my-2 my-sm-0 ml-1"><i class="fas fa-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </nav>
     <div class="title d-flex justify-content-center">
       <h1>BLOG </h1><i class="fas fa-pen-nib"></i>
     </div>
@@ -71,7 +81,7 @@
             <button onclick="showMore(this)" data-skip="2" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
           </div>
         </div>
-        <div class="col-sm-12 col-lg-4 p-2 mt-4">
+        <div class="col-sm-12 col-lg-4 p-2 mt-2">
           <div class="blog-box">
             <div class="blog-box__header bg-primary">
               <a href="/blog/news" class="blog-box__header__title">
@@ -213,6 +223,11 @@
 
   function toTop() {
     window.scrollTo(0, 0);
+  }
+</script>
+<script>
+  window.onsubmit = function(event) {
+    event.target.submit()
   }
 </script>
 
