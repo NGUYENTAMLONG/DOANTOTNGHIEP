@@ -51,7 +51,7 @@
     <div class="row">
       <% if(mangas.length !==0 ) {%>
       <% mangas.forEach(function(manga,index){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%- include('partials/mangaHandleList.ejs',{manga:manga}) %>
       <% }); %>
       <% }else {%>
       <div class="text-center">
@@ -66,9 +66,15 @@
 </body>
 
 </html>
+
 <%- include("partials/script") %>
 <script src="/js/tooltip.js"></script>
+
 <script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
   function changeQuery(feild, value) {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -108,5 +114,39 @@
       return "active"
     }
     return
+  }
+
+  function clearFollowManga(mangaId) {
+    const payload = {
+      mangaId: mangaId,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/follow", {
+        method: "DELETE",
+        body: JSON.stringify(payload),
+        headers,
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess === true) {
+          swal({
+            title: "Đã bỏ theo dõi",
+            text: "Cảm ơn bạn đã ủng hộ !",
+            icon: "success",
+            button: "OK!",
+          });
+          location.reload()
+        } else {
+          swal({
+            title: "Thông báo !",
+            text: "Có lỗi rồi",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
   }
 </script>

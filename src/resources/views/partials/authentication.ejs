@@ -49,7 +49,7 @@
            </div>
          </div>
          <hr>
-         <div class="modal-footer d-flex justify-content-center">
+         <div class="modal-footer d-flex justify-content-center" style="margin-top: -30px;">
            <div class="handle">
              <button type="button" class="btn btn-primary submitBtn" onclick="verification ()">Gửi mã xác thực</button>
              <button type="button" class="btn btn-primary registerBtn" onclick="register()" disabled>Đăng ký</button>
@@ -82,7 +82,7 @@
              <input type="password" class="form-control" id="passwordLogin" placeholder="Enter Password">
            </div>
            <div class="d-flex solution">
-             <a href="#" data-target="#registerModal" data-toggle="modal" data-dismiss="modal" aria-label="Close">Đăng ký</a><span class="m-2"> | </span>
+             <a href="#" onclick="closeLoginModal()">Đăng ký</a><span class="m-2"> | </span>
              <a href="/user/retrieval">Quên mật khẩu ?</a>
            </div>
            <div class="text-center">
@@ -90,7 +90,7 @@
            </div>
          </div>
          <hr>
-         <div class="modal-footer d-flex justify-content-between">
+         <div class="modal-footer d-flex justify-content-between" style="margin-top: -30px;">
            <div class="oauth2">
              <a href="/auth/facebook">
                <i class=" fab fa-facebook"></i>
@@ -101,7 +101,7 @@
            </div>
            <div class="handle">
              <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
-             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+             <button type="button" class="btn btn-secondary closeLoginModalBtn" data-dismiss="modal">Hủy</button>
            </div>
          </div>
        </div>

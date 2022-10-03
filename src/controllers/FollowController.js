@@ -45,6 +45,7 @@ class FollowController {
       res.render("showFollow", {
         user: req.user,
         moment,
+        flag: null,
         categories: types,
         mangas: result.mangas,
         navigator: {

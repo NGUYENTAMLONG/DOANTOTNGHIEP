@@ -247,8 +247,8 @@ body {
         position: relative;
         #shop-page {
           position: absolute;
-          width: 300px;
           left: -70px;
+          width: 250px;
           transition: 0.5s ease-in-out;
           z-index: 1;
           &:hover {
@@ -256,9 +256,9 @@ body {
             z-index: 3;
           }
         }
-        #list-item {
+        #list-page {
           position: absolute;
-          width: 250px;
+          width: 300px;
           transition: 0.5s ease-in-out;
           z-index: 2;
           &:hover {
@@ -266,7 +266,7 @@ body {
             z-index: 3;
           }
         }
-        #buy-item {
+        #buy-page {
           position: absolute;
           width: 250px;
           right: -70px;
@@ -282,6 +282,10 @@ body {
         }
         p {
           text-indent: 30px;
+        }
+        h2,
+        p {
+          margin-right: 50px;
         }
 
         z-index: 4;

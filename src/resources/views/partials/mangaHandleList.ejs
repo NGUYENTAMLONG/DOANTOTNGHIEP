@@ -52,5 +52,14 @@
            </p>
          </div>
      </div>
+     <div class="text-center">
+       <% if (flag === false) {%>
+       <i class="fas fa-times-circle" style="cursor: pointer;font-size: 25px;" onclick="clearHistoryLocal('<%= manga.slug %>')" data-toggle="tooltip" data-placement="bottom" title="Xóa khỏi lịch sử"></i>
+       <%}else if(flag === true){%>
+       <i class="fas fa-times-circle" style="cursor: pointer;font-size: 25px;" onclick="clearHistoryUser('<%= manga._id %>')" data-toggle="tooltip" data-placement="bottom" title="Xóa khỏi lịch sử"></i>
+       <%} else{%>
+       <i class="fas fa-heart-broken" style="cursor: pointer;font-size: 25px;" onclick="clearFollowManga('<%= manga._id %>')" data-toggle="tooltip" data-placement="bottom" title="Xóa khỏi danh sách theo dõi"></i>
+       <% } %>
+     </div>
    </div>
  </div>

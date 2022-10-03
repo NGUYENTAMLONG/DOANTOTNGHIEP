@@ -1,11 +1,15 @@
 const Manga = require("../models/Manga");
 const moment = require("moment");
 const { redirect } = require("../service/redirect");
-const { STATUS, MESSAGE } = require("../config/httpResponse");
+const { STATUS, MESSAGE, ERRORCODE } = require("../config/httpResponse");
 const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
 const { types } = require("../config/default");
-const { SuccessResponse } = require("../helper/response");
+const { SuccessResponse, ErrorResponse } = require("../helper/response");
+const UserLocal = require("../models/UserLocal");
+const UserGoogle = require("../models/UserGoogle");
+const UserFacebook = require("../models/UserFacebook");
+const History = require("../models/History");
 
 let visitedMangas = null;
 class historyController {
@@ -99,6 +103,60 @@ class historyController {
     return res
       .status(STATUS.SUCCESS)
       .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+  }
+  async clearVisitJustOne(req, res) {
+    const { manga } = req.param;
+    visitedMangas = visitedMangas.filter(function (elm, index) {
+      return elm !== manga;
+    });
+    console.log(visitedMangas);
+    return res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+  }
+  async clearVisitOfUser(req, res) {
+    const mangaId = req.params.id;
+    if (!mangaId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      if (!req.user) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
+      }
+      let foundUser;
+      if (req.user.provider === "LOCAL") {
+        foundUser = await UserLocal.findById(req.user.id);
+      } else if (req.user.provider === "GOOGLE") {
+        foundUser = await UserGoogle.findById(req.user.id);
+      } else if (req.user.provider === "FACEBOOK") {
+        foundUser = await UserFacebook.findById(req.user.id);
+      }
+      await History.updateOne(
+        {
+          _id: foundUser.history,
+        },
+        { $pull: { mangaList: { mangaId: mangaId } } }
+      );
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
   }
 }
 

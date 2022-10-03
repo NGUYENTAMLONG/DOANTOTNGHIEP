@@ -35,9 +35,10 @@
           <b>Quản trị viên nội dung</b> <span class="badge badge-success"> <%= adminList.filter((admin)=>admin.role==="CA").length %> </span>
         </p>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-4 d-flex mb-1">
-        <a href="/management/human/user" class="btn btn-sm btn-warning">Quản lí người dùng <i class="fas fa-users"></i></a>
-        <a href="/management/human/admin/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
+      <div class="col-sm-12 col-md-6 col-lg-4 d-flex mb-1 flex-wrap">
+        <a href="/management/human" class="btn btn-sm btn-primary mr-1">Điều hướng</a>
+        <a href="/management/human/user" class="btn btn-sm btn-warning">Người dùng <i class="fas fa-users"></i></a>
+        <a href="/management/human/admin/trash" class="btn btn-sm btn-dark ml-1">Thùng rác <i class="fas fa-trash-alt"></i></a>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4">
         <div class="d-flex justify-content-between align-items-center mb-1">

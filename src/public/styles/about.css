@@ -198,34 +198,37 @@ body {
       z-index: 4; }
       body #section-8 .container .section__box #shop-page {
         position: absolute;
-        width: 300px;
         left: -70px;
+        width: 250px;
         transition: 0.5s ease-in-out;
         z-index: 1; }
         body #section-8 .container .section__box #shop-page:hover {
           width: 500px;
           z-index: 3; }
-      body #section-8 .container .section__box #list-item {
+      body #section-8 .container .section__box #list-page {
         position: absolute;
-        width: 250px;
+        width: 300px;
         transition: 0.5s ease-in-out;
         z-index: 2; }
-        body #section-8 .container .section__box #list-item:hover {
+        body #section-8 .container .section__box #list-page:hover {
           width: 400px;
           z-index: 3; }
-      body #section-8 .container .section__box #buy-item {
+      body #section-8 .container .section__box #buy-page {
         position: absolute;
         width: 250px;
         right: -70px;
         transition: 0.5s ease-in-out;
         z-index: 1; }
-        body #section-8 .container .section__box #buy-item:hover {
+        body #section-8 .container .section__box #buy-page:hover {
           width: 400px;
           z-index: 3; }
       body #section-8 .container .section__box .section__box {
         z-index: 4; }
       body #section-8 .container .section__box p {
         text-indent: 30px; }
+      body #section-8 .container .section__box h2,
+      body #section-8 .container .section__box p {
+        margin-right: 50px; }
       body #section-8 .container .section__box .wrapper {
         height: 500px; }
 

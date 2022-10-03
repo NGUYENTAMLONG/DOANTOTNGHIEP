@@ -54,9 +54,13 @@
   </div>
   <section class="section container" id="section-1">
     <div class="row">
-      <% if(mangas.length !==0 ) {%>
+      <% if(mangas.length !==0 && flag === false) {%>
       <% mangas.forEach(function(manga,index){ %>
-      <%- include('partials/mangaList.ejs',{manga:manga}) %>
+      <%- include('partials/mangaHandleList.ejs',{manga:manga}) %>
+      <% }); %>
+      <% }else if(mangas.length !==0 && flag === true){%>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaHandleList.ejs',{manga:manga}) %>
       <% }); %>
       <% }else {%>
       <div class="text-center">
@@ -74,6 +78,10 @@
 <%- include("partials/script") %>
 <script src="/js/tooltip.js"></script>
 <script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
   function changeQuery(feild, value) {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -136,6 +144,75 @@
           swal({
             title: "Thông báo",
             text: "Đã xóa lịch sử !",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            document.getElementById("history-btn").click()
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  function clearHistoryLocal(manga) {
+    let listManga = localStorage.getItem("visits");
+    listManga = JSON.parse(listManga).filter(function(elm, index) {
+      return elm !== manga;
+    });
+    localStorage.setItem("visits", JSON.stringify(listManga));
+    fetch(`/history/clear-visit/${manga}`, {
+        method: 'DELETE', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (!result.isSuccess) {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Có thể lỗi do hệ thống :<",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Đã xóa lịch sử !",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            document.getElementById("history-btn").click()
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  function clearHistoryUser(mangaId) {
+    fetch(`/history/clear-history-user/${mangaId}`, {
+        method: 'DELETE', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (!result.isSuccess) {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Có thể lỗi do hệ thống :<",
+            icon: "error",
+            button: "OK!",
+          })
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Đã xóa thành công !",
             icon: "success",
             button: "OK!",
           }).then(() => {
