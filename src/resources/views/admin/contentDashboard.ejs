@@ -41,8 +41,8 @@
             <h5 class="card-title"><i class="fab fa-slideshare"></i> SLIDE</h5>
             <b>Số lượng : <%=slides.length %> </b>
             <br>
-            <span> <i class="fas fa-eye"></i> : <%= mangas.filter((manga)=>manga.active===true).length %> </span>
-            <span> <i class="fas fa-eye-slash"></i> : <%= mangas.filter((manga)=>manga.active===false).length %> </span>
+            <span> <i class="fas fa-eye"></i> : <%= slides.filter((slide)=>slide.active===true).length %> </span>
+            <span> <i class="fas fa-eye-slash"></i> : <%= slides.filter((slide)=>slide.active===false).length %> </span>
           </div>
         </a>
       </div>
@@ -61,10 +61,8 @@
         <a class="card bg-danger text-light" href="#">
           <div class="card-body">
             <h5 class="card-title"><i class="fab fa-slideshare"></i> NOVEL</h5>
-            <b>Số lượng : 150 </b>
+            <b>Số lượng : NULL </b>
             <br>
-            <span> <i class="fas fa-eye"></i> : <%= mangas.filter((manga)=>manga.active===true).length %> </span>
-            <span> <i class="fas fa-eye-slash"></i> : <%= mangas.filter((manga)=>manga.active===false).length %> </span>
           </div>
         </a>
       </div>
@@ -72,17 +70,15 @@
         <a class="card bg-info text-light" href="#">
           <div class="card-body">
             <h5 class="card-title"><i class="fab fa-slideshare"></i> FANMADE</h5>
-            <b>Số lượng : 120 </b>
+            <b>Số lượng : NULL </b>
             <br>
-            <span> <i class="fas fa-eye"></i> : <%= mangas.filter((manga)=>manga.active===true).length %> </span>
-            <span> <i class="fas fa-eye-slash"></i> : <%= mangas.filter((manga)=>manga.active===false).length %> </span>
           </div>
         </a>
       </div>
       <div class="col-6 col-lg-4 p-2">
         <a class="card bg-dark text-light" href="/management/content/mail">
           <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-envelope"></i> Mails</h5>
+            <h5 class="card-title"><i class="fas fa-envelope"></i> MAILS</h5>
             <b>Số lượng : <%= emails.length %> </b>
             <br>
           </div>
@@ -102,15 +98,6 @@
         <canvas id="doughnutChart"></canvas>
       </div>
     </div>
-    <!-- <h3>Manga</h3>
-    <div class="row">
-      <div class="col-6 col-lg-4 p-2">
-        <canvas id="pieChart"></canvas>
-      </div>
-      <div class="col-6 col-lg-4 p-2">
-        <canvas id="lineChart"></canvas>
-      </div>
-    </div> -->
   </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
