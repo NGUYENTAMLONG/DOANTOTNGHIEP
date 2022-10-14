@@ -22,3 +22,9 @@ package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+request_slide.http
+request.http
+request2.http
+test copy.html
