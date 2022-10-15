@@ -225,3 +225,8 @@ function toggleShowHide(it) {
     flag = true;
   }
 }
+
+function closeLoginModal(){
+  document.querySelector(".closeLoginModalBtn").click()
+  document.querySelector(".btnShowRegister").click()
+}

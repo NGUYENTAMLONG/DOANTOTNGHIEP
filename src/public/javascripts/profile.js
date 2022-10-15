@@ -4,7 +4,6 @@ let signal_2 = true;
 
 function toggleShowHide_1(it) {
   const dataId = it.getAttribute("data-id");
-  console.log(dataId);
   if (signal_1) {
     it.classList.add("fa-eye-slash");
     it.classList.remove("fa-eye");
@@ -20,7 +19,6 @@ function toggleShowHide_1(it) {
 
 function toggleShowHide_2(it) {
   const dataId = it.getAttribute("data-id");
-  console.log(dataId);
   if (signal_2) {
     it.classList.add("fa-eye-slash");
     it.classList.remove("fa-eye");
@@ -118,6 +116,70 @@ function updateDob(idTag) {
           swal({
             title: "Thông báo !",
             text: "Username không được chứa khoảng trắng hai đầu",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      }
+    })
+    .catch((error) => console.log(error));
+}
+
+function changePasswordProfile() {
+  const oldPassword = document.getElementById("old-password").value;
+  const newPassword = document.getElementById("new-password").value;
+  const payload = {
+    oldPassword,
+    newPassword,
+  };
+  // console.log(payload);
+  const headers = {
+    "content-Type": "application/json",
+  };
+  fetch("/user/update-password", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+    headers,
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      if (result.isSuccess === true) {
+        console.log(result);
+        swal({
+          title: "Thành công",
+          text: "Mật khẩu của bạn đã được thay đổi",
+          icon: "success",
+          button: "OK!",
+        }).then(() => {
+          location.reload();
+        });
+      } else {
+        console.log(result);
+        if (
+          result.errorCode === "BAD_REQUEST" &&
+          result.message === "OLD PASSWORD IS NOT CORRECT"
+        ) {
+          swal({
+            title: "Thông báo !",
+            text: "Mật khẩu cũ không chính xác",
+            icon: "error",
+            button: "OK!",
+          });
+        } else if (
+          result.errorCode === "BAD_REQUEST" &&
+          result.message === "INVALID PASSWORD"
+        ) {
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi sai form mật khẩu",
+            icon: "error",
+            button: "OK!",
+          });
+        } else {
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi hệ thống",
             icon: "error",
             button: "OK!",
           });

@@ -136,8 +136,9 @@
             text: "Cảm ơn bạn đã ủng hộ !",
             icon: "success",
             button: "OK!",
+          }).then(() => {
+            location.reload();
           });
-          location.reload()
         } else {
           swal({
             title: "Thông báo !",

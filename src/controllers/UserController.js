@@ -477,6 +477,62 @@ class UserController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+
+  async updatePasswordInProfile(req, res, next) {
+    const { newPassword, oldPassword } = req.body;
+    if (!newPassword || !oldPassword) {
+      return res
+        .status(STATUS.SUCCESS)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      //Check Old Password
+      const user = req.user;
+      const foundUser = await UserLocal.findById(user.id);
+      const checkOldPassword = await bcrypt.compare(
+        oldPassword,
+        foundUser.password
+      );
+      if (!checkOldPassword) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_BAD_REQUEST,
+              MESSAGE.WRONG_OLD_PASSWORD
+            )
+          );
+      }
+      //Test Password
+      if (!ValidatePassword(newPassword)) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_BAD_REQUEST,
+              MESSAGE.PASSWORD_INVALID
+            )
+          );
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      await UserLocal.findOneAndUpdate(
+        { _id: foundUser._id },
+        { password: hashedPassword }
+      );
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SUCCESS)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
 }
 
 module.exports = new UserController();
