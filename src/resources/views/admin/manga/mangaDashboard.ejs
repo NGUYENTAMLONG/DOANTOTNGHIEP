@@ -57,8 +57,17 @@
     </div>
     <div id="toolbar">
       <button id="deleteChecked" class="btn btn-danger btn-sm">Xóa hết <i class="fas fa-trash"></i></button>
+      <div class="d-flex">
+        <select id="select" class="form-control ml-2" name="filterAlgorithm">
+          <option value="and" selected>Tất cả</option>
+          <option value="Đang tiến hành" class="status-option">Đang tiến hành</option>
+          <option value="Hoàn thành" class="status-option">Hoàn thành</option>
+        </select>
+
+        <button class="btn btn-secondary ml-2" id="filterBy"><i class="fas fa-filter"></i></button>
+      </div>
     </div>
-    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar">
+    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar" data-filter-control="true" data-show-search-clear-button="true">
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
@@ -69,7 +78,7 @@
           <th scope="col" data-field="type" data-formatter="typeFormatter">Thể loại</th>
           <th scope="col" data-field="serve" data-sortable="true" data-formatter="serveFormatter">Đối tượng</th>
           <th scope="col" data-field="description" data-formatter="descFormatter">Mô tả</th>
-          <th scope="col" data-field="status" data-sortable="true">Tình trạng</th>
+          <th scope="col" data-field="status" data-sortable="true" data-filter-control="select">Tình trạng</th>
           <th scope="col" data-field="translation" data-sortable="true" data-formatter="translationFormatter">Người/Nhóm dịch</th>
           <th scope="col" data-field="hot" data-sortable="true" data-formatter="hotFormatter">Hot</th>
           <th scope="col" data-field="statistical" data-sortable="true" data-formatter="statisticalFormatter">Thống kê</th>
@@ -100,6 +109,8 @@
 <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
 
+<script src="https://unpkg.com/bootstrap-table@1.21.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
 <script>
   function responseHandler(res) {
@@ -157,11 +168,15 @@
   }
 
   function hotFormatter(data) {
+    let html = '';
     if (data === true) {
-      return `<span class='badge badge-success'>true</span>`
+      html = `<span class='badge badge-success'>true</span>`
     } else {
-      return `<span class='badge badge-danger'>false</span>`
+      html = `<span class='badge badge-danger'>false</span>`
     }
+    return `<div class="text-center d-flex flex-column">
+        ${html}
+      </div>`
   }
 
   function statisticalFormatter(data) {
@@ -319,6 +334,52 @@
       });
     })
   });
+</script>
+<script>
+  var $table = $('#table')
+  var filterAlgorithm = $('[name="filterAlgorithm"]').val();
+  const statusArr = [];
+  document.querySelectorAll(".status-option").forEach((elm, index) => {
+    statusArr.push(elm.value)
+  })
+  $('#filterBy').click(function() {
+    let statusValue = document.querySelector('[name="filterAlgorithm"]').value;
+    if (statusValue === "and") {
+      statusValue = statusArr;
+    }
+    console.log(statusValue)
+    $table.bootstrapTable('refreshOptions', {
+      filterOptions: {
+        filterAlgorithm: filterAlgorithm
+      }
+    })
+    $table.bootstrapTable('filterBy', {
+      status: statusValue
+    })
+  })
+
+
+
+  var filterAlgorithmHot = $('[name="filterAlgorithm_Hot"]').val();
+  const hotArr = [];
+  document.querySelectorAll(".hot-option").forEach((elm, index) => {
+    hotArr.push(elm.value)
+  })
+  $('#filterByHot').click(function() {
+    let hotValue = document.querySelector('[name="filterAlgorithm_Hot"]').value;
+    if (hotValue === "and") {
+      hotValue = hotArr;
+    }
+    console.log(hotValue)
+    $table.bootstrapTable('refreshOptions', {
+      filterOptions: {
+        filterAlgorithm: filterAlgorithmHot
+      }
+    })
+    $table.bootstrapTable('filterBy', {
+      hot: hotValue
+    })
+  })
 </script>
 
 </html>

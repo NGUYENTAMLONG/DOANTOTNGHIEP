@@ -24,6 +24,7 @@ const {
   sendMailToRetrievalPassword,
 } = require("../service/sendMail");
 const Blog = require("../models/Blog");
+const Markdown = require("../models/Markdown");
 dotenv.config();
 
 let Useremail;
@@ -212,7 +213,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -248,7 +249,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -285,7 +286,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -360,7 +361,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -381,7 +382,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -421,7 +422,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -429,7 +430,7 @@ class UserController {
     if (!req.body.email) {
       redirect(req, res, STATUS.UNAUTHORIZED);
     }
-    return res.status(STATUS.SUCCESS).render("recover");
+    return res.status(STATUS.SERVER_ERROR).render("recover");
   }
 
   async submitRecoverPassword(req, res) {
@@ -473,7 +474,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
@@ -529,7 +530,151 @@ class UserController {
     } catch (error) {
       console.log(error);
       res
-        .status(STATUS.SUCCESS)
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+
+  async markdown(req, res, next) {
+    const { mangaId, chapterMarkdown } = req.body;
+    if (!mangaId || !chapterMarkdown) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      if (!req.user) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
+      }
+      const user = req.user;
+      //Check Markdown repository exist
+      const foundMarkdownRepo = await Markdown.findOne({ userId: user.id });
+      if (!foundMarkdownRepo) {
+        await Markdown.create({
+          userId: user.id,
+        });
+      }
+      //Check Previous Markdown
+      const foundMarkdown = foundMarkdownRepo.markdownList.filter(
+        (markdown, index) => markdown.mangaId.toString() === mangaId
+      );
+      if (foundMarkdown.length !== 0) {
+        await Markdown.updateOne(
+          {
+            userId: user.id,
+          },
+          { $pull: { markdownList: { mangaId: mangaId } } }
+        );
+      }
+      //Set New Markdown
+      const newMarkdown = {
+        mangaId: mangaId,
+        chapterMarkdown: Number(chapterMarkdown),
+        markdownAt: new Date(),
+      };
+      await Markdown.updateOne(
+        {
+          userId: user.id,
+          "markdownList.mangaId": { $ne: newMarkdown.mangaId },
+        },
+        {
+          $addToSet: { markdownList: newMarkdown },
+        }
+      );
+      return res
+        .status(STATUS.CREATED)
+        .json(new SuccessResponse(MESSAGE.MARKDOWN_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async goToMarkdown(req, res, next) {
+    const mangaId = req.params.id;
+    if (!mangaId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      if (!req.user) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
+      }
+      const user = req.user;
+      //Check Markdown repository exist
+      const foundMarkdownRepo = await Markdown.findOne({ userId: user.id });
+      if (!foundMarkdownRepo) {
+        return res
+          .status(STATUS.NOT_FOUND)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.NOT_FOUND)
+          );
+      }
+      const foundMarkdownManga = foundMarkdownRepo.markdownList.filter(
+        (elm, index) => elm.mangaId.toString() === mangaId
+      );
+      if (foundMarkdownManga.length === 0) {
+        return res
+          .status(STATUS.NOT_FOUND)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.NOT_FOUND)
+          );
+      }
+      const foundManga = await Manga.findById(foundMarkdownManga[0].mangaId);
+
+      return res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          url: `/detail/${foundManga.slug}/read/chapter-${foundMarkdownManga[0].chapterMarkdown}`,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async goToMarkdownList(req, res, next) {
+    try {
+      res.render("showPopular", {
+        user: req.user,
+        moment: moment,
+        title: title,
+        mangas: orderManga(result.mangas),
+        categories: types,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalMangas / limit),
+          limit: limit,
+          activePage: page,
+          filter: match,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }

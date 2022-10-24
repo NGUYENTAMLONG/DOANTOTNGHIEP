@@ -22,9 +22,11 @@ class MangaController {
   async getMangaDashboard(req, res) {
     try {
       const allMangas = await Manga.find({});
+      console.log(types);
       res.render("admin/manga/mangaDashboard", {
         admin: req.user,
         allMangas,
+        types,
       });
     } catch (error) {
       console.log(error);
@@ -53,7 +55,9 @@ class MangaController {
   //route: /management/content/manga/updateManga/:slug
   async getUpdatePage(req, res) {
     const { slug } = req.params;
-
+    if (!slug) {
+      redirect(req, res, STATUS.NOT_FOUND);
+    }
     try {
       const foundManga = await Manga.findOne({ slug: slug }).populate(
         "contentId"
@@ -112,12 +116,11 @@ class MangaController {
   async getMangaList(req, res) {
     const { search, sort, order, offset, limit } = req.query;
     try {
-      const mangas = await Manga.find({})
-        .populate("contentId", {
-          chapters: { $slice: -1 },
-        })
-        .skip(Number(offset))
-        .limit(Number(limit));
+      const mangas = await Manga.find({}).populate("contentId", {
+        chapters: { $slice: -1 },
+      });
+      // .skip(Number(offset))
+      // .limit(Number(limit));
       res.status(STATUS.SUCCESS).json({
         rows: mangas,
       });
@@ -278,7 +281,7 @@ class MangaController {
         description,
         country,
       };
-      console.log(payload, image);
+      // console.log(payload, image);
       if (image) {
         payload.image = image;
         fs.unlinkSync(
@@ -289,11 +292,16 @@ class MangaController {
         );
       }
 
+      const foundManga = await Manga.findOne({ slug: slug });
       await Manga.findOneAndUpdate({ slug: slug }, payload);
-
+      let mangaAfterUpdate = null;
+      if (name !== foundManga.name) {
+        const foundMangaAfterUpdate = await Manga.findById(foundManga._id);
+        mangaAfterUpdate = foundMangaAfterUpdate;
+      }
       res
         .status(STATUS.CREATED)
-        .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, null));
+        .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, mangaAfterUpdate));
     } catch (error) {
       console.log(error);
       res

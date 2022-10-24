@@ -10,6 +10,13 @@ body {
     cursor: pointer;
     z-index: 100;
     color: #007bff; }
+  body #markdown {
+    position: fixed;
+    bottom: 150px;
+    right: 22px;
+    cursor: pointer;
+    z-index: 100;
+    color: #be151b; }
 
 .toggle__light-text {
   color: #343a40;

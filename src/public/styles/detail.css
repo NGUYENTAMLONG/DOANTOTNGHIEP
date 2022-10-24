@@ -26,7 +26,8 @@
   .manga-info .read-last,
   .manga-info .follow,
   .manga-info .like,
-  .manga-info .rate {
+  .manga-info .rate,
+  .manga-info .goToMarkdown {
     border-radius: 5px;
     cursor: pointer;
     color: white;
@@ -44,6 +45,8 @@
     background-color: #bd10e0; }
   .manga-info .rate {
     background-color: #ffc107; }
+  .manga-info .goToMarkdown {
+    background-color: #f7771d; }
   .manga-info .manga-info__desc p {
     text-indent: 20px; }
     .manga-info .manga-info__desc p::first-letter {

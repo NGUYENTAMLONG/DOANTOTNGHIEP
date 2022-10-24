@@ -16,7 +16,10 @@ const {
   getFormRecoverPassword,
   submitRecoverPassword,
   updateGender,
-  updatePasswordInProfile
+  updatePasswordInProfile,
+  markdown,
+  goToMarkdown,
+  goToMarkdownList,
 } = require("../../controllers/UserController");
 const { decodeBase64 } = require("../../middleware/handleBase64");
 const router = express.Router();
@@ -41,6 +44,10 @@ router.post("/retrieval", submitMailToRetrievalPassword);
 
 router.post("/recover/password", getFormRecoverPassword);
 router.patch("/recover/password", submitRecoverPassword);
+
+router.post("/markdown", markdown);
+router.post("/markdown/go-to/:id", goToMarkdown);
+router.get("/markdown/list", goToMarkdownList);
 
 router.use("/blog", userBlogRouter);
 

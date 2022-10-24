@@ -74,6 +74,15 @@ router.get("/api/mangas/:id", async (req, res) => {
   }
 });
 
+//2. Get All Types
+router.get("/api/get-types", (req, res) => {
+  // try {
+  //   const foundTypes = await Manga.fin
+  // } catch (error) {
+  //   console.log(error)
+  // }
+  res.status(200).json(types);
+});
 // router.use(bodyParser.json());
 // ****************** MANGA MANAGEMENT *************************
 //1. Get Page (MANGA MANAGEMENT)
@@ -207,4 +216,5 @@ router.patch("/swap/:chapterId", updateSwapChapter);
 //1. Get Page (MANGA ANALYSIS)
 // ex: /management/content/manga/analysis - Method: GET
 router.get("/analysis", getMangaAnalysis);
+
 module.exports = router;

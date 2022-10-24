@@ -87,7 +87,18 @@
               <i class="fas fa-fire"></i> Chương mới nhất
             </a>
             <%} %>
-            <label class="follow ml-2 mr-2 form-check-label" for="checkFollow">
+            <!-- <a class="goToMarkdown ml-2" href="/user/markdown/go-to/<%= manga._id %>">
+              <i class="fas fa-map-marker-alt"></i> Đọc chương đã đánh dấu
+            </a> -->
+            <label class="goToMarkdown ml-2 form-check-label" for="goToMarkdownManga">
+              <span>
+                <i class="fas fa-map-marker-alt"></i> Đọc chương đã đánh dấu
+              </span>
+              <input type="checkbox" class="form-check-input" id="goToMarkdownManga" onclick="handleGoToMarkdown('<%= manga._id%>')" hidden />
+            </label>
+          </div>
+          <div class="d-flex flex-wrap">
+            <label class="follow mr-2 form-check-label" for="checkFollow">
               <span>
                 <i class="fas fa-heart"></i> Theo dõi
               </span>
@@ -410,6 +421,36 @@
 <div class="fb-like" data-href="${window.location.href}" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>`
   }
   document.querySelector("#btn-share").innerHTML = shareSocial();
+</script>
+
+<script>
+  function handleGoToMarkdown(mangaId) {
+    fetch(`/user/markdown/go-to/${mangaId}`, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Success:', result);
+        if (result.isSuccess) {
+          location.href = result.data.url;
+        } else if (!result.isSuccess && result.errorCode === "NOT_FOUND") {
+          swal({
+            title: "Thông báo",
+            text: "Bạn chưa đánh dấu chương nào của bộ truyện",
+            icon: "error",
+            button: "OK!"
+          });
+        } else if (!result.isSuccess && result.errorCode === "UNAUTHORIZED") {
+          alert("UNAUTHOR")
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
 </script>
 
 </html>

@@ -117,8 +117,11 @@
       </div>
     </div>
   </div>
+  <div id="markdown">
+    <i class="fas fa-bookmark fa-2x" data-toggle="tooltip" data-placement="bottom" title="Đánh dấu chương đang đọc" onclick="markdown('<%= reading._id%>','<%= reading.Chapters.chapters.chapterNumber%>')"></i>
+  </div>
   <div id="to-top">
-    <i class="fas fa-angle-up fa-3x" onclick="toTop()"></i>
+    <i class="fas fa-angle-up fa-3x" data-toggle="tooltip" data-placement="bottom" title="Lên đầu trang" onclick="toTop()"></i>
   </div>
   <%- include('partials/footer') %>
 </body>
@@ -452,6 +455,41 @@
   }
   document.querySelector("#btn-share").innerHTML = shareSocial();
 </script>
-
+<script>
+  function markdown(mangaId, chapterMarkdown) {
+    const payload = {
+      mangaId,
+      chapterMarkdown,
+    }
+    fetch("/user/markdown", {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.isSuccess) {
+          swal({
+            title: "Đã đánh dấu chương",
+            text: "Nhớ tiếp tục bộ truyện khi có thể nhé 😤",
+            icon: "success",
+            button: "OK!"
+          });
+        } else {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi rồi",
+            icon: "error",
+            button: "Chờ Admin sửa vậy !"
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+</script>
 
 </html>

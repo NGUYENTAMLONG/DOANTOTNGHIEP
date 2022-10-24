@@ -58,9 +58,11 @@
               <span>Chapter: <b><%= slide.manga.contentId.chapters[0].chapterNumber %></b> - <b><%= slide.manga.contentId.chapters[0].chapterName %></b> </span>
               <%} %>
               <p><b>Thể loại: </b>
+              <div class="d-flex flex-wrap">
                 <% slide.manga.type.forEach(function(type){ %>
-                <span class="slide__types badge badge-sm"><%= type %></span>
+                <div class="slide__types badge badge-sm"><%= type %></div>
                 <% }) %>
+              </div>
               </p>
             </div>
             <% if( slide.content !== ""){ %>

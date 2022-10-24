@@ -47,7 +47,9 @@
         text-decoration: none;
         color: white;
         border-radius: 5px;
-        padding: 0px 2px; }
+        padding: 0px 2px;
+        font-size: 13px;
+        white-space: nowrap; }
       .box-slide .slide .slide__info .slide__desc {
         text-indent: 25px;
         display: -webkit-box;
