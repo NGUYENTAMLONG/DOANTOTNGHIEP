@@ -94,7 +94,7 @@
               <span>
                 <i class="fas fa-map-marker-alt"></i> Đọc chương đã đánh dấu
               </span>
-              <input type="checkbox" class="form-check-input" id="goToMarkdownManga" onclick="handleGoToMarkdown('<%= manga._id%>')" hidden />
+              <input type="checkbox" class="form-check-input" id="goToMarkdownManga" onclick="handleGoToMarkdown('<%= manga._id%>','<%= manga.slug %>')" hidden />
             </label>
           </div>
           <div class="d-flex flex-wrap">
@@ -424,7 +424,7 @@
 </script>
 
 <script>
-  function handleGoToMarkdown(mangaId) {
+  function handleGoToMarkdown(mangaId, mangaSlug) {
     fetch(`/user/markdown/go-to/${mangaId}`, {
         method: 'POST', // or 'PUT'
         headers: {
@@ -444,12 +444,36 @@
             button: "OK!"
           });
         } else if (!result.isSuccess && result.errorCode === "UNAUTHORIZED") {
-          alert("UNAUTHOR")
+          goToMarkdownLocal(mangaId, mangaSlug)
         }
       })
       .catch((error) => {
         console.error('Error:', error);
       });
+  }
+
+  function goToMarkdownLocal(mangaId, mangaSlug) {
+    if (localStorage.getItem("markdowns")) {
+      const markdownList = JSON.parse(localStorage.getItem("markdowns"));
+      const foundMangaMarked = markdownList.find((markdown, index) => markdown);
+      if (foundMangaMarked) {
+        location.href = `/detail/${mangaSlug}/read/chapter-${foundMangaMarked.chapterMarkdown}`
+      } else {
+        swal({
+          title: "Thông báo",
+          text: "Chưa có đánh dấu chương",
+          icon: "error",
+          button: "Ok"
+        });
+      }
+    } else {
+      swal({
+        title: "Thông báo",
+        text: "Chưa có đánh dấu chương",
+        icon: "error",
+        button: "Ok"
+      });
+    }
   }
 </script>
 

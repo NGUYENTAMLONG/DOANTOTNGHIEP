@@ -470,7 +470,16 @@
       })
       .then((response) => response.json())
       .then((result) => {
+        console.log(result)
         if (result.isSuccess) {
+          swal({
+            title: "Đã đánh dấu chương",
+            text: "Nhớ tiếp tục bộ truyện khi có thể nhé 😤",
+            icon: "success",
+            button: "OK!"
+          });
+        } else if (!result.isSuccess && result.errorCode === 'UNAUTHORIZED') {
+          markdownLocal(mangaId, chapterMarkdown)
           swal({
             title: "Đã đánh dấu chương",
             text: "Nhớ tiếp tục bộ truyện khi có thể nhé 😤",
@@ -489,6 +498,36 @@
       .catch((error) => {
         console.error("Error:", error);
       });
+  }
+
+
+  function markdownLocal(mangaId, chapterMarkdown) {
+    if (localStorage.getItem("markdowns")) {
+      const markdownList = JSON.parse(localStorage.getItem("markdowns"));
+      const foundMangaMarked = markdownList.find((markdown, index) => markdown.mangaId === mangaId)
+      const foundMangaMarkedIndex = markdownList.findIndex((markdown, index) => markdown.mangaId === mangaId)
+      console.log('foundMangaMarked:', foundMangaMarked)
+      console.log('foundMangaMarkedIndex:', foundMangaMarkedIndex)
+      if (!foundMangaMarked) {
+        const newMarkdowns = [{
+          mangaId: mangaId,
+          chapterMarkdown: Number(chapterMarkdown)
+        }, ...markdownList];
+        localStorage.setItem("markdowns", JSON.stringify(newMarkdowns));
+      } else {
+        markdownList.splice(foundMangaMarkedIndex, 1, {
+          mangaId: mangaId,
+          chapterMarkdown: Number(chapterMarkdown)
+        })
+        localStorage.setItem("markdowns", JSON.stringify(markdownList));
+      }
+    } else {
+      const markdowns = [{
+        mangaId: mangaId,
+        chapterMarkdown: Number(chapterMarkdown)
+      }];
+      localStorage.setItem("markdowns", JSON.stringify(markdowns));
+    }
   }
 </script>
 

@@ -655,12 +655,57 @@ class UserController {
     }
   }
   async goToMarkdownList(req, res, next) {
+    if (!req.user) {
+      // return res
+      //   .status(STATUS.UNAUTHORIZED)
+      //   .json(
+      //     new ErrorResponse(ERRORCODE.ERROR_UNAUTHORIZED, MESSAGE.UNAUTHORIZED)
+      //   );
+      return res.status(STATUS.UNAUTHORIZED).redirect("/");
+    }
+    const user = req.user;
     try {
-      res.render("showPopular", {
+      const foundMarkdownRepo = await Markdown.findOne({ userId: user.id });
+      console.log(foundMarkdownRepo);
+      if (!foundMarkdownRepo) {
+        res.render("showMarkdownManga", {
+          user: req.user,
+          flag: false,
+          title: `<i class="fas fa-empty-set"></i> Bạn chưa đánh dấu chương bộ truyện nào`,
+        });
+        return;
+      }
+
+      const foundMarkdownMangas = foundMarkdownRepo.markdownList.map(
+        (elm, index) => elm.mangaId
+      );
+
+      const foundMangas = await Manga.find({
+        _id: { $in: [...foundMarkdownMangas] },
+      });
+      const match = filterMangas(req);
+      match._id = { $in: foundMangas };
+      const totalMangas = await Manga.countDocuments(match);
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalMangas);
+      result.mangas = await Manga.find(match)
+        .populate({
+          path: "contentId",
+          options: {
+            chapters: { $slice: -1 },
+          },
+        })
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+      res.render("showMarkdownManga", {
         user: req.user,
         moment: moment,
-        title: title,
-        mangas: orderManga(result.mangas),
+        flag: true,
+        title: `<i class="fas fa-map-marked-alt"></i> Các bộ truyện bạn đã đánh dấu chương`,
+        mangas: result.mangas,
         categories: types,
         navigator: {
           previous: result.previous,
@@ -671,6 +716,45 @@ class UserController {
           filter: match,
         },
       });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async removeMarkdown(req, res, next) {
+    const mangaId = req.params.id;
+    if (!mangaId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      if (!req.user) {
+        return res
+          .status(STATUS.UNAUTHORIZED)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_UNAUTHORIZED,
+              MESSAGE.UNAUTHORIZED
+            )
+          );
+      }
+      const user = req.user;
+
+      await Markdown.updateOne(
+        {
+          userId: user.id,
+        },
+        { $pull: { markdownList: { mangaId: mangaId } } }
+      );
+
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       return res

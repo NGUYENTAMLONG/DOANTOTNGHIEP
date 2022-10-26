@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>MARKED MANGAS</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+
+  <% if(!flag){%>
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <%- title %>
+  </h2>
+  <%}else{%>
+  <h2 class="container mt-3 bg-dark rounded text-light">
+    <%- title %>
+  </h2>
+  <div class="container rounded p-2">
+    <div class="filterZone">
+      <div class="rows d-flex align-items-center">
+        <b>Thể loại : </b>
+        <select class="form-select form-select-sm form-control mb-1 ml-1" aria-label="Default select example" style="width: 200px" onchange="changeTypeQuery(this)">
+          <option selected disabled>Lọc theo thể loại</option>
+          <% categories.forEach((category,index)=>{ %>
+          <option value="<%= category.name %>" <%= (navigator.filter.type === category.name) && "selected" %>><%= category.name %></option>
+          <%})%>
+        </select>
+      </div>
+      <div class="rows">
+        <div><b>Tình trạng : </b>
+          <button type="button" onclick="changeQuery('status','true')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Hoàn thành") ? 'btn-info':'btn-outline-info' %>">Hoàn thành</button>
+          <button type="button" onclick="changeQuery('status','false')" class="btn btn-sm mb-1 <%= (navigator.filter.status === "Đang tiến hành") ? 'btn-info':'btn-outline-info' %>">Đang tiến hành</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Quốc gia : </b>
+          <button type="button" onclick="changeQuery('country','Nhật Bản')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Nhật Bản") ? 'btn-info':'btn-outline-info' %>">Nhật Bản</button>
+          <button type="button" onclick="changeQuery('country','Trung Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Trung Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Trung Quốc</button>
+          <button type="button" onclick="changeQuery('country','Mỹ')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Mỹ") ? 'btn-info':'btn-outline-info' %> ml-1">Mỹ</button>
+          <button type="button" onclick="changeQuery('country','Hàn Quốc')" class="btn btn-sm mb-1 <%= (navigator.filter.country === "Hàn Quốc") ? 'btn-info':'btn-outline-info' %> ml-1">Hàn Quốc</button>
+        </div>
+      </div>
+      <div class="rows">
+        <div><b>Đối tượng : </b> <button type="button" onclick="changeQuery('serve','male')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "male") ? 'btn-info':'btn-outline-info' %>">Con trai</button><button type="button" onclick="changeQuery('serve','female')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "female") ? 'btn-info':'btn-outline-info' %> ml-1">Con gái</button><button type="button" onclick="changeQuery('serve','all')" class="btn btn-sm mb-1 <%= (navigator.filter.serve === "all") ? 'btn-info':'btn-outline-info' %> ml-1">Tất cả</button></div>
+      </div>
+    </div>
+  </div>
+  <section class="section container" id="section-1">
+    <div class="row">
+      <% if(mangas.length !==0 ) {%>
+      <% mangas.forEach(function(manga,index){ %>
+      <%- include('partials/mangaMarkdownList.ejs',{manga:manga}) %>
+      <% }); %>
+      <% }else {%>
+      <div class="text-center">
+        <h2 class="text-light bg-dark p-3"><i class="fas fa-heart-broken"></i> Chưa có truyện nào phù hợp :(</h2>
+      </div>
+      <% } %>
+    </div>
+  </section>
+  <%- include("partials/pagination") %>
+  <%} %>
+  <!-- Pagination -->
+  <%- include('partials/footer') %>
+</body>
+
+</html>
+<%- include("partials/script") %>
+<script src="/js/tooltip.js"></script>
+<script>
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  function changeQuery(feild, value) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(feild, value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeTypeQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('type', it.value);
+    urlParams.set("page", "1");
+    window.location.search = urlParams;
+  }
+
+  function changeQueryPaging(page, pageValue, limit, limitValue) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set(page, pageValue);
+    urlParams.set(limit, limitValue);
+
+    window.location.search = urlParams;
+  }
+
+  function changeLimitQuery(it) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set('limit', it.value);
+    urlParams.set("page", "1");
+
+    window.location.search = urlParams;
+  }
+
+  function setActive(field, value) {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get(field) === value) {
+      return "active"
+    }
+    return
+  }
+
+  function clearMarkdown(mangaId) {
+    fetch('/user/markdown/remove/' + mangaId, {
+        method: 'DELETE', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if (!result.isSuccess && result.errorCode === "UNAUTHORIZED") {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Lỗi quyền thực thi",
+            icon: "error",
+            button: "OK!",
+          })
+        } else if (result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Đã xóa đánh dấu",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            location.reload()
+          })
+        } else {
+          swal({
+            title: "Có lỗi xảy ra !",
+            text: "Có thể lỗi do hệ thống :<",
+            icon: "error",
+            button: "OK!",
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>

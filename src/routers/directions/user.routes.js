@@ -20,6 +20,7 @@ const {
   markdown,
   goToMarkdown,
   goToMarkdownList,
+  removeMarkdown,
 } = require("../../controllers/UserController");
 const { decodeBase64 } = require("../../middleware/handleBase64");
 const router = express.Router();
@@ -48,6 +49,7 @@ router.patch("/recover/password", submitRecoverPassword);
 router.post("/markdown", markdown);
 router.post("/markdown/go-to/:id", goToMarkdown);
 router.get("/markdown/list", goToMarkdownList);
+router.delete("/markdown/remove/:id", removeMarkdown);
 
 router.use("/blog", userBlogRouter);
 
