@@ -38,7 +38,8 @@
             </section>
             <button class="btn btn-outline-success my-2 my-sm-0 btn-search btn-sm" type="submit" onclick="getResultSeaching()"><i class="fas fa-search"></i></button>
           </form>
-
+          <!-- ******** NOTIFICATION *************** -->
+          <%- include ("notification") %>
           <!-- ******** PRIVATE ZONE *************** -->
           <div class="authen float-right">
             <% if(user) {%>
@@ -313,9 +314,11 @@
           <button class="btn btn-info btn-sm mt-1 ml-2 mb-1" type="submit" id="history-btn"><i class='bx bxs-time'></i> Lịch sử</button>
         </form>
       </div>
-
+    </nav>
   </header>
   <script src="/js/authen.js"></script>
+  <script src="/js/notification.js"></script>
+
   <script>
     // Live Searching
     function liveSearch(e) {

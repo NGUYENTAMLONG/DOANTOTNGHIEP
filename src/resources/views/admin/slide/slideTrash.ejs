@@ -205,8 +205,8 @@
             body: JSON.stringify(payload)
           })
           .then(response => response.json())
-          .then(data => {
-            if (data.isSuccess) {
+          .then(result => {
+            if (result.data.isSuccess) {
               swal({
                 title: "Thành công",
                 text: "Đã xóa thành công !",

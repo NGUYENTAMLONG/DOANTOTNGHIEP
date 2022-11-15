@@ -1,0 +1,198 @@
+<!-- Socket IO CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/socket.io.min.js"></script>
+
+<div class="notification float-right">
+  <div class="bell" onclick="handleNotification()">
+    <div class="bell__symbol">
+      <i class="fas fa-bell text-white p-2"></i>
+    </div>
+    <div class="bell__alert d-none">
+      <span class="bell__alert-counter"></span>
+    </div>
+  </div>
+  <div class="notifications">
+    <ul class="noti__list">
+      <div class="noti__list-head row">
+        <h3>Thông báo</h3>
+        <div class="line"></div>
+      </div>
+      <div class="noti__list-filter row">
+        <div class="noti__filter-option active" id="noti-all" onclick="getAllNotification()">Tất cả</div>
+        <div class="noti__filter-option ml-2" id="noti-not" onclick="getNotReaded()">Chưa đọc</div>
+        <div class="noti__filter-option float-right" id="noti-get-all">
+          <a href="/notification" class="text-light"> <i class="fas fa-cog"></i> Xem tất cả</a>
+        </div>
+        <div class="line"></div>
+      </div>
+      <div class="noti__list-container">
+      </div>
+      <div class="noti__list-footer row d-flex justify-content-center align-items-center">
+        <button class="btn btn-primary btn-sm showMoreBtn" onclick="showMore(this)" data-skip="5">Hiển thị thêm</button>
+      </div>
+    </ul>
+  </div>
+</div>
+<script src="/js/moment-with-locales.min.js"></script>
+<script>
+  const notifications = document.querySelector(".notifications");
+  const listNotification = document.querySelector(".noti__list-container")
+  $(".notifications").addClass("d-none");
+  $(document).ready(function() {
+    $('.bell').click(function(event) {
+      event.stopPropagation();
+      $(".notifications").toggleClass("d-none");
+    });
+    $(".notifications").on("click", function(event) {
+      event.stopPropagation();
+    });
+  });
+
+  $(document).on("click", function() {
+    $(".notifications").addClass("d-none");
+  });
+
+  //Handle Notification
+  function handleNotification() {
+    fetch("/notification/api/get-list")
+      .then((res) => res.json())
+      .then((result) => {
+        const notifications = result.data;
+        const htmls = notifications.map((notification, index) => `<a href="${notification.url}">
+          <li class="noti__list-row row">
+            <div class="noti__item-image col-3">
+              <img src="${notification.image}" alt="" width="100%">
+            </div>
+            <div class="col-9">
+              <b class="noti__item-name">
+                ${notification.name}
+              </b>
+              <p class="noti__item-content">
+                ${notification.content}
+              </p>
+               <p class="noti__item-time">
+                 ${moment(notification.createdAt).locale("vi").fromNow()}
+               </p>
+            </div>
+            <div class="line"></div>
+          </li>
+        </a>`).join("")
+        listNotification.innerHTML = htmls;
+        console.log(result)
+      }).catch((error) => console.log(error))
+  }
+
+  const optionFilters = document.querySelectorAll(".noti__filter-option");
+  optionFilters.forEach((elm, index) => {
+    elm.onclick = function() {
+      document.querySelector(".noti__filter-option.active").classList.remove("active");
+      elm.classList.add("active")
+    }
+  })
+
+  function getAllNotification() {
+    fetch("/notification/api/get-list/unread")
+      .then((res) => res.json())
+      .then((result) => {
+        const notifications = result.data;
+        const htmls = notifications.map((notification, index) => `<a href="${notification.url}">
+       <li class="noti__list-row row">
+         <div class="noti__item-image col-3">
+           <img src="${notification.image}" alt="" width="100%">
+         </div>
+         <div class="col-9">
+           <b class="noti__item-name">
+             ${notification.name}
+           </b>
+           <p class="noti__item-content">
+             ${notification.content}
+           </p>
+           <p class="noti__item-time">
+             ${moment(notification.createdAt).locale("vi").fromNow()}
+           </p>
+         </div>
+         <div class="line"></div>
+       </li>
+     </a>`).join("")
+        listNotification.innerHTML = htmls;
+        console.log(result)
+      }).catch((error) => console.log(error))
+  }
+</script>
+<script>
+  const socket = io("/");
+  const notificationContainer = document.querySelector(".noti__list-container")
+  const bellAlert = document.querySelector(".bell__alert");
+  socket.on("PUBLISH", (data) => {
+    insertHtmlNotification(data)
+  })
+  socket.on("EXCEPTION", (data) => {
+    insertHtmlNotification(data)
+  })
+
+  function insertHtmlNotification(data) {
+    console.log(data);
+    bellAlert.classList.remove("d-none");
+    handleNotification()
+  }
+
+  const showMoreBtn = document.querySelector(".showMoreBtn")
+
+  function showMore(btn) {
+    const skip = btn.getAttribute("data-skip");
+    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    const payload = {
+      skip: skip,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/notification/api/get-list/more", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        // moment(blog.updatedAt).locale("vi").fromNow()
+        if (result.isSuccess === true) {
+          if (result.data.notifications.length === 0) {
+            showMoreBtn.innerHTML = "Đã tới giới hạn";
+            return;
+          }
+          console.log(result);
+          const htmls = result.data.notifications.map((notification) => `<a href="${notification.url}">
+            <li class="noti__list-row row">
+              <div class="noti__item-image col-3">
+                <img src="${notification.image}" alt="" width="100%">
+              </div>
+              <div class="col-9">
+                <b class="noti__item-name">
+                  ${notification.name}
+                </b>
+                <p class="noti__item-content">
+                  ${notification.content}
+                </p>
+                <p class="noti__item-time">
+                  ${moment(notification.createdAt).locale("vi").fromNow()}
+                </p>
+              </div>
+              <div class="line"></div>
+            </li>
+          </a>`).join("")
+          notificationContainer.innerHTML += htmls;
+          showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
+          showMoreBtn.innerHTML = "Xem thêm"
+        } else {
+          console.log(result);
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi cập nhật :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+</script>

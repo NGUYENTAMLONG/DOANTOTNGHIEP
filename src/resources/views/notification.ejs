@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>NOTIFICATION</title>
+  <%- include("partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <style>
+    .notification-item {
+      text-decoration: none;
+      margin: 10px 0px;
+      box-shadow: 2px 5px 10px 2px #888888;
+      border-radius: 5px;
+      overflow: hidden;
+      text-decoration: none !important;
+    }
+
+    .notification-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .notification__info {
+      width: 100%;
+    }
+
+    .notification__info-name {
+      text-decoration: none;
+    }
+
+    .notification__info-time {
+      font-size: 12px;
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <section class="section container mt-4 mb-4" id="section-1">
+    <h3>
+      <i class="far fa-newspaper"></i> Thông báo
+    </h3>
+  </section>
+  <section class="section container" id="section-2">
+    <div class="notification__list">
+      <% publicNotifications.forEach((notification,index)=>{%>
+      <a class="notification-item d-flex" href="<%= notification.url %>">
+        <img class="notification__img" src="<%= notification.image %>" alt="Card image notification">
+        <div class="notification__info p-3">
+          <h5 class="notification__info-name"><%= notification.name %></h5>
+          <p class="notification__info-content"><%= notification.content %></p>
+          <p class="notification__info-time"><%=moment(notification.createdAt).locale("vi").fromNow()%></p>
+        </div>
+      </a>
+      <%}) %>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-primary btn-sm showMoreBtnInPage" onclick="showMoreInPage(this)" data-skip="5">Hiển thị thêm</button>
+    </div>
+  </section>
+  <%- include('partials/footer') %>
+</body>
+<%- include("partials/script") %>
+<script>
+  const showMoreBtnInPage = document.querySelector(".showMoreBtnInPage")
+  const notificationList = document.querySelector(".notification__list")
+
+  function showMoreInPage(btn) {
+    const skip = btn.getAttribute("data-skip");
+    showMoreBtnInPage.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    const payload = {
+      skip: skip,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+    fetch("/notification/api/get-list/more", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        // moment(blog.updatedAt).locale("vi").fromNow()
+        if (result.isSuccess === true) {
+          if (result.data.notifications.length === 0) {
+            showMoreBtnInPage.innerHTML = "Đã tới giới hạn";
+            return;
+          }
+          const htmls = result.data.notifications.map((notification) => ` <a class="notification-item d-flex" href="${notification.url}">
+            <img class="notification__img" src="${notification.image}" alt="Card image notification">
+            <div class="notification__info p-3">
+              <h5 class="notification__info-name">${notification.name}</h5>
+              <p class="notification__info-content">${notification.content}</p>
+              <p class="notification__info-time">
+                ${moment(notification.createdAt).locale("vi").fromNow()}
+              </p>
+            </div>
+          </a>`).join("")
+          notificationList.innerHTML += htmls;
+          showMoreBtnInPage.setAttribute("data-skip", Number(skip) + 5);
+          showMoreBtnInPage.innerHTML = "Xem thêm"
+        } else {
+          console.log(result);
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi cập nhật :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+</script>
+
+
+</html>

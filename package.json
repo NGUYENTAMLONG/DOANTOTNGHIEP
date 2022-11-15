@@ -44,6 +44,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "randomstring": "^1.2.2",
+    "socket.io": "^4.5.3",
     "uniqid": "^5.4.0",
     "wysiwyg-editor-node-sdk": "^4.0.12"
   }

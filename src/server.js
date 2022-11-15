@@ -15,10 +15,12 @@ const { VALUES } = require("./config/default");
 const app = express();
 
 //********************* Khởi tạo cổng server
+
 const PORT = process.env.PORT || 3416;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🐲🐲🐲 Server is running on PORT: ${PORT} !!! 🍀🍀🍀`);
 });
+
 // Authentication ********************************************
 require("./middleware/passport");
 
@@ -127,5 +129,29 @@ database.connect();
 // ******************** Cofig CookieParser
 app.use(cookieParser());
 
+//******************** Config socket io */
+const socketIo = require("socket.io");
+const io = socketIo(server, { cors: { origin: "*", path: "/" } });
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
 //********************* Config router app
 route.configRoute(app);
+
+//******************** Config socket io */
+// const io = require("socket.io")(server);
+// const handleSocket = require("./service/socketIO");
+// io.on("connection", function (socket) {
+//   console.log("Connected Socket!", socket.id);
+//   handleSocket(socket);
+// });
+
+// const socketIo = require("socket.io");
+// const io = socketIo(server, { cors: { origin: "*" } });
+// app.use((req, res, next) => {
+//   req.io = io;
+//   return next();
+// });
+
+module.exports = server;

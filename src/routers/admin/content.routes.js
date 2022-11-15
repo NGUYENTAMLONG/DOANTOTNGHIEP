@@ -13,6 +13,7 @@ const mangaRouter = require("./content/manga.routes");
 const slideRouter = require("./content/slide.routes");
 const mailRouter = require("./content/mail.routes");
 const blogRouter = require("./content/blog.routes");
+const notificationRouter = require("./content/notification.routes");
 const Blog = require("../../models/Blog");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../config/httpResponse");
 const { ErrorResponse } = require("../../helper/response");
@@ -25,6 +26,8 @@ router.use("/slide", slideRouter);
 router.use("/mail", mailRouter);
 
 router.use("/blog", blogRouter);
+
+router.use("/notification", notificationRouter);
 
 //path: /management/content/infomation
 router.get("/infomation", showInfomationAdmin);

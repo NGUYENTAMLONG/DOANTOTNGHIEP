@@ -15,6 +15,7 @@ const userRouter = require("./directions/user.routes");
 const mailRouter = require("./directions/mail.routes");
 const blogRouter = require("./directions/blog.routes");
 const topRouter = require("./directions/top.routes");
+const notificationRouter = require("./directions/notification.routes");
 const Authentication = require("../middleware/authentication");
 
 function configRoute(app) {
@@ -34,6 +35,7 @@ function configRoute(app) {
   app.use("/user", Authentication, userRouter);
   app.use("/blog", Authentication, blogRouter);
   app.use("/mail", Authentication, mailRouter);
+  app.use("/notification", Authentication, notificationRouter);
   app.use("/", Authentication, siteRouter);
 }
 

@@ -48,7 +48,7 @@
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4 d-flex justify-content-between align-items-center mb-1">
         <a href="/management/content/manga/analysis" class="btn btn-sm btn-info">Thống kê <i class='bx bxs-pie-chart-alt-2'></i></a>
-        <a href="https://my-site-zlkjtgow8a.disqus.com/admin/moderate/pending" class="btn btn-sm btn-danger" target="_blank">Quản lí bình luận <i class='bx bx-message-dots'></i></a>
+        <a href="https://disqus.com/profile/login/" class="btn btn-sm btn-danger" target="_blank">Quản lí bình luận <i class='bx bx-message-dots'></i></a>
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
           <span></span>
           <span></span>
@@ -57,7 +57,7 @@
     </div>
     <div id="toolbar">
       <button id="deleteChecked" class="btn btn-danger btn-sm">Xóa hết <i class="fas fa-trash"></i></button>
-      <div class="d-flex">
+      <div class="d-flex mt-1">
         <select id="select" class="form-control ml-2" name="filterAlgorithm">
           <option value="and" selected>Tất cả</option>
           <option value="Đang tiến hành" class="status-option">Đang tiến hành</option>
@@ -78,7 +78,8 @@
           <th scope="col" data-field="type" data-formatter="typeFormatter">Thể loại</th>
           <th scope="col" data-field="serve" data-sortable="true" data-formatter="serveFormatter">Đối tượng</th>
           <th scope="col" data-field="description" data-formatter="descFormatter">Mô tả</th>
-          <th scope="col" data-field="status" data-sortable="true" data-filter-control="select">Tình trạng</th>
+          <th scope="col" data-field="status" data-sortable="true">Tình trạng</th>
+          <!-- data-filter-control="select" -->
           <th scope="col" data-field="translation" data-sortable="true" data-formatter="translationFormatter">Người/Nhóm dịch</th>
           <th scope="col" data-field="hot" data-sortable="true" data-formatter="hotFormatter">Hot</th>
           <th scope="col" data-field="statistical" data-sortable="true" data-formatter="statisticalFormatter">Thống kê</th>

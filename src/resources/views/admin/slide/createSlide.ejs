@@ -124,10 +124,11 @@
       content: slideContent,
       manga: mangaId
     }
+    console.log(imgFiles.files[0])
     if (!imgFiles.files[0]) {
       swal({
         title: "Thông báo",
-        text: "Bạn phải upload trang bìa của manga >.<",
+        text: "Bạn phải upload ảnh slide >.<",
         icon: "warning",
         button: "OK!",
       });

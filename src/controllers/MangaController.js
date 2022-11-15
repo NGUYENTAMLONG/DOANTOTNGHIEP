@@ -1,6 +1,6 @@
 const Slide = require("../models/Slide");
 const jwt = require("jsonwebtoken");
-const { VALUES, types, PENDING } = require("../config/default");
+const { VALUES, types, PENDING, NOTIFICATION } = require("../config/default");
 const moment = require("moment");
 const Manga = require("../models/Manga");
 const Chapter = require("../models/Chapter");
@@ -10,6 +10,8 @@ const { redirect } = require("../service/redirect");
 const path = require("path");
 const fs = require("fs");
 const appRoot = require("app-root-path");
+const { storePublicNotification } = require("../service/storeNotification");
+const { handleSocket } = require("../service/socketIO");
 const FroalaEditor = require(path.join(
   appRoot.path,
   "/node_modules/wysiwyg-editor-node-sdk/lib/froalaEditor.js"
@@ -22,7 +24,6 @@ class MangaController {
   async getMangaDashboard(req, res) {
     try {
       const allMangas = await Manga.find({});
-      console.log(types);
       res.render("admin/manga/mangaDashboard", {
         admin: req.user,
         allMangas,
@@ -223,6 +224,22 @@ class MangaController {
             new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER)
           );
       }
+      //Notification
+      await storePublicNotification(res, {
+        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
+        image: createdManga.image,
+        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
+        fromUser: req.user,
+        url: `/detail/${createdManga.slug}`,
+      });
+
+      handleSocket(req.io, NOTIFICATION.PUBLIC.SPACE.PUBLISH, {
+        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
+        image: createdManga.image,
+        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
+        url: `/detail/${createdManga.slug}`,
+      });
+      //
       res
         .status(STATUS.CREATED)
         .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, createdManga));

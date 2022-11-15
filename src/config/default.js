@@ -311,6 +311,32 @@ module.exports.BLOG_STATUS = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
 };
+module.exports.NOTIFICATION = {
+  PUBLIC: {
+    SPACE: {
+      PUBLISH: "PUBLISH",
+      EVENT: "EVENT",
+      RANK: "RARK",
+      EXCEPTION: "EXCEPTION",
+    },
+    NAME: {
+      PUBLISH: "Xuất bản",
+      EVENT: "Sự kiện",
+      RANK: "Cập nhật bảng xếp hạng",
+      EXCEPTION: "Thông báo từ admin",
+    },
+  },
+  PRIVATE: {
+    SPACE: {
+      FOLLOW_PUBLISH: "FOLLOW_PUBLISH",
+      EXCEPTION: "EXCEPTION",
+    },
+    NAME: {
+      FOLLOW_PUBLISH: "Truyện bạn theo dõi cập nhật chương mới",
+      EXCEPTION: "Thông báo từ admin",
+    },
+  },
+};
 module.exports.PROLONGATION = 2;
 module.exports.RANDOM_SIZE = 12;
 module.exports.SECRET_KEY = "tamlongdev";

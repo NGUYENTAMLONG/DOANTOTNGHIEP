@@ -138,7 +138,6 @@
   fetch('/chart/daily')
     .then((response) => response.json())
     .then((result) => {
-      console.log(result)
       const htmls = result.data.map((manga, index) => `
       <li class="rank d-flex rank-${index + 1}">
         <div class="rank__number p-1">
@@ -179,7 +178,6 @@
   fetch('/chart/weekly')
     .then((response) => response.json())
     .then((result) => {
-      console.log(result)
       const htmls = result.data.map((manga, index) => `
    <li class="rank d-flex rank-${index + 1}">
      <div class="rank__number p-1">
@@ -220,7 +218,6 @@
   fetch('/chart/monthly')
     .then((response) => response.json())
     .then((result) => {
-      console.log(result)
       const htmls = result.data.map((manga, index) => `
     <li class="rank d-flex rank-${index + 1}">
       <div class="rank__number p-1">
