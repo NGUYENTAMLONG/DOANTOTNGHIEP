@@ -37,6 +37,8 @@
 <script>
   const notifications = document.querySelector(".notifications");
   const listNotification = document.querySelector(".noti__list-container")
+  const showMoreBtn = document.querySelector(".showMoreBtn")
+
   $(".notifications").addClass("d-none");
   $(document).ready(function() {
     $('.bell').click(function(event) {
@@ -50,6 +52,7 @@
 
   $(document).on("click", function() {
     $(".notifications").addClass("d-none");
+    listNotification.innerHTML = ''
   });
 
   //Handle Notification
@@ -78,7 +81,8 @@
           </li>
         </a>`).join("")
         listNotification.innerHTML = htmls;
-        console.log(result)
+        showMoreBtn.setAttribute("data-skip", 5);
+        showMoreBtn.innerHTML = "Xem thêm";
       }).catch((error) => console.log(error))
   }
 
@@ -118,8 +122,9 @@
         console.log(result)
       }).catch((error) => console.log(error))
   }
-</script>
-<script>
+
+
+  //
   const socket = io("/");
   const notificationContainer = document.querySelector(".noti__list-container")
   const bellAlert = document.querySelector(".bell__alert");
@@ -135,8 +140,6 @@
     bellAlert.classList.remove("d-none");
     handleNotification()
   }
-
-  const showMoreBtn = document.querySelector(".showMoreBtn")
 
   function showMore(btn) {
     const skip = btn.getAttribute("data-skip");
@@ -160,7 +163,6 @@
             showMoreBtn.innerHTML = "Đã tới giới hạn";
             return;
           }
-          console.log(result);
           const htmls = result.data.notifications.map((notification) => `<a href="${notification.url}">
             <li class="noti__list-row row">
               <div class="noti__item-image col-3">
@@ -182,7 +184,7 @@
           </a>`).join("")
           notificationContainer.innerHTML += htmls;
           showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
-          showMoreBtn.innerHTML = "Xem thêm"
+          showMoreBtn.innerHTML = "Xem thêm";
         } else {
           console.log(result);
           swal({

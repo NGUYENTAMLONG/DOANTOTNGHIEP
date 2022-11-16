@@ -303,3 +303,7 @@ header .navbar {
     .nav__column-sort a,
     .nav__column-country a {
       font-size: 13px; } }
+
+@media (max-width: 996px) {
+  .notification .notifications {
+    left: -300px !important; } }

@@ -123,7 +123,7 @@
               <%= manga.description %>
             </p>
             <div class="text-center">
-              <button class="show-more btn btn-primary" onclick="showMore()"> Show More <i class="fas fa-angle-down"></i></button>
+              <button class="show-more-desc btn btn-primary" onclick="showMoreDesc()"> Show More <i class="fas fa-angle-down"></i></button>
             </div>
           </div>
         </div>
@@ -190,7 +190,7 @@
 
     <% } %>
   </section>
-  <section class="section container text-center" id="section-3">
+  <section class="section container text-center" style="overflow: hidden;" id="section-3">
     <div class="text-center">
       <div id="fb-root"></div>
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0&appId=452307582987806&autoLogAppEvents=1" nonce="AckQt6Ew">
@@ -231,11 +231,29 @@
   </section>
   <%- include('partials/footer') %>
 </body>
+<script>
+  //Show more & show less Description
+  const textDesc = document.querySelector(".manga-info__desc p");
+  const showMoreBtn = document.querySelector(".show-more-desc");
 
+  let bool = false;
+
+  function showMoreDesc() {
+    alert("dsaf")
+    // if (bool === false) {
+    //   showMoreBtn.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
+    //   textDesc.classList.remove("truncate");
+    //   bool = true;
+    // } else {
+    //   showMoreBtn.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
+    //   textDesc.classList.add("truncate");
+    //   bool = false;
+    // }
+  }
+</script>
 <%- include("partials/script") %>
 <%- include("partials/visitHistory") %>
-
-<script src="/js/plugins/detail.js"></script>
+<!-- <script src="/js/plugins/detail.js"></script> -->
 <script src="/js/moment.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/rating.js"></script>

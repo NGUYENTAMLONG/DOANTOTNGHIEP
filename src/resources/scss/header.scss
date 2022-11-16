@@ -379,3 +379,23 @@ header {
     }
   }
 }
+
+@media (max-width: 996px) {
+  .notification {
+    .notifications {
+      left: -300px !important;
+      a {
+      }
+      .noti__list {
+      }
+      .noti__list-footer {
+      }
+      .noti__filter-option {
+      }
+      .noti__filter-option.active {
+      }
+      .noti__list-row {
+      }
+    }
+  }
+}
