@@ -21,7 +21,6 @@
 
 <body onload="handleAPI('<%= manga._id %>','<%= manga.type %>')">
   <%- include('partials/header',{user:user}) %>
-
   <section class="section container" id="section-1">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -231,7 +230,18 @@
   </section>
   <%- include('partials/footer') %>
 </body>
-<script>
+<%- include("partials/script") %>
+<%- include("partials/visitHistory") %>
+<!-- <script>
+  //Searching Chapter by Filter
+  $(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+  });
   //Show more & show less Description
   const textDesc = document.querySelector(".manga-info__desc p");
   const showMoreBtn = document.querySelector(".show-more-desc");
@@ -250,10 +260,8 @@
     //   bool = false;
     // }
   }
-</script>
-<%- include("partials/script") %>
-<%- include("partials/visitHistory") %>
-<!-- <script src="/js/plugins/detail.js"></script> -->
+</script> -->
+<script src="/js/plugins/detail.js"></script>
 <script src="/js/moment.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/rating.js"></script>
@@ -474,7 +482,7 @@
   function goToMarkdownLocal(mangaId, mangaSlug) {
     if (localStorage.getItem("markdowns")) {
       const markdownList = JSON.parse(localStorage.getItem("markdowns"));
-      const foundMangaMarked = markdownList.find((markdown, index) => markdown);
+      const foundMangaMarked = markdownList.find((markdown, index) => markdown.mangaId === mangaId);
       if (foundMangaMarked) {
         location.href = `/detail/${mangaSlug}/read/chapter-${foundMangaMarked.chapterMarkdown}`
       } else {

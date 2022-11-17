@@ -285,8 +285,26 @@
             body: JSON.stringify(mangaInfo),
           })
           .then(response => response.json())
-          .then(data => {
-            console.log("CREATED MANGA:", data)
+          .then(result => {
+            console.log("CREATED MANGA:", result)
+            if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+              swal({
+                title: "Thất bại",
+                text: "Truyện đã tồn tại !",
+                icon: "error",
+                button: "Ok!",
+              })
+              return;
+            }
+            if (!result.isSuccess && result.errorCode === "SERVER_ERROR") {
+              swal({
+                title: "Thất bại",
+                text: "Lỗi hệ thống",
+                icon: "error",
+                button: "Ok!",
+              })
+              return;
+            }
             swal({
               title: "Thành công",
               text: "Đã xuất bản thành công !",
@@ -295,7 +313,6 @@
             }).then(() => {
               location.reload()
             })
-
           })
           .catch((error) => {
             console.log('Error:', error);

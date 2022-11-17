@@ -134,7 +134,7 @@ function destroyManga(slug, contentId, imgPath) {
       })
         .then((response) => response.json())
         .then((result) => {
-          if (result.data.isSuccess) {
+          if (result.isSuccess) {
             swal({
               title: "Thành công",
               text: "Đã xóa thành công !",

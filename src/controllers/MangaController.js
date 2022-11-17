@@ -185,6 +185,18 @@ class MangaController {
         );
     }
     try {
+      const checkName = await Manga.findOne({ name: name });
+      if (checkName) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_ALREADY_EXISTS,
+              MESSAGE.MANGA_ALREADY
+            )
+          );
+      }
+
       const initializedChapter = await Chapter.create({});
       const newManga = new Manga({
         name,
@@ -201,21 +213,7 @@ class MangaController {
         country,
         contentId: initializedChapter._id,
       });
-      console.log({
-        name,
-        anotherName,
-        author: author.length !== 0 ? author : PENDING.INFOMATION,
-        type,
-        serve,
-        status,
-        translation:
-          translation.length !== 0 ? translation : PENDING.INFOMATION,
-        hot,
-        description,
-        image,
-        country,
-        contentId: initializedChapter._id,
-      });
+
       const createdManga = await newManga.save();
       if (!createdManga) {
         res
@@ -412,12 +410,17 @@ class MangaController {
       // remove old cover of manga
       fs.unlinkSync(path.join(appRoot.path, `/src/public/images/${imgName}`));
 
-      fs.rmSync(path.join(appRoot.path, `/src/public/mangas/${slug}/`), {
-        recursive: true,
-      });
+      if (
+        fs.existsSync(path.join(appRoot.path, `/src/public/mangas/${slug}/`))
+      ) {
+        //file exists
+        fs.rmSync(path.join(appRoot.path, `/src/public/mangas/${slug}/`), {
+          recursive: true,
+        });
+      }
       //Note : SLIDE !!!!!!
       res
-        .status(STATUS.CREATED)
+        .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
     } catch (error) {
       console.log(error);

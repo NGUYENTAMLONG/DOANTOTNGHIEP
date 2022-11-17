@@ -1,15 +1,15 @@
 //Show more & show less Description
 const textDesc = document.querySelector(".manga-info__desc p");
-const showMoreBtn = document.querySelector(".show-more-desc");
+const showMoreDescBtn = document.querySelector(".show-more-desc");
 
 let bool = false;
 function showMoreDesc() {
   if (bool === false) {
-    showMoreBtn.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
+    showMoreDescBtn.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
     textDesc.classList.remove("truncate");
     bool = true;
   } else {
-    showMoreBtn.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
+    showMoreDescBtn.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
     textDesc.classList.add("truncate");
     bool = false;
   }
