@@ -61,10 +61,10 @@
                     <textarea type="text" class="form-control" id="noti-content" placeholder="Nhập nội dung thông báo"></textarea>
                   </div>
                   <div class="form-group">
-                    <label for="noti-img">Ảnh thông báo (Nếu có)</label>
-                    <input type="file" class="form-control" required name="noti-img" id="noti-img" onchange="changeImg(this)" />
+                    <label for="noti-img-create">Ảnh thông báo (Nếu có)</label>
+                    <input type="file" class="form-control" required name="noti-img-create" id="noti-img-create" onchange="changeImgCreate(this)" />
                     <div class="text-center">
-                      <img src="" id="preview-img" alt="">
+                      <img src="" id="preview-img-create" alt="">
                     </div>
                   </div>
                   <div class="form-group">
@@ -113,7 +113,7 @@
       <tbody>
         <% if (publicNotifications.length !== 0){%>
         <% publicNotifications.forEach((notification,index)=>{%>
-        <tr>
+        <tr id="noti-<%= notification._id%>">
           <th scope="row" class="text-center"><%= index + 1 %> </th>
           <td><%= notification.name %></td>
           <td><img src="<%= notification.image %>" alt="notification-img" style="width: 100px;height: 100px; object-fit: cover;" data-toggle="modal" data-target="#imgModal-<%= notification._id%>" />
@@ -155,24 +155,32 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form>
+                    <form class="text-dark">
                       <div class="form-group">
-                        <label for="noti-name">Tên thông báo</label>
+                        <label class="float-left" for="noti-name"><b>
+                            Tên thông báo
+                          </b></label>
                         <input type="text" class="form-control" id="noti-name" value="<%= notification.name %>" placeholder="Nhập tên thông báo">
                       </div>
                       <div class="form-group">
-                        <label for="noti-content">Nội dung</label>
+                        <label class="float-left" for="noti-content"><b>
+                            Nội dung
+                          </b></label>
                         <textarea type="text" class="form-control" id="noti-content" placeholder="Nhập nội dung thông báo"><%= notification.content %></textarea>
                       </div>
                       <div class="form-group">
-                        <label for="noti-img">Ảnh thông báo (Nếu có)</label>
-                        <input type="file" class="form-control" required name="noti-img" id="noti-img" onchange="changeImg(this)" />
+                        <label class="float-left" for="noti-img-update"><b>
+                            Ảnh thông báo (Nếu có)
+                          </b></label>
+                        <input type="file" class="form-control" required name="noti-img-update" id="noti-img-update" onchange="changeImgUpdate(this)" />
                         <div class="text-center">
-                          <img src="<%= notification.image %> " id="preview-img" alt="">
+                          <img src="<%= notification.image %> " id="preview-img-update" alt="">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="noti-link">Link thông báo</label>
+                        <label class="float-left" for="noti-link"><b>
+                            Link thông báo
+                          </b></label>
                         <input type="text" class="form-control" id="noti-link" placeholder="Nhập đường link thông báo" value="<%= notification.url %>">
                       </div>
                       <div class="text-center">
@@ -238,26 +246,22 @@
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-  const previewImg = document.getElementById("preview-img");
+  const previewImgCreate = document.getElementById("preview-img-create");
 
-  function changeImg(imgInput) {
+  function changeImgCreate(imgInput) {
     const [file] = imgInput.files;
     if (file) {
-      previewImg.setAttribute("src", URL.createObjectURL(file))
+      previewImgCreate.setAttribute("src", URL.createObjectURL(file))
     }
   }
 
   function createNotification(event) {
     event.preventDefault();
-    const checkImgFile = document.getElementById("noti-img");
+    const checkImgFile = document.getElementById("noti-img-create");
     const name = document.getElementById("noti-name").value;
     const content = document.getElementById("noti-content").value;
     const link = document.getElementById("noti-link").value;
 
-    // const [file] = checkImgFile.files;
-    // if (file) {
-
-    // }
     const formData = new FormData();
     formData.append("notification", checkImgFile.files[0]);
     formData.append("name", name)
@@ -276,6 +280,14 @@
             title: "Thông báo",
             text: "Đăng thông báo thành công",
             icon: "success",
+            button: "OK!",
+          });
+          return;
+        } else if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+          swal({
+            title: "Thông báo",
+            text: "Đường link đã tồn tại >.<",
+            icon: "error",
             button: "OK!",
           });
           return;
@@ -334,7 +346,57 @@
 </script>
 <script>
   function softDelete(notificationId) {
-    alert(notificationId)
+    swal({
+      title: "Bạn có chắc chắn muốn xóa không",
+      text: "Nếu xóa bạn vẫn có thể khôi phục thông báo !",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        fetch('/management/content/notification/api/delete/' + notificationId, {
+            method: 'DELETE', // or 'PUT'
+          })
+          .then(response => response.json())
+          .then(result => {
+            console.log(result)
+            if (result.isSuccess) {
+              swal({
+                title: "Thông báo",
+                text: "Xóa thành công",
+                icon: "success",
+                button: "OK!",
+              });
+              document.getElementById(`noti-${notificationId}`).remove();
+
+              return;
+            } else if (!result.isSuccess) {
+              swal({
+                title: "Thông báo",
+                text: "Có lỗi xảy ra",
+                icon: "error",
+                button: "OK!",
+              });
+              return;
+            }
+          }).catch((error) => {
+            console.log('Error:', error);
+          })
+      } else {
+        return;
+      }
+    });
+  }
+</script>
+<script>
+  //Update Notification
+  const previewImgUpdate = document.getElementById("preview-img-update");
+
+  function changeImgUpdate(imgInput) {
+    const [file] = imgInput.files;
+    if (file) {
+      previewImgUpdate.setAttribute("src", URL.createObjectURL(file))
+    }
   }
 </script>
 

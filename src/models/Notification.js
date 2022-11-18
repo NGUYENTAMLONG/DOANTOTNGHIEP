@@ -39,7 +39,7 @@ const NotificationPublicSchema = new mongoose.Schema(
     },
     fromUser: { type: mongoose.Schema.Types.ObjectId, required: true },
     content: { type: String, required: true },
-    url: { type: String },
+    url: { type: String, unique: true },
   },
   {
     collection: "PublicNotification",

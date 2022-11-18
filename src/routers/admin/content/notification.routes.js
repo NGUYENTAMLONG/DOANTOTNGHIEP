@@ -5,6 +5,7 @@ const appRoot = require("app-root-path");
 const {
   getNotificationDashboard,
   createNotification,
+  deleteNotification,
 } = require("../../../controllers/NotificationController");
 const router = express.Router();
 
@@ -41,11 +42,11 @@ router.post(
   uploadNotification.single("notification"),
   createNotification
 );
+router.delete("/api/delete/:id", deleteNotification);
 // router.get("/api/getList", getSlideList);
 // router.get("/api/getDeletedList", getDeletedList);
 // router.get("/api/slides", findAllSlides);
 // router.get("/api/slides/:id", findSlideById);
-// router.delete("/api/delete/:id", deleteSlide);
 // router.delete("/api/destroy/:id", destroySlide);
 // router.patch("/api/restore/:id", restoreSlide);
 // router.put("/api/switch/:id", switchSlide);

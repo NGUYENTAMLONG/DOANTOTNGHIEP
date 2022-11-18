@@ -79,6 +79,19 @@ class NotificationController {
       if (req.file) {
         payload.image = "/public/notification/" + req.file.filename;
       }
+      const checkUrl = await PublicNotification.findOne({ url: url });
+      if (checkUrl) {
+        removeImg(req);
+
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_ALREADY_EXISTS,
+              MESSAGE.URL_ALREADY
+            )
+          );
+      }
       const createdNotification = await PublicNotification(payload);
       //Notification
       await storePublicNotification(res, {
@@ -100,29 +113,41 @@ class NotificationController {
         .status(STATUS.CREATED)
         .json(new SuccessResponse(MESSAGE.SUCCESS, createdNotification));
     } catch (error) {
-      console.log(error);
       //rollback
-      if (req.file) {
-        fs.unlinkSync(
-          path.join(
-            appRoot.path,
-            `/src/public/notification/${req.file.filename}`
-          )
-        );
-      }
+      removeImg(req);
 
-      if (error.code === 11000) {
-        return res
-          .status(STATUS.BAD_REQUEST)
-          .json(
-            new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.URL_ALREADY)
-          );
-      }
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async deleteNotification(req, res, next) {
+    const notificationId = req.params.id;
+    if (!notificationId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await PublicNotification.delete({ _id: notificationId });
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
       return res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
 }
-
+function removeImg(req) {
+  if (req.file) {
+    fs.unlinkSync(
+      path.join(appRoot.path, `/src/public/notification/${req.file.filename}`)
+    );
+  }
+}
 module.exports = new NotificationController();
