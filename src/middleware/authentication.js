@@ -6,8 +6,7 @@ const UserGoogle = require("../models/UserGoogle");
 const UserLocal = require("../models/UserLocal");
 
 async function Authentication(req, res, next) {
-  console.log("---->", req.user);
-  // console.log("-->", req.originalUrl);
+  // console.log("---->", req.user);
   if (req.originalUrl.includes("/management/")) {
     if (req.user && req.user.role === "HA") {
       const foundUser = await Admin.findById(req.user._id);
