@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOTIFICATION DASHBOARD</title>
+  <title>NOTIFICATION TRASH</title>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/fullscreenImg.css">
 
@@ -23,7 +23,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mt-2">
         <li class="breadcrumb-item"><a href="/management/content/admin">Trang quản lí</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Quản lí thông báo</li>
+        <li class="breadcrumb-item active" aria-current="page">Thông báo đã xóa</li>
       </ol>
     </nav>
     <div class="row d-flex justify-content-center align-items-center">
@@ -33,55 +33,7 @@
         </p>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4 d-flex mb-1">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createNotification">
-          Đăng Thông báo
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="createNotification" tabindex="-1" role="dialog" aria-labelledby="createNotificationLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="createNotificationLabel">Đăng thông báo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="noti-name">Tên thông báo</label>
-                    <input type="text" class="form-control" id="noti-name" placeholder="Nhập tên thông báo">
-                  </div>
-                  <div class="form-group">
-                    <label for="noti-content">Nội dung</label>
-                    <textarea type="text" class="form-control" id="noti-content" placeholder="Nhập nội dung thông báo"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <label for="noti-img-create">Ảnh thông báo (Nếu có)</label>
-                    <input type="file" class="form-control" required name="noti-img-create" id="noti-img-create" onchange="changeImgCreate(this)" />
-                    <div class="text-center">
-                      <img src="" id="preview-img-create" alt="">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="noti-link">Link thông báo</label>
-                    <input type="text" class="form-control" id="noti-link" placeholder="Nhập đường link thông báo">
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary" onclick="createNotification(event)">Đăng</button>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <a href="/management/content/notification/trash" class="btn btn-sm btn-dark ml-2">Thùng rác <i class="fas fa-trash-alt"></i></a>
+        <a href="/management/content/notification/" class="btn btn-sm btn-primary ml-2">Quản lí thông báo</a>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-between align-items-center mb-1">
         <button class="light-mode-button" aria-label="Toggle Light Mode" onclick="toggle_light_mode()">
@@ -91,7 +43,7 @@
       </div>
     </div>
     <div id="toolbar" class="d-flex">
-      <button id="deleteChecked" class="btn btn-danger btn-sm mb-2">Xóa hết <i class="fas fa-trash"></i></button>
+      <button id="recoverChecked" class="btn btn-success btn-sm mb-2">Khôi phục toàn bộ <i class="fas fa-retweet-alt"></i></button>
     </div>
     <table class="table table-dark table-striped table-hover" id="table">
       <thead>
@@ -104,6 +56,7 @@
           <th scope="col"><i class="fas fa-link"></i></th>
           <th scope="col">Tạo lúc</th>
           <th scope="col">Cập nhật</th>
+          <th scope="col">Xóa lúc</th>
           <th scope="col"><input type="checkbox" name="check-all" id="check-all"></th>
           <th scope="col"><i class="fas fa-cog"></i></th>
         </tr>
@@ -140,66 +93,17 @@
           <td><a href="<%= notification.url %>">Đi tới</a></td>
           <td><%= moment(notification.createdAt).format("L") %> <br> <%= moment(notification.createdAt).format("LT") %></td>
           <td><%= moment(notification.updatedAt).format("L") %> <br> <%= moment(notification.updatedAt).format("LT") %></td>
+          <td><%= moment(notification.deletedAt).format("L") %> <br> <%= moment(notification.deletedAt).format("LT") %></td>
           <td><input type="checkbox" name="check-row" id="check-row" data-id="<%= notification._id %>"></td>
           <td class="text-center">
-            <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-<%= notification._id%>">Sửa</div>
-            <div class="modal fade" id="update-<%= notification._id%>" tabindex="-1" role="dialog" aria-labelledby="update-<%= notification._id%>Label" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title text-dark" id="exampleModalLabel">Cập nhật thông báo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form class="text-dark">
-                      <div class="form-group">
-                        <label class="float-left" for="noti-name"><b>
-                            Tên thông báo
-                          </b></label>
-                        <input type="text" class="form-control" id="noti-name" value="<%= notification.name %>" placeholder="Nhập tên thông báo">
-                      </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-content"><b>
-                            Nội dung
-                          </b></label>
-                        <textarea type="text" class="form-control" id="noti-content" placeholder="Nhập nội dung thông báo"><%= notification.content %></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-img-update"><b>
-                            Ảnh thông báo (Nếu có)
-                          </b></label>
-                        <input type="file" class="form-control" required name="noti-img-update" id="noti-img-update" onchange="changeImgUpdate(this)" />
-                        <div class="text-center">
-                          <img src="<%= notification.image %> " id="preview-img-update" alt="">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-link"><b>
-                            Link thông báo
-                          </b></label>
-                        <input type="text" class="form-control" id="noti-link" placeholder="Nhập đường link thông báo" value="<%= notification.url %>">
-                      </div>
-                      <div class="text-center">
-                        <button type="submit" class="btn btn-primary" onclick="createNotification(event)">Đăng</button>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="btn btn-success btn-sm" onclick="restore('<%= notification._id%>')">Khôi phục</div>
             <!--  -->
-            <div class="btn btn-danger btn-sm mt-2" onclick="softDelete('<%= notification._id %>')">Xóa</div>
+            <div class="btn btn-danger btn-sm mt-2" onclick="destroy('<%= notification._id %>')">Xóa</div>
           </td>
         </tr>
         <%}) %>
         <%}else{%>
-        <div class="text-center"><b class="text-danger">Chưa có thông báo nào !</b></div>
+        <div class="text-center"><b class="text-danger">Chưa có thông báo nào bị xóa!</b></div>
         <%} %>
       </tbody>
     </table>
@@ -242,67 +146,6 @@
 <script src="/js/moment.min.js"></script>
 <script src="/js/darkMode.js"></script>
 <script>
-  const previewImgCreate = document.getElementById("preview-img-create");
-
-  function changeImgCreate(imgInput) {
-    const [file] = imgInput.files;
-    if (file) {
-      previewImgCreate.setAttribute("src", URL.createObjectURL(file))
-    }
-  }
-
-  function createNotification(event) {
-    event.preventDefault();
-    const checkImgFile = document.getElementById("noti-img-create");
-    const name = document.getElementById("noti-name").value;
-    const content = document.getElementById("noti-content").value;
-    const link = document.getElementById("noti-link").value;
-
-    const formData = new FormData();
-    formData.append("notification", checkImgFile.files[0]);
-    formData.append("name", name)
-    formData.append("content", content)
-    formData.append("url", link)
-
-    fetch('/management/content/notification/api/create', {
-        method: 'POST', // or 'PUT'
-        body: formData,
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        if (result.isSuccess) {
-          swal({
-            title: "Thông báo",
-            text: "Đăng thông báo thành công",
-            icon: "success",
-            button: "OK!",
-          });
-          return;
-        } else if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
-          swal({
-            title: "Thông báo",
-            text: "Đường link đã tồn tại >.<",
-            icon: "error",
-            button: "OK!",
-          });
-          return;
-        } else if (!result.isSuccess) {
-          swal({
-            title: "Thông báo",
-            text: "Có lỗi xảy ra",
-            icon: "error",
-            button: "OK!",
-          });
-          return;
-        }
-      })
-      .catch((error) => {
-        console.log('Error:', error);
-      })
-  }
-</script>
-<script>
   function changeQuery(feild, value) {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -341,16 +184,47 @@
   }
 </script>
 <script>
-  function softDelete(notificationId) {
+  function restore(notificationId) {
+    fetch('/management/content/notification/api/restore/' + notificationId, {
+        method: 'PATCH', // or 'PUT'
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if (result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Khôi phục thành công",
+            icon: "success",
+            button: "OK!",
+          });
+          document.getElementById(`noti-${notificationId}`).remove();
+          return;
+        } else if (!result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi xảy ra",
+            icon: "error",
+            button: "OK!",
+          });
+          return;
+        }
+      }).catch((error) => {
+        console.log('Error:', error);
+      })
+  }
+</script>
+<script>
+  function destroy(notificationId) {
     swal({
       title: "Bạn có chắc chắn muốn xóa không",
-      text: "Nếu xóa bạn vẫn có thể khôi phục thông báo !",
+      text: "Nếu xóa bạn không thể khôi phục thông báo !",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        fetch('/management/content/notification/api/delete/' + notificationId, {
+        fetch('/management/content/notification/api/destroy/' + notificationId, {
             method: 'DELETE', // or 'PUT'
           })
           .then(response => response.json())
@@ -359,12 +233,11 @@
             if (result.isSuccess) {
               swal({
                 title: "Thông báo",
-                text: "Xóa thành công",
+                text: "Xóa vĩnh viễn thành công",
                 icon: "success",
                 button: "OK!",
               });
               document.getElementById(`noti-${notificationId}`).remove();
-
               return;
             } else if (!result.isSuccess) {
               swal({
@@ -382,17 +255,6 @@
         return;
       }
     });
-  }
-</script>
-<script>
-  //Update Notification
-  const previewImgUpdate = document.getElementById("preview-img-update");
-
-  function changeImgUpdate(imgInput) {
-    const [file] = imgInput.files;
-    if (file) {
-      previewImgUpdate.setAttribute("src", URL.createObjectURL(file))
-    }
   }
 </script>
 

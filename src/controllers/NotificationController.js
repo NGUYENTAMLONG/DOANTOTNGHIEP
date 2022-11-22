@@ -60,6 +60,37 @@ class NotificationController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async getNotificationTrash(req, res) {
+    try {
+      const totalNotification = await PublicNotification.findDeleted().count();
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 2;
+      const startPage = (page - 1) * limit;
+      const result = pagination(req, totalNotification);
+      result.publicNotifications = await PublicNotification.findDeleted({})
+        .limit(limit)
+        .skip(startPage)
+        .exec();
+
+      res.render("admin/notification/notificationTrash", {
+        admin: req.user,
+        moment,
+        publicNotifications: result.publicNotifications,
+        navigator: {
+          previous: result.previous,
+          next: result.next,
+          totalPages: Math.ceil(totalNotification / limit),
+          limit: limit,
+          activePage: page,
+        },
+        // privateNotifications,
+      });
+    } catch (error) {
+      console.log(error);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  //API
   async createNotification(req, res, next) {
     const { name, content, url } = req.body;
     if (!name || !content) {
@@ -135,6 +166,27 @@ class NotificationController {
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async restoreNotification(req, res, next) {
+    const notificationId = req.params.id;
+    if (!notificationId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await PublicNotification.restore({ _id: notificationId });
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       return res
