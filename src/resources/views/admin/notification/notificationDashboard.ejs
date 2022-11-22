@@ -133,109 +133,135 @@
           </td>
           <td><%= notification.content %></td>
           <td>
-            <button class="btn btn-warning btn-sm" onclick="checkFromUser('<%= notification.fromUser %>')">
+            <button class="btn btn-warning btn-sm" onclick="checkFromUser('<%= notification.fromUser %>')" data-toggle="modal" data-target="#author-<%= notification.fromUser%>">
               Xem
             </button>
-          </td>
-          <td><a href="<%= notification.url %>">Đi tới</a></td>
-          <td><%= moment(notification.createdAt).format("L") %> <br> <%= moment(notification.createdAt).format("LT") %></td>
-          <td><%= moment(notification.updatedAt).format("L") %> <br> <%= moment(notification.updatedAt).format("LT") %></td>
-          <td><input type="checkbox" name="check-row" id="check-row" data-id="<%= notification._id %>"></td>
-          <td class="text-center">
-            <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-<%= notification._id%>">Sửa</div>
-            <div class="modal fade" id="update-<%= notification._id%>" tabindex="-1" role="dialog" aria-labelledby="update-<%= notification._id%>Label" aria-hidden="true">
+            <div class="modal fade" id="author-<%= notification.fromUser%>" tabindex="-1" role="dialog" aria-labelledby="author-<%= notification.fromUser%>Label" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title text-dark" id="exampleModalLabel">Cập nhật thông báo</h5>
+                    <h5 class="modal-title text-dark" id="authorModalLabel">Người đăng</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">
-                    <form class="text-dark">
-                      <div class="form-group">
-                        <label class="float-left" for="noti-name"><b>
-                            Tên thông báo
-                          </b></label>
-                        <input type="text" class="form-control" id="noti-name" value="<%= notification.name %>" placeholder="Nhập tên thông báo">
+                  <div class="modal-body" id="infor-<%= notification.fromUser %>">
+                    <!-- <div class="author text-dark d-flex justify-content-center align-items-center flex-column">
+                      <div class="author__avatar" style="background-image: url('/public/avatars/admin/1661738593357.jpg');width: 150px; height: 150px; background-size:cover; background-position:top center; border-radius: 50%">
                       </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-content"><b>
-                            Nội dung
-                          </b></label>
-                        <textarea type="text" class="form-control" id="noti-content" placeholder="Nhập nội dung thông báo"><%= notification.content %></textarea>
+                      <div class="author__name">
+                        <b>NGuyen van Anh</b>
                       </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-img-update"><b>
-                            Ảnh thông báo (Nếu có)
-                          </b></label>
-                        <input type="file" class="form-control" required name="noti-img-update" id="noti-img-update" onchange="changeImgUpdate(this)" />
-                        <div class="text-center">
-                          <img src="<%= notification.image %> " id="preview-img-update" alt="">
-                        </div>
+                      <div class="author__email">
+                        <b>tamlong12032000@gmail.com</b>
                       </div>
-                      <div class="form-group">
-                        <label class="float-left" for="noti-link"><b>
-                            Link thông báo
-                          </b></label>
-                        <input type="text" class="form-control" id="noti-link" placeholder="Nhập đường link thông báo" value="<%= notification.url %>">
-                      </div>
-                      <div class="text-center">
-                        <button type="submit" class="btn btn-primary" onclick="createNotification(event)">Đăng</button>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                      <div class="author__role">
+                        <b>CA</b>
+                      </div> -->
                   </div>
                 </div>
               </div>
             </div>
-            <!--  -->
-            <div class="btn btn-danger btn-sm mt-2" onclick="softDelete('<%= notification._id %>')">Xóa</div>
-          </td>
-        </tr>
-        <%}) %>
-        <%}else{%>
-        <div class="text-center"><b class="text-danger">Chưa có thông báo nào !</b></div>
-        <%} %>
-      </tbody>
-    </table>
-
-    <!-- paging -->
-    <div class="container mt-4 d-flex justify-content-center">
-      <nav aria-label="Page navigation">
-        <ul class="pagination flex-wrap">
-          <!-- First Page -->
-          <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','1','limit','<%= navigator.limit %>')">First</button></li>
-          <!-- Previous Page -->
-          <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','<%= (navigator.previous) && navigator.previous.previousPage %>','limit','<%= navigator.limit %>')">Previous</button></li>
-          <!-- Pages -->
-          <% for(var i=1; i<=navigator.totalPages; i++) {%>
-          <% if(i > navigator.activePage - 4 && i< navigator.activePage + 4 ){%>
-          <li class=" page-item <%= (navigator.activePage === i) && 'active' %>"><a class="page-link" onclick="changeQueryPaging('page','<%= i %>','limit','<%= navigator.limit %>')"><%= i %></a></li>
-          <%} %>
-          <% }%>
-          <!-- Next Page -->
-          <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= (navigator.next) && navigator.next.nextPage %>', 'limit', '<%= navigator.limit %>')">Next</button></li>
-          <!-- Last Page -->
-          <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= navigator.totalPages %>', 'limit', '<%= navigator.limit %>')">Last</button></li>
-          <li class="page-item">
-            <select class="form-select form-control ml-2" onchange="changeLimitQuery(this)">
-              <option selected>Giới hạn</option>
-              <option value="2" <%= (navigator.limit === 2) && "selected" %>>2</option>
-              <option value="3" <%= (navigator.limit === 3) && "selected" %>>3</option>
-              <option value=" 5" <%= (navigator.limit === 5) && "selected" %>>5</option>
-              <option value="10" <%= (navigator.limit === 10) && "selected" %>>10</option>
-              <option value="20" <%= (navigator.limit === 20) && "selected" %>>20</option>
-              <option value="30" <%= (navigator.limit === 30) && "selected" %>>30</option>
-            </select>
-          </li>
-        </ul>
-      </nav>
+  </div>
+  </td>
+  <td><a href="<%= notification.url %>">Đi tới</a></td>
+  <td><%= moment(notification.createdAt).format("L") %> <br> <%= moment(notification.createdAt).format("LT") %></td>
+  <td><%= moment(notification.updatedAt).format("L") %> <br> <%= moment(notification.updatedAt).format("LT") %></td>
+  <td><input type="checkbox" name="check-row" id="check-row" data-id="<%= notification._id %>"></td>
+  <td class="text-center">
+    <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-<%= notification._id%>">Sửa</div> <br>
+    <div class="modal fade" id="update-<%= notification._id%>" tabindex="-1" role="dialog" aria-labelledby="update-<%= notification._id%>Label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-dark" id="updateModalLabel">Cập nhật thông báo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="text-dark">
+              <div class="form-group">
+                <label class="float-left" for="name-update-<%= notification._id %>"><b>
+                    Tên thông báo
+                  </b></label>
+                <input type="text" class="form-control" id="name-update-<%= notification._id %>" value="<%= notification.name %>" placeholder="Nhập tên thông báo">
+              </div>
+              <div class="form-group">
+                <label class="float-left" for="content-update-<%= notification._id %>"><b>
+                    Nội dung
+                  </b></label>
+                <textarea type="text" class="form-control" id="content-update-<%= notification._id %>" placeholder="Nhập nội dung thông báo"><%= notification.content %></textarea>
+              </div>
+              <div class="form-group">
+                <label class="float-left" for="img-update-<%= notification._id %>"><b>
+                    Ảnh thông báo (Nếu có)
+                  </b></label>
+                <input type="file" class="form-control" required name="noti-img-update" id="img-update-<%= notification._id %>" onchange="changeImgUpdate(this)" />
+                <div class="text-center">
+                  <img src="<%= notification.image %>" id="preview-img-update" alt="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="float-left" for="link-update-<%= notification._id %>"><b>
+                    Link thông báo
+                  </b></label>
+                <input type="text" class="form-control" id="link-update-<%= notification._id %>" placeholder="Nhập đường link thông báo" value="<%= notification.url %>">
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary" id="btn-<%= notification._id %>" onclick="updateNotification(event,'<%= notification._id %>')" data-oldImg="<%= notification.image %>">Sửa</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          </div>
+        </div>
+      </div>
     </div>
+    <!--  -->
+    <div class="btn btn-danger btn-sm mt-2" onclick="softDelete('<%= notification._id %>')">Xóa</div>
+  </td>
+  </tr>
+  <%}) %>
+  <%}else{%>
+  <div class="text-center"><b class="text-danger">Chưa có thông báo nào !</b></div>
+  <%} %>
+  </tbody>
+  </table>
+
+  <!-- paging -->
+  <div class="container mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination flex-wrap">
+        <!-- First Page -->
+        <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','1','limit','<%= navigator.limit %>')">First</button></li>
+        <!-- Previous Page -->
+        <li class="page-item <% if(!navigator.previous){ %>disabled<%}%>"><button class="page-link"  onclick="changeQueryPaging('page','<%= (navigator.previous) && navigator.previous.previousPage %>','limit','<%= navigator.limit %>')">Previous</button></li>
+        <!-- Pages -->
+        <% for(var i=1; i<=navigator.totalPages; i++) {%>
+        <% if(i > navigator.activePage - 4 && i< navigator.activePage + 4 ){%>
+        <li class=" page-item <%= (navigator.activePage === i) && 'active' %>"><a class="page-link" onclick="changeQueryPaging('page','<%= i %>','limit','<%= navigator.limit %>')"><%= i %></a></li>
+        <%} %>
+        <% }%>
+        <!-- Next Page -->
+        <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= (navigator.next) && navigator.next.nextPage %>', 'limit', '<%= navigator.limit %>')">Next</button></li>
+        <!-- Last Page -->
+        <li class="page-item <% if(!navigator.next){ %>disabled<%}%>"><button class="page-link" onclick="changeQueryPaging('page', '<%= navigator.totalPages %>', 'limit', '<%= navigator.limit %>')">Last</button></li>
+        <li class="page-item">
+          <select class="form-select form-control ml-2" onchange="changeLimitQuery(this)">
+            <option selected>Giới hạn</option>
+            <option value="2" <%= (navigator.limit === 2) && "selected" %>>2</option>
+            <option value="3" <%= (navigator.limit === 3) && "selected" %>>3</option>
+            <option value=" 5" <%= (navigator.limit === 5) && "selected" %>>5</option>
+            <option value="10" <%= (navigator.limit === 10) && "selected" %>>10</option>
+            <option value="20" <%= (navigator.limit === 20) && "selected" %>>20</option>
+            <option value="30" <%= (navigator.limit === 30) && "selected" %>>30</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+  </div>
   </div>
 </body>
 <%- include("../../partials/script") %>
@@ -258,12 +284,22 @@
     const content = document.getElementById("noti-content").value;
     const link = document.getElementById("noti-link").value;
 
+
     const formData = new FormData();
     formData.append("notification", checkImgFile.files[0]);
     formData.append("name", name)
     formData.append("content", content)
     formData.append("url", link)
-
+    //check empty
+    if (!checkImgFile.files[0] || !name || !content || !link) {
+      swal({
+        title: "Thông báo",
+        text: "Bạn phải điền đầy đủ thông tin",
+        icon: "error",
+        button: "OK!",
+      });
+      return;
+    }
     fetch('/management/content/notification/api/create', {
         method: 'POST', // or 'PUT'
         body: formData,
@@ -337,7 +373,26 @@
   }
 
   function checkFromUser(fromUserId) {
-    alert(fromUserId)
+    fetch('/management/content/notification/api/get-author/' + fromUserId)
+      .then(response => response.json())
+      .then(result => {
+        const author = result.data;
+        document.getElementById(`infor-${fromUserId}`).innerHTML = `<div class="author text-dark d-flex justify-content-center align-items-center flex-column">
+          <div class="author__avatar" style="background-image: url('/public/avatars/admin/${author.avatar}');width: 150px; height: 150px;
+          border:2px black solid; background-size:cover; background-position:top center; border-radius: 50%">
+          </div>
+          <div class="author__name">
+            <b>${author.username}</b>
+          </div>
+          <div class="author__email">
+            <b>${author.email}</b>
+          </div>
+          <div class="author__role">
+            <b><span class="badge badge-primary">${author.role}</span></b>
+          </div>`
+      }).catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 <script>
@@ -393,6 +448,67 @@
     if (file) {
       previewImgUpdate.setAttribute("src", URL.createObjectURL(file))
     }
+  }
+
+  function updateNotification(event, notificationId) {
+    event.preventDefault();
+    // console.log(notificationId)
+    const updateBtn = document.getElementById(`btn-${notificationId}`)
+    const oldImg = updateBtn.getAttribute("data-oldImg");
+
+    const checkImgFile = document.getElementById(`img-update-${notificationId}`);
+    const name = document.getElementById(`name-update-${notificationId}`).value;
+    const content = document.getElementById(`content-update-${notificationId}`).value;
+    const link = document.getElementById(`link-update-${notificationId}`).value;
+
+    const formData = new FormData();
+    formData.append("notification", checkImgFile.files[0]);
+    formData.append("name", name)
+    formData.append("content", content)
+    formData.append("url", link)
+    formData.append("oldImg", oldImg)
+
+    console.log({
+      notificationId,
+      img: checkImgFile.files[0],
+      name,
+      content,
+      link
+    })
+    fetch('/management/content/notification/api/update/' + notificationId, {
+        method: 'PATCH', // or 'PUT'
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Sửa thông báo thành công",
+            icon: "success",
+            button: "OK!",
+          });
+          return;
+        } else if (!result.isSuccess && result.errorCode === "ALREADY_EXISTS") {
+          swal({
+            title: "Thông báo",
+            text: "Đường link đã tồn tại >.<",
+            icon: "error",
+            button: "OK!",
+          });
+          return;
+        } else if (!result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi xảy ra",
+            icon: "error",
+            button: "OK!",
+          });
+          return;
+        }
+      }).catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 

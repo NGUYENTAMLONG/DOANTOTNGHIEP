@@ -1,6 +1,7 @@
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { redirect } = require("../service/redirect");
 const { SuccessResponse, ErrorResponse } = require("../helper/response");
+const Admin = require("../models/Admin");
 const fs = require("fs");
 const appRoot = require("app-root-path");
 const path = require("path");
@@ -123,7 +124,7 @@ class NotificationController {
             )
           );
       }
-      const createdNotification = await PublicNotification(payload);
+      const createdNotification = await PublicNotification.create(payload);
       //Notification
       await storePublicNotification(res, {
         name: NOTIFICATION.PUBLIC.NAME.EXCEPTION,
@@ -194,6 +195,82 @@ class NotificationController {
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
+  async getAuthorNotification(req, res, next) {
+    const fromUserId = req.params.id;
+    if (!fromUserId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const foundFromUser = await Admin.findById(fromUserId);
+      if (!foundFromUser) {
+        return res
+          .status(STATUS.NOT_FOUND)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_NOT_FOUND, MESSAGE.NOT_FOUND)
+          );
+      }
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, foundFromUser));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async updateNotification(req, res, next) {
+    const notificationId = req.params.id;
+    const { name, content, url, oldImg } = req.body;
+    if (!name || !content || !oldImg) {
+      removeImg(req);
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      const payload = {
+        name,
+        content,
+        url,
+      };
+      if (req.file) {
+        payload.image = "/public/notification/" + req.file.filename;
+      }
+      const checkUrl = await PublicNotification.findOne({ url: url });
+      if (checkUrl && checkUrl._id.toString() !== notificationId) {
+        removeImg(req);
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(
+              ERRORCODE.ERROR_ALREADY_EXISTS,
+              MESSAGE.URL_ALREADY
+            )
+          );
+      }
+      await PublicNotification.findByIdAndUpdate(notificationId, payload);
+      if (req.file) {
+        removeOldImg(oldImg);
+      }
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      //rollback
+      removeImg(req);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
 }
 function removeImg(req) {
   if (req.file) {
@@ -201,5 +278,16 @@ function removeImg(req) {
       path.join(appRoot.path, `/src/public/notification/${req.file.filename}`)
     );
   }
+}
+function removeOldImg(oldImg) {
+  const oldImgSplit = oldImg.split("/");
+  const oldImgName = oldImgSplit[oldImgSplit.length - 1];
+
+  if (oldImgName === "notification.jpg") {
+    return;
+  }
+  fs.unlinkSync(
+    path.join(appRoot.path, `/src/public/notification/${oldImgName}`)
+  );
 }
 module.exports = new NotificationController();

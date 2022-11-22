@@ -8,6 +8,8 @@ const {
   createNotification,
   deleteNotification,
   restoreNotification,
+  getAuthorNotification,
+  updateNotification,
 } = require("../../../controllers/NotificationController");
 const router = express.Router();
 
@@ -51,8 +53,13 @@ router.delete("/api/delete/:id", deleteNotification);
 // router.get("/api/slides/:id", findSlideById);
 // router.delete("/api/destroy/:id", destroySlide);
 router.patch("/api/restore/:id", restoreNotification);
+router.get("/api/get-author/:id", getAuthorNotification);
+router.patch(
+  "/api/update/:id",
+  uploadNotification.single("notification"),
+  updateNotification
+);
 // router.put("/api/switch/:id", switchSlide);
-// router.post("/api/update/:id", updateSlide);
 // router.delete("/api/deleteChecked", deleteChecked);
 // router.patch("/api/restoreChecked", restoreChecked);
 module.exports = router;
