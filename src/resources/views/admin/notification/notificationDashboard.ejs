@@ -91,7 +91,11 @@
       </div>
     </div>
     <div id="toolbar" class="d-flex">
-      <button id="deleteChecked" class="btn btn-danger btn-sm mb-2">Xóa hết <i class="fas fa-trash"></i></button>
+      <button id="deleteChecked" class="btn btn-danger btn-sm mb-2" onclick="deleteAll()">Xóa hết <i class="fas fa-trash"></i></button>
+      <%- include("notificationSearching.ejs")%>
+      <div class="d-block ml-3">
+        <button class="btn btn-success" onclick="refresh()"><i class="fas fa-sync-alt"></i></button>
+      </div>
     </div>
     <table class="table table-dark table-striped table-hover" id="table">
       <thead>
@@ -102,9 +106,9 @@
           <th scope="col">Nội dung</th>
           <th scope="col">Gửi từ</th>
           <th scope="col"><i class="fas fa-link"></i></th>
-          <th scope="col">Tạo lúc</th>
+          <th scope="col">Tạo lúc <i class="fas fa-sort" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp" onclick="sorting(this)"></i></th>
           <th scope="col">Cập nhật</th>
-          <th scope="col"><input type="checkbox" name="check-all" id="check-all"></th>
+          <th scope="col"><input type="checkbox" name="check-all" id="check-all" onchange="checkAll(this)"></th>
           <th scope="col"><i class="fas fa-cog"></i></th>
         </tr>
       </thead>
@@ -167,7 +171,7 @@
   <td><a href="<%= notification.url %>">Đi tới</a></td>
   <td><%= moment(notification.createdAt).format("L") %> <br> <%= moment(notification.createdAt).format("LT") %></td>
   <td><%= moment(notification.updatedAt).format("L") %> <br> <%= moment(notification.updatedAt).format("LT") %></td>
-  <td><input type="checkbox" name="check-row" id="check-row" data-id="<%= notification._id %>"></td>
+  <td><input type="checkbox" name="check-row" class="check-row" data-id="<%= notification._id %>" onchange="changeElm(this)"></td>
   <td class="text-center">
     <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-<%= notification._id%>">Sửa</div> <br>
     <div class="modal fade" id="update-<%= notification._id%>" tabindex="-1" role="dialog" aria-labelledby="update-<%= notification._id%>Label" aria-hidden="true">
@@ -509,6 +513,122 @@
       }).catch((error) => {
         console.log('Error:', error);
       })
+  }
+</script>
+<script>
+  const checkList = document.querySelectorAll(".check-row");
+  const checkboxAllBtn = document.getElementById("check-all");
+
+  function checkAll(input) {
+    const bool = input.checked;
+    checkList.forEach((checkInput, index) => {
+      checkInput.checked = bool;
+    })
+  }
+
+  function changeElm(input) {
+    let totalChecked = 0;
+    checkList.forEach((checkbox, index) => {
+      if (checkbox.checked === true) {
+        totalChecked++
+      }
+    });
+
+    if (!input.checked) {
+      checkboxAllBtn.checked = false;
+    } else {
+      checkboxAllBtn.checked = totalChecked === checkList.length;
+    }
+  }
+
+  function deleteAll() {
+    const notiIdList = [];
+    checkList.forEach((checkbox, index) => {
+      if (checkbox.checked === true) {
+        notiIdList.push(checkbox.getAttribute("data-id"))
+      }
+    });
+
+    swal({
+      title: "Bạn có chắc chắn muốn xóa những thông báo không",
+      text: "Nếu xóa bạn vẫn có thể khôi phục thông báo !",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        fetch('/management/content/notification/api/delete-checked/', {
+            method: 'DELETE', // or 'PUT'
+            headers: {
+              "Content-Type": "application/json",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(notiIdList)
+          })
+          .then(response => response.json())
+          .then(result => {
+            console.log(result)
+            if (result.isSuccess) {
+              swal({
+                title: "Thông báo",
+                text: "Xóa thành công",
+                icon: "success",
+                button: "OK!",
+              }).then(() => {
+                location.reload();
+              })
+              return;
+            } else if (!result.isSuccess && result.errorCode === "BAD_REQUEST") {
+              swal({
+                title: "Thông báo",
+                text: "Danh sách cần xóa trống",
+                icon: "error",
+                button: "OK!",
+              });
+              return;
+            } else if (!result.isSuccess) {
+              swal({
+                title: "Thông báo",
+                text: "Có lỗi xảy ra",
+                icon: "error",
+                button: "OK!",
+              });
+              return;
+            }
+          }).catch((error) => {
+            console.log('Error:', error);
+          })
+      } else {
+        return;
+      }
+    });
+  }
+
+  function refresh() {
+    location.href = "/management/content/notification"
+  }
+</script>
+<script>
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  let sortFlag = true;
+
+  function sorting(sortBtn) {
+    if (sortFlag === true) {
+      sortBtn.classList.remove("fa-sort");
+      sortBtn.classList.remove("fa-sort-down");
+      sortBtn.classList.add("fa-sort-up");
+      sortFlag = false;
+      console.log(window.location.href)
+    } else {
+      sortBtn.classList.remove("fa-sort-up");
+      sortBtn.classList.add("fa-sort-down");
+      sortFlag = true;
+      console.log(window.location.href)
+    }
   }
 </script>
 

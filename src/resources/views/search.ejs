@@ -27,7 +27,7 @@
     </div>
   </section>
   <div class="container">
-    <button onclick="showMore(this,'<%= keyword %>')" data-skip="5" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
+    <button onclick="showMoreSearching(this,'<%= keyword %>')" data-skip="5" class="btn btn-primary showMore__Btn" style="width: 100%;">Xem thêm</button>
   </div>
   <% } else {%>
   <div class="container text-center mt-4">
@@ -44,11 +44,11 @@
 
 <script>
   const mangaRow = document.querySelector(".manga-row")
-  const showMoreBtn = document.querySelector(".showMore__Btn")
+  const showMoreSearchingBtn = document.querySelector(".showMore__Btn")
 
-  function showMore(btn, keyword) {
+  function showMoreSearching(btn, keyword) {
     const skip = btn.getAttribute("data-skip");
-    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    showMoreSearchingBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
     const payload = {
       skip: skip,
       keyword
@@ -66,7 +66,7 @@
         if (result.isSuccess === true) {
           const mangas = result.data.mangas
           if (mangas.length === 0) {
-            showMoreBtn.innerHTML = "Đã tới giới hạn";
+            showMoreSearchingBtn.innerHTML = "Đã tới giới hạn";
             return;
           }
           const htmls = mangas.map((manga) => ` <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-2">
@@ -126,8 +126,8 @@
             </div>
           </div>`).join("")
           mangaRow.innerHTML += htmls;
-          showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
-          showMoreBtn.innerHTML = "Xem tiếp";
+          showMoreSearchingBtn.setAttribute("data-skip", Number(skip) + 5);
+          showMoreSearchingBtn.innerHTML = "Xem tiếp";
           // Tippy tooltip js library
           tippy(`.div-template`, {
             content(reference) {

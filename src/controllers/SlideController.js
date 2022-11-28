@@ -286,6 +286,13 @@ class SlideController {
   //Soft Delete Checked
   async deleteChecked(req, res, next) {
     const idList = req.body;
+    if (!idList || idList.length === 0) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
     try {
       await Slide.delete({ _id: { $in: idList } });
       res
@@ -301,7 +308,7 @@ class SlideController {
   //Restore Checked
   async restoreChecked(req, res, next) {
     const idList = req.body;
-    if (!idList || idList.length !== 0) {
+    if (!idList || idList.length === 0) {
       return res
         .status(STATUS.BAD_REQUEST)
         .json(

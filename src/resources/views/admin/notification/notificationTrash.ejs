@@ -43,7 +43,7 @@
       </div>
     </div>
     <div id="toolbar" class="d-flex">
-      <button id="recoverChecked" class="btn btn-success btn-sm mb-2">Khôi phục toàn bộ <i class="fas fa-retweet-alt"></i></button>
+      <button id="recoverChecked" class="btn btn-success btn-sm mb-2" onclick="restoreAll()">Khôi phục toàn bộ <i class="fas fa-retweet-alt"></i></button>
     </div>
     <table class="table table-dark table-striped table-hover" id="table">
       <thead>
@@ -57,7 +57,7 @@
           <th scope="col">Tạo lúc</th>
           <th scope="col">Cập nhật</th>
           <th scope="col">Xóa lúc</th>
-          <th scope="col"><input type="checkbox" name="check-all" id="check-all"></th>
+          <th scope="col"><input type="checkbox" name="check-all" id="check-all" onchange="checkAll(this)"></th>
           <th scope="col"><i class="fas fa-cog"></i></th>
         </tr>
       </thead>
@@ -94,7 +94,7 @@
           <td><%= moment(notification.createdAt).format("L") %> <br> <%= moment(notification.createdAt).format("LT") %></td>
           <td><%= moment(notification.updatedAt).format("L") %> <br> <%= moment(notification.updatedAt).format("LT") %></td>
           <td><%= moment(notification.deletedAt).format("L") %> <br> <%= moment(notification.deletedAt).format("LT") %></td>
-          <td><input type="checkbox" name="check-row" id="check-row" data-id="<%= notification._id %>"></td>
+          <td><input type="checkbox" name="check-row" class="check-row" data-id="<%= notification._id %>" onchange="changeElm(this)"></td>
           <td class="text-center">
             <div class="btn btn-success btn-sm" onclick="restore('<%= notification._id%>')">Khôi phục</div>
             <!--  -->
@@ -255,6 +255,83 @@
         return;
       }
     });
+  }
+</script>
+<script>
+  const checkList = document.querySelectorAll(".check-row");
+  const checkboxAllBtn = document.getElementById("check-all");
+
+  function checkAll(input) {
+    const bool = input.checked;
+    checkList.forEach((checkInput, index) => {
+      checkInput.checked = bool;
+    })
+  }
+
+  function changeElm(input) {
+    let totalChecked = 0;
+    checkList.forEach((checkbox, index) => {
+      if (checkbox.checked === true) {
+        totalChecked++
+      }
+    });
+
+    if (!input.checked) {
+      checkboxAllBtn.checked = false;
+    } else {
+      checkboxAllBtn.checked = totalChecked === checkList.length;
+    }
+  }
+
+  function restoreAll() {
+    const notiIdList = [];
+    checkList.forEach((checkbox, index) => {
+      if (checkbox.checked === true) {
+        notiIdList.push(checkbox.getAttribute("data-id"))
+      }
+    });
+
+    fetch('/management/content/notification/api/restore-checked/', {
+        method: 'PATCH', // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(notiIdList)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if (result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Khôi phục thành công",
+            icon: "success",
+            button: "OK!",
+          }).then(() => {
+            location.reload();
+          })
+          return;
+        } else if (!result.isSuccess && result.errorCode === "BAD_REQUEST") {
+          swal({
+            title: "Thông báo",
+            text: "Danh sách cần khôi phục trống",
+            icon: "error",
+            button: "OK!",
+          });
+          return;
+        } else if (!result.isSuccess) {
+          swal({
+            title: "Thông báo",
+            text: "Có lỗi xảy ra",
+            icon: "error",
+            button: "OK!",
+          });
+          return;
+        }
+      }).catch((error) => {
+        console.log('Error:', error);
+      })
   }
 </script>
 

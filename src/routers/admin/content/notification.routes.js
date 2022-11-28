@@ -10,6 +10,9 @@ const {
   restoreNotification,
   getAuthorNotification,
   updateNotification,
+  deleteChecked,
+  restoreChecked,
+  searchNotification,
 } = require("../../../controllers/NotificationController");
 const router = express.Router();
 
@@ -19,7 +22,7 @@ const router = express.Router();
 router.get("/trash", getNotificationTrash);
 // router.get("/paging", getPagingNotification);
 router.get("/", getNotificationDashboard);
-
+router.get("/searching", searchNotification);
 //route (API-JSON): -> /management/content/notification/api
 const storageNotification = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -60,6 +63,6 @@ router.patch(
   updateNotification
 );
 // router.put("/api/switch/:id", switchSlide);
-// router.delete("/api/deleteChecked", deleteChecked);
-// router.patch("/api/restoreChecked", restoreChecked);
+router.delete("/api/delete-checked", deleteChecked);
+router.patch("/api/restore-checked", restoreChecked);
 module.exports = router;

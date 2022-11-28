@@ -18,31 +18,29 @@ const pagination = require("../service/pagination");
 class NotificationController {
   //Go to notification dashboard
   async getNotificationDashboard(req, res) {
+    const { search } = req.query;
     try {
-      const totalNotification = await PublicNotification.countDocuments();
+      let matching = {};
+      if (search) {
+        matching = {
+          // $or: [{ name: regex }, { anotherName: regex }, { author: regex }],
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { content: { $regex: search, $options: "i" } },
+            { url: { $regex: search, $options: "i" } },
+          ],
+        };
+      }
+      const totalNotification = await PublicNotification.find(matching).count();
+      console.log(totalNotification);
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 2;
       const startPage = (page - 1) * limit;
       const result = pagination(req, totalNotification);
-      result.publicNotifications = await PublicNotification.find()
+      result.publicNotifications = await PublicNotification.find(matching)
         .limit(limit)
         .skip(startPage)
         .exec();
-
-      // // const privateNotifications = await PrivateNotification.find();
-      // return res.json({
-      //   admin: req.user,
-      //   moment,
-      //   publicNotifications: result.publicNotifications,
-      //   navigator: {
-      //     previous: result.previous,
-      //     next: result.next,
-      //     totalPages: Math.ceil(totalNotification / limit),
-      //     limit: limit,
-      //     activePage: page,
-      //   },
-      //   // privateNotifications,
-      // });
       res.render("admin/notification/notificationDashboard", {
         admin: req.user,
         moment,
@@ -58,7 +56,9 @@ class NotificationController {
       });
     } catch (error) {
       console.log(error);
-      redirect(req, res, STATUS.SERVER_ERROR);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
   }
   async getNotificationTrash(req, res) {
@@ -124,7 +124,7 @@ class NotificationController {
             )
           );
       }
-      const createdNotification = await PublicNotification.create(payload);
+      const createdNotification = await PublicNotification(payload);
       //Notification
       await storePublicNotification(res, {
         name: NOTIFICATION.PUBLIC.NAME.EXCEPTION,
@@ -267,6 +267,70 @@ class NotificationController {
       //rollback
       removeImg(req);
       return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async deleteChecked(req, res, next) {
+    const notiIdList = req.body;
+    if (!notiIdList || notiIdList.length === 0) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.EMPTY_LIST)
+        );
+    }
+    try {
+      await PublicNotification.delete({ _id: { $in: notiIdList } });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.DELETE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async restoreChecked(req, res, next) {
+    const notiIdList = req.body;
+    if (!notiIdList || notiIdList.length === 0) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      await PublicNotification.restore({ _id: { $in: notiIdList } });
+      res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.RESTORE_SUCCESS, null));
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async searchNotification(req, res, next) {
+    const { search } = req.query;
+    if (!search) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    try {
+      res
+        .status(STATUS.SUCCESS)
+        .redirect(
+          `/management/content/notification?search=${search}&page=1&limit=2`
+        );
+    } catch (error) {
+      console.log(error);
+      res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }
