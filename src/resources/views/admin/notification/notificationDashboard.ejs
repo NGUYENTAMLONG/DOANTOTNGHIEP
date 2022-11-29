@@ -103,18 +103,43 @@
           <th scope="col">STT</th>
           <th scope="col">Tên</th>
           <th scope="col">Ảnh</th>
-          <th scope="col">Nội dung</th>
+          <th scope="col">Nội dung
+            <% if(!locals.sortContent){%>
+            <i class="fas fa-sort" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp" onclick="sorting('sortContent',-1)"></i>
+            <%} else if(locals.sortContent && locals.sortContent === "-1"){%>
+            <i class="fas fa-sort-up" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp tăng dần" onclick="sorting('sortContent',1)"></i>
+            <%} else if(locals.sortContent && locals.sortContent === "1"){%>
+            <i class="fas fa-sort-down" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp giảm dần" onclick="sorting('sortContent',-1)"></i>
+            <%}%></th>
           <th scope="col">Gửi từ</th>
           <th scope="col"><i class="fas fa-link"></i></th>
-          <th scope="col">Tạo lúc <i class="fas fa-sort" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp" onclick="sorting(this)"></i></th>
-          <th scope="col">Cập nhật</th>
+          <th scope="col">Tạo lúc
+            <% if(!locals.sortCreatedAt){%>
+            <i class="fas fa-sort" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp" onclick="sorting('sortCreatedAt',-1)"></i>
+            <%} else if(locals.sortCreatedAt && locals.sortCreatedAt === "-1"){%>
+            <i class="fas fa-sort-up" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp tăng dần" onclick="sorting('sortCreatedAt',1)"></i>
+            <%} else if(locals.sortCreatedAt && locals.sortCreatedAt === "1"){%>
+            <i class="fas fa-sort-down" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp giảm dần" onclick="sorting('sortCreatedAt',-1)"></i>
+            <%}%>
+
+
+          </th>
+          <th scope="col">Cập nhật
+            <% if(!locals.sortUpdatedAt){%>
+            <i class="fas fa-sort" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp" onclick="sorting('sortUpdatedAt',-1)"></i>
+            <%} else if(locals.sortUpdatedAt && locals.sortUpdatedAt === "-1"){%>
+            <i class="fas fa-sort-up" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp tăng dần" onclick="sorting('sortUpdatedAt',1)"></i>
+            <%} else if(locals.sortUpdatedAt && locals.sortUpdatedAt === "1"){%>
+            <i class="fas fa-sort-down" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title="Sắp xếp giảm dần" onclick="sorting('sortUpdatedAt',-1)"></i>
+            <%}%>
+          </th>
           <th scope="col"><input type="checkbox" name="check-all" id="check-all" onchange="checkAll(this)"></th>
           <th scope="col"><i class="fas fa-cog"></i></th>
         </tr>
       </thead>
       <tbody>
         <% if (publicNotifications.length !== 0){%>
-        <% publicNotifications.forEach((notification,index)=>{%>
+            <% publicNotifications.forEach((notification,index)=>{%>
         <tr id="noti-<%= notification._id%>">
           <th scope="row" class="text-center"><%= index + 1 %> </th>
           <td><%= notification.name %></td>
@@ -310,7 +335,6 @@
       })
       .then(response => response.json())
       .then(result => {
-        console.log(result)
         if (result.isSuccess) {
           swal({
             title: "Thông báo",
@@ -605,7 +629,7 @@
   }
 
   function refresh() {
-    location.href = "/management/content/notification"
+    location.href = "/management/content/notification?page=1&limit=2"
   }
 </script>
 <script>
@@ -614,21 +638,25 @@
     $('[data-toggle="tooltip"]').tooltip();
   });
 
-  let sortFlag = true;
 
-  function sorting(sortBtn) {
-    if (sortFlag === true) {
-      sortBtn.classList.remove("fa-sort");
-      sortBtn.classList.remove("fa-sort-down");
-      sortBtn.classList.add("fa-sort-up");
-      sortFlag = false;
-      console.log(window.location.href)
-    } else {
-      sortBtn.classList.remove("fa-sort-up");
-      sortBtn.classList.add("fa-sort-down");
-      sortFlag = true;
-      console.log(window.location.href)
+  function sorting(feild, num) {
+    const params = new URLSearchParams(window.location.search);
+    let arr = [];
+    for (var value of params.keys()) {
+      if (value !== feild && value.includes("sort")) {
+        arr.push(value);
+      }
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    arr.forEach((item) => {
+      urlParams.delete(item)
+    })
+
+    urlParams.set(feild, num);
+
+    window.location.search = urlParams;
+
   }
 </script>
 

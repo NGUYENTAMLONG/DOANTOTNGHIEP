@@ -18,8 +18,25 @@ const pagination = require("../service/pagination");
 class NotificationController {
   //Go to notification dashboard
   async getNotificationDashboard(req, res) {
-    const { search } = req.query;
+    const { search, sortCreatedAt, sortContent, sortUpdatedAt } = req.query;
     try {
+      let sortConditon = "";
+      if (sortCreatedAt) {
+        sortConditon = {
+          createdAt: sortCreatedAt,
+        };
+      }
+      if (sortUpdatedAt) {
+        sortConditon = {
+          updatedAt: sortUpdatedAt,
+        };
+      }
+      if (sortContent) {
+        sortConditon = {
+          content: sortContent,
+        };
+      }
+
       let matching = {};
       if (search) {
         matching = {
@@ -38,6 +55,7 @@ class NotificationController {
       const startPage = (page - 1) * limit;
       const result = pagination(req, totalNotification);
       result.publicNotifications = await PublicNotification.find(matching)
+        .sort(sortConditon)
         .limit(limit)
         .skip(startPage)
         .exec();
@@ -52,6 +70,9 @@ class NotificationController {
           limit: limit,
           activePage: page,
         },
+        sortCreatedAt,
+        sortContent,
+        sortUpdatedAt,
         // privateNotifications,
       });
     } catch (error) {
