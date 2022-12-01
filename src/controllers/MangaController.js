@@ -546,9 +546,30 @@ class MangaController {
         { _id: chapterId },
         { $push: { chapters: { $each: [], $sort: 1 } } }
       );
+      //Notification
+      // const foundManga = await Manga.findOne({
+      //   contentId: chapterId,
+      // });
+      // const getFollowUsers = await
+
+      await storePublicNotification(res, {
+        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
+        image: createdManga.image,
+        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
+        fromUser: req.user,
+        url: `/detail/${createdManga.slug}`,
+      });
+
+      handleSocket(req.io, NOTIFICATION.PUBLIC.SPACE.PUBLISH, {
+        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
+        image: createdManga.image,
+        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
+        url: `/detail/${createdManga.slug}`,
+      });
+      //
       res
         .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.UPDATE_SUCCESS, null));
+        .json(new SuccessResponse(MESSAGE.CREATE_SUCCESS, null));
     } catch (error) {
       console.log(error);
       res

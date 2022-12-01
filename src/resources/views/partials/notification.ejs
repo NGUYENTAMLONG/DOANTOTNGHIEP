@@ -134,6 +134,9 @@
   socket.on("EXCEPTION", (data) => {
     insertHtmlNotification(data)
   })
+  socket.on('<%= user.id %>', (data) => {
+    insertHtmlNotification(data)
+  })
 
   function insertHtmlNotification(data) {
     console.log(data);

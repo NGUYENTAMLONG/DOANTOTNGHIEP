@@ -2,7 +2,7 @@
 const express = require("express");
 const path = require("path");
 const passport = require("passport");
-const ejs = require("ejs");
+// const ejs = require("ejs");
 const morgan = require("morgan");
 const database = require("./config/database");
 const route = require("./routers/index.routes");
@@ -131,14 +131,37 @@ app.use(cookieParser());
 
 //******************** Config socket io */
 const socketIo = require("socket.io");
+const { storeConnectSocket, connectedUsers } = require("./service/socketIO");
+
+const {
+  initHRAdminAcount,
+  initContentAdminAcount,
+} = require("./service/initialization");
 const io = socketIo(server, { cors: { origin: "*", path: "/" } });
+require("events").EventEmitter.defaultMaxListeners = 0;
 app.use((req, res, next) => {
   req.io = io;
+  io.on("connection", function (socket) {
+    // console.log("Connected Socket!", socket.id);
+    // console.log({ USER: req.user, socketID: socket.id });
+    storeConnectSocket(req.user && req.user.id, socket.id);
+  });
+
   return next();
 });
+console.log(connectedUsers);
 //********************* Config router app
 route.configRoute(app);
+//********************* Config admin account
+(async () => {
+  await initHRAdminAcount();
+  await initContentAdminAcount();
+})();
 
+const { test } = require("./service/test");
+// (async () => {
+//   test("62d5710c85e73ad364ab0f0f");
+// })();
 //******************** Config socket io */
 // const io = require("socket.io")(server);
 // const handleSocket = require("./service/socketIO");
