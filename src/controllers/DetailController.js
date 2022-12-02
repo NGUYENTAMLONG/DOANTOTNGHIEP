@@ -18,11 +18,18 @@ class detailController {
         redirect(req, res, STATUS.NOT_FOUND);
       }
       let checkFollow = false;
-      setHistory(req, res, manga._id);
+      await setHistory(req, res, manga._id);
       contentId = manga.contentId;
+      const relatedMangas = await Manga.find({ types: { $in: manga.types } })
+        .sort({ "statistical.views": "desc" })
+        .populate("contentId", {
+          chapters: { $slice: -1 },
+        })
+        .limit(11);
       res.render("detail", {
         slug,
         manga,
+        relatedMangas,
         user: req.user,
         moment,
         followFlag: checkFollow,

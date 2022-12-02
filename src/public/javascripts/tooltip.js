@@ -11,3 +11,16 @@ tippy(`.div-template`, {
   placement: "right-end",
   arrow: true,
 });
+// Tippy tooltip js library
+tippy(`.item-template`, {
+  content(reference) {
+    const id = reference.getAttribute("data-template");
+    const template = document.getElementById(`template-${id}`);
+    return template.innerHTML;
+  },
+  allowHTML: true,
+  interactive: true,
+  followCursor: true,
+  placement: "top-end",
+  arrow: true,
+});

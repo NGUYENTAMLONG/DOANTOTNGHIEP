@@ -27,7 +27,7 @@
         <div class="manga-info">
           <h3 class="manga-info__name"><%= manga.name%></h3>
           <p class="manga-info__anotherName">Tên khác: <%= manga.anotherName %> </p>
-          <p class="manga-info__author">Tác giả: <a href="#">
+          <p class="manga-info__author">Tác giả: <a href="/filter/author/<%= manga.author %>?page=1&limit=2" target="_blank">
               <%= manga.author %>
             </a></p>
           <p class="manga-info__status">Tình trạng: <%= manga.status %> </p>

@@ -219,52 +219,68 @@
   </div>
   <section class="section container text-center" id="section-4">
     <div class="d-flex justify-content-around">
-      <% [0,1,2,3,4].forEach((item)=>{ %>
-      <div class="card">
-        <p></p>
-        <h2></h2>
-        <h3></h3>
+      <div class="owl-carousel owl-theme">
+        <% relatedMangas.forEach((manga,index)=>{%>
+        <div class="item p-2">
+          <div class="manga-card item-template" data-template="<%=manga._id%>">
+            <% if(manga.hot === true) {%>
+            <span class="manga-tag__hot badge badge-sm">Hot</span>
+            <%}%>
+            <% if(manga.contentId.chapters.length > 0) {%>
+            <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;"><%= moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() %></span>
+            <%}else{%>
+            <span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">Chưa công bố</span>
+            <%}%>
+            <a href="/detail/<%= manga.slug %>">
+            <img class="card-img-top manga-img" style="z-index: -1;" src="<%= manga.image %>" alt="Cover Manga" />
+            </a>
+            <div class="manga-title">
+              <a class="manga-name" href="/detail/<%= manga.slug %>">
+                <h5><%= manga.name %></h5>
+              </a>
+              <a href="/detail/<%= manga.slug %>" class="manga-chapter">
+                <% if(manga.contentId.chapters.length > 0) {%>
+                Chương <%= manga.contentId.chapters.slice(-1)[0].chapterNumber %>
+                <%}else{%>
+                Chưa công bố
+                <% } %>
+              </a>
+            </div>
+          </div>
+          <div id="template-<%=manga._id%>" style="display: none;">
+            <div class="info text-light">
+              <h4 class="info__name"><%= manga.name%></h4>
+              <p class="info__another-name"><b>Tên khác:</b> <%= manga.anotherName%></p>
+              <ul class="info__follows d-block">
+                <li>
+                  Tác giả: <b><%= manga.author %></b>
+                </li>
+                <li>
+                  Tình trạng: <b><%= manga.status %></b>
+                </li>
+              </ul>
+              <div class="info__type">
+                <b>Thể loại:</b>
+                <%manga.type.forEach(function(item){ %>
+                <a href="/category/<%= item  %>"><%= item  %></a>
+                <% }); %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%}) %>
       </div>
-      <%}) %>
     </div>
   </section>
   <%- include('partials/footer') %>
 </body>
 <%- include("partials/script") %>
 <%- include("partials/visitHistory") %>
-<!-- <script>
-  //Searching Chapter by Filter
-  $(document).ready(function() {
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#myTable tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-      });
-    });
-  });
-  //Show more & show less Description
-  const textDesc = document.querySelector(".manga-info__desc p");
-  const showMoreBtn = document.querySelector(".show-more-desc");
-
-  let bool = false;
-
-  function showMoreDesc() {
-    alert("dsaf")
-    // if (bool === false) {
-    //   showMoreBtn.innerHTML = "Show Less <i class='fas fa-angle-up'></i>";
-    //   textDesc.classList.remove("truncate");
-    //   bool = true;
-    // } else {
-    //   showMoreBtn.innerHTML = "Show More <i class='fas fa-angle-down'></i>";
-    //   textDesc.classList.add("truncate");
-    //   bool = false;
-    // }
-  }
-</script> -->
 <script src="/js/plugins/detail.js"></script>
 <script src="/js/moment.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/rating.js"></script>
+<script src="/js/tooltip.js"></script>
 <script id="dsq-count-scr" src="https://my-site-zlkjtgow8a.disqus.com/count.js" async></script>
 <script>
   // Sorting Top Bottom list
@@ -318,7 +334,6 @@
       .then((response) => response.json())
       .then((result) => {
         const user = result.data;
-        console.log(user)
         if (user && user.followedList.includes(mangaId)) {
           document.querySelector(".follow span").innerHTML = `<i class="fas fa-heartbeat"></i> Đang theo dõi`;
           document.getElementById("checkFollow").setAttribute("checked", "")
@@ -333,86 +348,28 @@
           document.querySelector(".like span").innerHTML = `<i class="far fa-thumbs-up"></i> Thích`;
           document.getElementById("checkLike").removeAttribute("checked")
         }
-        getRelatedMangas(mangaId, types);
       }).catch(error => console.log(error))
   }
 
-  function getRelatedMangas(mangaId, types) {
-    const data = {
-      types: types.split(",")
+  $('.owl-carousel').owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    autoplay: true,
+    autoplayTimeout: 4000,
+    autoplayHoverPause: true,
+    responsive: {
+      400: {
+        items: 2
+      },
+      600: {
+        items: 2
+      },
+      1000: {
+        items: 5
+      }
     }
-    fetch('/filter/related', {
-        method: 'POST', // or 'PUT'
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log('Success:', result);
-        let htmls = result.data.map((manga, index) => {
-          if (manga._id !== mangaId) {
-            return `<div class="item p-2">
-            <div class="manga-card">
-              ${ (manga.hot === true)  ?
-              `<span class="manga-tag__hot badge badge-sm">Hot</span>`:""
-               } 
-            ${(manga.contentId.chapters.length > 0) ?
-              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">${ moment(manga.contentId.chapters[0].createdTime).locale("vi").fromNow() }</span>`
-             :
-              `<span class="manga-tag__period" style="font-size: 13px;text-transform: capitalize;">Chưa công bố</span>`
-            }
-              <a href="/detail/${manga.slug}">
-                <img class="card-img-top manga-img" src="${ manga.image }" alt="Cover Manga"/>
-              </a>
-              <div class="manga-title">
-                <a class="manga-name" href="/detail/${ manga.slug }">
-                  <h5>${ manga.name }</h5>
-                </a>
-                <a href="/detail/${ manga.slug }" class="manga-chapter">
-                  ${ (manga.contentId.chapters.length > 0) ?
-                  `Chương ${ manga.contentId.chapters.slice(-1)[0].chapterNumber }
-                  `:
-                  "Chưa công bố"
-                  }
-                </a>
-                </div>
-                </div>
-                </div>
-                `
-          }
-        }).join("")
-
-        document.getElementById("section-4").innerHTML = `
-        <div class="owl-carousel owl-theme">
-         ${htmls}
-        </div>`
-
-        $('.owl-carousel').owlCarousel({
-          loop: true,
-          margin: 10,
-          nav: true,
-          autoplay: true,
-          autoplayTimeout: 4000,
-          autoplayHoverPause: true,
-          responsive: {
-            400: {
-              items: 2
-            },
-            600: {
-              items: 2
-            },
-            1000: {
-              items: 5
-            }
-          }
-        })
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }
+  })
 </script>
 <script>
   (function() { // DON'T EDIT BELOW THIS LINE
@@ -449,7 +406,6 @@
   }
   document.querySelector("#btn-share").innerHTML = shareSocial();
 </script>
-
 <script>
   function handleGoToMarkdown(mangaId, mangaSlug) {
     fetch(`/user/markdown/go-to/${mangaId}`, {

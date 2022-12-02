@@ -131,7 +131,6 @@ app.use(cookieParser());
 
 //******************** Config socket io */
 const socketIo = require("socket.io");
-const { storeConnectSocket, connectedUsers } = require("./service/socketIO");
 
 const {
   initHRAdminAcount,
@@ -139,17 +138,24 @@ const {
 } = require("./service/initialization");
 const io = socketIo(server, { cors: { origin: "*", path: "/" } });
 require("events").EventEmitter.defaultMaxListeners = 0;
+// const { test } = require("./service/test");
+// (async () => {
+//   test("62d5710c85e73ad364ab0f0f");
+// })();
+
 app.use((req, res, next) => {
   req.io = io;
   io.on("connection", function (socket) {
-    // console.log("Connected Socket!", socket.id);
+    console.log("Connected Socket!", socket.id);
     // console.log({ USER: req.user, socketID: socket.id });
-    storeConnectSocket(req.user && req.user.id, socket.id);
+    // io.emit(req.user && req.user.id, "ABC");
+    // setTimeout(() => {
+    //   test(req, "62d5710c85e73ad364ab0f0f");
+    // }, 15000);
   });
 
   return next();
 });
-console.log(connectedUsers);
 //********************* Config router app
 route.configRoute(app);
 //********************* Config admin account
@@ -158,10 +164,6 @@ route.configRoute(app);
   await initContentAdminAcount();
 })();
 
-const { test } = require("./service/test");
-// (async () => {
-//   test("62d5710c85e73ad364ab0f0f");
-// })();
 //******************** Config socket io */
 // const io = require("socket.io")(server);
 // const handleSocket = require("./service/socketIO");

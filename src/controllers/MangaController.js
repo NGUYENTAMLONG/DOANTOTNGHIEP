@@ -12,6 +12,7 @@ const fs = require("fs");
 const appRoot = require("app-root-path");
 const { storePublicNotification } = require("../service/storeNotification");
 const { handleSocket } = require("../service/socketIO");
+const { announceNewChapter } = require("../service/announceNewChapter");
 const FroalaEditor = require(path.join(
   appRoot.path,
   "/node_modules/wysiwyg-editor-node-sdk/lib/froalaEditor.js"
@@ -547,25 +548,7 @@ class MangaController {
         { $push: { chapters: { $each: [], $sort: 1 } } }
       );
       //Notification
-      // const foundManga = await Manga.findOne({
-      //   contentId: chapterId,
-      // });
-      // const getFollowUsers = await
-
-      await storePublicNotification(res, {
-        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
-        image: createdManga.image,
-        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
-        fromUser: req.user,
-        url: `/detail/${createdManga.slug}`,
-      });
-
-      handleSocket(req.io, NOTIFICATION.PUBLIC.SPACE.PUBLISH, {
-        name: NOTIFICATION.PUBLIC.SPACE.PUBLISH,
-        image: createdManga.image,
-        content: `Bộ truyện ${createdManga.name} chính thức đổ bộ để phục vụ các bạn đọc ^^`,
-        url: `/detail/${createdManga.slug}`,
-      });
+      await announceNewChapter(req, res, chapterId);
       //
       res
         .status(STATUS.SUCCESS)

@@ -10,6 +10,9 @@ const filterMangas = require("../service/filterMangas");
 const pagination = require("../service/pagination");
 class FollowController {
   async showFollowManga(req, res) {
+    if (!req.user) {
+      return res.status(STATUS.UNAUTHORIZED).redirect("/");
+    }
     try {
       let userInfo;
       if (req.user) {

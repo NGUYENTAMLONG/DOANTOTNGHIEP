@@ -13,7 +13,7 @@ const NotificationPrivateSchema = new mongoose.Schema(
       default: "notification.jpg",
     },
     content: { type: String, required: true },
-    toUser: [{ userId: mongoose.Schema.Types.ObjectId }],
+    toUser: [{ userId: mongoose.Schema.Types.ObjectId, passport: String }],
     fromUser: { type: mongoose.Schema.Types.ObjectId, required: true },
     url: {
       type: String,

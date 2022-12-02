@@ -1,11 +1,14 @@
 const express = require("express");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../../helper/response");
-const { PublicNotification } = require("../../models/Notification");
+const {
+  PublicNotification,
+  PrivateNotification,
+} = require("../../models/Notification");
 const moment = require("moment");
 const router = express.Router();
 
-router.get("/api/get-list", async (req, res) => {
+router.get("/api/get-list/public", async (req, res) => {
   try {
     const publicNotifications = await PublicNotification.find()
       .sort({
@@ -25,7 +28,7 @@ router.get("/api/get-list", async (req, res) => {
   }
 });
 
-router.post("/api/get-list/more", async (req, res) => {
+router.post("/api/get-list/public/more", async (req, res) => {
   const { skip } = req.body;
   if (!skip) {
     return res
@@ -54,12 +57,14 @@ router.post("/api/get-list/more", async (req, res) => {
   }
 });
 
-router.get("/api/get-all/unread", async (req, res) => {
+router.get("/api/get-list/private", async (req, res) => {
   try {
-    const publicNotifications = await PublicNotification.find({ read: false });
+    const privateNotifications = await PrivateNotification.find({
+      toUser: { $elemMatch: { _id: req.user.id } },
+    });
     return res
       .status(STATUS.SUCCESS)
-      .json(new SuccessResponse(MESSAGE.SUCCESS, publicNotifications));
+      .json(new SuccessResponse(MESSAGE.SUCCESS, privateNotifications));
   } catch (error) {
     console.log(error);
     return res

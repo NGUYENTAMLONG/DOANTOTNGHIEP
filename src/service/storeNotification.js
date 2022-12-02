@@ -1,6 +1,9 @@
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse } = require("../helper/response");
-const { PublicNotification } = require("../models/Notification");
+const {
+  PublicNotification,
+  PrivateNotification,
+} = require("../models/Notification");
 
 async function storePublicNotification(res, notification) {
   try {
@@ -22,15 +25,15 @@ async function storePublicNotification(res, notification) {
 
 async function storePrivateNotification(res, notification) {
   try {
-    const savedPublicNotification = await PublicNotification.create({
+    const savedPrivateNotification = await PrivateNotification.create({
       name: notification.name,
       image: notification.image,
       content: notification.content,
       fromUser: notification.fromUser,
       url: notification.url,
-      toUser: [],
+      toUser: notification.toUser,
     });
-    return savedPublicNotification;
+    return savedPrivateNotification;
   } catch (error) {
     console.log(error);
     return res
@@ -41,4 +44,5 @@ async function storePrivateNotification(res, notification) {
 
 module.exports = {
   storePublicNotification,
+  storePrivateNotification,
 };

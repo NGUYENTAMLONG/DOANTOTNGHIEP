@@ -2,7 +2,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="/js/socket.io.min.js"></script>
 
-<div class="notification float-right">
+<div class="notification float-right" data-user="<% if (locals.user) { %>
+  <%= user.id %>
+  <% } %>">
   <div class="bell" onclick="handleNotification()">
     <div class="bell__symbol">
       <i class="fas fa-bell text-white p-2"></i>
@@ -18,8 +20,10 @@
         <div class="line"></div>
       </div>
       <div class="noti__list-filter row">
-        <div class="noti__filter-option active" id="noti-all" onclick="getAllNotification()">Tất cả</div>
-        <div class="noti__filter-option ml-2" id="noti-not" onclick="getNotReaded()">Chưa đọc</div>
+        <div class="noti__filter-option active" id="noti-all" onclick="getPublicNotifications(this)">Chung</div>
+        <% if(locals.user){%>
+        <div class="noti__filter-option ml-2" id="noti-not" onclick="getPrivateNotifications(this)">Riêng</div>
+        <%} %>
         <div class="noti__filter-option float-right" id="noti-get-all">
           <a href="/notification" class="text-light"> <i class="fas fa-cog"></i> Xem tất cả</a>
         </div>
@@ -28,10 +32,11 @@
       <div class="noti__list-container">
       </div>
       <div class="noti__list-footer row d-flex justify-content-center align-items-center">
-        <button class="btn btn-primary btn-sm showMoreBtn" onclick="showMore(this)" data-skip="5">Hiển thị thêm</button>
+        <button class="btn btn-primary btn-sm showMoreBtn" onclick="showMore(this)" data-skip="5" data-type="public">Hiển thị thêm</button>
       </div>
     </ul>
   </div>
+
 </div>
 <script src="/js/moment-with-locales.min.js"></script>
 <script>
@@ -57,7 +62,7 @@
 
   //Handle Notification
   function handleNotification() {
-    fetch("/notification/api/get-list")
+    fetch("/notification/api/get-list/public")
       .then((res) => res.json())
       .then((result) => {
         const notifications = result.data;
@@ -86,19 +91,16 @@
       }).catch((error) => console.log(error))
   }
 
-  const optionFilters = document.querySelectorAll(".noti__filter-option");
-  optionFilters.forEach((elm, index) => {
-    elm.onclick = function() {
-      document.querySelector(".noti__filter-option.active").classList.remove("active");
-      elm.classList.add("active")
-    }
-  })
 
-  function getAllNotification() {
-    fetch("/notification/api/get-list/unread")
+  function getPublicNotifications(btn) {
+    document.querySelector(".noti__filter-option.active").classList.remove("active");
+    btn.classList.add("active")
+    showMoreBtn.setAttribute("data-type", "public")
+    fetch("/notification/api/get-list/public")
       .then((res) => res.json())
       .then((result) => {
         const notifications = result.data;
+        console.log(result)
         const htmls = notifications.map((notification, index) => `<a href="${notification.url}">
        <li class="noti__list-row row">
          <div class="noti__item-image col-3">
@@ -123,6 +125,38 @@
       }).catch((error) => console.log(error))
   }
 
+  function getPrivateNotifications(btn) {
+    document.querySelector(".noti__filter-option.active").classList.remove("active");
+    btn.classList.add("active")
+    showMoreBtn.setAttribute("data-type", "private")
+    fetch("/notification/api/get-list/private")
+      .then((res) => res.json())
+      .then((result) => {
+        const notifications = result.data;
+        console.log("private", result)
+        const htmls = notifications.map((notification, index) => `<a href="${notification.url}">
+       <li class="noti__list-row row">
+         <div class="noti__item-image col-3">
+           <img src="${notification.image}" alt="" width="100%">
+         </div>
+         <div class="col-9">
+           <b class="noti__item-name">
+             ${notification.name}
+           </b>
+           <p class="noti__item-content">
+             ${notification.content}
+           </p>
+           <p class="noti__item-time">
+             ${moment(notification.createdAt).locale("vi").fromNow()}
+           </p>
+         </div>
+         <div class="line"></div>
+       </li>
+     </a>`).join("")
+        listNotification.innerHTML = htmls;
+        console.log(result)
+      }).catch((error) => console.log(error))
+  }
 
   //
   const socket = io("/");
@@ -134,8 +168,11 @@
   socket.on("EXCEPTION", (data) => {
     insertHtmlNotification(data)
   })
-  socket.on('<%= user.id %>', (data) => {
-    insertHtmlNotification(data)
+  const userId = document.querySelector(".notification").getAttribute("data-user")
+  console.log(userId)
+  socket.on(userId.trim(), (data) => {
+    // insertHtmlNotification(data)
+    console.log(data)
   })
 
   function insertHtmlNotification(data) {
@@ -146,14 +183,21 @@
 
   function showMore(btn) {
     const skip = btn.getAttribute("data-skip");
-    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`
+    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`;
+    const type = showMoreBtn.getAttribute("data-type")
     const payload = {
       skip: skip,
     };
     const headers = {
       "content-Type": "application/json",
     };
-    fetch("/notification/api/get-list/more", {
+    let url = null;
+    if (type === "public") {
+      url = "/notification/api/get-list/public/more";
+    } else {
+      url = "/notification/api/get-list/private/more";
+    }
+    fetch(url, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
@@ -200,4 +244,7 @@
       })
       .catch((error) => console.log(error));
   }
+</script>
+<script>
+
 </script>

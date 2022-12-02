@@ -1,99 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <title>Drag & Drop Element | CodingNepal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"></script>
+  <title>My Now Amazing Webpage</title>
+  <!-- <link rel="stylesheet" type="text/css" href="slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="slick/slick-theme.css" /> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" integrity="sha512-6lLUdeQ5uheMFbWm3CP271l14RsX1xtx+J5x2yeIDkkiBpeVTNhTqijME7GgRKKi6hCqovwCoBTlRBEC20M8Mg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
+    html,
     body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: #304B5F;
-      padding: 20px;
+      background-color: #e74c3c;
     }
 
     .wrapper {
-      background: #fff;
-      padding: 25px;
-      max-width: 460px;
       width: 100%;
-      border-radius: 3px;
-      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+      padding-top: 20px;
+      text-align: center;
     }
 
-    .wrapper .item {
+    h2 {
+      font-family: sans-serif;
       color: #fff;
-      display: flex;
-      margin-bottom: 8px;
-      padding: 12px 17px;
-      background: #304B5F;
-      border-radius: 3px;
-      align-items: center;
-      justify-content: space-between;
     }
 
-    .wrapper .item:last-child {
-      margin-bottom: 0px;
+    .carousel {
+      width: 90%;
+      margin: 0px auto;
     }
 
-    .wrapper .item .text {
-      font-size: 18px;
-      font-weight: 400;
+    .slick-slide {
+      margin: 10px;
     }
 
-    .wrapper .item i {
-      font-size: 18px;
-      cursor: pointer;
+    .slick-slide img {
+      width: 100%;
+      border: 2px solid #fff;
+    }
+
+    .wrapper .slick-dots li button:before {
+      font-size: 20px;
+      color: white;
     }
   </style>
 </head>
 
 <body>
+
   <div class="wrapper">
-    <div class="item">
-      <span class="text">Draggable Element One</span>
-      <i class="fas fa-bars"></i>
-    </div>
-    <div class="item">
-      <span class="text">Draggable Element Two</span>
-      <i class="fas fa-bars"></i>
-    </div>
-    <div class="item">
-      <span class="text">Draggable Element Three</span>
-      <i class="fas fa-bars"></i>
-    </div>
-    <div class="item">
-      <span class="text">Draggable Element Four</span>
-      <i class="fas fa-bars"></i>
-    </div>
-    <div class="item">
-      <span class="text">Draggable Element Five</span>
-      <i class="fas fa-bars"></i>
-    </div>
+    <h2>Slick Carousel Example<h2>
+        <div class="carousel">
+          <div><img src="https://picsum.photos/300/200?random=1"></div>
+          <div><img src="https://picsum.photos/300/200?random=2"></div>
+          <div><img src="https://picsum.photos/300/200?random=3"></div>
+          <div><img src="https://picsum.photos/300/200?random=4"></div>
+          <div><img src="https://picsum.photos/300/200?random=5"></div>
+          <div><img src="https://picsum.photos/300/200?random=6"></div>
+        </div>
   </div>
-  <img src="
-https://lh3.googleusercontent.com/a-/ACNPEu8-QWP7yQ6GftAs1-u-gVnfKhigyI9QtMXqUbnj=s96-c" alt="">
-  <script>
-    const dragArea = document.querySelector(".wrapper");
-    new Sortable(dragArea, {
-      animation: 350
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.4.0/jquery-migrate.min.js" integrity="sha512-QDsjSX1mStBIAnNXx31dyvw4wVdHjonOwrkaIhpiIlzqGUCdsI62MwQtHpJF+Npy2SmSlGSROoNWQCOFpqbsOg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.carousel').slick({
+        slidesToShow: 3,
+        dots: true,
+        centerMode: true,
+      });
     });
+
+    // Slick version 1.5.8
   </script>
 
 </body>
