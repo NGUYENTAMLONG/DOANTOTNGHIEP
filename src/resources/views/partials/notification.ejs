@@ -20,9 +20,9 @@
         <div class="line"></div>
       </div>
       <div class="noti__list-filter row">
-        <div class="noti__filter-option active" id="noti-all" onclick="getPublicNotifications(this)">Chung</div>
+        <div class="noti__filter-option active" id="noti-public" onclick="getPublicNotifications(this)">Chung</div>
         <% if(locals.user){%>
-        <div class="noti__filter-option ml-2" id="noti-not" onclick="getPrivateNotifications(this)">Riêng</div>
+        <div class="noti__filter-option ml-2" id="noti-private" onclick="getPrivateNotifications(this)">Riêng</div>
         <%} %>
         <div class="noti__filter-option float-right" id="noti-get-all">
           <a href="/notification" class="text-light"> <i class="fas fa-cog"></i> Xem tất cả</a>
@@ -32,7 +32,7 @@
       <div class="noti__list-container">
       </div>
       <div class="noti__list-footer row d-flex justify-content-center align-items-center">
-        <button class="btn btn-primary btn-sm showMoreBtn" onclick="showMore(this)" data-skip="5" data-type="public">Hiển thị thêm</button>
+
       </div>
     </ul>
   </div>
@@ -42,7 +42,6 @@
 <script>
   const notifications = document.querySelector(".notifications");
   const listNotification = document.querySelector(".noti__list-container")
-  const showMoreBtn = document.querySelector(".showMoreBtn")
 
   $(".notifications").addClass("d-none");
   $(document).ready(function() {
@@ -62,6 +61,9 @@
 
   //Handle Notification
   function handleNotification() {
+    document.querySelector(".noti__filter-option.active").classList.remove("active");
+    document.getElementById("noti-public").classList.add("active")
+    document.querySelector(".noti__list-footer").innerHTML = `<button class="btn btn-primary btn-sm showMoreBtn" onclick="showPublicMore(this)" data-skip="5" data-type="public">Hiển thị thêm</button>`
     fetch("/notification/api/get-list/public")
       .then((res) => res.json())
       .then((result) => {
@@ -86,6 +88,7 @@
           </li>
         </a>`).join("")
         listNotification.innerHTML = htmls;
+        const showMoreBtn = document.querySelector(".showMoreBtn")
         showMoreBtn.setAttribute("data-skip", 5);
         showMoreBtn.innerHTML = "Xem thêm";
       }).catch((error) => console.log(error))
@@ -94,8 +97,8 @@
 
   function getPublicNotifications(btn) {
     document.querySelector(".noti__filter-option.active").classList.remove("active");
-    btn.classList.add("active")
-    showMoreBtn.setAttribute("data-type", "public")
+    btn.classList.add("active");
+    document.querySelector(".noti__list-footer").innerHTML = `<button class="btn btn-primary btn-sm showMoreBtn" onclick="showPublicMore(this)" data-skip="5" data-type="public">Hiển thị thêm</button>`
     fetch("/notification/api/get-list/public")
       .then((res) => res.json())
       .then((result) => {
@@ -128,7 +131,7 @@
   function getPrivateNotifications(btn) {
     document.querySelector(".noti__filter-option.active").classList.remove("active");
     btn.classList.add("active")
-    showMoreBtn.setAttribute("data-type", "private")
+    document.querySelector(".noti__list-footer").innerHTML = `<button class="btn btn-primary btn-sm showMoreBtn" onclick="showPrivateMore(this)" data-skip="5" data-type="private">Hiển thị thêm</button>`
     fetch("/notification/api/get-list/private")
       .then((res) => res.json())
       .then((result) => {
@@ -181,23 +184,18 @@
     handleNotification()
   }
 
-  function showMore(btn) {
+  function showPrivateMore(btn) {
     const skip = btn.getAttribute("data-skip");
+    const showMoreBtn = document.querySelector(".showMoreBtn")
     showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`;
-    const type = showMoreBtn.getAttribute("data-type")
     const payload = {
       skip: skip,
     };
     const headers = {
       "content-Type": "application/json",
     };
-    let url = null;
-    if (type === "public") {
-      url = "/notification/api/get-list/public/more";
-    } else {
-      url = "/notification/api/get-list/private/more";
-    }
-    fetch(url, {
+
+    fetch("/notification/api/get-list/private/more", {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
@@ -229,6 +227,65 @@
               <div class="line"></div>
             </li>
           </a>`).join("")
+          notificationContainer.innerHTML += htmls;
+          showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
+          showMoreBtn.innerHTML = "Xem thêm";
+        } else {
+          console.log(result);
+          swal({
+            title: "Thông báo !",
+            text: "Lỗi cập nhật :(",
+            icon: "error",
+            button: "OK!",
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function showPublicMore(btn) {
+    const skip = btn.getAttribute("data-skip");
+    const showMoreBtn = document.querySelector(".showMoreBtn")
+    showMoreBtn.innerHTML = `<i class="fas fa-sync fa-spin"></i>`;
+    const payload = {
+      skip: skip,
+    };
+    const headers = {
+      "content-Type": "application/json",
+    };
+
+    fetch("/notification/api/get-list/public/more", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        // moment(blog.updatedAt).locale("vi").fromNow()
+        if (result.isSuccess === true) {
+          if (result.data.notifications.length === 0) {
+            showMoreBtn.innerHTML = "Đã tới giới hạn";
+            return;
+          }
+          const htmls = result.data.notifications.map((notification) => `<a href="${notification.url}">
+     <li class="noti__list-row row">
+       <div class="noti__item-image col-3">
+         <img src="${notification.image}" alt="" width="100%">
+       </div>
+       <div class="col-9">
+         <b class="noti__item-name">
+           ${notification.name}
+         </b>
+         <p class="noti__item-content">
+           ${notification.content}
+         </p>
+         <p class="noti__item-time">
+           ${moment(notification.createdAt).locale("vi").fromNow()}
+         </p>
+       </div>
+       <div class="line"></div>
+     </li>
+   </a>`).join("")
           notificationContainer.innerHTML += htmls;
           showMoreBtn.setAttribute("data-skip", Number(skip) + 5);
           showMoreBtn.innerHTML = "Xem thêm";

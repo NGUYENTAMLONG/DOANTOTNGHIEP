@@ -16,6 +16,7 @@ const { handleSocket } = require("../service/socketIO");
 const pagination = require("../service/pagination");
 
 class NotificationController {
+  //ADMIN CONTROLLERS
   //Go to notification dashboard
   async getNotificationDashboard(req, res) {
     const { search, sortCreatedAt, sortContent, sortUpdatedAt } = req.query;
@@ -352,6 +353,140 @@ class NotificationController {
     } catch (error) {
       console.log(error);
       res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  //CLIENT CONTROLLERS
+  async getPublicNotifications(req, res, next) {
+    try {
+      const publicNotifications = await PublicNotification.find()
+        .sort({
+          createdAt: -1,
+        })
+        .limit(5)
+        .skip(0)
+        .exec();
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, publicNotifications));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getMorePublicNotifications(req, res, next) {
+    const { skip } = req.body;
+    if (!skip) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      const foundNotifications = await PublicNotification.find()
+        .sort({
+          createdAt: -1,
+        })
+        .limit(5)
+        .skip(Number(skip))
+        .exec();
+      res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          user: req.user,
+          notifications: foundNotifications,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getPrivateNotifications(req, res, next) {
+    try {
+      const privateNotifications = await PrivateNotification.find({
+        toUser: { $elemMatch: { _id: req.user.id } },
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .limit(5)
+        .skip(0)
+        .exec();
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, privateNotifications));
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getMorePrivateNotifications(req, res, next) {
+    const { skip } = req.body;
+    if (!skip) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+    }
+    try {
+      const foundNotifications = await PrivateNotification.find({
+        toUser: { $elemMatch: { _id: req.user.id } },
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .limit(5)
+        .skip(Number(skip))
+        .exec();
+      res.status(STATUS.SUCCESS).json(
+        new SuccessResponse(MESSAGE.SUCCESS, {
+          user: req.user,
+          notifications: foundNotifications,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      res
+        .status(STATUS.SERVER_ERROR)
+        .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
+    }
+  }
+  async getAllNotifications(req, res, next) {
+    try {
+      const publicNotifications = await PublicNotification.find()
+        .sort({
+          createdAt: -1,
+        })
+        .limit(5)
+        .skip(0)
+        .exec();
+
+      let response = {
+        user: req.user,
+        publicNotifications: publicNotifications,
+        moment,
+      };
+      if (req.user) {
+        const privateNotifications = await PrivateNotification.find({
+          toUser: { $elemMatch: { _id: req.user.id } },
+        })
+          .sort({
+            createdAt: -1,
+          })
+          .limit(5)
+          .skip(0)
+          .exec();
+        response.privateNotifications = privateNotifications;
+      }
+      return res.status(STATUS.SUCCESS).render("notification", response);
+    } catch (error) {
+      console.log(error);
+      return res
         .status(STATUS.SERVER_ERROR)
         .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
     }

@@ -55,19 +55,20 @@
         </button>
       </div>
     </div>
-    <div id="toolbar">
-      <button id="deleteChecked" class="btn btn-danger btn-sm">Xóa hết <i class="fas fa-trash"></i></button>
+    <div id="toolbar" class="d-flex">
+      <button id="deleteChecked" class="btn btn-danger btn-sm d-block">Xóa hết <i class="fas fa-trash"></i></button>
       <div class="d-flex mt-1">
         <select id="select" class="form-control ml-2" name="filterAlgorithm">
           <option value="and" selected>Tất cả</option>
           <option value="Đang tiến hành" class="status-option">Đang tiến hành</option>
           <option value="Hoàn thành" class="status-option">Hoàn thành</option>
         </select>
-
         <button class="btn btn-secondary ml-2" id="filterBy"><i class="fas fa-filter"></i></button>
       </div>
     </div>
-    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar" data-filter-control="true" data-show-search-clear-button="true">
+    <table class="table table-striped table-bordered table-sm" id="table" data-height="250px" data-url="/management/content/manga/api/getList" data-pagination="true" data-show-columns="true" data-page-size="2" data-page-list="[2,4,6,10,25,30]" data-buttons-class="primary" data-resizable="true" data-toggle="table" data-show-toggle="true" data-search="true" data-show-jump-to="true" data-show-columns-toggle-all="true" data-show-columns-search="true" data-show-fullscreen="true" data-show-refresh="true" data-response-handler="responseHandler" data-click-to-select="true" data-advanced-search="true" data-id-table="advancedTable" data-show-print="true" data-show-export="true" data-show-pagination-switch="true" data-toolbar="#toolbar" data-filter-control="true">
+      <!-- data-show-search-clear-button="true" -->
+      <!-- data-show-search-button="true" -->
       <thead>
         <tr class="text-center">
           <th scope="col" data-field="index" data-sortable="true">STT</th>
@@ -109,9 +110,8 @@
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/print/bootstrap-table-print.min.js"></script>
 <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
-
-<script src="https://unpkg.com/bootstrap-table@1.21.0/dist/bootstrap-table.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<!-- <script src="https://unpkg.com/bootstrap-table@1.21.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script> -->
 
 <script>
   function responseHandler(res) {

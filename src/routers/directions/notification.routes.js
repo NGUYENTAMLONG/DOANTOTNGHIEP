@@ -1,97 +1,18 @@
 const express = require("express");
-const { STATUS, ERRORCODE, MESSAGE } = require("../../config/httpResponse");
-const { ErrorResponse, SuccessResponse } = require("../../helper/response");
-const {
-  PublicNotification,
-  PrivateNotification,
-} = require("../../models/Notification");
 const moment = require("moment");
+const {
+  getPublicNotifications,
+  getMorePublicNotifications,
+  getPrivateNotifications,
+  getMorePrivateNotifications,
+  getAllNotifications,
+} = require("../../controllers/NotificationController");
 const router = express.Router();
 
-router.get("/api/get-list/public", async (req, res) => {
-  try {
-    const publicNotifications = await PublicNotification.find()
-      .sort({
-        createdAt: -1,
-      })
-      .limit(5)
-      .skip(0)
-      .exec();
-    return res
-      .status(STATUS.SUCCESS)
-      .json(new SuccessResponse(MESSAGE.SUCCESS, publicNotifications));
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(STATUS.SERVER_ERROR)
-      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-  }
-});
+router.get("/api/get-list/public", getPublicNotifications);
+router.post("/api/get-list/public/more", getMorePublicNotifications);
+router.get("/api/get-list/private", getPrivateNotifications);
+router.post("/api/get-list/private/more", getMorePrivateNotifications);
+router.get("/", getAllNotifications);
 
-router.post("/api/get-list/public/more", async (req, res) => {
-  const { skip } = req.body;
-  if (!skip) {
-    return res
-      .status(STATUS.BAD_REQUEST)
-      .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
-  }
-  try {
-    const foundNotifications = await PublicNotification.find()
-      .sort({
-        createdAt: -1,
-      })
-      .limit(5)
-      .skip(Number(skip))
-      .exec();
-    res.status(STATUS.SUCCESS).json(
-      new SuccessResponse(MESSAGE.SUCCESS, {
-        user: req.user,
-        notifications: foundNotifications,
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    res
-      .status(STATUS.SERVER_ERROR)
-      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-  }
-});
-
-router.get("/api/get-list/private", async (req, res) => {
-  try {
-    const privateNotifications = await PrivateNotification.find({
-      toUser: { $elemMatch: { _id: req.user.id } },
-    });
-    return res
-      .status(STATUS.SUCCESS)
-      .json(new SuccessResponse(MESSAGE.SUCCESS, privateNotifications));
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(STATUS.SERVER_ERROR)
-      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-  }
-});
-
-router.get("/", async (req, res) => {
-  try {
-    const publicNotifications = await PublicNotification.find()
-      .sort({
-        createdAt: -1,
-      })
-      .limit(5)
-      .skip(0)
-      .exec();
-    return res.status(STATUS.SUCCESS).render("notification", {
-      user: req.user,
-      publicNotifications: publicNotifications,
-      moment,
-    });
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(STATUS.SERVER_ERROR)
-      .json(new ErrorResponse(ERRORCODE.ERROR_SERVER, MESSAGE.ERROR_SERVER));
-  }
-});
 module.exports = router;
