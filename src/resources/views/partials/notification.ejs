@@ -172,7 +172,6 @@
     insertHtmlNotification(data)
   })
   const userId = document.querySelector(".notification").getAttribute("data-user")
-  console.log(userId)
   socket.on(userId.trim(), (data) => {
     // insertHtmlNotification(data)
     console.log(data)

@@ -644,6 +644,7 @@ class UserController {
 
       return res.status(STATUS.SUCCESS).json(
         new SuccessResponse(MESSAGE.SUCCESS, {
+          chapterNumber: Number(foundMarkdownManga[0].chapterMarkdown),
           url: `/detail/${foundManga.slug}/read/chapter-${foundMarkdownManga[0].chapterMarkdown}`,
         })
       );

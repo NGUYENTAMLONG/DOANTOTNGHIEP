@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 </head>
 
-<body onload="handleAPI('<%= manga._id %>','<%= manga.type %>')">
+<body onload="handleAPI('<%= manga._id %>','<%= manga.type %>')" data-id="<%= manga._id %>" data-user="<%= (locals.user) && user.id %>">
   <%- include('partials/header',{user:user}) %>
   <section class="section container" id="section-1">
     <nav aria-label="breadcrumb">
@@ -164,12 +164,13 @@
             <th scope="col" class="chapter">Chương</th>
             <th scope="col">Tên chương</th>
             <th scope="col" class="text-center"><i class="fas fa-chart-pie"></i></th>
+            <th scope="col" class="text-center"><i class="fas fa-map-marked-alt"></i></th>
             <th scope="col" class="text-right">Ngày đăng</th>
           </tr>
         </thead>
         <tbody class="chapterList" id="myTable">
           <% manga.contentId.chapters.forEach(function(chapter,index){ %>
-          <tr>
+          <tr data-chapter="<%= chapter.chapterNumber %>">
             <th scope="row" class="stt"><%= index + 1%></th>
             <td class="chapter"> <a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
                 Chương <%= chapter.chapterNumber%>
@@ -177,8 +178,11 @@
             <td class="tdTruncate" data-toggle="tooltip" data-placement="bottom" title="<%= chapter.chapterName%>"><a href="<%= manga.slug%>/read/chapter-<%= chapter.chapterNumber%>">
                 <%= chapter.chapterName%>
               </a></td>
-            <td class=" text-center">
+            <td class="text-center">
               <span><i class="fas fa-eye"></i> <%= chapter.statistical.views %></span>
+            </td>
+            <td class="text-center markdown-td">
+
             </td>
             <td class="text-right"> <%= moment(chapter.createdTime).format('L') %></td>
           </tr>
@@ -458,6 +462,40 @@
       });
     }
   }
+
+  (() => {
+    const mangaId = document.getElementsByTagName("BODY")[0].getAttribute("data-id");
+    const userId = document.getElementsByTagName("BODY")[0].getAttribute("data-user");
+    const markdownList = JSON.parse(localStorage.getItem("markdowns"));
+    const foundMangaMarked = markdownList.find((markdown, index) => markdown.mangaId === mangaId);
+    const chapterList = document.getElementById("myTable");
+    if (userId) {
+      fetch(`/user/markdown/go-to/${mangaId}`, {
+          method: 'POST', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(result => {
+          // console.log('Success:', result);
+          chapterList.querySelectorAll("tr").forEach((chapter, index) => {
+            if (Number(chapter.getAttribute("data-chapter")) === result.data.chapterNumber) {
+              chapter.querySelector(".markdown-td").innerHTML = `<i class="fas fa-bookmark" data-toggle="tooltip" data-placement="bottom" title="Đã đọc tới đây"></i>`
+            }
+          })
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      chapterList.querySelectorAll("tr").forEach((chapter, index) => {
+        if (Number(chapter.getAttribute("data-chapter")) === foundMangaMarked.chapterMarkdown) {
+          chapter.querySelector(".markdown-td").innerHTML = `<i class="fas fa-bookmark" data-toggle="tooltip" data-placement="bottom" title="Đã đọc tới đây"></i>`
+        }
+      })
+    }
+  })()
 </script>
 
 </html>
