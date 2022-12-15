@@ -71,7 +71,7 @@ app.get(
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.status(200).redirect("/");
+  return res.status(STATUS.SUCCESS).redirect("/");
 });
 
 app.use(cors()); // Cho phép chia sẻ api với localhost khác
@@ -136,6 +136,7 @@ const {
   initHRAdminAcount,
   initContentAdminAcount,
 } = require("./service/initialization");
+const { STATUS } = require("./config/httpResponse");
 const io = socketIo(server, { cors: { origin: "*", path: "/" } });
 require("events").EventEmitter.defaultMaxListeners = 0;
 // const { test } = require("./service/test");
