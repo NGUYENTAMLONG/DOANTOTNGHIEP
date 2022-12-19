@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DATA MANAGEMENT</title>
+  <link rel="icon" href="/image/tablogo.png">
+  <%- include("../../partials/link") %>
+</head>
+
+<body>
+  <%- include("../../admin/partials/header") %>
+
+  <div class="container mt-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="/management/content/admin">Trang quản lí</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Quản lí DATA</li>
+      </ol>
+    </nav>
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <h3>Dữ liệu</h3>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4 d-flex mb-2">
+        <a href="/management/content" class="btn btn-sm btn-warning">Quản lí chung <i class="fas fa-book"></i></a>
+      </div>
+    </div>
+  </div>
+
+</body>
+<%- include("../../partials/script") %>
+<script src="/js/moment.min.js"></script>
+
+</html>

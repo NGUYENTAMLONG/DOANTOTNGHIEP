@@ -14,6 +14,8 @@ const slideRouter = require("./content/slide.routes");
 const mailRouter = require("./content/mail.routes");
 const blogRouter = require("./content/blog.routes");
 const notificationRouter = require("./content/notification.routes");
+const dataRouter = require("./content/data.routes");
+
 const Blog = require("../../models/Blog");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../config/httpResponse");
 const { ErrorResponse } = require("../../helper/response");
@@ -28,6 +30,8 @@ router.use("/mail", mailRouter);
 router.use("/blog", blogRouter);
 
 router.use("/notification", notificationRouter);
+
+router.use("/data", dataRouter);
 
 //path: /management/content/infomation
 router.get("/infomation", showInfomationAdmin);
