@@ -10,6 +10,9 @@ const { STATUS, ERRORCODE, MESSAGE } = require("../../../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../../../helper/response");
 const readXlsxFile = require("read-excel-file/node");
 
+const Manga = require("../../../models/Manga");
+const Slide = require("../../../models/Slide");
+
 const router = express.Router();
 
 // route:-> /management/content/data/...
@@ -84,6 +87,46 @@ router.post("/api/send-data", uploadFile.single("file"), async (req, res) => {
     res.status(500).send({
       message: "Could not upload the file: " + req.file.originalname,
     });
+  }
+});
+
+router.post("/api/export-data/:slug", async (req, res) => {
+  const { slug } = req.params;
+  if (!slug) {
+    return res
+      .status(STATUS.BAD_REQUEST)
+      .json(new ErrorResponse(ERRORCODE.BAD_REQUEST, MESSAGE.BAD_REQUEST));
+  }
+  const wb = XLSX.utils.book_new();
+  let dataModel = null;
+  if (slug === "manga") {
+    dataModel = Manga;
+  } else if (slug === "slide") {
+    dataModel = Slide;
+  }
+  // dataModel.find((err, data) => {
+  //   if (condition) {
+  //   }
+  // });
+  try {
+    const foundData = await dataModel.find();
+    //export excel file
+    let temp = JSON.stringify(foundData);
+    temp = JSON.parse(temp);
+    const ws = XLSX.utils.json_to_sheet(temp);
+    // const down = __dirname + "/public/exportdata.xlsx";
+    const down = path.join(appRoot.path, "/src/public/data/exportdata.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "sheet1");
+    XLSX.writeFile(wb, down);
+    return res.download(down);
+    res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.SUCCESS, foundData));
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(STATUS.SERVER_ERROR)
+      .json(new ErrorResponse(ERRORCODE.SERVER_ERROR, MESSAGE.ERROR_SERVER));
   }
 });
 
