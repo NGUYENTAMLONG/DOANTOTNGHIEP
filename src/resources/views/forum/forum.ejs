@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>FORUM</title>
+  <%- include("../partials/link") %>
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="container">
+    <div class="section" id="section-1">
+      <div class="row">
+        <% data.data.forEach((manga,index)=>{%>
+        <div class="col-4">
+          <div class="card" style="width: 100%;">
+            <img class="card-img-top" src="<%= manga.images.jpg.image_url %> " alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+        <%}) %>
+      </div>
+    </div>
+
+    <nav aria-label="...">
+      <ul class="pagination">
+        <% if(data.pagination.current_page !== 1) {%>
+        <li class="page-item">
+          <a class="page-link" href="/forum?page=1&limit=25" tabindex="-1">First</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="/forum?page=<%=  data.pagination.current_page - 1 %> &limit=25" tabindex="-1">Previous</a>
+        </li>
+        <%}%>
+        <% if(data.pagination.has_next_page && ( data.pagination.current_page - 1 >= 7)) {%>
+        <li class="page-item">
+          <a class="page-link" href="">...</a>
+        </li>
+        <%}%>
+        <% for(var i=1; i<=data.pagination.last_visible_page; i++) {%>
+        <% if(i > data.pagination.current_page - 7 && i< data.pagination.current_page + 7){%>
+        <% if(data.pagination.current_page=== i) {%>
+        <li class="page-item active">
+          <a class="page-link" href="/forum?page=<%= i %>&limit=25"><%= i %> <span class="sr-only">(current)</span></a>
+        </li>
+        <%}else{%>
+        <li class="page-item"><a class="page-link" href="/forum?page=<%= i %>&limit=25"><%= i %></a></li>
+        <% } %>
+        <%} %>
+        <%} %>
+        <% if(data.pagination.has_next_page && (data.pagination.last_visible_page - data.pagination.current_page >= 7)) {%>
+        <li class="page-item">
+          <a class="page-link" href="">...</a>
+        </li>
+        <%}%>
+        <% if(data.pagination.has_next_page) {%>
+        <li class="page-item">
+          <a class="page-link" href="/forum?page=<%= data.pagination.current_page + 1 %> &limit=25">Next</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="/forum?page=<%= data.pagination.last_visible_page %> &limit=25" tabindex="-1">Last</a>
+        </li>
+        <%}%>
+      </ul>
+    </nav>
+  </div>
+</body>
+<%- include("../partials/script") %>
+
+</html>

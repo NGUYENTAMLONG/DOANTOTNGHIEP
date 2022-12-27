@@ -123,6 +123,8 @@ app.use(express.static("public"));
 //********************* Config template ejs
 app.set("views", path.join(__dirname, "/resources/views"));
 app.set("view engine", "ejs");
+app.set("forum", path.join(__dirname, "/resources/views"));
+app.set("view engine", "ejs");
 //********************* Connect to Database (MongoDB) - Kết nối tới cơ sở dữ liệu MONGODB
 
 database.connect();
