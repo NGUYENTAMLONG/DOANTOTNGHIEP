@@ -25,6 +25,8 @@ router.post("/read", upload.single("file"), (req, res) => {
             MESSAGE.BAD_REQUEST_FILE
           )
         );
+    } else {
+      const filePath = "public" + req.file.filename;
     }
   } catch (error) {}
 });
