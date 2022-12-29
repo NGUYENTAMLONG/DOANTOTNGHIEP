@@ -48,10 +48,29 @@
     }
     .author__info {
       .author__info-about {
-        .author__info-series-manga {
+        .author__info-series-manga,
+        .author__info-series-anime {
+          height: 400px;
+          width: 100%;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+            rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+          &::-webkit-scrollbar {
+            width: 12px;
+            background-color: #f5f5f5;
+            overflow: hidden;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            border-radius: 20px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #555;
+          }
           .manga__series-info {
             flex-direction: column;
-            background-color: rebeccapurple;
             width: 100%;
           }
         }

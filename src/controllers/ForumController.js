@@ -59,21 +59,20 @@ class ForumController {
     if (!req.params.authorId) {
       redirect(req, res, STATUS.BAD_REQUEST);
     }
-    const url = `https://api.jikan.moe/v4/people/${req.params.authorId}`;
-    const urlManga = `https://api.jikan.moe/v4/people/${req.params.authorId}/manga`;
+    const url = `https://api.jikan.moe/v4/people/${req.params.authorId}/full`;
+    const urlPics = `https://api.jikan.moe/v4/people/${req.params.authorId}/pictures`;
     const options = {
       method: "GET",
     };
     try {
       let response = await fetch(url, options);
       response = await response.json();
-      let mangaList = await fetch(urlManga, options);
-      mangaList = await mangaList.json();
-
+      let pictures = await fetch(urlPics, options);
+      pictures = await pictures.json();
       return res.status(STATUS.SUCCESS).render("forum/author", {
         user: req.user,
         author: response.data,
-        mangaList: mangaList.data,
+        pictures: pictures.data,
         moment,
       });
     } catch (err) {

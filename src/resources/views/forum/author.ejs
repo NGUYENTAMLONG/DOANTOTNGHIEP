@@ -62,16 +62,53 @@
                 <h3>About</h3>
                 <p><%= author.about %></p>
                 <hr>
-                <h3>Series</h3>
+                <h3>Manga Series</h3>
                 <div class="author__info-series-manga">
-                  <% mangaList.forEach(function(elm,index){%>
+                  <% author.manga.forEach(function(elm,index){%>
                   <div class="d-flex m-2">
                     <img src="<%= elm.manga.images.jpg.image_url %>" width="100px" alt="">
-                    <div class="d-flex manga__series-info">
-                      <a href="/forum/detail/<%= elm.manga.mal_id %>">
+                    <div class="d-flex manga__series-info mt-3 ml-3">
+                      <a href="/forum/detail/<%= elm.manga.mal_id %>" class="mb-2">
                         <b> <%= elm.manga.title %> </b>
                       </a>
                       <p><b>Position: </b> <%= elm.position %> </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <%}) %>
+                </div>
+                <hr>
+                <h3>Anime Series</h3>
+                <div class="author__info-series-anime">
+                  <% author.anime.forEach(function(elm,index){%>
+                  <div class="d-flex m-2">
+                    <img src="<%= elm.anime.images.jpg.image_url %>" width="100px" alt="">
+                    <div class="d-flex manga__series-info mt-3 ml-3">
+                      <a href="<%= elm.anime.url %>" class="mb-2">
+                        <b> <%= elm.anime.title %> </b>
+                      </a>
+                      <p><b>Position: </b> <%= elm.position %> </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <%}) %>
+                </div>
+                <hr>
+                <h3>Pictures</h3>
+                <div class="author__info-pictures d-flex justify-content-around flex-wrap">
+                  <% pictures.forEach(function(pic,index){%>
+                  <!-- Button trigger modal -->
+
+                  <img src="<%= pic.jpg.image_url %>" width="100px" alt="" data-toggle="modal" data-target="#pic<%=index %>">
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="pic<%=index %>" tabindex="-1" role="dialog" aria-labelledby="pic<%=index %>Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <img src="<%= pic.jpg.image_url %>" width="100%" alt="">
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <%}) %>
