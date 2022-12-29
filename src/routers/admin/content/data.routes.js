@@ -53,35 +53,19 @@ router.post("/api/send-data", uploadFile.single("file"), async (req, res) => {
   // console.log("DSAFDSA");
   // return res.json("DSAFDSA");
   try {
-    if (req.file == undefined) {
-      return res.status(400).send("Please upload an excel file!");
-    }
+    let tutorials = [];
 
-    let excelPath = path.join(appRoot.path, "/src/public/data/") + req.filename;
-    // return res
-    //   .status(STATUS.SUCCESS)
-    //   .json(new SuccessResponse(MESSAGE.SUCCESS, excelPath));
-    console.log(excelPath);
-    readXlsxFile(excelPath).then((rows) => {
-      // skip header
-      rows.shift();
+    let tutorial = {
+      id: row[0],
+      title: row[1],
+      description: row[2],
+      published: row[3],
+    };
 
-      let tutorials = [];
-
-      rows.forEach((row) => {
-        let tutorial = {
-          id: row[0],
-          title: row[1],
-          description: row[2],
-          published: row[3],
-        };
-
-        tutorials.push(tutorial);
-      });
-      return res
-        .status(STATUS.SUCCESS)
-        .json(new SuccessResponse(MESSAGE.SUCCESS, tutorials));
-    });
+    tutorials.push(tutorial);
+    return res
+      .status(STATUS.SUCCESS)
+      .json(new SuccessResponse(MESSAGE.SUCCESS, tutorials));
   } catch (error) {
     console.log(error);
     res.status(500).send({

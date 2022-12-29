@@ -42,7 +42,7 @@
                   <div><b>Chapter:</b> <%= (manga.chapters) ? manga.chapters : 'unknown' %></div>
                   <div><b>Volumes:</b> <%= (manga.volumes) ? manga.volumes : 'unknown' %></div>
                   <div><b>Status:</b>
-                    <span class="badge badge-danger">
+                    <span class="badge  <%= (manga.status === "Finished")  ? 'badge-danger' : 'badge-success' %>">
                       <%= (manga.status) ? manga.status : 'unknown' %>
                     </span>
                   </div>

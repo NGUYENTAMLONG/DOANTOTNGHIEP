@@ -1,0 +1,16 @@
+#section-1 .info-right .navigation {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; }
+  #section-1 .info-right .navigation li {
+    margin: 0px 3px; }
+    #section-1 .info-right .navigation li a {
+      display: flex;
+      text-decoration: none;
+      font-size: 17px; }
+
+.vertical {
+  border-left: 1px solid rgba(128, 128, 128, 0.705);
+  height: 100%; }

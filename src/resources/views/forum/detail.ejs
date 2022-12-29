@@ -9,14 +9,11 @@
   <title>FORUM</title>
   <%- include("../partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
-  <link rel="stylesheet" href="/css/forum.css">
+  <link rel="stylesheet" href="/css/forum_detail.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <style>
-    .vertical {
-      border-left: 1px solid gray;
-      height: 200px;
-    }
+
   </style>
 </head>
 
@@ -54,6 +51,7 @@
                   <i class="fab fa-2x fa-reddit-square"></i>
                 </span>
               </div>
+              <br>
               <h5>Alternative Titles</h5>
               <hr>
               <span><b>Default Name:</b> <%= manga.title %> </span>
@@ -93,8 +91,8 @@
           </div>
         </div>
         <div class="col-9">
-          <div class="row vertical">
-            <ul class="d-flex">
+          <div class="row info-right">
+            <ul class="navigation">
               <li><a href="#" class="disabled">Detail</a></li>
               <li><a href="#">Author</a></li>
               <li><a href="#">Characters</a></li>

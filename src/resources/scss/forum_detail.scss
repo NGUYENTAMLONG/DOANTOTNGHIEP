@@ -4,4 +4,25 @@
   .info-left {
     
   }
+  .info-right {
+    .navigation {
+      display: flex;
+      list-style: none;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      li {
+        margin: 0px 3px;
+        a {
+          display: flex;
+          text-decoration: none;
+          font-size: 17px;
+        }
+      }
+    }
+  }
+}
+.vertical {
+  border-left: 1px solid rgba(128, 128, 128, 0.705);
+  height: 100%;
 }
