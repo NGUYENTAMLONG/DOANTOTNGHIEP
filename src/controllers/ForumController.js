@@ -1,5 +1,6 @@
 const { STATUS, ERRORCODE, MESSAGE } = require("../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../helper/response");
+const moment = require("moment");
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -49,6 +50,48 @@ class ForumController {
         user: req.user,
         manga: response.data,
       });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showAuthor(req, res) {
+    if (!req.params.authorId) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    const url = `https://api.jikan.moe/v4/people/${req.params.authorId}`;
+    const urlManga = `https://api.jikan.moe/v4/people/${req.params.authorId}/manga`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      let mangaList = await fetch(urlManga, options);
+      mangaList = await mangaList.json();
+
+      return res.status(STATUS.SUCCESS).render("forum/author", {
+        user: req.user,
+        author: response.data,
+        mangaList: mangaList.data,
+        moment,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showGenres(req, res) {
+    const url = `https://api.jikan.moe/v4/genres/manga`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, response.data));
     } catch (err) {
       console.log(err);
       redirect(req, res, STATUS.SERVER_ERROR);

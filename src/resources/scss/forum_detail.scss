@@ -1,24 +1,153 @@
 @import "variables.scss";
 
 #section-1 {
+  margin-top: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  padding: 10px;
+  border-radius: 5px;
   .info-left {
-    
+    .manga__cover {
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+      margin-bottom: 40px;
+    }
+    .manga__paticals {
+      .fab {
+        cursor: pointer;
+        transition: 0.5s ease-in-out;
+        &:hover {
+          opacity: 0.7;
+          transform: scale(1.5);
+        }
+      }
+      .fa-facebook-square {
+        color: $color-facebook;
+      }
+      .fa-instagram-square {
+        color: $color-instagram;
+      }
+      .fa-pinterest-square {
+        color: $color-pinterest;
+      }
+      .fa-tumblr-square {
+        color: $color-tumblr;
+      }
+      .fa-twitter-square {
+        color: $color-twitter;
+      }
+      .fa-reddit-square {
+        color: $color-reddit;
+      }
+    }
   }
   .info-right {
     .navigation {
+      margin-top: 10px;
       display: flex;
       list-style: none;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
+
       li {
-        margin: 0px 3px;
+        margin: 2px 3px;
         a {
-          display: flex;
           text-decoration: none;
           font-size: 17px;
+          padding: 0px 2px;
+          border-left: 0.5px solid gainsboro;
+          position: relative;
+          &::before {
+            position: absolute;
+            bottom: 0px;
+            content: "";
+            width: 0;
+            height: 5px;
+            background-color: black;
+            transition: 0.5s ease-in-out;
+          }
+          &:hover {
+            &::before {
+              width: 100%;
+            }
+          }
         }
       }
+    }
+    .statisticals {
+      display: flex;
+      width: 98%;
+      align-items: center;
+      padding: 5px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+      .statisticals__score {
+        text-align: center;
+        height: auto;
+        width: 150px;
+        padding: 10px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+          rgba(0, 0, 0, 0.3) 0px 10px 10px -10px inset;
+        border-radius: 5px;
+        &:hover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+            rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        }
+        span {
+          font-weight: bold;
+        }
+        .statisticals__score-score {
+          font-size: 30px;
+        }
+        .statisticals__score-scoredBy {
+          font-size: 11px;
+        }
+      }
+      .statisticals__another {
+        .general-1 {
+          display: flex;
+          margin-bottom: 20px;
+          div {
+            margin-left: 15px;
+          }
+        }
+        .general-2 {
+          display: flex;
+          height: 20px;
+          div {
+            margin-left: 15px;
+            padding-right: 15px;
+          }
+          div:not(:last-child) {
+            border-right: 0.5px solid gainsboro;
+          }
+        }
+      }
+    }
+    .description {
+      .synopsis,
+      .background {
+        p {
+          text-indent: 20px;
+        }
+      }
+      .themes,
+      .types {
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+#section-2 {
+  .genres-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    a {
+      text-decoration: none;
     }
   }
 }

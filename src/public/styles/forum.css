@@ -16,6 +16,10 @@
     height: 25px;
     width: 100%;
     overflow: hidden; }
+    #section-1 .manga .manga-info .manga-info__types a {
+      text-decoration: none; }
+  #section-1 .manga .manga-info .manga-info__themes a {
+    text-decoration: none; }
   #section-1 .manga .manga-info .manga-info__params {
     font-size: 13px; }
   #section-1 .manga .manga-info .manga-info__react {

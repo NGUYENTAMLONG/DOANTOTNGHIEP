@@ -1,0 +1,72 @@
+@import "variables.scss";
+
+#section-1 {
+  margin-top: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  padding: 10px;
+  border-radius: 5px;
+  .info-left {
+    .author__avatar {
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+      margin-bottom: 40px;
+    }
+  }
+  .info-right {
+    .navigation {
+      margin-top: 10px;
+      display: flex;
+      list-style: none;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+
+      li {
+        margin: 2px 3px;
+        a {
+          text-decoration: none;
+          font-size: 17px;
+          padding: 0px 2px;
+          border-left: 0.5px solid gainsboro;
+          position: relative;
+          &::before {
+            position: absolute;
+            bottom: 0px;
+            content: "";
+            width: 0;
+            height: 5px;
+            background-color: black;
+            transition: 0.5s ease-in-out;
+          }
+          &:hover {
+            &::before {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+    .author__info {
+      .author__info-about {
+        .author__info-series-manga {
+          .manga__series-info {
+            flex-direction: column;
+            background-color: rebeccapurple;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+#section-2 {
+  .genres-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    a {
+      text-decoration: none;
+    }
+  }
+}

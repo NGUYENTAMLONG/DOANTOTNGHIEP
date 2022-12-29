@@ -1,15 +1,102 @@
-#section-1 .info-right .navigation {
-  display: flex;
-  list-style: none;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap; }
-  #section-1 .info-right .navigation li {
-    margin: 0px 3px; }
-    #section-1 .info-right .navigation li a {
+#section-1 {
+  margin-top: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  padding: 10px;
+  border-radius: 5px; }
+  #section-1 .info-left .manga__cover {
+    box-shadow: #26394d 0px 20px 30px -10px;
+    margin-bottom: 40px; }
+  #section-1 .info-left .manga__paticals .fab {
+    cursor: pointer;
+    transition: 0.5s ease-in-out; }
+    #section-1 .info-left .manga__paticals .fab:hover {
+      opacity: 0.7;
+      transform: scale(1.5); }
+  #section-1 .info-left .manga__paticals .fa-facebook-square {
+    color: #1877f2; }
+  #section-1 .info-left .manga__paticals .fa-instagram-square {
+    color: #c32aa3; }
+  #section-1 .info-left .manga__paticals .fa-pinterest-square {
+    color: #bd081c; }
+  #section-1 .info-left .manga__paticals .fa-tumblr-square {
+    color: #35465d; }
+  #section-1 .info-left .manga__paticals .fa-twitter-square {
+    color: #1da1f2; }
+  #section-1 .info-left .manga__paticals .fa-reddit-square {
+    color: #ff4500; }
+  #section-1 .info-right .navigation {
+    margin-top: 10px;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap; }
+    #section-1 .info-right .navigation li {
+      margin: 2px 3px; }
+      #section-1 .info-right .navigation li a {
+        text-decoration: none;
+        font-size: 17px;
+        padding: 0px 2px;
+        border-left: 0.5px solid gainsboro;
+        position: relative; }
+        #section-1 .info-right .navigation li a::before {
+          position: absolute;
+          bottom: 0px;
+          content: "";
+          width: 0;
+          height: 5px;
+          background-color: black;
+          transition: 0.5s ease-in-out; }
+        #section-1 .info-right .navigation li a:hover::before {
+          width: 100%; }
+  #section-1 .info-right .statisticals {
+    display: flex;
+    width: 98%;
+    align-items: center;
+    padding: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px; }
+    #section-1 .info-right .statisticals .statisticals__score {
+      text-align: center;
+      height: auto;
+      width: 150px;
+      padding: 10px;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 10px 10px -10px inset;
+      border-radius: 5px; }
+      #section-1 .info-right .statisticals .statisticals__score:hover {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; }
+      #section-1 .info-right .statisticals .statisticals__score span {
+        font-weight: bold; }
+      #section-1 .info-right .statisticals .statisticals__score .statisticals__score-score {
+        font-size: 30px; }
+      #section-1 .info-right .statisticals .statisticals__score .statisticals__score-scoredBy {
+        font-size: 11px; }
+    #section-1 .info-right .statisticals .statisticals__another .general-1 {
       display: flex;
-      text-decoration: none;
-      font-size: 17px; }
+      margin-bottom: 20px; }
+      #section-1 .info-right .statisticals .statisticals__another .general-1 div {
+        margin-left: 15px; }
+    #section-1 .info-right .statisticals .statisticals__another .general-2 {
+      display: flex;
+      height: 20px; }
+      #section-1 .info-right .statisticals .statisticals__another .general-2 div {
+        margin-left: 15px;
+        padding-right: 15px; }
+      #section-1 .info-right .statisticals .statisticals__another .general-2 div:not(:last-child) {
+        border-right: 0.5px solid gainsboro; }
+  #section-1 .info-right .description .synopsis p,
+  #section-1 .info-right .description .background p {
+    text-indent: 20px; }
+  #section-1 .info-right .description .themes a,
+  #section-1 .info-right .description .types a {
+    text-decoration: none; }
+
+#section-2 .genres-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center; }
+  #section-2 .genres-list a {
+    text-decoration: none; }
 
 .vertical {
   border-left: 1px solid rgba(128, 128, 128, 0.705);

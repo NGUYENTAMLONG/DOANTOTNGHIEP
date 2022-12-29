@@ -32,7 +32,7 @@
               <div class="col-5">
                 <div class="manga-params">
                   <div><b>Author:</b> <% manga.authors.forEach(function(author,index){%>
-                    <a href="<%= author.url %>">
+                    <a href="/forum/author/<%= author.mal_id %>">
                       <%= author.name %>
                     </a>
                     <%}) %>
@@ -131,11 +131,11 @@
   <%- include('../partials/footer') %>
 </body>
 <%- include("../partials/script") %>
-        <script>
-          // Tooltips
-          $(function() {
-            $('[data-toggle="tooltip"]').tooltip();
-          });
-        </script>
+<script>
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
 
 </html>
