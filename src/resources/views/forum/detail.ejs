@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>FORUM</title>
+  <%- include("../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/forum_detail.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="container">
+    <div class="section" id="section-1">
+      <div class="row">
+        <div class="col-3">
+          <div class="info-left">
+            <div class="manga__avatar">
+              <img src="<%= manga.images.jpg.image_url %>" width="100%" alt="">
+            </div>
+            <div class="manga__paticals">
+              <p>Add to My List</p>
+              <hr>
+              <p>Add to My Favorites</p>
+              <hr>
+              <div class="share d-flex flex-wrap justify-content-around">
+                <span>
+                  <i class="fab fa-2x fa-facebook-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-instagram-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-pinterest-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-tumblr-square"></i>
+                </span><span>
+                  <i class="fab fa-2x fa-twitter-square"></i>
+                </span><span>
+                  <i class="fab fa-2x fa-reddit-square"></i>
+                </span>
+              </div>
+              <br>
+              <h5>Alternative Titles</h5>
+              <hr>
+              <span><b>Default Name:</b> <%= manga.title %> </span>
+              <span><b>Japanese Name:</b> <%= (manga.title_japanse) ? manga.title_japanse : 'unknown' %> </span>
+              <span><b>English Name:</b>
+                <%= (manga.title_english) ? manga.title_english : 'unknown' %> </span>
+              <h5>Information</h5>
+              <hr>
+              <div><b>Author:</b> <% manga.authors.forEach(function(author,index){%>
+                <a href="<%= author.url %>">
+                  <%= author.name %>
+                </a>
+                <%}) %>
+              </div>
+              <div><b>Type:</b> <%= (manga.type) ? manga.type : 'unknown'%></div>
+              <div><b>Published:</b> <%= (manga.published.string) ?manga.published.string : 'unknown' %></div>
+              <div><b>Chapter:</b> <%= (manga.chapters) ? manga.chapters : 'unknown' %></div>
+              <div><b>Volumes:</b> <%= (manga.volumes) ? manga.volumes : 'unknown' %></div>
+              <div><b>Status:</b>
+                <%= (manga.status) ? manga.status : 'unknown' %>
+              </div>
+              <div><b>Genres:</b>
+                <% manga.genres.forEach(function(type,index){%>
+                <a href="<%= type.url %>" target="_blank">
+                  <%= type.name %>
+                </a>
+                <%}) %>
+              </div>
+              <div><b>Demographic:</b>
+                <% manga.demographics.forEach(function(demographic,index){%>
+                <a href="<%= demographic.url %>" target="_blank">
+                  <%= demographic.name %>
+                </a>
+                <%}) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row info-right">
+            <ul class="navigation">
+              <li><a href="#" class="disabled">Detail</a></li>
+              <li><a href="#">Author</a></li>
+              <li><a href="#">Characters</a></li>
+              <li><a href="#">News</a></li>
+              <li><a href="#">Statistics</a></li>
+              <li><a href="#">Reviews</a></li>
+              <li><a href="#">Recommendations</a></li>
+              <li><a href="#">Interest Stacks</a></li>
+              <li><a href="#">Forum</a></li>
+              <li><a href="#">Clubs</a></li>
+              <li><a href="#">Pictures</a></li>
+            </ul>
+          </div>
+          <div class="info-right">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section" id="section-2">
+      <div class="row">
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+<%- include("../partials/script") %>
+<script>
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+
+</html>

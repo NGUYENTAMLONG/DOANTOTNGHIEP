@@ -28,10 +28,72 @@
         <a href="/management/content" class="btn btn-sm btn-warning">Quản lí chung <i class="fas fa-book"></i></a>
       </div>
     </div>
+    <div class="container">
+      <form action="/management/content/data/api/read" class="form-control" method="post" enctype="multipart/form-data">
+        <input class="form-control" type="file" class="form-control" name="file" id="excel-file">
+        <div class="text-center mt-2">
+          <button class="btn btn-primary" type="submit" onclick="submitFile()">Gửi file</button>
+        </div>
+        <!-- <div class="text-center mt-2">
+          <button class="btn btn-warning" onclick="exportData('manga')">Xuất file Excel Manga</button>
+          <button class="btn btn-danger" onclick="exportData('slide')">Xuất file Excel Slide</button>
+        </div> -->
+      </form>
+      <form action="/management/content/data/api/export-data/manga" class="form-control" method="post">
+        <div class="text-center mt-2">
+          <button class="btn btn-warning" type="submit">Xuất file Excel Manga</button>
+        </div>
+      </form>
+    </div>
   </div>
 
 </body>
 <%- include("../../partials/script") %>
 <script src="/js/moment.min.js"></script>
+<script>
+  // window.onsubmit = function(event) {
+  //   event.preventDefault();
+  // }
+
+  function submitFile() {
+    const getFile = document.getElementById("excel-file");
+    let formData = new FormData();
+    formData.append('file', getFile.files[0]);
+    // console.log(formData.get("file"))
+    fetch(`/management/content/data/api/send-data`, {
+        method: "POST", // or 'PUT'
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        //   // 'Content-Type': 'application/x-www-form-urlencoded',
+        // },
+        body: formData
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }
+
+  function exportData(slug) {
+    fetch(`/management/content/data/api/export-data/${slug}`, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "multipart/form-data",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // body: formData
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }
+</script>
 
 </html>
