@@ -60,10 +60,11 @@
                 <%= (manga.title_english) ? manga.title_english : 'unknown' %> </span>
               <h5 class="mt-4">Information</h5>
               <hr>
-              <div><b>Author:</b> <% manga.authors.forEach(function(author,index){%>
+              <div><b>Author:</b>
+                <% manga.authors.forEach(function(author,index){%>
                 <a href="/forum/author/<%= author.mal_id %>">
                   <%= author.name %>
-                </a>
+                </a> <%= (index ===  manga.authors.length -1) ? '.' : "," %>
                 <%}) %>
               </div>
               <div><b>Type:</b> <%= (manga.type) ? manga.type : 'unknown'%></div>
@@ -126,7 +127,7 @@
                 <p class="statisticals__score-score">
                   <span>
                     <b>
-                      <%= manga.score %>
+                      <%= (manga.score)? manga.score : 'Not Scored' %>
                     </b>
                   </span>
                 </p>
@@ -170,15 +171,16 @@
                     </a>
                     <%}) %>
                   </div>
-                  <div class="authors d-flex">
-                    <% manga.authors.forEach(function(author,index){%>
-                    <a href="/forum/author/<%= author.mal_id %> " target="_blank">
-                      <p>
-                        <%= author.name %>
-                      </p>
-                    </a>
-                    <%}) %>
+                  <div class="authors">
                     <p>
+                      <% manga.authors.forEach(function(author,index){%>
+                      <a href="/forum/author/<%= author.mal_id %> ">
+                        <p>
+                          <%= author.name %>
+                        </p>
+                      </a>
+                      <%= (index ===  manga.authors.length -1) ? '.' : ", " %>
+                      <%}) %>
                       (Story & Art)
                     </p>
                   </div>

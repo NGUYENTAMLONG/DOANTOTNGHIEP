@@ -18,6 +18,14 @@
   <%- include('../partials/header') %>
 
   <div class="container">
+    <div class="d-flex justify-content-center">
+      <nav class="navbar navbar-light bg-light">
+        <form class="form-inline" action="/forum/search">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search Author" aria-label="Search" name="question">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </nav>
+    </div>
     <div class="section" id="section-1">
       <div class="row">
         <div class="col-3">
@@ -45,16 +53,10 @@
               </ol>
             </nav>
             <ul class="navigation">
-              <li><a href="#" class="disabled">Detail</a></li>
-              <li><a href="#">Author</a></li>
-              <li><a href="#">Characters</a></li>
+              <li><a href="/forum/author/<%= author.mal_id %>">Author</a></li>
               <li><a href="#">News</a></li>
-              <li><a href="#">Statistics</a></li>
-              <li><a href="#">Reviews</a></li>
-              <li><a href="#">Recommendations</a></li>
-              <li><a href="#">Interest Stacks</a></li>
-              <li><a href="#">Forum</a></li>
-              <li><a href="#">Clubs</a></li>
+              <li><a href="#">Anime</a></li>
+              <li><a href="#">Manga</a></li>
               <li><a href="#">Pictures</a></li>
             </ul>
             <div class="author__info">
@@ -84,7 +86,7 @@
                   <div class="d-flex m-2">
                     <img src="<%= elm.anime.images.jpg.image_url %>" width="100px" alt="">
                     <div class="d-flex manga__series-info mt-3 ml-3">
-                      <a href="<%= elm.anime.url %>" class="mb-2">
+                      <a href="<%= elm.anime.url %>" class="mb-2" target="_blank">
                         <b> <%= elm.anime.title %> </b>
                       </a>
                       <p><b>Position: </b> <%= elm.position %> </p>

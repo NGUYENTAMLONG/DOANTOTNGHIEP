@@ -80,9 +80,10 @@
       align-items: center;
       padding: 5px;
       box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+      overflow: hidden;
       .statisticals__score {
         text-align: center;
-        height: auto;
+        height: 150px;
         width: 150px;
         padding: 10px;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
@@ -120,6 +121,14 @@
           }
           div:not(:last-child) {
             border-right: 0.5px solid gainsboro;
+          }
+          .authors {
+            height: 30px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            text-overflow: ellipsis;
           }
         }
       }

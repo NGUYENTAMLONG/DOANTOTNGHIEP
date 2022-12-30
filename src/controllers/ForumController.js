@@ -80,6 +80,52 @@ class ForumController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+  async showResultSeaching(req, res) {
+    let page = req.query.page || 1;
+    let limit = req.query.limit || 25;
+    if (!req.query.q) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    const url = `https://api.jikan.moe/v4/manga?q=${req.query.q}&page=${page}&limit=${limit}`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res.status(STATUS.SUCCESS).render("forum/search", {
+        user: req.user,
+        result: response,
+        q: req.query.q,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showResultAuthorSeaching(req, res) {
+    let page = req.query.page || 1;
+    let limit = req.query.limit || 25;
+    if (!req.query.question) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    const url = `https://api.jikan.moe/v4/people?q=${req.query.question}&page=${page}&limit=${limit}`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res.status(STATUS.SUCCESS).render("forum/search", {
+        user: req.user,
+        result: response,
+        q: req.query.q,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
   async showGenres(req, res) {
     const url = `https://api.jikan.moe/v4/genres/manga`;
     const options = {

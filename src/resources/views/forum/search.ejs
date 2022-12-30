@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta http-equiv="refresh" content="5"> -->
-  <title>FORUM</title>
+  <title>RESULT SEARCHING FORUM</title>
   <%- include("../partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/forum.css">
@@ -27,8 +27,25 @@
       </nav>
     </div>
     <div class="section" id="section-1">
+      <% if(result.data.length === 0){%>
+      <div class="text-center bg-dark text-light" style="width: 100%;">
+        <h2>NO MATCHING SEARCH <i class="fas fa-sad-tear"></i></h2>
+      </div>
+      <%}else{%>
+      <div class="text-right">
+        <span class="badge badge-success">
+          Result: <%= result.pagination.items.total %>
+        </span>
+        <span class="badge badge-warning">
+          Result per page: <%= result.pagination.items.per_page %>
+        </span>
+        <span class="badge badge-danger">
+          Result in page: <%= result.pagination.items.count %>
+        </span>
+      </div>
+      <%} %>
       <div class="row">
-        <% data.data.forEach((manga,index)=>{%>
+        <% result.data.forEach((manga,index)=>{%>
         <div class="col-4 col-md-4 col-sm-6">
           <div class="card manga" style="width: 100%;">
             <div class="manga-header row">
@@ -93,48 +110,49 @@
         <%}) %>
       </div>
     </div>
-
+    <% if(result.data.length !== 0){%>
     <nav aria-label="...">
       <ul class="pagination">
-        <% if(data.pagination.current_page !== 1) {%>
+        <% if(result.pagination.current_page !== 1) {%>
         <li class="page-item">
-          <a class="page-link" href="/forum?page=1&limit=25" tabindex="-1">First</a>
+          <a class="page-link" href="/forum/search?q=<%= q %>&page=1&limit=25" tabindex="-1">First</a>
         </li>
         <li class="page-item">
-          <a class="page-link" href="/forum?page=<%=  data.pagination.current_page - 1 %> &limit=25" tabindex="-1">Previous</a>
+          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%=  result.pagination.current_page - 1 %> &limit=25" tabindex="-1">Previous</a>
         </li>
         <%}%>
-        <% if(data.pagination.has_next_page && ( data.pagination.current_page - 1 >= 7)) {%>
+        <% if(result.pagination.has_next_page && ( result.pagination.current_page - 1 >= 7)) {%>
         <li class="page-item">
           <a class="page-link" href="">...</a>
         </li>
         <%}%>
-        <% for(var i=1; i<=data.pagination.last_visible_page; i++) {%>
-        <% if(i > data.pagination.current_page - 7 && i< data.pagination.current_page + 7){%>
-        <% if(data.pagination.current_page=== i) {%>
+        <% for(var i=1; i<=result.pagination.last_visible_page; i++) {%>
+        <% if(i > result.pagination.current_page - 7 && i< result.pagination.current_page + 7){%>
+        <% if(result.pagination.current_page=== i) {%>
         <li class="page-item active">
-          <a class="page-link" href="/forum?page=<%= i %>&limit=25"><%= i %> <span class="sr-only">(current)</span></a>
+          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %> <span class="sr-only">(current)</span></a>
         </li>
         <%}else{%>
-        <li class="page-item"><a class="page-link" href="/forum?page=<%= i %>&limit=25"><%= i %></a></li>
+        <li class="page-item"><a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %></a></li>
         <% } %>
         <%} %>
         <%} %>
-        <% if(data.pagination.has_next_page && (data.pagination.last_visible_page - data.pagination.current_page >= 7)) {%>
+        <% if(result.pagination.has_next_page && (result.pagination.last_visible_page - result.pagination.current_page >= 7)) {%>
         <li class="page-item">
           <a class="page-link" href="">...</a>
         </li>
         <%}%>
-        <% if(data.pagination.has_next_page) {%>
+        <% if(result.pagination.has_next_page) {%>
         <li class="page-item">
-          <a class="page-link" href="/forum?page=<%= data.pagination.current_page + 1 %> &limit=25">Next</a>
+          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.current_page + 1 %> &limit=25">Next</a>
         </li>
         <li class="page-item">
-          <a class="page-link" href="/forum?page=<%= data.pagination.last_visible_page %> &limit=25" tabindex="-1">Last</a>
+          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.last_visible_page %> &limit=25" tabindex="-1">Last</a>
         </li>
         <%}%>
       </ul>
     </nav>
+    <%} %>
   </div>
   <%- include('../partials/footer') %>
 </body>
