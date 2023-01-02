@@ -20,7 +20,7 @@
   <div class="container">
     <div class="d-flex justify-content-center">
       <nav class="navbar navbar-light bg-light">
-        <form class="form-inline" action="/forum/search">
+        <form class="form-inline" action="/forum/search-author">
           <input class="form-control mr-sm-2" type="search" placeholder="Search Manga" aria-label="Search" name="q">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
@@ -31,108 +31,94 @@
         <% result.data.forEach((manga,index)=>{%>
         <div class="col-4 col-md-4 col-sm-6">
           <div class="card author" style="width: 100%;">
-            <div class="manga-header row">
-              <div class="col-7 manga-cover">
+            <div class="author-header row">
+              <div class="col-7 author-cover">
                 <a href="/forum/author/<%= manga.mal_id %>">
-                  <img class="card-img-top" src="<%= manga.images.jpg.image_url %>" height="" alt="Card image cap">
+                  <img class="card-img-top" src="<%= manga.images.jpg.image_url %>" height="" alt="Author avatar">
                 </a>
               </div>
               <div class="col-5">
-                <div class="manga-params">
-                  <div><b>Author:</b> <% manga.authors.forEach(function(author,index){%>
-                    <a href="/forum/author/<%= author.mal_id %>">
-                      <%= author.name %>
-                    </a>
-                    <%}) %>
-                  </div>
-                  <div><b>Type:</b> <%= (manga.type) ? manga.type : 'unknown'%></div>
-                  <div><b>Published:</b> <%= (manga.published.string) ?manga.published.string : 'unknown' %></div>
-                  <div><b>Chapter:</b> <%= (manga.chapters) ? manga.chapters : 'unknown' %></div>
-                  <div><b>Volumes:</b> <%= (manga.volumes) ? manga.volumes : 'unknown' %></div>
-                  <div><b>Status:</b>
-                    <span class="badge  <%= (manga.status === "Finished")  ? 'badge-danger' : 'badge-success' %>">
-                      <%= (manga.status) ? manga.status : 'unknown' %>
-                    </span>
+                <div class="author-params">
+                  <div><b>Author:</b>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="card-body manga-info">
-              <a class="card-title manga-info__title text-center" href="<%= manga.url %>">
-                <h5><%= manga.title %></h5>
-              </a>
-              <div class="manga-info__react d-flex">
-                <div class="manga-info__react-item ml-2 react-score" data-toggle="tooltip" data-placement="bottom" title="score"><i class="fas fa-star"></i> <%= manga.score %></div>
-                <div class="manga-info__react-item ml-2 react-rank" data-toggle="tooltip" data-placement="bottom" title="rank"><i class="fas fa-crown"></i> <%= manga.rank %></div>
-                <div class="manga-info__react-item ml-2 react-popularity" data-toggle="tooltip" data-placement="bottom" title="popularity"><i class="fas fa-fire-alt"></i> <%= manga.popularity %></div>
-                <div class="manga-info__react-item ml-2 react-members" data-toggle="tooltip" data-placement="bottom" title="members"><i class="fas fa-users"></i> <%= manga.members %></div>
-                <div class="manga-info__react-item ml-2 react-favorites" data-toggle="tooltip" data-placement="bottom" title="favorites"><i class="fas fa-thumbs-up"></i> <%= manga.favorites %></div>
-              </div>
-              <div class="manga-info__types text-center">
-                <% manga.themes.forEach(function(theme,index){%>
-                <a href="<%= theme.url %>" target="_blank">
-                  <span class="badge badge-warning">
-                    <%= theme.name %>
-                  </span>
+              <div class="card-body manga-info">
+                <a class="card-title manga-info__title text-center" href="<%= manga.url %>">
+                  <h5><%= manga.title %></h5>
                 </a>
-                <%}) %>
+                <div class="manga-info__react d-flex">
+                  <div class="manga-info__react-item ml-2 react-score" data-toggle="tooltip" data-placement="bottom" title="score"><i class="fas fa-star"></i> <%= manga.score %></div>
+                  <div class="manga-info__react-item ml-2 react-rank" data-toggle="tooltip" data-placement="bottom" title="rank"><i class="fas fa-crown"></i> <%= manga.rank %></div>
+                  <div class="manga-info__react-item ml-2 react-popularity" data-toggle="tooltip" data-placement="bottom" title="popularity"><i class="fas fa-fire-alt"></i> <%= manga.popularity %></div>
+                  <div class="manga-info__react-item ml-2 react-members" data-toggle="tooltip" data-placement="bottom" title="members"><i class="fas fa-users"></i> <%= manga.members %></div>
+                  <div class="manga-info__react-item ml-2 react-favorites" data-toggle="tooltip" data-placement="bottom" title="favorites"><i class="fas fa-thumbs-up"></i> <%= manga.favorites %></div>
+                </div>
+                <div class="manga-info__types text-center">
+                  <% manga.themes.forEach(function(theme,index){%>
+                  <a href="<%= theme.url %>" target="_blank">
+                    <span class="badge badge-warning">
+                      <%= theme.name %>
+                    </span>
+                  </a>
+                  <%}) %>
+                </div>
+                <div class="manga-info__types text-center">
+                  <% manga.genres.forEach(function(type,index){%>
+                  <a href="<%= type.url %>" target="_blank">
+                    <span class="badge badge-info">
+                      <%= type.name %>
+                    </span>
+                  </a>
+                  <%}) %>
+                </div>
+                <p class="card-text manga-info__content"> <%= (manga.synopsis) ? (manga.synopsis) : 'No synopsis information has been added to this title' %></p>
               </div>
-              <div class="manga-info__types text-center">
-                <% manga.genres.forEach(function(type,index){%>
-                <a href="<%= type.url %>" target="_blank">
-                  <span class="badge badge-info">
-                    <%= type.name %>
-                  </span>
-                </a>
-                <%}) %>
-              </div>
-              <p class="card-text manga-info__content"> <%= (manga.synopsis) ? (manga.synopsis) : 'No synopsis information has been added to this title' %></p>
             </div>
           </div>
+          <%}) %>
         </div>
-        <%}) %>
       </div>
-    </div>
 
-    <nav aria-label="...">
-      <ul class="pagination">
-        <% if(result.pagination.current_page !== 1) {%>
-        <li class="page-item">
-          <a class="page-link" href="/forum/search?q=<%= q %>&page=1&limit=25" tabindex="-1">First</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%=  result.pagination.current_page - 1 %> &limit=25" tabindex="-1">Previous</a>
-        </li>
-        <%}%>
+      <nav aria-label="...">
+        <ul class="pagination">
+          <% if(result.pagination.current_page !== 1) {%>
+          <li class="page-item">
+            <a class="page-link" href="/forum/search?q=<%= q %>&page=1&limit=25" tabindex="-1">First</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="/forum/search?q=<%= q %>&page=<%=  result.pagination.current_page - 1 %> &limit=25" tabindex="-1">Previous</a>
+          </li>
+          <%}%>
         <% if(result.pagination.has_next_page && ( result.pagination.current_page - 1 >= 7)) {%>
-        <li class="page-item">
-          <a class="page-link" href="">...</a>
-        </li>
-        <%}%>
+          <li class="page-item">
+            <a class="page-link" href="">...</a>
+          </li>
+          <%}%>
         <% for(var i=1; i<=result.pagination.last_visible_page; i++) {%>
-        <% if(i > result.pagination.current_page - 7 && i< result.pagination.current_page + 7){%>
-        <% if(result.pagination.current_page=== i) {%>
-        <li class="page-item active">
-          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %> <span class="sr-only">(current)</span></a>
-        </li>
-        <%}else{%>
-        <li class="page-item"><a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %></a></li>
-        <% } %>
-        <%} %>
-        <%} %>
-        <% if(result.pagination.has_next_page && (result.pagination.last_visible_page - result.pagination.current_page >= 7)) {%>
-        <li class="page-item">
-          <a class="page-link" href="">...</a>
-        </li>
-        <%}%>
+          <% if(i > result.pagination.current_page - 7 && i< result.pagination.current_page + 7){%>
+          <% if(result.pagination.current_page=== i) {%>
+          <li class="page-item active">
+            <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %> <span class="sr-only">(current)</span></a>
+          </li>
+          <%}else{%>
+          <li class="page-item"><a class="page-link" href="/forum/search?q=<%= q %>&page=<%= i %>&limit=25"><%= i %></a></li>
+          <% } %>
+          <%} %>
+          <%} %>
+          <% if(result.pagination.has_next_page && (result.pagination.last_visible_page - result.pagination.current_page >= 7)) {%>
+          <li class="page-item">
+            <a class="page-link" href="">...</a>
+          </li>
+          <%}%>
         <% if(result.pagination.has_next_page) {%>
-        <li class="page-item">
-          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.current_page + 1 %> &limit=25">Next</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.last_visible_page %> &limit=25" tabindex="-1">Last</a>
-        </li>
-        <%}%>
+          <li class="page-item">
+            <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.current_page + 1 %> &limit=25">Next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="/forum/search?q=<%= q %>&page=<%= result.pagination.last_visible_page %> &limit=25" tabindex="-1">Last</a>
+          </li>
+          <%}%>
       </ul>
     </nav>
   </div>

@@ -10,11 +10,9 @@
   <%- include("../partials/link") %>
   <link rel="icon" href="/image/tablogo.png">
   <link rel="stylesheet" href="/css/forum_detail.css">
+  <link rel="stylesheet" href="/css/forum_review.css">
   <!----===== Boxicons CSS ===== -->
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-  <!-- OWL CAROUSEL -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 </head>
 
 <body>
@@ -106,7 +104,7 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/forum">Forum</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Detail</li>
+                <li class="breadcrumb-item active" aria-current="page">Reviews</li>
               </ol>
             </nav>
             <ul class="navigation">
@@ -115,130 +113,71 @@
               <li><a href="#">Characters</a></li>
               <li><a href="#">News</a></li>
               <li><a href="#">Statistics</a></li>
-              <li><a href="/forum/reviews/<%= manga.mal_id %>">Reviews</a></li>
+              <li><a href="/forum/review/<%= manga.authors[0].mal_id %>">Reviews</a></li>
               <li><a href="/forum/recommendations/<%= manga.mal_id %>">Recommendations</a></li>
               <li><a href="#">Interest Stacks</a></li>
               <li><a href="#">Forum</a></li>
               <li><a href="#">Clubs</a></li>
               <li><a href="#">Pictures</a></li>
             </ul>
-            <div class="statisticals">
-              <div class="statisticals__score">
-                <span>
-                  <p>SCORE</p>
-                </span>
-                <p class="statisticals__score-score">
-                  <span>
-                    <b>
-                      <%= (manga.score)? manga.score : 'Not Scored' %>
-                    </b>
-                  </span>
-                </p>
-                <p class="statisticals__score-scoredBy">
-                  <%= manga.scored_by %> users
-                </p>
-              </div>
-              <div class="statisticals__another">
-                <div class="general-1">
-                  <div class="rank">
-                    <p>Ranked <b>#
-                        <b data-vanilla-counter data-start-at="0" data-end-at="<%= manga.rank %>" data-time="1000"></b>
-                      </b></p>
-                  </div>
-                  <div class="popularity">
-                    <p>Popularity <b># <b data-vanilla-counter data-start-at="0" data-end-at="<%= manga.popularity %>" data-time="2000"></b></b></p>
-                  </div>
-                  <div class="members">
-                    <p>Members
-                      <b><%= manga.members %></b>
-                    </p>
-                  </div>
-                  <div class="members">
-                    <p>Favorites
-                      <b><%= manga.favorites %></b>
-                    </p>
-                  </div>
-                </div>
-                <div class="general-2">
-                  <div class="type">
-                    <a href="#">
-                      <p><%= manga.type %></p>
-                    </a>
-                  </div>
-                  <div class="serializations">
-                    <% manga.serializations.forEach(function(elm,index){%>
-                    <a href="<%= elm.url %> " target="_blank">
-                      <p>
-                        <%= elm.name %>
-                      </p>
-                    </a>
-                    <%}) %>
-                  </div>
-                  <div class="authors">
-                    <p>
-                      <% manga.authors.forEach(function(author,index){%>
-                      <a href="/forum/author/<%= author.mal_id %> ">
-                        <p>
-                          <%= author.name %>
-                        </p>
-                      </a>
-                      <%= (index ===  manga.authors.length -1) ? '.' : ", " %>
-                      <%}) %>
-                      (Story & Art)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="description mt-4">
-              <div class="synopsis">
-                <h4>Synopsis</h4>
-                <hr>
-                <p><%= manga.synopsis %> </p>
-              </div>
-              <div class="background">
-                <h4>Background</h4>
-                <hr>
-                <p><%= manga.background %> </p>
-              </div>
-              <div class="types">
-                <h4>Types</h4>
-                <hr>
-                <% manga.genres.forEach(function(genre,index){%>
-                <a href="<%= genre.url %>" target="_blank">
-                  <span class="badge badge-warning">
-                    <%= genre.name %>
-                  </span>
-                </a>
-                <%}) %>
-              </div>
-              <div class="themes mt-4">
-                <h4>Themes</h4>
-                <hr>
-                <% manga.themes.forEach(function(theme,index){%>
-                <a href="<%= theme.url %>" target="_blank">
-                  <span class="badge badge-success">
-                    <%= theme.name %>
-                  </span>
-                </a>
-                <%}) %>
-              </div>
-            </div>
-            <div class="recommendations mt-4">
-              <h4>Recommendations</h4>
+            <div class="reviews mt-4">
+              <h4>Reviews</h4>
               <hr>
-              <div class="owl-carousel owl-theme">
-                <% recommendations.forEach((manga,index)=>{%>
-                <div class="manga__recommend d-flex flex-column">
-                  <a href="/forum/detail/<%= manga.entry.mal_id %>" class="manga__recommend-title">
-                    <img src="<%= manga.entry.images.jpg.image_url %>" class="manga__recommend-cover" alt="">
-                  </a>
-                  <div class="text-center">
-                    <a href="/forum/detail/<%= manga.entry.mal_id %>" class="manga__recommend-title">
-                      <%= manga.entry.title %>
-                    </a>
-                    <p><%= manga.votes %> <i class="fas fa-star text-warning"></i></p>
-                    <a href="<%= manga.url %>"> read more</a>
+              <div class="d-flex flex-column">
+                <% reviews.forEach(function(review,index){%>
+                <div class="review d-flex">
+                  <div class="review__avatar">
+                    <img src="<%= review.user.images.jpg.image_url%>" alt="">
+                  </div>
+                  <div class="review__content">
+                    <div class="review__content-name">
+                      <a href="#">
+                        <b><%= review.user.username %></b>
+                      </a>
+                    </div>
+                    <div class="review__content-tags">
+                      <% review.tags.forEach(function(tag,index){%>
+                      <% if (tag === 'Recommended') {%>
+                      <span class="badge badge-success"><%= tag %> </span>
+                      <%}else if(tag === 'Not Recommended'){%>
+                      <span class="badge badge-danger">
+                        <%= tag %>
+                      </span>
+                      <%}else{%>
+                      <span class="badge badge-warning">
+                        <%= tag %>
+                      </span>
+                      <%} %>
+                      <%}) %>
+                    </div>
+                    <p class="review__content-review">
+                      <%= review.review %>
+                    </p>
+                    <div class="review__content-reaction">
+                      <div class="icons d-flex">
+                        <div class="nice">
+                          <i class='bx bxs-like' data-toggle="tooltip" data-placement="bottom" title="nice"></i> <%= review.reactions.nice %>
+                        </div>
+                        <div class="love">
+                          <i class='bx bxs-heart' data-toggle="tooltip" data-placement="bottom" title="love it"></i> <%= review.reactions.love_it %>
+                        </div>
+                        <div class="funny">
+                          <i class='bx bx-wink-smile' data-toggle="tooltip" data-placement="bottom" title="funny"></i> <%= review.reactions.funny %>
+                        </div>
+                        <div class="confusing">
+                          <i class='bx bx-question-mark' data-toggle="tooltip" data-placement="bottom" title="confusing"></i> <%= review.reactions.confusing %>
+                        </div>
+                        <div class="informative">
+                          <i class='bx bxs-extension' data-toggle="tooltip" data-placement="bottom" title="informative"></i> <%= review.reactions.informative %>
+                        </div>
+                        <div class="well">
+                          <i class='bx bx-paint' data-toggle="tooltip" data-placement="bottom" title="well written"></i> <%= review.reactions.well_written %>
+                        </div>
+                        <div class="creative">
+                          <i class='bx bxs-leaf' data-toggle="tooltip" data-placement="bottom" title="creative"></i> <%= review.reactions.creative %>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <%}) %>
@@ -257,11 +196,12 @@
   <%- include('../partials/footer') %>
 </body>
 <%- include("../partials/script") %>
-<script src="/js/vanilla-counter.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 <script>
-  VanillaCounter();
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
   fetch("/forum/genres").then((res) => res.json()).then((result) => {
     const htmls = result.data.map((elm, index) => `
@@ -273,27 +213,6 @@
     `).join("")
     document.querySelector('.genres-list').innerHTML = htmls
     console.log(result)
-  })
-</script>
-<script>
-  $('.owl-carousel').owlCarousel({
-    loop: true,
-    margin: 10,
-    nav: true,
-    autoplay: true,
-    autoplayTimeout: 4000,
-    autoplayHoverPause: true,
-    responsive: {
-      400: {
-        items: 2
-      },
-      600: {
-        items: 2
-      },
-      1000: {
-        items: 5
-      }
-    }
   })
 </script>
 

@@ -147,6 +147,45 @@
         }
       }
     }
+    .recommendations {
+      overflow: hidden;
+      .manga__recommend {
+        .manga__recommend-cover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+          width: 100%;
+          height: 200px;
+          object-fit: contain;
+        }
+        .manga__recommend-title {
+          text-decoration: none;
+          color: black;
+          font-weight: bold;
+        }
+      }
+      .owl-prev,
+      .owl-next {
+        // width: 50px;
+        zoom: 2 !important;
+        outline: none !important;
+        span {
+          margin: 10px 15px !important;
+        }
+      }
+      .owl-prev:hover {
+        background-color: $color-3 !important;
+        color: white !important;
+      }
+      .owl-next:hover {
+        background-color: $color-3 !important;
+        color: white !important;
+      }
+      .owl-dots {
+        .owl-dot {
+          outline: none !important;
+        }
+      }
+    }
   }
 }
 #section-2 {

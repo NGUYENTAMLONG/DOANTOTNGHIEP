@@ -36,6 +36,7 @@ class ForumController {
       redirect(req, res, STATUS.BAD_REQUEST);
     }
     const url = `https://api.jikan.moe/v4/manga/${req.params.mangaId}`;
+    const urlRecommendations = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/recommendations`;
     const options = {
       method: "GET",
       // headers: {
@@ -46,9 +47,12 @@ class ForumController {
     try {
       let response = await fetch(url, options);
       response = await response.json();
+      let responseRecommendations = await fetch(urlRecommendations, options);
+      responseRecommendations = await responseRecommendations.json();
       return res.status(STATUS.SUCCESS).render("forum/detail", {
         user: req.user,
         manga: response.data,
+        recommendations: responseRecommendations.data,
       });
     } catch (err) {
       console.log(err);
@@ -137,6 +141,47 @@ class ForumController {
       return res
         .status(STATUS.SUCCESS)
         .json(new SuccessResponse(MESSAGE.SUCCESS, response.data));
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showRecommendations(req, res) {
+    const url = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/recommendations`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res.json(response);
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, response.data));
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showReviews(req, res) {
+    const urlReview = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/reviews`;
+    const urlManga = `https://api.jikan.moe/v4/manga/${req.params.mangaId}`;
+
+    const options = {
+      method: "GET",
+    };
+    try {
+      let responseReviews = await fetch(urlReview, options);
+      responseReviews = await responseReviews.json();
+      let responseManga = await fetch(urlManga, options);
+      responseManga = await responseManga.json();
+      return res.status(STATUS.SUCCESS).render("forum/reviews", {
+        user: req.user,
+        reviews: responseReviews.data,
+        manga: responseManga.data,
+        pagination: responseReviews.pagination,
+        moment,
+      });
     } catch (err) {
       console.log(err);
       redirect(req, res, STATUS.SERVER_ERROR);

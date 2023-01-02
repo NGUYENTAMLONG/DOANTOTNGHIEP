@@ -97,6 +97,32 @@
   #section-1 .info-right .description .themes a,
   #section-1 .info-right .description .types a {
     text-decoration: none; }
+  #section-1 .info-right .recommendations {
+    overflow: hidden; }
+    #section-1 .info-right .recommendations .manga__recommend .manga__recommend-cover {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      width: 100%;
+      height: 200px;
+      object-fit: contain; }
+    #section-1 .info-right .recommendations .manga__recommend .manga__recommend-title {
+      text-decoration: none;
+      color: black;
+      font-weight: bold; }
+    #section-1 .info-right .recommendations .owl-prev,
+    #section-1 .info-right .recommendations .owl-next {
+      zoom: 2 !important;
+      outline: none !important; }
+      #section-1 .info-right .recommendations .owl-prev span,
+      #section-1 .info-right .recommendations .owl-next span {
+        margin: 10px 15px !important; }
+    #section-1 .info-right .recommendations .owl-prev:hover {
+      background-color: #007bff !important;
+      color: white !important; }
+    #section-1 .info-right .recommendations .owl-next:hover {
+      background-color: #007bff !important;
+      color: white !important; }
+    #section-1 .info-right .recommendations .owl-dots .owl-dot {
+      outline: none !important; }
 
 #section-2 .genres-list {
   display: flex;

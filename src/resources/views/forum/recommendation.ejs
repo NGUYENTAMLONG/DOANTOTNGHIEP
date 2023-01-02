@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>AUTHOR FORUM</title>
+  <%- include("../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/forum_author.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <nav class="navbar navbar-light bg-light">
+        <form class="form-inline" action="/forum/search">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search Author" aria-label="Search" name="question">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </nav>
+    </div>
+    <div class="section" id="section-1">
+      <div class="row">
+        <div class="col-3">
+          <div class="info-left">
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row info-right">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/forum">Forum</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="/forum/detail/<%= mangaId %> ">Manga</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Recommendations</li>
+              </ol>
+            </nav>
+            <div class="author__info">
+              <div class="author__info-about">
+                <h3>Recommendations</h3>
+                <div class="author__info-series-manga">
+                  <% author.manga.forEach(function(elm,index){%>
+                  <div class="d-flex m-2">
+                    <img src="<%= elm.manga.images.jpg.image_url %>" width="100px" alt="">
+                    <div class="d-flex manga__series-info mt-3 ml-3">
+                      <a href="/forum/detail/<%= elm.manga.mal_id %>" class="mb-2">
+                        <b> <%= elm.manga.title %> </b>
+                      </a>
+                      <p><b>Position: </b> <%= elm.position %> </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <%}) %>
+                </div>
+                <hr>
+                <h3>Anime Series</h3>
+                <div class="author__info-series-anime">
+                  <% author.anime.forEach(function(elm,index){%>
+                  <div class="d-flex m-2">
+                    <img src="<%= elm.anime.images.jpg.image_url %>" width="100px" alt="">
+                    <div class="d-flex manga__series-info mt-3 ml-3">
+                      <a href="<%= elm.anime.url %>" class="mb-2" target="_blank">
+                        <b> <%= elm.anime.title %> </b>
+                      </a>
+                      <p><b>Position: </b> <%= elm.position %> </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <%}) %>
+                </div>
+                <hr>
+                <h3>Pictures</h3>
+                <div class="author__info-pictures d-flex justify-content-around flex-wrap">
+                  <% pictures.forEach(function(pic,index){%>
+                  <!-- Button trigger modal -->
+
+                  <img src="<%= pic.jpg.image_url %>" width="100px" alt="" data-toggle="modal" data-target="#pic<%=index %>">
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="pic<%=index %>" tabindex="-1" role="dialog" aria-labelledby="pic<%=index %>Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <img src="<%= pic.jpg.image_url %>" width="100%" alt="">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <%}) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section mt-4" id="section-2">
+      <div class="row">
+        <div class="genres-list"></div>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+<%- include("../partials/script") %>
+<script src="/js/vanilla-counter.js"></script>
+<script>
+  VanillaCounter();
+
+  fetch("/forum/genres").then((res) => res.json()).then((result) => {
+    const htmls = result.data.map((elm, index) => `
+       <a href="${elm.url}" target="_blank" class="m-1">
+      <span class="badge badge-info">
+        ${ elm.name } (${elm.count})
+      </span>
+      </a>
+    `).join("")
+    document.querySelector('.genres-list').innerHTML = htmls
+    console.log(result)
+  })
+</script>
+
+</html>
