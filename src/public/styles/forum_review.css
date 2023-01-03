@@ -1,11 +1,28 @@
-#section-1 .info-right .reviews .review .review__avatar img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover; }
-
-#section-1 .info-right .reviews .review .review__content {
-  margin-left: 20px; }
-  #section-1 .info-right .reviews .review .review__content .review__content-name a {
-    text-decoration: none; }
-  #section-1 .info-right .reviews .review .review__content .review__content-review {
-    text-indent: 15px; }
+#section-1 .info-right .reviews .review {
+  border-bottom: 0.5px rgba(128, 128, 128, 0.589) solid;
+  margin: 15px; }
+  #section-1 .info-right .reviews .review .review__avatar img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover; }
+  #section-1 .info-right .reviews .review .review__content {
+    margin-left: 20px; }
+    #section-1 .info-right .reviews .review .review__content .review__content-name a {
+      text-decoration: none; }
+    #section-1 .info-right .reviews .review .review__content .review__content-review {
+      text-indent: 15px; }
+    #section-1 .info-right .reviews .review .review__content .review__content-review.show {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 100px; }
+  #section-1 .info-right .reviews .review .review__content-reaction {
+    padding: 0px 10px; }
+    #section-1 .info-right .reviews .review .review__content-reaction .icons div {
+      margin: 0px 3px;
+      padding-right: 6px; }
+    #section-1 .info-right .reviews .review .review__content-reaction .icons div:not(:last-child) {
+      border-right: 0.5px solid gainsboro; }
+    #section-1 .info-right .reviews .review .review__content-reaction .handles-show {
+      cursor: pointer; }

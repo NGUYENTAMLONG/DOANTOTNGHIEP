@@ -37,6 +37,7 @@ class ForumController {
     }
     const url = `https://api.jikan.moe/v4/manga/${req.params.mangaId}`;
     const urlRecommendations = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/recommendations`;
+    const urlCharacters = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/characters`;
     const options = {
       method: "GET",
       // headers: {
@@ -49,10 +50,13 @@ class ForumController {
       response = await response.json();
       let responseRecommendations = await fetch(urlRecommendations, options);
       responseRecommendations = await responseRecommendations.json();
+      let responseCharacters = await fetch(urlCharacters, options);
+      responseCharacters = await responseCharacters.json();
       return res.status(STATUS.SUCCESS).render("forum/detail", {
         user: req.user,
         manga: response.data,
         recommendations: responseRecommendations.data,
+        characters: responseCharacters.data,
       });
     } catch (err) {
       console.log(err);

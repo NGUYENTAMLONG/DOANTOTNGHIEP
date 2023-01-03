@@ -25,13 +25,13 @@
       <div class="row">
         <div class="col-3">
           <div class="info-left">
-            <div class="manga__name text-center">
-              <h2><%= manga.title %></h2>
+            <div class="character__name text-center">
+              <h2><%= character.title %></h2>
             </div>
-            <div class="manga__cover">
-              <img src="<%= manga.images.jpg.image_url %>" width="100%" alt="">
+            <div class="character__cover">
+              <img src="<%= character.images.jpg.image_url %>" width="100%" alt="">
             </div>
-            <div class="manga__paticals">
+            <div class="character__paticals">
               <p>Add to My List</p>
               <hr>
               <p>Add to My Favorites</p>
@@ -57,44 +57,16 @@
               <br>
               <h5>Alternative Titles</h5>
               <hr>
-              <span><b>Default Name:</b> <%= manga.title %> </span>
-              <span><b>Japanese Name:</b> <%= (manga.title_japanse) ? manga.title_japanse : 'unknown' %> </span>
+              <span><b>Default Name:</b> <%= character.title %> </span>
+              <span><b>Japanese Name:</b> <%= (character.title_japanse) ? character.title_japanse : 'unknown' %> </span>
               <span><b>English Name:</b>
-                <%= (manga.title_english) ? manga.title_english : 'unknown' %> </span>
+                <%= (character.title_english) ? character.title_english : 'unknown' %> </span>
               <h5 class="mt-4">Information</h5>
               <hr>
-              <div><b>Author:</b>
-                <% manga.authors.forEach(function(author,index){%>
-                <a href="/forum/author/<%= author.mal_id %>">
-                  <%= author.name %>
-                </a> <%= (index ===  manga.authors.length -1) ? '.' : "," %>
-                <%}) %>
-              </div>
-              <div><b>Type:</b> <%= (manga.type) ? manga.type : 'unknown'%></div>
-              <div><b>Published:</b> <%= (manga.published.string) ?manga.published.string : 'unknown' %></div>
-              <div><b>Chapter:</b> <%= (manga.chapters) ? manga.chapters : 'unknown' %></div>
-              <div><b>Volumes:</b> <%= (manga.volumes) ? manga.volumes : 'unknown' %></div>
-              <div><b>Status:</b>
-                <%= (manga.status) ? manga.status : 'unknown' %>
-              </div>
               <div><b>Genres:</b>
-                <% manga.genres.forEach(function(type,index){%>
+                <% character.genres.forEach(function(type,index){%>
                 <a href="<%= type.url %>" target="_blank">
                   <%= type.name %>
-                </a>
-                <%}) %>
-              </div>
-              <div><b>Demographic:</b>
-                <% manga.demographics.forEach(function(demographic,index){%>
-                <a href="<%= demographic.url %>" target="_blank">
-                  <%= demographic.name %>
-                </a>
-                <%}) %>
-              </div>
-              <div><b>Serialization:</b>
-                <% manga.serializations.forEach(function(serialization,index){%>
-                <a href="<%= serialization.url %>" target="_blank">
-                  <%= serialization.name %>
                 </a>
                 <%}) %>
               </div>
@@ -111,15 +83,7 @@
             </nav>
             <ul class="navigation">
               <li><a href="#" class="disabled">Detail</a></li>
-              <li><a href="/forum/author/<%= manga.authors[0].mal_id %>">Author</a></li>
               <li><a href="#">Characters</a></li>
-              <li><a href="#">News</a></li>
-              <li><a href="#">Statistics</a></li>
-              <li><a href="/forum/reviews/<%= manga.mal_id %>">Reviews</a></li>
-              <li><a href="/forum/recommendations/<%= manga.mal_id %>">Recommendations</a></li>
-              <li><a href="#">Interest Stacks</a></li>
-              <li><a href="#">Forum</a></li>
-              <li><a href="#">Clubs</a></li>
               <li><a href="#">Pictures</a></li>
             </ul>
             <div class="statisticals">
@@ -130,43 +94,43 @@
                 <p class="statisticals__score-score">
                   <span>
                     <b>
-                      <%= (manga.score)? manga.score : 'Not Scored' %>
+                      <%= (character.score)? character.score : 'Not Scored' %>
                     </b>
                   </span>
                 </p>
                 <p class="statisticals__score-scoredBy">
-                  <%= manga.scored_by %> users
+                  <%= character.scored_by %> users
                 </p>
               </div>
               <div class="statisticals__another">
                 <div class="general-1">
                   <div class="rank">
                     <p>Ranked <b>#
-                        <b data-vanilla-counter data-start-at="0" data-end-at="<%= manga.rank %>" data-time="1000"></b>
+                        <b data-vanilla-counter data-start-at="0" data-end-at="<%= character.rank %>" data-time="1000"></b>
                       </b></p>
                   </div>
                   <div class="popularity">
-                    <p>Popularity <b># <b data-vanilla-counter data-start-at="0" data-end-at="<%= manga.popularity %>" data-time="2000"></b></b></p>
+                    <p>Popularity <b># <b data-vanilla-counter data-start-at="0" data-end-at="<%= character.popularity %>" data-time="2000"></b></b></p>
                   </div>
                   <div class="members">
                     <p>Members
-                      <b><%= manga.members %></b>
+                      <b><%= character.members %></b>
                     </p>
                   </div>
                   <div class="members">
                     <p>Favorites
-                      <b><%= manga.favorites %></b>
+                      <b><%= character.favorites %></b>
                     </p>
                   </div>
                 </div>
                 <div class="general-2">
                   <div class="type">
                     <a href="#">
-                      <p><%= manga.type %></p>
+                      <p><%= character.type %></p>
                     </a>
                   </div>
                   <div class="serializations">
-                    <% manga.serializations.forEach(function(elm,index){%>
+                    <% character.serializations.forEach(function(elm,index){%>
                     <a href="<%= elm.url %> " target="_blank">
                       <p>
                         <%= elm.name %>
@@ -176,13 +140,13 @@
                   </div>
                   <div class="authors">
                     <p>
-                      <% manga.authors.forEach(function(author,index){%>
+                      <% character.authors.forEach(function(author,index){%>
                       <a href="/forum/author/<%= author.mal_id %> ">
                         <p>
                           <%= author.name %>
                         </p>
                       </a>
-                      <%= (index ===  manga.authors.length -1) ? '.' : ", " %>
+                      <%= (index ===  character.authors.length -1) ? '.' : ", " %>
                       <%}) %>
                       (Story & Art)
                     </p>
@@ -194,17 +158,17 @@
               <div class="synopsis">
                 <h4>Synopsis</h4>
                 <hr>
-                <p><%= manga.synopsis %> </p>
+                <p><%= character.synopsis %> </p>
               </div>
               <div class="background">
                 <h4>Background</h4>
                 <hr>
-                <p><%= manga.background %> </p>
+                <p><%= character.background %> </p>
               </div>
               <div class="types">
                 <h4>Types</h4>
                 <hr>
-                <% manga.genres.forEach(function(genre,index){%>
+                <% character.genres.forEach(function(genre,index){%>
                 <a href="<%= genre.url %>" target="_blank">
                   <span class="badge badge-warning">
                     <%= genre.name %>
@@ -215,7 +179,7 @@
               <div class="themes mt-4">
                 <h4>Themes</h4>
                 <hr>
-                <% manga.themes.forEach(function(theme,index){%>
+                <% character.themes.forEach(function(theme,index){%>
                 <a href="<%= theme.url %>" target="_blank">
                   <span class="badge badge-success">
                     <%= theme.name %>
@@ -252,17 +216,17 @@
               <h4>Recommendations</h4>
               <hr>
               <div class="owl-carousel owl-theme">
-                <% recommendations.forEach((manga,index)=>{%>
-                <div class="manga__recommend d-flex flex-column">
-                  <a href="/forum/detail/<%= manga.entry.mal_id %>" class="manga__recommend-title">
-                    <img src="<%= manga.entry.images.jpg.image_url %>" class="manga__recommend-cover" alt="">
+                <% recommendations.forEach((character,index)=>{%>
+                <div class="character__recommend d-flex flex-column">
+                  <a href="/forum/detail/<%= character.entry.mal_id %>" class="character__recommend-title">
+                    <img src="<%= character.entry.images.jpg.image_url %>" class="character__recommend-cover" alt="">
                   </a>
                   <div class="text-center">
-                    <a href="/forum/detail/<%= manga.entry.mal_id %>" class="manga__recommend-title">
-                      <%= manga.entry.title %>
+                    <a href="/forum/detail/<%= character.entry.mal_id %>" class="character__recommend-title">
+                      <%= character.entry.title %>
                     </a>
-                    <p><%= manga.votes %> <i class="fas fa-star text-warning"></i></p>
-                    <a href="<%= manga.url %>"> read more</a>
+                    <p><%= character.votes %> <i class="fas fa-star text-warning"></i></p>
+                    <a href="<%= character.url %>"> read more</a>
                   </div>
                 </div>
                 <%}) %>
@@ -298,27 +262,6 @@
     `).join("")
     document.querySelector('.genres-list').innerHTML = htmls
     console.log(result)
-  })
-</script>
-<script>
-  $('.owl-carousel').owlCarousel({
-    loop: true,
-    margin: 10,
-    nav: true,
-    autoplay: true,
-    autoplayTimeout: 4000,
-    autoplayHoverPause: true,
-    responsive: {
-      400: {
-        items: 2
-      },
-      600: {
-        items: 2
-      },
-      1000: {
-        items: 5
-      }
-    }
   })
 </script>
 

@@ -7,11 +7,11 @@
   padding: 10px;
   border-radius: 5px;
   .info-left {
-    .manga__cover {
+    .character__cover {
       box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
       margin-bottom: 40px;
     }
-    .manga__paticals {
+    .character__paticals {
       .fab {
         cursor: pointer;
         transition: 0.5s ease-in-out;
@@ -81,69 +81,12 @@
       padding: 5px;
       box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
       overflow: hidden;
-      .statisticals__score {
-        text-align: center;
-        height: 150px;
-        width: 150px;
-        padding: 10px;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
-          rgba(0, 0, 0, 0.3) 0px 10px 10px -10px inset;
-        border-radius: 5px;
-        &:hover {
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-            rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-        }
-        span {
-          font-weight: bold;
-        }
-        .statisticals__score-score {
-          font-size: 30px;
-        }
-        .statisticals__score-scoredBy {
-          font-size: 11px;
-        }
-      }
-      .statisticals__another {
-        .general-1 {
-          display: flex;
-          margin-bottom: 20px;
-          div {
-            margin-left: 15px;
-          }
-        }
-        .general-2 {
-          display: flex;
-          height: 20px;
-          div {
-            margin-left: 15px;
-            padding-right: 15px;
-          }
-          div:not(:last-child) {
-            border-right: 0.5px solid gainsboro;
-          }
-          .authors {
-            height: 30px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            display: flex;
-            flex-wrap: wrap;
-            text-overflow: ellipsis;
-          }
-        }
-      }
     }
     .description {
       .synopsis,
       .background {
         p {
           text-indent: 20px;
-        }
-      }
-      .themes,
-      .types {
-        a {
-          text-decoration: none;
         }
       }
     }
@@ -178,45 +121,6 @@
         }
       }
     }
-    .recommendations {
-      overflow: hidden;
-      .manga__recommend {
-        .manga__recommend-cover {
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-          width: 100%;
-          height: 200px;
-          object-fit: contain;
-        }
-        .manga__recommend-title {
-          text-decoration: none;
-          color: black;
-          font-weight: bold;
-        }
-      }
-      .owl-prev,
-      .owl-next {
-        // width: 50px;
-        zoom: 2 !important;
-        outline: none !important;
-        span {
-          margin: 10px 15px !important;
-        }
-      }
-      .owl-prev:hover {
-        background-color: $color-3 !important;
-        color: white !important;
-      }
-      .owl-next:hover {
-        background-color: $color-3 !important;
-        color: white !important;
-      }
-      .owl-dots {
-        .owl-dot {
-          outline: none !important;
-        }
-      }
-    }
   }
 }
 #section-2 {
@@ -229,8 +133,4 @@
       text-decoration: none;
     }
   }
-}
-.vertical {
-  border-left: 1px solid rgba(128, 128, 128, 0.705);
-  height: 100%;
 }

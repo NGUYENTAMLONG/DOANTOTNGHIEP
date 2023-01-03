@@ -108,7 +108,7 @@
               </ol>
             </nav>
             <ul class="navigation">
-              <li><a href="#" class="disabled">Detail</a></li>
+              <li><a href="/forum/detail/<%= manga.mal_id %>" class="disabled">Detail</a></li>
               <li><a href="/forum/author/<%= manga.authors[0].mal_id %>">Author</a></li>
               <li><a href="#">Characters</a></li>
               <li><a href="#">News</a></li>
@@ -126,22 +126,30 @@
               <div class="d-flex flex-column">
                 <% reviews.forEach(function(review,index){%>
                 <div class="review d-flex">
-                  <div class="review__avatar">
+                  <div class="review__avatar d-flex  flex-column text-center">
                     <img src="<%= review.user.images.jpg.image_url%>" alt="">
+                    <div class="score">
+                      <span class="badge badge-info">
+                        Score: <%= review.score %>
+                      </span>
+                    </div>
                   </div>
                   <div class="review__content">
-                    <div class="review__content-name">
+                    <div class="review__content-name d-flex justify-content-between">
                       <a href="#">
                         <b><%= review.user.username %></b>
                       </a>
+                      <div class="review__content-date">
+                        <small><%= moment(review.date).format("L") %> - <%= moment(review.date).format("LT")%> </small>
+                      </div>
                     </div>
                     <div class="review__content-tags">
                       <% review.tags.forEach(function(tag,index){%>
                       <% if (tag === 'Recommended') {%>
-                      <span class="badge badge-success"><%= tag %> </span>
+                      <span class="badge badge-success"><i class='bx bxs-star'></i> <%= tag %> </span>
                       <%}else if(tag === 'Not Recommended'){%>
                       <span class="badge badge-danger">
-                        <%= tag %>
+                        <i class='bx bx-star'></i> <%= tag %>
                       </span>
                       <%}else{%>
                       <span class="badge badge-warning">
@@ -150,32 +158,37 @@
                       <%} %>
                       <%}) %>
                     </div>
-                    <p class="review__content-review">
+                    <p class="review__content-review show" id="review-<%= index %>">
                       <%= review.review %>
                     </p>
-                    <div class="review__content-reaction">
+                    <div class="review__content-reaction d-flex justify-content-between">
                       <div class="icons d-flex">
-                        <div class="nice">
-                          <i class='bx bxs-like' data-toggle="tooltip" data-placement="bottom" title="nice"></i> <%= review.reactions.nice %>
+                        <div class="nice" data-toggle="tooltip" data-placement="bottom" title="nice">
+                          <i class='bx bxs-like'></i> <%= review.reactions.nice %>
                         </div>
-                        <div class="love">
-                          <i class='bx bxs-heart' data-toggle="tooltip" data-placement="bottom" title="love it"></i> <%= review.reactions.love_it %>
+                        <div class="love" data-toggle="tooltip" data-placement="bottom" title="love it">
+                          <i class='bx bxs-heart'></i> <%= review.reactions.love_it %>
                         </div>
-                        <div class="funny">
-                          <i class='bx bx-wink-smile' data-toggle="tooltip" data-placement="bottom" title="funny"></i> <%= review.reactions.funny %>
+                        <div class="funny" data-toggle="tooltip" data-placement="bottom" title="funny">
+                          <i class='bx bx-wink-smile'></i> <%= review.reactions.funny %>
                         </div>
-                        <div class="confusing">
-                          <i class='bx bx-question-mark' data-toggle="tooltip" data-placement="bottom" title="confusing"></i> <%= review.reactions.confusing %>
+                        <div class="confusing" data-toggle="tooltip" data-placement="bottom" title="confusing">
+                          <i class='bx bx-question-mark'></i> <%= review.reactions.confusing %>
                         </div>
-                        <div class="informative">
-                          <i class='bx bxs-extension' data-toggle="tooltip" data-placement="bottom" title="informative"></i> <%= review.reactions.informative %>
+                        <div class="informative" data-toggle="tooltip" data-placement="bottom" title="informative">
+                          <i class='bx bxs-extension'></i> <%= review.reactions.informative %>
                         </div>
-                        <div class="well">
-                          <i class='bx bx-paint' data-toggle="tooltip" data-placement="bottom" title="well written"></i> <%= review.reactions.well_written %>
+                        <div class="well" data-toggle="tooltip" data-placement="bottom" title="well written">
+                          <i class='bx bx-paint'></i> <%= review.reactions.well_written %>
                         </div>
-                        <div class="creative">
-                          <i class='bx bxs-leaf' data-toggle="tooltip" data-placement="bottom" title="creative"></i> <%= review.reactions.creative %>
+                        <div class="creative" data-toggle="tooltip" data-placement="bottom" title="creative">
+                          <i class='bx bxs-leaf'></i> <%= review.reactions.creative %>
                         </div>
+                      </div>
+                      <div class="handles">
+                        <span class="text-primary handles-show" data-review="review-<%= index %>" onclick="show(this)">
+                          <i class='bx bxs-chevron-down'></i> read more
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -214,6 +227,23 @@
     document.querySelector('.genres-list').innerHTML = htmls
     console.log(result)
   })
+</script>
+<script>
+  let check = false;
+
+  function show(btn) {
+    const review = btn.getAttribute("data-review");
+    const reviewContent = document.getElementById(review)
+    if (check === false) {
+      reviewContent.classList.remove('show');
+      btn.innerHTML = `<i class='bx bxs-chevron-up'></i> show less`;
+      check = true
+    } else {
+      reviewContent.classList.add('show');
+      btn.innerHTML = `<i class='bx bxs-chevron-down'></i> read more`;
+      check = false
+    }
+  }
 </script>
 
 </html>
