@@ -124,10 +124,33 @@ class ForumController {
     try {
       let response = await fetch(url, options);
       response = await response.json();
-      return res.status(STATUS.SUCCESS).render("forum/search", {
+      return res.status(STATUS.SUCCESS).render("forum/searchAuthor", {
         user: req.user,
-        result: response,
-        q: req.query.q,
+        result: response.data,
+        q: req.query.question,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showResultCharacterSeaching(req, res) {
+    let page = req.query.page || 1;
+    let limit = req.query.limit || 25;
+    if (!req.query.question) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    const url = `https://api.jikan.moe/v4/characters?q=${req.query.question}`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res.status(STATUS.SUCCESS).render("forum/searchCharacter", {
+        user: req.user,
+        result: response.data,
+        q: req.query.question,
       });
     } catch (err) {
       console.log(err);
@@ -184,6 +207,31 @@ class ForumController {
         reviews: responseReviews.data,
         manga: responseManga.data,
         pagination: responseReviews.pagination,
+        moment,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showCharacter(req, res) {
+    if (!req.params.characterId) {
+      redirect(req, res, STATUS.BAD_REQUEST);
+    }
+    const url = `https://api.jikan.moe/v4/characters/${req.params.characterId}/full`;
+    const urlPics = `https://api.jikan.moe/v4/characters/${req.params.characterId}/pictures`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      let pictures = await fetch(urlPics, options);
+      pictures = await pictures.json();
+      return res.status(STATUS.SUCCESS).render("forum/character", {
+        user: req.user,
+        character: response.data,
+        pictures: pictures.data,
         moment,
       });
     } catch (err) {

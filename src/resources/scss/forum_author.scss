@@ -78,6 +78,17 @@
       }
     }
   }
+  //forum_author
+  .author {
+    .author-avatar {
+      img {
+        height: 240px;
+        width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+      }
+    }
+  }
 }
 #section-2 {
   .genres-list {

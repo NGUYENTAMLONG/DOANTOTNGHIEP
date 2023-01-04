@@ -56,6 +56,11 @@
       #section-1 .info-right .author__info .author__info-about .author__info-series-anime .manga__series-info {
         flex-direction: column;
         width: 100%; }
+  #section-1 .author .author-avatar img {
+    height: 240px;
+    width: 100%;
+    object-fit: cover;
+    cursor: pointer; }
 
 #section-2 .genres-list {
   display: flex;
