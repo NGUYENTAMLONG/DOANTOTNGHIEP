@@ -7,7 +7,7 @@
   padding: 10px;
   border-radius: 5px;
   .info-left {
-    .character__cover {
+    .character__avatar {
       box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
       margin-bottom: 40px;
     }
@@ -37,6 +37,37 @@
       }
       .fa-reddit-square {
         color: $color-reddit;
+      }
+      .animeography {
+        width: 100%;
+        .anime {
+          &.gray {
+            background-color: gainsboro;
+          }
+        }
+        .anime-list {
+          height: 500px;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          .anime__info {
+            a {
+              text-decoration: none;
+            }
+          }
+          &::-webkit-scrollbar {
+            width: 12px;
+            background-color: #f5f5f5;
+            overflow: hidden;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            border-radius: 20px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #555;
+          }
+        }
       }
     }
   }
@@ -74,35 +105,55 @@
         }
       }
     }
-    .statisticals {
-      display: flex;
-      width: 98%;
-      align-items: center;
-      padding: 5px;
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-      overflow: hidden;
+    .about {
+      p {
+        text-indent: 20px;
+      }
     }
-    .description {
-      .synopsis,
-      .background {
-        p {
-          text-indent: 20px;
+    .voice__actors {
+      width: 100%;
+      .actor {
+        .actor-avatar {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+        }
+        &.gray {
+          background-color: gainsboro;
+        }
+      }
+      .actor-list {
+        height: 500px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+          width: 12px;
+          background-color: #f5f5f5;
+          overflow: hidden;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 20px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: #555;
         }
       }
     }
-    .characters {
+    .mangaography {
       width: 100%;
-      .char-list {
-        .character {
-          .character-avatar {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-          }
-          &.gray {
-            background-color: gainsboro;
-          }
+      .manga {
+        .manga-cover {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
         }
+        &.gray {
+          background-color: gainsboro;
+        }
+      }
+      .manga-list {
         height: 500px;
         overflow-y: scroll;
         overflow-x: hidden;

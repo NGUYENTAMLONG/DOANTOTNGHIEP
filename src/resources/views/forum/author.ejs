@@ -39,8 +39,8 @@
             <div class="author__paticals">
               <p><b>Given name: </b><%= author.given_name %> </p>
               <p><b>Family name: </b><%= author.family_name %> </p>
-              <p><b>Birthday: </b> <%= moment(author.birthday).format("L") %> </p>
-              <p><b>favorites: </b> <%= author.favorites %> </p>
+              <p><b>Birthday: </b> <%= (author.birthday) ? moment(author.birthday).format("L") : 'unknown' %> <i class='bx bxs-cake'></i></p>
+              <p><b>favorites: </b> <%= author.favorites %> <i class='bx bxs-happy-heart-eyes'></i></p>
             </div>
           </div>
         </div>
@@ -65,6 +65,9 @@
                 <p class="ml-3"><%= (author.about) ? author.about : 'We are updating...' %></p>
                 <hr>
                 <h3>Manga Series</h3>
+                <% if(author.manga.length === 0){%>
+                <span class="badge badge-warning">Updating ...</span>
+                <%}else{%>
                 <div class="author__info-series-manga">
                   <% author.manga.forEach(function(elm,index){%>
                   <div class="d-flex m-2">
@@ -79,8 +82,12 @@
                   <hr>
                   <%}) %>
                 </div>
+                <%} %>
                 <hr>
                 <h3>Anime Series</h3>
+                <% if(author.anime.length === 0){%>
+                <span class="badge badge-warning">Updating ...</span>
+                <%}else{%>
                 <div class="author__info-series-anime">
                   <% author.anime.forEach(function(elm,index){%>
                   <div class="d-flex m-2">
@@ -95,6 +102,7 @@
                   <hr>
                   <%}) %>
                 </div>
+                <%} %>
                 <hr>
                 <h3>Pictures</h3>
                 <div class="author__info-pictures d-flex justify-content-around flex-wrap">
@@ -107,7 +115,7 @@
                   <div class="modal fade" id="pic<%=index %>" tabindex="-1" role="dialog" aria-labelledby="pic<%=index %>Label" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
-                        <div class="modal-body">
+                        <div class="modal-body d-flex justify-content-center align-items-center">
                           <img src="<%= pic.jpg.image_url %>" width="100%" alt="">
                         </div>
                       </div>

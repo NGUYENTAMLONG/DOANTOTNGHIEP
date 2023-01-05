@@ -20,8 +20,7 @@
   <div class="container">
     <div class="d-flex justify-content-center">
       <nav class="navbar navbar-light bg-light">
-        <form class="form-inline" action="/forum/search-author">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search Author" aria-label="Search" name="question">
+        <form class="form-inline" action="/forum/search-character">
           <input class="form-control mr-sm-2" type="search" placeholder="Search Manga" aria-label="Search" name="question" value="<%= q %>">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
@@ -29,20 +28,20 @@
     </div>
     <div class="section" id="section-1">
       <div class="row">
-        <% result.forEach((author,index)=>{%>
+        <% result.forEach((character,index)=>{%>
         <div class="col-3 col-md-3 col-sm-4">
           <div class="card author mb-3" style="width: 100%;min-height: 150px;">
             <div class="author-avatar">
-              <a href="/forum/author/<%= author.mal_id %>">
-                <img class="card-img-top" src="<%= author.images.jpg.image_url %>" height="" alt="Author avatar">
+              <a href="/forum/author/<%= character.mal_id %>">
+                <img class="card-img-top" src="<%= character.images.jpg.image_url %>" height="" alt="Author avatar">
               </a>
             </div>
             <div class="author-info">
-              <div class="author-info__name text-center"><b><%= author.name %></b>
+              <div class="author-info__name text-center"><b><%= character.name %></b>
               </div>
               <div class="text-center">
-                <% if(author.given_name &&  author.family_name ) {%>
-                (<%= author.given_name %>) - (<%= author.family_name %> )<% } %>
+                <% if(character.given_name &&  character.kanji ) {%>
+                (<%= character.given_name %>) - (<%= character.family_name %> )<% } %>
               </div>
             </div>
           </div>
@@ -51,6 +50,7 @@
       </div>
     </div>
 
+  </div>
   </div>
   <%- include('../partials/footer') %>
 </body>
