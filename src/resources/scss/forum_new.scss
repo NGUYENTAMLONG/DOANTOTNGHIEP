@@ -1,0 +1,37 @@
+@import "variables.scss";
+
+#section-1 {
+  .info-right {
+    .news {
+      .new {
+        border-bottom: 0.5px rgba(128, 128, 128, 0.589) solid;
+        margin: 15px;
+        .new__cover {
+          img {
+            width: 100px;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        .new__info {
+          margin-left: 20px;
+          .new__info-title {
+            a {
+              text-decoration: none;
+              color: black;
+            }
+          }
+          .new__info-author {
+            text-decoration: none;
+            font-weight: bold;
+          }
+          .new__info-date {
+          }
+          .new__info-excerpt {
+            text-indent: 25px;
+          }
+        }
+      }
+    }
+  }
+}

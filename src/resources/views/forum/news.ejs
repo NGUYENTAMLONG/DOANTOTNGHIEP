@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <title>DETAIL FORUM</title>
+  <%- include("../partials/link") %>
+  <link rel="icon" href="/image/tablogo.png">
+  <link rel="stylesheet" href="/css/forum_detail.css">
+  <link rel="stylesheet" href="/css/forum_new.css">
+  <!----===== Boxicons CSS ===== -->
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="container">
+    <div class="section" id="section-1">
+      <div class="row">
+        <div class="col-3">
+          <div class="info-left">
+            <div class="manga__name text-center">
+              <h2><%= manga.title %></h2>
+            </div>
+            <div class="manga__cover">
+              <img src="<%= manga.images.jpg.image_url %>" width="100%" alt="">
+            </div>
+            <div class="manga__paticals">
+              <p>Add to My List</p>
+              <hr>
+              <p>Add to My Favorites</p>
+              <hr>
+              <div class="share d-flex flex-wrap justify-content-around">
+                <span>
+                  <i class="fab fa-2x fa-facebook-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-instagram-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-pinterest-square"></i>
+                </span>
+                <span>
+                  <i class="fab fa-2x fa-tumblr-square"></i>
+                </span><span>
+                  <i class="fab fa-2x fa-twitter-square"></i>
+                </span><span>
+                  <i class="fab fa-2x fa-reddit-square"></i>
+                </span>
+              </div>
+              <br>
+              <h5>Alternative Titles</h5>
+              <hr>
+              <span><b>Default Name:</b> <%= manga.title %> </span>
+              <span><b>Japanese Name:</b> <%= (manga.title_japanse) ? manga.title_japanse : 'unknown' %> </span>
+              <span><b>English Name:</b>
+                <%= (manga.title_english) ? manga.title_english : 'unknown' %> </span>
+              <h5 class="mt-4">Information</h5>
+              <hr>
+              <div><b>Author:</b>
+                <% manga.authors.forEach(function(author,index){%>
+                <a href="/forum/author/<%= author.mal_id %>">
+                  <%= author.name %>
+                </a> <%= (index ===  manga.authors.length -1) ? '.' : "," %>
+                <%}) %>
+              </div>
+              <div><b>Type:</b> <%= (manga.type) ? manga.type : 'unknown'%></div>
+              <div><b>Published:</b> <%= (manga.published.string) ?manga.published.string : 'unknown' %></div>
+              <div><b>Chapter:</b> <%= (manga.chapters) ? manga.chapters : 'unknown' %></div>
+              <div><b>Volumes:</b> <%= (manga.volumes) ? manga.volumes : 'unknown' %></div>
+              <div><b>Status:</b>
+                <%= (manga.status) ? manga.status : 'unknown' %>
+              </div>
+              <div><b>Genres:</b>
+                <% manga.genres.forEach(function(type,index){%>
+                <a href="<%= type.url %>" target="_blank">
+                  <%= type.name %>
+                </a>
+                <%}) %>
+              </div>
+              <div><b>Demographic:</b>
+                <% manga.demographics.forEach(function(demographic,index){%>
+                <a href="<%= demographic.url %>" target="_blank">
+                  <%= demographic.name %>
+                </a>
+                <%}) %>
+              </div>
+              <div><b>Serialization:</b>
+                <% manga.serializations.forEach(function(serialization,index){%>
+                <a href="<%= serialization.url %>" target="_blank">
+                  <%= serialization.name %>
+                </a>
+                <%}) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row info-right">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/forum">Forum</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="/forum/detail/<%= manga.mal_id %> ">Detail</a></li>
+                <li class="breadcrumb-item active" aria-current="page">news</li>
+              </ol>
+            </nav>
+            <ul class="navigation">
+              <li><a href="/forum/detail/<%= manga.mal_id %>" class="disabled">Detail</a></li>
+              <li><a href="/fourum/news/<%= manga.mal_id %>">News</a></li>
+              <li><a href="/forum/review/<%= manga.mal_id %>">Reviews</a></li>
+              <li><a href="/forum/recommendations/<%= manga.mal_id %>">Recommendations</a></li>
+              <li><a href="/forum/pictures/<%= manga.mal_id %>">Pictures</a></li>
+            </ul>
+            <div class="news mt-4">
+              <h4>News</h4>
+              <hr>
+              <div class="d-flex flex-column">
+                <% news.forEach(function(elm,index){%>
+                <div class="new d-flex">
+                  <div class="new__cover d-flex flex-column text-center">
+                    <img src="<%= elm.images.jpg.image_url%>" alt="">
+                  </div>
+                  <div class="new__info">
+                    <div class="new__info-title">
+                      <a href="#">
+                        <b><%= elm.title %></b>
+                      </a>
+                    </div>
+                    <div class="d-flex">
+                      <div class="new__info-author">
+                        <a href="<%= elm.author_url %>" target="_blank">
+                          <small> <i class='bx bxs-user'></i> <%= elm.author_username %></small>
+                        </a>
+                      </div>
+                      <span class="ml-2 mr-2"> - </span>
+                      <div class="new__info-date">
+                        <small> <i class='bx bx-time-five'></i> <%= moment(elm.date).format("L") %> - <%= moment(elm.date).format("LT")%> </small>
+                      </div>
+                    </div>
+                    <div class="new__info-excerpt">
+                      <p>
+                        <%= elm.excerpt %>
+                      </p>
+                    </div>
+                    <div class="new__info-comments">
+                      <span class="badge badge-info">
+                        <i class='bx bx-message-dots'></i> comments: <%= elm.comments %>
+                      </span>
+                      <div class="float-right">
+                        <a href="<%= elm.url %>">
+                          <small>
+                            Read source
+                          </small>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <%}) %>
+              </div>
+              <div class="text-center">
+                <% if(pagination.has_next_page) {%>
+                <a href="/forum/news/<%= manga.mal_id %>?page=<%= Number(page) + 1 %>" class="btn btn-outline-secondary"> <i class='bx bxs-down-arrow'></i> More </a>
+                <% }else{%>
+                <h5><i class='bx bx-flag'></i> End</h5>
+                <%} %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section mt-4" id="section-2">
+      <div class="row">
+        <div class="genres-list"></div>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+<%- include("../partials/script") %>
+
+<script>
+  // Tooltips
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  fetch("/forum/genres").then((res) => res.json()).then((result) => {
+    const htmls = result.data.map((elm, index) => `
+       <a href="${elm.url}" target="_blank" class="m-1">
+      <span class="badge badge-info">
+        ${ elm.name } (${elm.count})
+      </span>
+      </a>
+    `).join("")
+    document.querySelector('.genres-list').innerHTML = htmls
+    console.log(result)
+  })
+</script>
+
+</html>

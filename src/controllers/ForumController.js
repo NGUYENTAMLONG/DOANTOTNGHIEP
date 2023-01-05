@@ -38,6 +38,7 @@ class ForumController {
     const url = `https://api.jikan.moe/v4/manga/${req.params.mangaId}`;
     const urlRecommendations = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/recommendations`;
     const urlCharacters = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/characters`;
+
     const options = {
       method: "GET",
       // headers: {
@@ -52,6 +53,7 @@ class ForumController {
       responseRecommendations = await responseRecommendations.json();
       let responseCharacters = await fetch(urlCharacters, options);
       responseCharacters = await responseCharacters.json();
+
       return res.status(STATUS.SUCCESS).render("forum/detail", {
         user: req.user,
         manga: response.data,
@@ -185,6 +187,31 @@ class ForumController {
         manga: responseManga.data,
         pagination: responseReviews.pagination,
         moment,
+      });
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showNews(req, res) {
+    let page = req.query.page || 1;
+    const urlNews = `https://api.jikan.moe/v4/manga/${req.params.mangaId}/news?page=${page}`;
+    const urlManga = `https://api.jikan.moe/v4/manga/${req.params.mangaId}`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let responseNews = await fetch(urlNews, options);
+      responseNews = await responseNews.json();
+      let responseManga = await fetch(urlManga, options);
+      responseManga = await responseManga.json();
+      return res.status(STATUS.SUCCESS).render("forum/news", {
+        user: req.user,
+        news: responseNews.data,
+        manga: responseManga.data,
+        pagination: responseNews.pagination,
+        moment,
+        page,
       });
     } catch (err) {
       console.log(err);

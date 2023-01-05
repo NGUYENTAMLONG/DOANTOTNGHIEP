@@ -1,0 +1,17 @@
+#section-1 .info-right .news .new {
+  border-bottom: 0.5px rgba(128, 128, 128, 0.589) solid;
+  margin: 15px; }
+  #section-1 .info-right .news .new .new__cover img {
+    width: 100px;
+    height: 100%;
+    object-fit: cover; }
+  #section-1 .info-right .news .new .new__info {
+    margin-left: 20px; }
+    #section-1 .info-right .news .new .new__info .new__info-title a {
+      text-decoration: none;
+      color: black; }
+    #section-1 .info-right .news .new .new__info .new__info-author {
+      text-decoration: none;
+      font-weight: bold; }
+    #section-1 .info-right .news .new .new__info .new__info-excerpt {
+      text-indent: 25px; }
