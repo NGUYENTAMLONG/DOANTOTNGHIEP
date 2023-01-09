@@ -56,6 +56,22 @@
       #section-1 .info-right .author__info .author__info-about .author__info-series-anime .manga__series-info {
         flex-direction: column;
         width: 100%; }
+    #section-1 .info-right .author__info .author__info-about .author__info-pictures .picture-skeleton {
+      width: 100px;
+      height: 150px;
+      background: #9c9c9c;
+      background-image: linear-gradient(115deg, #c4c4c4 20%, #d8d8d8 30%, #d8d8d8 35%, #c4c4c4 40%);
+      background-position: 0% 0;
+      background-size: 300% 200%;
+      color: rgba(0, 0, 0, 0);
+      animation: shimmer 2s infinite; }
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0; }
+  60%,
+  100% {
+    background-position: -50% 0; } }
   #section-1 .author .author-avatar img {
     height: 240px;
     width: 100%;

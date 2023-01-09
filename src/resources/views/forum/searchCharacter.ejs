@@ -27,12 +27,30 @@
       </nav>
     </div>
     <div class="section" id="section-1">
+      <% if(pagination.length === 0){%>
+      <div class="text-center bg-dark text-light" style="width: 100%;">
+        <h2>NO MATCHING SEARCH <i class="fas fa-sad-tear"></i></h2>
+      </div>
+      <%}else{%>
+      <div class="text-right">
+        <span class="badge badge-success">
+          Result: <%= pagination.items.total %>
+        </span>
+        <span class="badge badge-warning">
+          Result per page: <%= pagination.items.per_page %>
+        </span>
+        <span class="badge badge-danger">
+          Result in page: <%= pagination.items.count %>
+        </span>
+      </div>
+      <%} %>
+
       <div class="row">
         <% result.forEach((character,index)=>{%>
         <div class="col-3 col-md-3 col-sm-4">
           <div class="card author mb-3" style="width: 100%;min-height: 150px;">
             <div class="author-avatar">
-              <a href="/forum/author/<%= character.mal_id %>">
+              <a href="/forum/character/<%= character.mal_id %>">
                 <img class="card-img-top" src="<%= character.images.jpg.image_url %>" height="" alt="Author avatar">
               </a>
             </div>

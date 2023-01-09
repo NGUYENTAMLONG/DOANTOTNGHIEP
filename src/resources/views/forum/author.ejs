@@ -106,22 +106,10 @@
                 <hr>
                 <h3>Pictures</h3>
                 <div class="author__info-pictures d-flex justify-content-around flex-wrap">
-                  <% pictures.forEach(function(pic,index){%>
-                  <!-- Button trigger modal -->
-
-                  <img src="<%= pic.jpg.image_url %>" width="100px" alt="" data-toggle="modal" data-target="#pic<%=index %>">
-
-                  <!-- Modal -->
-                  <div class="modal fade" id="pic<%=index %>" tabindex="-1" role="dialog" aria-labelledby="pic<%=index %>Label" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-body d-flex justify-content-center align-items-center">
-                          <img src="<%= pic.jpg.image_url %>" width="100%" alt="">
-                        </div>
-                      </div>
-                    </div>
+                  <% for(i=0;i<=4;i++) {%>
+                  <div class="picture-skeleton">
                   </div>
-                  <%}) %>
+                  <% } %>
                 </div>
               </div>
             </div>
@@ -151,6 +139,26 @@
       </a>
     `).join("")
     document.querySelector('.genres-list').innerHTML = htmls
+    console.log(result)
+  })
+
+  //show pictures
+  fetch("/forum/author/pictures/" + '<%= author.mal_id %>').then((res) => res.json()).then((result) => {
+    const htmls = result.data.map((pic, index) => `
+
+  <img src="${pic.jpg.image_url}" width="100px" alt="" data-toggle="modal" data-target="#pic${index}">
+
+  <div class="modal fade" id="pic${index}" tabindex="-1" role="dialog" aria-labelledby="pic${index}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body d-flex justify-content-center align-items-center">
+          <img src="${pic.jpg.image_url}" width="100%" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+  `).join("")
+    document.querySelector('.author__info-pictures').innerHTML = htmls
     console.log(result)
   })
 </script>

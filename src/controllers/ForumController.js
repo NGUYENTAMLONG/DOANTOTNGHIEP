@@ -70,19 +70,15 @@ class ForumController {
       redirect(req, res, STATUS.BAD_REQUEST);
     }
     const url = `https://api.jikan.moe/v4/people/${req.params.authorId}/full`;
-    const urlPics = `https://api.jikan.moe/v4/people/${req.params.authorId}/pictures`;
     const options = {
       method: "GET",
     };
     try {
       let response = await fetch(url, options);
       response = await response.json();
-      let pictures = await fetch(urlPics, options);
-      pictures = await pictures.json();
       return res.status(STATUS.SUCCESS).render("forum/author", {
         user: req.user,
         author: response.data,
-        pictures: pictures.data,
         moment,
       });
     } catch (err) {
@@ -90,6 +86,7 @@ class ForumController {
       redirect(req, res, STATUS.SERVER_ERROR);
     }
   }
+
   async showResultSeaching(req, res) {
     let page = req.query.page || 1;
     let limit = req.query.limit || 25;
@@ -129,6 +126,8 @@ class ForumController {
       return res.status(STATUS.SUCCESS).render("forum/searchAuthor", {
         user: req.user,
         result: response.data,
+        pagination: response.pagination,
+        page: page,
         q: req.query.question,
       });
     } catch (err) {
@@ -152,6 +151,7 @@ class ForumController {
       return res.status(STATUS.SUCCESS).render("forum/searchCharacter", {
         user: req.user,
         result: response.data,
+        pagination: response.pagination,
         q: req.query.question,
       });
     } catch (err) {
@@ -161,6 +161,29 @@ class ForumController {
   }
   async showGenres(req, res) {
     const url = `https://api.jikan.moe/v4/genres/manga`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      let response = await fetch(url, options);
+      response = await response.json();
+      return res
+        .status(STATUS.SUCCESS)
+        .json(new SuccessResponse(MESSAGE.SUCCESS, response.data));
+    } catch (err) {
+      console.log(err);
+      redirect(req, res, STATUS.SERVER_ERROR);
+    }
+  }
+  async showAuthorPictures(req, res) {
+    if (!req.params.authorId) {
+      return res
+        .status(STATUS.BAD_REQUEST)
+        .json(
+          new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.BAD_REQUEST)
+        );
+    }
+    const url = `https://api.jikan.moe/v4/people/${req.params.authorId}/pictures`;
     const options = {
       method: "GET",
     };

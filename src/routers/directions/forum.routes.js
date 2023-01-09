@@ -11,6 +11,7 @@ const {
   showReviews,
   showCharacter,
   showNews,
+  showAuthorPictures,
 } = require("../../controllers/ForumController");
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.get("/", showForum);
 router.get("/detail/:mangaId", showDetail);
 router.get("/recommendations/:mangaId", showRecommendations);
 router.get("/genres", showGenres);
+router.get("/author/pictures/:authorId", showAuthorPictures);
 router.get("/character/:characterId", showCharacter);
 router.get("/search", showResultSeaching);
 router.get("/search-author", showResultAuthorSeaching);

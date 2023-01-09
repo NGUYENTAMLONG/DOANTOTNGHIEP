@@ -191,6 +191,9 @@
             <div class="pictures mt-4">
               <h3>Pictures</h3>
               <hr>
+              <% if(pictures.length === 0){%>
+              <span class="badge badge-warning">Updating ...</span>
+              <%}else{%>
               <div class="author__info-pictures d-flex justify-content-around flex-wrap">
                 <% pictures.forEach(function(pic,index){%>
                 <!-- Button trigger modal -->
@@ -209,6 +212,7 @@
                 </div>
                 <%}) %>
               </div>
+              <% } %>
             </div>
           </div>
         </div>

@@ -227,6 +227,7 @@
             <div class="characters mt-4">
               <h4>Characters</h4>
               <hr>
+              <% if(characters.length!==0){%>
               <div class="char-list">
                 <% characters.forEach(function(character,index){%>
                 <div class="character d-flex <%= (index % 2 === 0)? 'gray' : '' %> ">
@@ -247,12 +248,16 @@
                 </div>
                 <%}) %>
               </div>
+              <% }else{%>
+              <h6>Updating ...</h6>
+              <%} %>
             </div>
             <div class="recommendations mt-4">
               <h4>Recommendations</h4>
               <hr>
+              <% if(recommendations.length!==0){%>
               <div class="owl-carousel owl-theme">
-                <% recommendations.forEach((manga,index)=>{%>
+                <%  recommendations.forEach((manga,index)=>{%>
                 <div class="manga__recommend d-flex flex-column">
                   <a href="/forum/detail/<%= manga.entry.mal_id %>" class="manga__recommend-title">
                     <img src="<%= manga.entry.images.jpg.image_url %>" class="manga__recommend-cover" alt="">
@@ -267,6 +272,9 @@
                 </div>
                 <%}) %>
               </div>
+              <%}else{%>
+              <h6>Updating ...</h6>
+              <%} %>
             </div>
 
           </div>
