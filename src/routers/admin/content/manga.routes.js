@@ -8,8 +8,7 @@ const Chapter = require("../../../models/Chapter");
 const { STATUS, ERRORCODE, MESSAGE } = require("../../../config/httpResponse");
 const { ErrorResponse, SuccessResponse } = require("../../../helper/response");
 const multer = require("multer");
-const { types, PAGING } = require("../../../config/default");
-const { redirect } = require("../../../service/redirect");
+const { types } = require("../../../config/default");
 const {
   getMangaDashboard,
   getMangaList,
@@ -126,7 +125,7 @@ router.patch("/updateManga/:slug", updateManga);
 
 // 4. Soft Delete Manga
 // ex: /management/content/manga/deleteManga/:slug - Method: DELETE
-router.delete("/deleteManga/:slug", softDeleteManga);
+router.delete("/deleteManga/:mangaId", softDeleteManga);
 
 //6 Trash dashboard
 // ex: /management/content/manga/trash - Method: GET

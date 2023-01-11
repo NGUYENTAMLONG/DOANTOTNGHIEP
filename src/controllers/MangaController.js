@@ -327,8 +327,8 @@ class MangaController {
   }
   //5.Soft Delete Manga
   async softDeleteManga(req, res) {
-    const slug = req.params.slug;
-    if (!slug) {
+    const mangaId = req.params.mangaId;
+    if (!mangaId) {
       return res
         .status(STATUS.BAD_REQUEST)
         .json(
@@ -337,8 +337,18 @@ class MangaController {
     }
     try {
       //note : no unlink image cover
-
-      await Manga.delete({ slug: slug });
+      const checkSlide = await Slide.findOne({
+        manga: mangaId,
+        deleted: false,
+      });
+      if (checkSlide) {
+        return res
+          .status(STATUS.BAD_REQUEST)
+          .json(
+            new ErrorResponse(ERRORCODE.ERROR_BAD_REQUEST, MESSAGE.DELETE_FAIL)
+          );
+      }
+      await Manga.delete({ _id: mangaId });
 
       res
         .status(STATUS.SUCCESS)

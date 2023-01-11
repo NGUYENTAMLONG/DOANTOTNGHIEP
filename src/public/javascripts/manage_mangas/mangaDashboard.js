@@ -148,7 +148,20 @@ function deleteManga(event, slug) {
             }).then(() => {
               location.reload();
             });
+          } else if (
+            !data.isSuccess &&
+            data.errorCode === "BAD_REQUEST" &&
+            data.message === "DELETE FAIL"
+          ) {
+            swal({
+              title: "Thất bại",
+              text: "Xóa thất bại vì slide liên kết đến manga còn tồn tại !",
+              icon: "error",
+              button: "Ok!",
+            });
+            return;
           }
+          console.log(data);
         })
         .catch((error) => {
           console.log("Error:", error);
